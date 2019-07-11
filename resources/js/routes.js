@@ -1,13 +1,24 @@
+import Vue from "vue"
 import VueRouter from "vue-router"
-import Map from './views/Map'
+Vue.use(VueRouter)
 
-export default{
-    mode: 'history',
+import Cargos from './views/Cargos'
+import Cargo from './views/Cargo'
 
-    routes:[
-        {
-            path:'/',
-            component: Map
-        }
-    ]
-}
+
+let routes = [
+    {
+        path:'/cargos',
+        component: Cargos
+    },
+
+    {
+        path:'/cargos/:cargo',
+        component: Cargo
+    }
+]
+
+export default new VueRouter({
+    mode: 'hash',
+    routes   
+})
