@@ -1,8 +1,8 @@
 <template> 
     
-    <router-link class="flex p-2 border-b hover:bg-gray-100" :to="`/cargo/${cargo.id}`">
+    <router-link class="flex p-2 border-b hover:bg-gray-100" :to="`/cargos/${cargo.id}`">
         <div class="flex w-32 h-32 p-3">
-            <img class="rounded-lg" :src="cargo.user.avatar" :alt="cargo.user.name">
+            <img class="rounded-lg shadow-md" :src="cargo.user.avatar" :alt="cargo.user.name">
         </div>
         
         <div class="flex flex-1 flax-auto w=2/3 flex-col p-2 overflow-hidden">

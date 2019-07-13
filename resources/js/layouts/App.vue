@@ -1,23 +1,37 @@
 <template>
-         
-    <div>
-        <!-- <navbar></navbar> -->
+
+    <component :is="layout">   
+
+        <!-- <template v-slot:header>
+            <router-view name="header"></router-view>
+        </template>  
+
+        <template v-slot:sidebar>
+            <router-view name="sidebar"></router-view>
+        </template>  -->
+
+        <router-view :key="$route.fullPath"></router-view>
         
-        <nav-drawer>
-            <router-view></router-view>
-        </nav-drawer>
-        <gmap></gmap>
-        
-    </div>
+    </component>         
+    
 </template>
 <script>
-    import Gmap from '../views/Map'
-    import Navbar from '../components/Navbar'
-    import NavDrawer from '../components/NavDrawer'
+    import Default from '../layouts/Default'
+    import Mapped from '../layouts/Mapped'
 
     export default {
         
-        components:{ Gmap, Navbar, NavDrawer }, 
+        components:{ 
+            'default-layout': Default,
+            'mapped-layout': Mapped,
+        }, 
+
+        computed:{
+            layout(){
+                let layout = this.$route.meta.layout 
+                return layout ? layout + '-layout': 'default-layout'                
+            },    
+        }
 
     }
 </script>

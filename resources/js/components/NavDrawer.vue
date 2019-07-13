@@ -1,79 +1,44 @@
 <template>
-    <nav class="li-nav-drawer fixed min-h-screen z-10 bg-white overflow-y-scroll top-0 bottom-0"> 
-        <div class="p-5 bg-blue-400">
-            <p class="ml-8 mb-2 text-sm text-white">Finde die passende Fracht auf deiner Stecke</p>
-           <div class="flex items-center mb-2">    
-                <i class="material-icons text-sm text-blue-200 pl-1 pr-3">trip_origin</i>
-            
-                <input class="bg-gray-200 appearance-none border border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" 
-                    id="search-origin" 
-                    type="text" 
-                    placeholder="Startpunkt wählen"                                                                      
-                >
-            </div>
-            <div class="flex items-center mb-2">    
-                <i class="material-icons text-blue-200 pr-2">location_on</i>
-            
-                <input class="bg-gray-200 appearance-none border border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" 
-                    id="search-destination" 
-                    type="text" 
-                    placeholder="Reiseziel wählen"
-                >
-            </div>
-            <div class="flex items-center">    
-                <i class="material-icons text-blue-200 pr-2">zoom_out_map</i>
-            
-                <div class="relative">
-                    <select 
-                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500" 
-                        v-model="detour"
-                    >
-                        <option selected disabled class="text-grey-500">Umweg</option>
-                        <option value="10">+10 km</option>
-                        <option value="20">+20 km</option>
-                        <option value="30">+30 km</option>
-                        <option value="40">+40 km</option>
-                        <option value="50">+50 km</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                </div>
+    <div>
+        <transition name="toggle-drawer">
+            <section v-if="show"
+                class="li-nav-drawer w-full fixed min-h-screen z-10 bg-white overflow-y-scroll top-0 bottom-0"
+            >
+                <button
+                    class="li-drawer-close-button fixed bottom-0 right-0 m-5 rounded-full bg-teal-500 shadow-lg hover:bg-teal-700 focus:outline-none"
+                    @click="show = !show">
+                    <i class="material-icons text-white text-2xl p-3">map</i>
+                </button>
 
-            </div>
-        </div>
-        <slot></slot>
-    </nav>    
+                <div class="opacity-1">
+                    <slot></slot>
+                </div>                
+
+            </section>
+        </transition>
+    </div>
 </template>
 <script>
-    
-    // import RouteBoxer from '../utilities/RouteBoxer'
 
-    export default {          
-        
+    export default { 
         data(){            
             return{
+                show: true,
+                
                 origin: null,
                 destination: null,
                 route: null,
                 detour: 'Umweg',
 
                 directionsService: null,
-                directionsDisplay:null
+                directionsDisplay:null,
+
+                
             }
-        },
+        },        
 
-        computed:{
-            google(){
-                return this.$store.state.google
-            },
+        methods:{            
 
-            map(){
-                return this.$store.state.map
-            },
-        },
-
-        methods:{
             setAutocomplete(){
                 setTimeout(()=>{                    
                     let originInput = document.getElementById('search-origin') 
@@ -130,41 +95,14 @@
                         window.alert('Directions request failed due to ' + status);
                     }
                 })
-            },
-
-            routeBounds(path){
-                let lat0 = this.rad(path[0].lat())
-                let lng0 = this.rad(path[0].lng())
-                
-                let lat1 = this.rad(path[353].lat())
-                let lng1 = this.rad(path[353].lng())                
-                
-
-                let distance = 6378.388 * Math.acos(Math.sin(lat0)*Math.sin(lat1) + Math.cos(lat0)*Math.cos(lat1)*Math.cos(lng1-lng0))
-
-                console.log(distance)
-                console.log(path.length)
-
-               
-            //    path.forEach((point, i) => {
-            //        let lat1 = point.lat()
-            //        let lng1 = point.lng()
-            //        path.forEach((nextPoint, i) => {
-            //            let lat2 = nextPoint.lat()
-            //            let lng2 = nextPoint.lng()
-            //        });
-            //    });
-            },
-            rad(grad){
-                return grad*Math.PI/180
-            }
-        
-
-
+            }, 
 
         },
 
         mounted(){
+            Event.$on('toggle-drawer-left', ()=>{
+                this.show = !this.show
+            })
             // this.setAutocomplete()
             // console.log(Math.sin(30*Math.PI/180))
         }
@@ -172,12 +110,34 @@
     }
 </script>
 <style lang="scss">
-    .li-nav-drawer{
-        width: 450px;
+    .li-nav-drawer{        
         box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), 
                     4px 0 6px -2px rgba(0, 0, 0, 0.05);
-
     }
+    
+    @media (min-width: 640px) {
+        .li-nav-drawer{ 
+            width: 450px;
+        }
+    }  
+
+    @media (min-width: 768px) {
+        .li-drawer-close-button{
+            left: 21rem;
+            opacity: 1;
+        }
+    } 
+
+    .toggle-drawer-enter-active, .toggle-drawer-leave-active {
+        transition: all .3s ease;
+    }
+
+    .toggle-drawer-enter, .toggle-drawer-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        width: 0;
+        opacity: 0;
+    } 
+
+    
     
 </style>
 

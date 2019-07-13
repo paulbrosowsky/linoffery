@@ -11,8 +11,8 @@
             return{
                 locations: null,
                 markers:[],
-                origin: {lat: 48.1351253, lng: 11.581980499999986},
-                destination: {lat: 52.52000659999999, lng: 13.404953999999975},
+                origin: null,
+                destination: null,
                 range: 10,
                 
                 map: null ,
@@ -34,53 +34,33 @@
                         center: {lat: 51.5, lng: 10.5},
                         zoom: 6,
                         disableDefaultUI: true
-                    }); 
+                    });
+
                     this.directionsDisplay.setMap(null) 
                     
                     
-                    setTimeout(() => {
-                        this.displayRoute()
-                    }, 1000);                    
+                    // setTimeout(() => {
+                    //     this.displayRoute()
+                    // }, 1000);                    
                     
                     
                    
-                    let originInput = document.getElementById('search-origin') 
-                    let destinationInput = document.getElementById('search-destination')                     
-                    let originAutocomplete = new google.maps.places.Autocomplete(originInput)                    
-                    let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput)
+                    // let originInput = document.getElementById('search-origin') 
+                    // let destinationInput = document.getElementById('search-destination')                     
+                    // let originAutocomplete = new google.maps.places.Autocomplete(originInput)                    
+                    // let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput)
 
-                    originAutocomplete.addListener('place_changed', ()=>{
-                        let place = originAutocomplete.getPlace()                    
-                        this.origin = place.geometry.location
-                        this.displayRoute()
-                    })
+                    // originAutocomplete.addListener('place_changed', ()=>{
+                    //     let place = originAutocomplete.getPlace()                    
+                    //     this.origin = place.geometry.location
+                    //     this.displayRoute()
+                    // })
 
-                    destinationAutocomplete.addListener('place_changed', ()=>{
-                        let place = destinationAutocomplete.getPlace()                    
-                        this.destination = place.geometry.location
-                        this.displayRoute()
-                    })                   
-
-
-                    
-                    Event.$on('displayRoute', value => {                       
-                        this.resetMap()
-                        this.locations = value 
-                        directionsDisplay.setMap(this.map)                        
-                        this.displayRoute(directionsService, directionsDisplay)
-                    })     
-                    
-                    Event.$on('updateLocations', value => {
-                        console.log(value)
-                        this.resetMap()
-                        this.locations = value                         
-                        this.updateMarkers()                                          
-                    })                     
-                   
-                    
-                
-                    
-                    
+                    // destinationAutocomplete.addListener('place_changed', ()=>{
+                    //     let place = destinationAutocomplete.getPlace()                    
+                    //     this.destination = place.geometry.location
+                    //     this.displayRoute()
+                    // })
                     
                     // geocoder.geocode({ address: 'Stuttgart' }, (results, status) => {
                     //     if (status !== 'OK' || !results[0]) {
@@ -131,8 +111,7 @@
                 if(!this.origin || !this.destination){
                     return 
                 }
-                    this.directionsDisplay.setMap(this.map)                    
-                    
+                    this.directionsDisplay.setMap(this.map)
                    
                     let that = this
 
@@ -143,8 +122,9 @@
                     }, function(response, status) {                        
                         if (status === 'OK') {                            
                             that.directionsDisplay.setDirections(response)
-                            let path = response.routes[0].overview_path                             
-                            that.boxRoute(path)
+                            
+                            // let path = response.routes[0].overview_path                             
+                            // that.boxRoute(path)
                         } else {
                             window.alert('Directions request failed due to ' + status);
                         }
@@ -161,8 +141,7 @@
                             Event.$emit('updateLocations', response.data)
                         }, 2000)
                         
-                    })
-                            
+                    })                            
             },
             
             resetMap(directionsDisplay = null){
@@ -175,6 +154,22 @@
         
         mounted(){  
             this.mountMap()
+             Event.$on('displayRoute', value => { 
+                        this.origin = value.origin
+                        this.destination = value.destination                      
+                        this.resetMap()
+                        this.locations = value 
+                        // this.directionsDisplay.setMap(this.map)                        
+                        this.displayRoute()
+                        
+                    })     
+                    
+                    Event.$on('updateLocations', value => {
+                        console.log(value)
+                        this.resetMap()
+                        this.locations = value                         
+                        this.updateMarkers()                                          
+                    }) 
             // this.$store.dispatch('setMap', this.$el)                 
                        
         },        
