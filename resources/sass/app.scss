@@ -72,3 +72,11 @@
     }
 } 
 
+.input{
+    @apply .bg-gray-200 .appearance-none .border .border-gray-200 .rounded-lg .w-full .py-3 .px-4 .text-gray-700 .leading-tight;
+
+    &:focus{
+        @apply .outline-none .bg-white .border-teal-700
+    }     
+}
+

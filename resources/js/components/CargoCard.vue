@@ -8,21 +8,21 @@
         <div class="flex flex-1 flax-auto w=2/3 flex-col p-2 overflow-hidden">
             <p class="truncate mb-2" v-text="cargo.title"></p>
             <div class="truncate">
-                <span><i class="material-icons text-sm">trip_origin</i></span>
+                <span><i class="icon ion-md-radio-button-off"></i></span>
                 <span class="text-sm text-gray-500" v-text="deliveryLocation.city"></span>
-                <span><i class="material-icons text-sm">location_on</i></span>
+                <span><i class="icon ion-md-pin"></i></span>
                 <span class="text-sm text-gray-500" v-text="pickupLocation.city"></span>
             </div>
 
             <div>                            
                 <span class="text-sm">Lieferart:</span>
                 <span class="text-sm text-gray-500" v-text="frights"></span>  
-                <span><i class="material-icons text-sm">vertical_align_bottom</i></span>
+                <span><i class="icon ion-md-speedometer "></i></span>
                 <span class="text-sm text-gray-500" v-text="weight"></span>                             
             </div>
 
             <div>
-                <span><i class="material-icons text-sm">calendar_today</i></span>                                          
+                <span><i class="icon ion-md-calendar"></i></span>                                          
                 <span class="text-sm text-gray-500" v-text="latestDelivery"></span>                            
             </div>            
         </div>    

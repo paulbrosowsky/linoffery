@@ -1,18 +1,17 @@
 import Vue from "vue"
 import Vuex from 'vuex'
-import gmapsInit from './utilities/gmaps';
 
 Vue.use(Vuex)
 
 export let store = new Vuex.Store({
     state:{
-
-        google: null,
-        map: null,
-
         cargo: null,
         cargos: null,        
-        locations: null
+        locations: [],
+
+        origin:null,
+        destination:null,
+        range: 'Umweg'
     },
 
     mutations:{
@@ -24,27 +23,43 @@ export let store = new Vuex.Store({
             state.cargo = cargo
         },
 
-        retrieveLocations(state, cargos){
-            state.locations = cargos
+        retrieveLocations(state, cargos){ 
+            state.locations = []           
+            cargos.map(cargo => {                
+                cargo.locations.forEach( location => {
+                    state.locations.push(location)
+                });                
+            })
+        },      
+        
+        retrieveOrigin(state, origin){
+            state.origin = origin
         },
 
-        mountGmap(state, google){
-            state.google = google
+        retrieveDestination(state, destination){
+            state.destination = destination
         },
 
-        retrieveMap(state, map){ 
-            state.map = map
+        retrieveFilterRange(state, range){
+            state.range = range
+        },
+
+        resetFilters(state){
+            state.origin = null,
+            state.destination = null,
+            state.range = 'Umweg'
         }
 
     },
 
     actions:{
-        fetchCargos(context){
+        fetchCargos(context, route = null){
             return new Promise((resolve, reject)=>{
                 axios
-                    .get('api/cargos')
+                    .get('api/cargos', { params:{route:route} })
                     .then(response =>{                       
                         context.commit('retrieveCargos', response.data)
+                        context.commit('retrieveLocations', response.data)
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response))
@@ -63,33 +78,17 @@ export let store = new Vuex.Store({
             })           
         },
 
-        fetchLocations(context, route){
+        fetchLocations(context, route = null){
             return new Promise((resolve, reject)=>{                
                 axios
                     .get('api/locations', { params:{route:route} })
                     .then(response =>{                       
-                        context.commit('retrieveLocations', response.data)
+                        // context.commit('retrieveLocations', response.data)
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response))
             })           
-        }, 
-        
-        async mountMap(context){
-            context.commit('mountGmap', await gmapsInit())
-        },
-
-        async setMap(context, map){
-            
-            await context.dispatch('mountMap')
-
-            let gmap = new context.state.google.maps.Map(map,{
-                 center: {lat: 51.5, lng: 10.5},
-                zoom: 6,
-                disableDefaultUI: true
-            })
-
-            context.commit('retrieveMap', gmap)
-        }
+        },      
+      
     }
 })

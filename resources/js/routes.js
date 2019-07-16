@@ -7,6 +7,8 @@ import Cargo from './views/Cargo'
 import Impressum from './views/Impressum'
 import Welcome from './views/Welcome'
 
+import {store} from './store'
+
 
 let routes = [
     {
@@ -23,11 +25,21 @@ let routes = [
         path:'/cargos',
         component: Cargos,
         meta:{
-            layout: 'mapped'
-        }
+            layout: 'mapped',
+        },
+        beforeEnter: (to, from, next) => {  
+            if(from.name === 'cargo'){
+                next()
+            }else{                
+                store.dispatch('fetchCargos')
+                store.commit('resetFilters')
+                next()
+            }                   
+        }       
     },
 
     {
+        name: 'cargo',
         path:'/cargos/:cargo',
         component: Cargo,
         meta:{

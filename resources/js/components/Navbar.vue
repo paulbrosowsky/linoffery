@@ -3,11 +3,14 @@
         <div class="flex items-center justify-between">
             <div class="flex">
                 <button 
-                    class="bg-teal-500 rounded-full mr-2 shadow-md hover:bg-teal-700 focus:outline-none"
+                    class="bg-teal-500 rounded-full mr-2 shadow-md px-3 py-1 hover:bg-teal-700 focus:outline-none"
                     v-if="layout === 'map'" 
                     @click="toggleDrawerLeft"
                 >
-                    <i class="material-icons text-2xl text-white p-2">sort</i>
+                    
+                    <i class="icon ion-md-list text-xl text-white"></i>
+                    
+                    
                 </button>                
                 <router-link to="/">                
                     <div class="flex items-center flex-1 text-gray-700 mr-6"> 
@@ -27,7 +30,7 @@
                 </div>
                 <div class="ml-3">
                     <a href="">
-                        <i class="material-icons text-gray-700 pt-2 hover:text-gray-700">menu</i>
+                        <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-700"></i>
                     </a>
                 </div>
             </div>

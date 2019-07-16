@@ -4,25 +4,27 @@
             <p class="text-white ml-8 mb-2">Finde die Fracht auf deiner Strecke</p>
 
             <div class="flex items-center mb-2">
-                <i class="material-icons text-sm text-white pl-1 pr-3">trip_origin</i>
+                <i class="icon ion-md-radio-button-off text-white pr-3"></i>
 
                 <input
-                    class="bg-gray-200 appearance-none border border-gray-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-teal-700"
-                    id="search-origin" type="text" placeholder="Startpunkt wählen">
+                    class="input"
+                    id="search-origin" type="text" placeholder="Startpunkt wählen"
+                    v-model="origin"
+                >
             </div>
             <div class="flex items-center mb-2">
-                <i class="material-icons text-xl text-white pr-3">location_on</i>
+                <i class="icon ion-md-pin text-xl text-white pr-3"></i>
 
                 <input
-                    class="bg-gray-200 appearance-none border border-gray-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-teal-700"
-                    id="search-destination" type="text" placeholder="Reiseziel wählen">
+                    class="input"
+                    id="search-destination" type="text" placeholder="Reiseziel wählen"
+                    v-model="destination"
+                >
             </div>
             <div class="flex items-center relative">
-                <i class="material-icons text-xl text-white pr-3">zoom_out_map</i>                
-                    <select
-                        class="relative block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                        >
-                        <option selected disabled class="text-grey-500">Umweg</option>
+                <i class="icon ion-md-expand text-xl text-white pr-3"></i>                
+                    <select class="input" @change="triggerRouteBoxer" v-model="range">
+                        <option disabled class="text-grey-500">Umweg</option>
                         <option value="10">+ 10 km</option>
                         <option value="20">+ 20 km</option>
                         <option value="30">+ 30 km</option>
@@ -41,34 +43,64 @@
 
 </template>
 <script>
-    import CargoCard from '../components/CargoCard'
-
+    import CargoCard from '../components/CargoCard'  
 
     export default {
-        components:{CargoCard},           
+        components:{CargoCard},   
         
+        data(){
+            return{
+                origin:null,
+                destination:null,
+                range: 'Umweg'
+            }
+        },
+
         computed:{
             cargos(){
                 return this.$store.state.cargos
-            }
+            },   
+            
+            locations(){
+                return this.$store.state.locations
+            },  
         },   
 
-        methods:{
-            fetchData(){
-                this.$store.dispatch('fetchCargos')
-                // this.$store
-                //     .dispatch('fetchLocations')
-                //     .then((response) => {
-                //         setTimeout(()=>{
-                //             Event.$emit('updateLocations', response.data)
-                //         }, 2000)
-                        
-                //     })
+        methods:{          
+
+            fetchCargos(bounds = null){                  
+                this.$store
+                    .dispatch('fetchCargos', bounds)
+                    .then((response) => {
+                        setTimeout(()=>{
+                            Event.$emit('updateMarkers', this.locations)
+                        }, 1000)                        
+                    })       
+            },
+
+            triggerRouteBoxer(){                
+                Event.$emit('boxRoute', this.range)
+                this.setRouteFilter()
+            },
+
+            setRouteFilter(){
+                this.origin = this.$store.state.origin
+                this.destination = this.$store.state.destination
+                this.range = this.$store.state.range
             }
+
         },
         
         created(){
-            this.fetchData()
+            // this.fetchCargos()
+            this.setRouteFilter();
+
+            setTimeout(() => {
+                Event.$emit('setAutocomplete')
+                Event.$emit('updateMarkers', this.locations) 
+            },2000); 
+            
+            Event.$on('filterCargosByTheRoute', bounds => this.fetchCargos(bounds))
         }
     }
 </script>

@@ -1,9 +1,11 @@
 import Vue from "vue"
+import VueModal from "vue-js-modal"
 
 import router from './routes'
 import {store} from './store'
 import App from './layouts/App'
 
+Vue.use(VueModal)
 Vue.component('app', App)
 
 window.Event = new Vue();

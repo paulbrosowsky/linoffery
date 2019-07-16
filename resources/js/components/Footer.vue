@@ -9,19 +9,19 @@
                         <span class="font-light text-3xl">ffery</span>
                     </div>
                     
-                    <div class="flex">
-                        <a href="">
-                            <i class="material-icons text-gray-500 hover:text-teal-500">check_circle</i> 
+                    <div class="flex items-center">
+                        <a href="#">
+                            <i class="icon ion-logo-linkedin  text-2xl text-gray-600 mr-2 hover:text-teal-500"></i> 
                         </a>
-                        <a href="">
-                            <i class="material-icons text-gray-500 hover:text-teal-500">check_circle</i> 
+                        <a href="#">
+                            <i class="icon ion-logo-facebook  text-2xl text-gray-600 mr-2 hover:text-teal-500"></i> 
                         </a>
-                        <a href="">
-                            <i class="material-icons text-gray-500 hover:text-teal-500">check_circle</i> 
+                        <a href="#">
+                            <i class="icon ion-logo-twitter  text-2xl text-gray-600 hover:text-teal-500 mr-2"></i> 
                         </a>
-                        <a href="">
-                            <i class="material-icons text-gray-500 hover:text-teal-500">check_circle</i> 
-                        </a>
+                        <a href="#">
+                            <i class="icon ion-logo-xing  text-xl text-gray-600 hover:text-teal-500"></i> 
+                        </a>                       
                     </div>
                 </div>
 

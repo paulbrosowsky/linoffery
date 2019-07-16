@@ -5,14 +5,14 @@
                 <div class="flex">
                     <div class="w-full relative z-10 max-w-3xl xl:max-w-2xl xl:px-12 xl:pt-16">
                         <p class="text-3xl sm:text-5xl font-light leading-none">Die Brücke zwischen</p>
-                        <p class="text-3xl sm:text-5xl font-light leading-none text-teal-500">Spedition und Versender</p>
+                        <p class="text-4xl sm:text-5xl font-light leading-none text-teal-500">Spedition und Versender</p>
                         <p class="text-lg text-gray-600 mt-10 leading-relaxed">
                             Unsere Lösung war eine Plattform zu entwickeln welche sich auf die Bedürfnisse vom 
                             jeden einzelnen Unternehmen anpasst und damit jeder so handeln kann wie es für sein 
                             eigenes Unternehmen für richtig hält. Jedem sollte die Möglichkeit gegeben werden 
                             sein Anteil oder Potenzial zu erweitern, oder auf dem Markt zu sichern.
                         </p>
-                        <div class="flex mt-16">
+                        <div class="flex mt-12">
                             <button class="button-teal mr-2">
                                 Registrieren
                             </button>
@@ -46,17 +46,17 @@
                 <div class="bg-gray-200 rounded-lg shadow-lg p-8 md:mr-5">  
                     <p class="uppercase text-gray-600 mb-5">Versender</p>
                     <div class="flex items-center mb-2">
-                        <i class="material-icons text-teal-400 mr-3">check_circle</i>
+                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Fairer Preis</span>
                     </div>                  
                     
                     <div class="flex items-center mb-2">
-                        <i class="material-icons text-teal-400 mr-3">check_circle</i>
+                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Einfache Abwicklung</span>
                     </div>  
 
                     <div class="flex items-center mb-2">
-                        <i class="material-icons text-teal-400 mr-3">check_circle</i>
+                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Unabhängige Vermittlung</span>
                     </div>                     
 
@@ -72,17 +72,17 @@
                     <p class="uppercase text-gray-600 mb-5">Spedition</p>
 
                     <div class="flex items-center mb-2">
-                        <i class="material-icons text-teal-400 mr-3">check_circle</i>
+                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Bessere Fahrtauslastung</span>
                     </div>                  
                     
                     <div class="flex items-center mb-2">
-                        <i class="material-icons text-teal-400 mr-3">check_circle</i>
+                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Schnelle Vergabe</span>
                     </div>  
 
                     <div class="flex items-center mb-2">
-                        <i class="material-icons text-teal-400 mr-3">check_circle</i>
+                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Fracht in deiner Nähe</span>
                     </div>                     
 

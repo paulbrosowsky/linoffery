@@ -30,7 +30,7 @@
         <div class="p-5">
             <p class="uppercase text-sm text-gray-500 mb-2">Abholdetails</p>
             <div class="flex pb-2">
-                    <i class="material-icons text-xl text-teal-400 pt-1 mx-5">location_on</i>
+                    <i class="icon ion-md-pin text-2xl text-teal-400 pt-1 mx-6"></i>
                     <div>
                         <p v-text="pickup.address"></p>
                         <span v-text="pickup.zip"></span>
@@ -39,7 +39,7 @@
                     </div>                        
             </div> 
             <div class="flex pb-2">
-                <i class="material-icons text-xl text-teal-400 pt-1 mx-5">insert_invitation</i>
+                <i class="icon ion-md-calendar text-2xl text-teal-400 pt-1 mx-6"></i>
                 <div>
                     <div>
                         <p v-text="pickup.earliest_date"></p>
@@ -53,7 +53,7 @@
             </div> 
 
             <div class="flex pb-2">
-                <i class="material-icons text-xl text-teal-400 pt-1 mx-5">save_alt</i>
+                <i class="icon ion-md-fitness text-2xl text-teal-400 pt-1 mx-6"></i>
                 <div>
                     <div>
                         <p v-text="pickup.loading ? 'Ja' : 'Nein'"></p>
@@ -64,7 +64,7 @@
             </div> 
 
             <div class="flex pb-2">
-                <i class="material-icons text-xl text-teal-400 pt-1 mx-5">access_time</i>
+                <i class="icon ion-md-time text-xl text-teal-400 pt-1 mx-6"></i>
                 <div>
                     <div>
                         <p v-text="pickup.latency + ' Stunden'"></p>
@@ -78,7 +78,7 @@
         <div class="p-5">
             <p class="uppercase text-sm text-gray-500 mb-2">Lieferdetails</p>
             <div class="flex pb-2">
-                    <i class="material-icons text-xl text-teal-400 pt-1 mx-5">location_on</i>
+                    <i class="icon ion-md-pin text-2xl text-teal-400 pt-1 mx-6"></i>
                     <div>
                         <p v-text="delivery.address"></p>
                         <span v-text="delivery.zip"></span>
@@ -87,7 +87,7 @@
                     </div>                        
             </div> 
             <div class="flex pb-2">
-                <i class="material-icons text-xl text-teal-400 pt-1 mx-5">insert_invitation</i>
+                <i class="icon ion-md-calendar text-2xl text-teal-400 pt-1 mx-6"></i>
                 <div>
                     <div>
                         <p v-text="delivery.earliest_date"></p>
@@ -101,7 +101,7 @@
             </div> 
 
             <div class="flex pb-2">
-                <i class="material-icons text-xl text-teal-400 pt-1 mx-5">save_alt</i>
+                <i class="icon ion-md-fitness text-2xl text-teal-400 pt-1 mx-6"></i>
                 <div>
                     <div>
                         <p v-text="delivery.loading ? 'Ja' : 'Nein'"></p>
@@ -112,7 +112,7 @@
             </div> 
 
             <div class="flex pb-2">
-                <i class="material-icons text-xl text-teal-400 pt-1 mx-5">access_time</i>
+                <i class="icon ion-md-time text-xl text-teal-400 pt-1 mx-6"></i>
                 <div>
                     <div>
                         <p v-text="delivery.latency + ' Stunden'"></p>
@@ -127,7 +127,7 @@
             <p class="uppercase text-sm text-gray-500 mb-2">Frachtdetails</p>
             <div class="flex pb-2" v-for="(freight, index) in cargo.freights" :key="index">
                     
-                    <i class="material-icons text-xl text-teal-400 pt-1 mx-5" v-show="index === 0">airport_shuttle</i>
+                    <i class="ion-md-cart text-xl text-teal-400 pt-1 mx-5" v-show="index === 0"></i>
                     <p class="mx-8"  v-show="index != 0"></p>
                    
                     <div>
@@ -177,24 +177,17 @@
                 this.$store
                     .dispatch('fetchCargo', `/api/${this.$route.path}`) 
                     .then(response => {
-                        // Event.$emit('updateLocations', response.data.locations)
-                        Event.$emit('displayRoute', {
-                            origin: this.pickup.city,
-                            destination: this.delivery.city
-                        })
+                        Event.$emit('updateMarkers', response.data.locations)
+                        // Event.$emit('displayRoute', {
+                        //     origin: this.pickup.city,
+                        //     destination: this.delivery.city
+                        // })
                     })               
             }
         },
 
         mounted(){            
-            this.fetchData()     
-            
-            // this.$nextTick(()=>{
-            //     Event.$emit('displayRoute', {
-            //         origin: this.pickup,
-            //         destination: this.delivery
-            //     })
-            // })
+            this.fetchData()
         }
     }
 </script>

@@ -8,19 +8,21 @@
     export default {      
         
         data(){
-            return{
-                locations: null,
+            return{                
                 markers:[],
                 origin: null,
                 destination: null,
-                range: 10,
-                
-                map: null ,
-                google: null                   
+                route: [],                
+                              
+                map: null ,                            
+            }
+        },  
+        
+        computed:{
+            locations(){
+               return this.$store.state.locations
             }
         },
-
-       
 
         methods:{
 
@@ -36,31 +38,30 @@
                         disableDefaultUI: true
                     });
 
-                    this.directionsDisplay.setMap(null) 
+                    this.directionsDisplay.setMap(null)  
+                                        
+                    Event.$on('updateMarkers',value => {                        
+                        this.resetMarkers()                                               
+                        this.updateMarkers(value)                                          
+                    }) 
+
+                    Event.$on('displayRoute', value => { 
+                        this.origin = value.origin
+                        this.destination = value.destination 
+                        this.resetMarkers()                                                             
+                        this.displayRoute()                        
+                    }) 
                     
-                    
-                    // setTimeout(() => {
-                    //     this.displayRoute()
-                    // }, 1000);                    
-                    
+                    Event.$on('setAutocomplete',() =>{                
+                        this.setAutocomplete()
+                    }),
+
+                    Event.$on('boxRoute', value => {                
+                        this.boxRoute(value)
+                    })
                     
                    
-                    // let originInput = document.getElementById('search-origin') 
-                    // let destinationInput = document.getElementById('search-destination')                     
-                    // let originAutocomplete = new google.maps.places.Autocomplete(originInput)                    
-                    // let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput)
-
-                    // originAutocomplete.addListener('place_changed', ()=>{
-                    //     let place = originAutocomplete.getPlace()                    
-                    //     this.origin = place.geometry.location
-                    //     this.displayRoute()
-                    // })
-
-                    // destinationAutocomplete.addListener('place_changed', ()=>{
-                    //     let place = destinationAutocomplete.getPlace()                    
-                    //     this.destination = place.geometry.location
-                    //     this.displayRoute()
-                    // })
+                   
                     
                     // geocoder.geocode({ address: 'Stuttgart' }, (results, status) => {
                     //     if (status !== 'OK' || !results[0]) {
@@ -98,16 +99,36 @@
                 }               
             },
 
-            updateMarkers(){                 
-                this.locations.map(location =>{                    
-                    let position = { lat:location.latitude, lng:location.longitude }                    
+            updateMarkers(locations){ 
+                locations.map(location =>{                    
+                    let position = { lat:location.lat, lng:location.lng }                    
                     this.addMarker(position, location)                                       
                 })
-            },             
+            },    
             
+            setAutocomplete(){
+                let originInput = document.getElementById('search-origin') 
+                let destinationInput = document.getElementById('search-destination')                     
+                let originAutocomplete = new google.maps.places.Autocomplete(originInput)                    
+                let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput)
 
-            displayRoute(){
-                
+                originAutocomplete.addListener('place_changed', ()=>{
+                    let place = originAutocomplete.getPlace()  
+                    this.$store.commit('retrieveOrigin', place.formatted_address)                 
+                    this.origin = place.geometry.location                    
+                    this.displayRoute() 
+                })
+
+                destinationAutocomplete.addListener('place_changed', ()=>{
+                    let place = destinationAutocomplete.getPlace()  
+                    this.$store.commit('retrieveDestination', place.formatted_address)                   
+                    this.destination = place.geometry.location
+                    this.displayRoute()
+                })
+
+            },            
+
+            displayRoute(){                
                 if(!this.origin || !this.destination){
                     return 
                 }
@@ -121,57 +142,34 @@
                         travelMode: 'DRIVING'
                     }, function(response, status) {                        
                         if (status === 'OK') {                            
-                            that.directionsDisplay.setDirections(response)
+                            that.directionsDisplay.setDirections(response)                            
+                            that.route = response.routes[0].overview_path                             
                             
-                            // let path = response.routes[0].overview_path                             
-                            // that.boxRoute(path)
+                            console.log(response.routes[0])
                         } else {
                             window.alert('Directions request failed due to ' + status);
                         }
                     });               
             } ,
 
-            boxRoute(path){                
+            boxRoute(range){      
+                if(this.route.length === 0 || !range){
+                    return
+                } 
+                this.$store.commit('retrieveFilterRange', range)  
                 let routeBoxer = RouteBoxer()
-                let bounds = routeBoxer.box(path, this.range)
-                this.$store
-                    .dispatch('fetchLocations', bounds)
-                    .then((response) => {
-                        setTimeout(()=>{
-                            Event.$emit('updateLocations', response.data)
-                        }, 2000)
-                        
-                    })                            
+                let bounds = routeBoxer.box(this.route, range)
+                Event.$emit('filterCargosByTheRoute', bounds)                
             },
             
-            resetMap(directionsDisplay = null){
-                this.locations = []                 
-                directionsDisplay ? directionsDisplay.setMap(null) : ''  
+            resetMarkers(){                
                 this.markers.map(marker => marker.setMap(null))
                 this.markers = []
             },            
         },
         
         mounted(){  
-            this.mountMap()
-             Event.$on('displayRoute', value => { 
-                        this.origin = value.origin
-                        this.destination = value.destination                      
-                        this.resetMap()
-                        this.locations = value 
-                        // this.directionsDisplay.setMap(this.map)                        
-                        this.displayRoute()
-                        
-                    })     
-                    
-                    Event.$on('updateLocations', value => {
-                        console.log(value)
-                        this.resetMap()
-                        this.locations = value                         
-                        this.updateMarkers()                                          
-                    }) 
-            // this.$store.dispatch('setMap', this.$el)                 
-                       
+            this.mountMap() 
         },        
     }
 </script>
