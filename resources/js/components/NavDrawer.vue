@@ -1,35 +1,51 @@
 <template>
     <div>
-        <transition name="toggle-drawer">
-            <section v-show="show"
-                class="li-nav-drawer w-full fixed min-h-screen z-10 bg-white overflow-y-scroll top-0 bottom-0"
-            >
-                <button
-                    class="li-drawer-close-button fixed bottom-0 right-0 m-5 rounded-full bg-teal-500 shadow-lg z-10 px-4 py-2 hover:bg-teal-700 focus:outline-none"
-                    @click="show = !show">
-                    <i class="icon ion-md-map text-white text-2xl"></i>
-                </button>
+        
+            <transition name="toggle-drawer">
+                  
+                    <section v-show="showDrawer"
+                        class="li-nav-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0"
+                    >
+                    
+                        <button
+                            class="li-drawer-close-button fixed bottom-0 right-0 m-5 rounded-full bg-teal-500 shadow-lg z-10 px-4 py-2 hover:bg-teal-700 focus:outline-none"
+                            @click="showDrawer = !showDrawer">
+                            <i class="icon ion-md-map text-white text-2xl"></i>
+                        </button>
+                        
 
-                <div class="opacity-1">
-                    <slot></slot>
-                </div>                
+                        <div class="opacity-1">
+                            <perfect-scrollbar class="h-screen">
 
-            </section>
-        </transition>
+                                <slot></slot>
+                            </perfect-scrollbar> 
+                        </div>                
+                    
+                    </section>
+              
+            </transition>
+        
+      
     </div>
 </template>
 <script>
 
+    import {PerfectScrollbar} from 'vue2-perfect-scrollbar'
+    import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
+
     export default { 
+
+        components:{PerfectScrollbar},
+
         data(){            
             return{
-                show: true,
+                showDrawer: true,
             }
         },  
 
         mounted(){
             Event.$on('toggle-drawer-left', ()=>{
-                this.show = !this.show
+                this.showDrawer = !this.showDrawer
             })            
         }
         
@@ -49,7 +65,7 @@
 
     @media (min-width: 768px) {
         .li-drawer-close-button{
-            left: 21rem;
+            left: 22rem;
             opacity: 1;
         }
     } 

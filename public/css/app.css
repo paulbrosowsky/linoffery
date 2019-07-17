@@ -7686,7 +7686,7 @@ video {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  border-width: 1px;
+  border-width: 2px;
   border-color: #edf2f7;
   border-radius: 0.5rem;
   width: 100%;
@@ -7701,7 +7701,7 @@ video {
 .input:focus {
   outline: 0;
   background-color: #fff;
-  border-color: #2c7a7b;
+  border-color: #38b2ac;
 }
 
 @media (min-width: 640px) {

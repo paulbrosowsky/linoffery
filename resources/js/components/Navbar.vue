@@ -24,12 +24,15 @@
             <div class="flex items-center">
                 <div class="lg:flex-grow"></div>
                 <div> 
-                    <a href="#" class="px-4 py-3 leading-none rounded-full text-sm font-semibold text-gray-700 uppercase hover:text-teal-500 hover:bg-white">
-                        login
+                    <a 
+                        class="px-4 py-3 leading-none rounded-full text-sm font-semibold text-gray-700 uppercase hover:text-teal-500 hover:bg-white"
+                        @click="$modal.show('login')"
+                    >
+                        Login
                     </a>
                 </div>
                 <div class="ml-3">
-                    <a href="">
+                    <a @click="$modal.show('navDrawerRight')">
                         <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-700"></i>
                     </a>
                 </div>

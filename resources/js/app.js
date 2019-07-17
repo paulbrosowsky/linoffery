@@ -6,8 +6,6 @@ import {store} from './store'
 import App from './layouts/App'
 
 Vue.use(VueModal)
-Vue.component('app', App)
-
 window.Event = new Vue();
 
 
@@ -20,6 +18,9 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+Vue.component('app', App)
+Vue.component('default-modal', require('./modals/DefaultModal.vue').default);
 
 const app = new Vue({
     el: '#app',
