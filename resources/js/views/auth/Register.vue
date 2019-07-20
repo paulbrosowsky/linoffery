@@ -1,0 +1,187 @@
+<template>
+    <section 
+        class="li-register-view flex justify-center items-center min-h-screen"
+        style="background: linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(226,232,240,0.8) 100%);"
+    >        
+        <div class="px-5 py-5" style="max-width: 512px!important;">
+            <div class="py-5">
+                <router-link to="/">                
+                    <div class="flex items-center flex-1 text-gray-700 mr-6"> 
+                        <span class="font-light text-2xl">lin</span>
+                        <span class="text-2xl text-teal-500">o</span>
+                        <span class="font-light text-2xl">ffery</span>
+                    </div>
+                </router-link>
+                <p class="text-3xl text-teal-500 leading-none pb-2 md:text-4xl">Starten Sie mit Ihrem neuen Benutzerkonto.</p>
+                <span class="text-sm text-gray-700">Haben Sie bereits ein Benutzerkonto?</span>
+                <span><a class="link text-sm" @click="$modal.show('login')">Anmelden</a></span>
+            </div>
+           
+            <form class="py-5" @submit.prevent="register"> 
+                <p class="text-sm text-red-500 mb-2" v-if="errors.name" v-text="errors.name[0]"></p>               
+                <div class="relative flex items-center mb-2">                    
+                    <i class="absolute icon ion-md-person text-xl text-gray-500 px-3"></i>   
+                    <input 
+                        class="input pl-10"
+                        :class="errors.name ? 'border-red-300' : ''"
+                        type="text" 
+                        placeholder="Ihr Name"
+                        required                        
+                        v-model="name"
+                        @keyup="errors= []"
+                    >
+                </div>
+
+                <p class="text-sm text-red-500 mb-2" v-if="errors.email" v-text="errors.email[0]"></p>
+                <div class="relative flex items-center mb-2 " >
+                    <i class="absolute icon ion-md-mail text-xl text-gray-500 px-3"></i>   
+                    <input 
+                        class="input pl-10"
+                        :class="errors.email ? 'border-red-300' : ''"
+                        type="email" 
+                        placeholder="Email"
+                        required                        
+                        v-model="email"
+                        @keyup="errors= []"
+                    >
+                </div>
+
+                <password-input :value="password" :errors="errors" @changed="updatePassword"></password-input>
+               
+                <p class="text-sm text-gray-700 py-5">Unser Service können Sie nur als Geschäftskunde nützen. Deshalb brauchen wir noch Angaben zu Ihrem Unternehmen. </p>
+
+                <p class="text-sm text-red-500 mb-2" v-if="errors.company_name" v-text="errors.company_name[0]"></p>
+                <div class="relative flex items-center mb-2">
+                    <i class="absolute icon ion-md-business text-xl text-gray-500 px-3"></i>   
+                    <input 
+                        class="input pl-10"
+                        :class="errors.company_name ? 'border-red-300' : ''"
+                        type="text" 
+                        placeholder="Vollständiger Firmenname"
+                        required                        
+                        v-model="company_name"
+                        @keyup="errors= []"
+                    >
+                </div>
+
+                <p class="text-sm text-red-500 mb-2" v-if="errors.vat" v-text="errors.vat[0]"></p>
+                <div class="relative flex items-center mb-2">
+                    <p class="absolute text-xl font-bold text-gray-500 px-3">§</p>                    
+                    <input class="input pl-10"
+                        :class="errors.vat ? 'border-red-300' : ''"
+                        type="text" 
+                        placeholder="Umsatzsteuer ID"
+                        required                        
+                        v-model="vat"
+                        @keyup="errors= []"                        
+                    >
+                </div>
+
+                <div class="py-5">
+                    <div class="text-sm text-gray-700 py-5">
+                        Mit Ihrer Registrierung erstellen Sie ein neues Benutzerkonto, und geben sich mit unseren 
+                        <router-link class="link" to="/terms">allgemeinen Geschäftsbedingungen</router-link>  
+                        sowie
+                        <router-link class="link" to="/privacy">Datenschutzbestimmungen</router-link> 
+                         einverstanden.
+                    </div>
+                    <button class="btn btn-teal w-full px-auto py-3" type="submit"> Registieren </button>
+                </div>  
+
+            </form>
+
+            <div class="flex flex-col items-center justify-center md:flex-row ">
+                <p class="text-sm text-gray-500 pr-5">linoffery © 2019 </p>
+                <div class="flex">
+                    <p><router-link class="link text-sm pr-2" to="/impressum">
+                        Impressum 
+                    </router-link></p>
+                    <p><router-link class="link text-sm pr-2" to="/">
+                        Datenschutzbestimmungen
+                    </router-link></p>
+                    <p><router-link class="link text-sm" to="/">
+                        AGB
+                    </router-link></p>  
+                </div>
+                        
+            </div>
+        </div>
+        <div class="fixed w-full h-full bg-white opacity-75  flex justify-center items-center top-0"
+            v-if="loading"
+        >
+            <spinner :loading="loading" size="48px"></spinner>
+        </div>
+    </section>  
+</template>
+<script>
+    import PasswordInput from '../../components/PasswordInput'
+    export default {
+        components:{ PasswordInput },
+
+        data(){
+            return{
+                
+                name: null,
+                email: null,
+                password: null,
+                company_name: null,
+                vat: null,
+                            
+                errors: [] ,
+                loading: false             
+            }
+        },
+
+        computed:{
+            spacelessVat(){
+                return this.vat.replace(/ /g, '')
+            }
+        },
+        
+        methods:{           
+
+            updatePassword(value){
+                this.errors = []
+                this.password = value
+            },
+
+            register(){
+                this.loading = true
+                this.$store
+                    .dispatch('register', {
+                        name: this.name,
+                        email: this.email,
+                        password: this.password,
+                        company_name: this.company_name,
+                        vat: this.spacelessVat
+                    })
+                    .then(()=>{
+                        this.login()                        
+                    })
+                    .catch(errors => {
+                        this.errors = errors
+                        this.loading = false 
+                    })
+            },
+
+            login(){                
+                this.$store
+                    .dispatch('login', {
+                        email: this.email,
+                        password: this.password
+                    })
+                    .then(()=>{                         
+                        this.$router.push({ name: settings })
+                        this.close()
+                        this.loading = false 
+                    })
+                    .catch((error)=>{
+                        this.loading = false                        
+                    })
+            },
+        }
+
+        
+    }
+</script>
+

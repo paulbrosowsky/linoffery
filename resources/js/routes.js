@@ -2,9 +2,15 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
-import Cargos from './views/Cargos'
-import Cargo from './views/Cargo'
+import Cargos from './views/cargos/Cargos'
+import Cargo from './views/cargos/Cargo'
+import CreateCargo from './views/cargos/CreateCargo'
+import Dashboard from './views/Dashboard'
 import Impressum from './views/Impressum'
+import Login from './views/auth/Login'
+import Logout from './views/auth/Logout'
+import Register from './views/auth/Register'
+import Settings from './views/Settings'
 import Welcome from './views/Welcome'
 
 import {store} from './store'
@@ -12,13 +18,67 @@ import {store} from './store'
 
 let routes = [
     {
+        name: 'home',
         path:'/',
-        component: Welcome
+        component: Welcome,
+        meta:{            
+            requiresVisitor: true
+        }
+        
+    },   
+
+    {
+        name:'impressum',
+        path:'/impressum',
+        component: Impressum
+    },
+
+    
+    {
+        name:'dashboard',
+        path:'/dashboard',
+        component: Dashboard,
+        meta:{            
+            requiresAuth: true
+        }
     },
 
     {
-        path:'/impressum',
-        component: Impressum
+        name:'settings',
+        path:'/settings',
+        component: Settings,
+        meta:{            
+            requiresAuth: true
+        }
+    },
+
+    {
+        name:'register',
+        path:'/register',
+        component: Register,
+        meta:{
+            layout: 'fullscreen',
+            requiresVisitor: true
+        }
+    },
+
+    {
+        name:'login',
+        path:'/login',
+        component: Login,
+        meta:{
+            layout: 'fullscreen',
+            requiresVisitor: true
+        }
+    },
+
+    {
+        name: 'logout',
+        path:'/logout',
+        component: Logout, 
+        meta:{            
+            requiresAuth: true
+        }       
     },
 
     {
@@ -39,13 +99,23 @@ let routes = [
     },
 
     {
+        path:'/cargos/create',
+        component: CreateCargo,
+        meta:{
+            layout: 'mapped',
+        },        
+    },
+   
+
+    {
         name: 'cargo',
         path:'/cargos/:cargo',
         component: Cargo,
         meta:{
             layout: 'mapped'
         }
-    }
+    },    
+   
 ]
 
 export default new VueRouter({

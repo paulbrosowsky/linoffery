@@ -27,7 +27,7 @@ class UsersSeeder extends Seeder
             [
                 'name' => 'John Doe',                
                 'email' => 'john@example.com',
-                'password' => bcrypt('secret'),
+                'password' => bcrypt('password'),
                 'avatar' => 'https://randomuser.me/portraits/men/85.jpg'
             ],
             [

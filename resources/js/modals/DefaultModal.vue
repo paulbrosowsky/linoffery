@@ -7,11 +7,12 @@
         :adaptive="true"              
         @before-open="beforeOpen" 
         @opened="$emit('opened')"
+        @closed="$emit('close')"
         v-cloak
     >
         <button 
             class="absolute right-0 p-5 focus:outline-none"  
-            @click="$modal.hide(name)"
+            @click="$emit('close')"
         >        
             <i class="icon ion-md-close text-xl text-gray-500"></i>            
         </button>

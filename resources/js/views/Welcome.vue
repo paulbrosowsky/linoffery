@@ -12,11 +12,13 @@
                             eigenes Unternehmen für richtig hält. Jedem sollte die Möglichkeit gegeben werden 
                             sein Anteil oder Potenzial zu erweitern, oder auf dem Markt zu sichern.
                         </p>
-                        <div class="flex mt-12">
-                            <button class="button-teal mr-2">
-                                Registrieren
+                        <div class="flex mt-12">                            
+                            <button class="btn btn-teal mr-2">
+                                <router-link to="/register">
+                                    Registrieren
+                                </router-link>                               
                             </button>
-                            <button class="button-teal is-outlined">
+                            <button class="btn btn-outlined btn-teal-outlined is-outlined">
                                 mehr erfahren
                             </button>
                         </div>
@@ -62,7 +64,7 @@
 
                     <div class="text-center mt-10">
                         <router-link to="/cargos">
-                            <button class="button-teal">
+                            <button class="btn btn-teal">
                                 Auftrag abgeben
                             </button>
                         </router-link>
@@ -88,7 +90,7 @@
 
                     <div class="text-center mt-10">
                         <router-link to="/cargos">
-                            <button class="button-teal">
+                            <button  class="btn btn-teal">
                                 Fracht finden
                             </button>
                         </router-link>
@@ -116,7 +118,7 @@
                     Auswahl an Ausschreibungen, welche speziell auf die Speditionen zugeschnitten sind.
                 </p>
                 <div class="mt-10">
-                    <button class="button-teal is-outlined">
+                    <button class="btn btn-outlined btn-teal-outlined">
                         mehr erfahren
                     </button>
                 </div> 

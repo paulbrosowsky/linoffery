@@ -17,8 +17,9 @@
             <router-link 
                 class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
                 to="/"
+                
             >
-                Home
+               <p @click="hide">Home</p>
             </router-link>
 
             <router-link 
@@ -49,9 +50,20 @@
                Auftrag Abgeben
             </router-link>
 
-            <button class="button-teal is-outlined mt-10 mb-2"> Registirieren </button>
+            <div class="flex flex-col pt-10" v-if="!loggedIn">
+                <router-link :to="{name: 'register'}">
+                    <button class="btn btn-outlined btn-teal-outlined mb-2" @click="hide"> Registirieren </button>
+                </router-link>   
+                             
+                <button class="btn btn-teal" @click="showLogin"> Anmelden </button>
+            </div>
 
-            <button class="button-teal"> Anmelden </button>
+            <div v-if="loggedIn">
+                <router-link :to="{name: 'logout'}">
+                    <button class="btn btn-teal mt-10" @click="hide"> Abmelden </button>
+                </router-link>   
+            </div>
+            
 
         </div>
         
@@ -62,7 +74,22 @@
         computed:{
             width(){
                 return screen.width > 640 ? '350px' : '100%'
+            },
+
+            loggedIn(){
+                return this.$store.getters.loggedIn
             }
+        },
+
+        methods:{
+           hide(){
+               this.$modal.hide('navDrawerRight')
+           },
+
+           showLogin(){
+               this.$modal.show('login')
+               this.hide()
+           }
         }
         
     }

@@ -1,3 +1,63 @@
+/* cyrillic-ext */
+
+@font-face {
+  font-family: "PT Sans";
+
+  font-style: normal;
+
+  font-weight: 400;
+
+  src: local("PT Sans"), local("PTSans-Regular"), url(https://fonts.gstatic.com/s/ptsans/v10/jizaRExUiTo99u79D0-ExdGM.woff2) format("woff2");
+
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+
+@font-face {
+  font-family: "PT Sans";
+
+  font-style: normal;
+
+  font-weight: 400;
+
+  src: local("PT Sans"), local("PTSans-Regular"), url(https://fonts.gstatic.com/s/ptsans/v10/jizaRExUiTo99u79D0aExdGM.woff2) format("woff2");
+
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+
+@font-face {
+  font-family: "PT Sans";
+
+  font-style: normal;
+
+  font-weight: 400;
+
+  src: local("PT Sans"), local("PTSans-Regular"), url(https://fonts.gstatic.com/s/ptsans/v10/jizaRExUiTo99u79D0yExdGM.woff2) format("woff2");
+
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+
+@font-face {
+  font-family: "PT Sans";
+
+  font-style: normal;
+
+  font-weight: 400;
+
+  src: local("PT Sans"), local("PTSans-Regular"), url(https://fonts.gstatic.com/s/ptsans/v10/jizaRExUiTo99u79D0KExQ.woff2) format("woff2");
+
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body {
+  font-family: "PT Sans";
+}
+
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
@@ -563,7 +623,7 @@ pre,
 code,
 kbd,
 samp {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 /**
@@ -625,6 +685,89 @@ video {
   .container {
     max-width: 1280px;
   }
+}
+
+.btn {
+  background-color: #a0aec0;
+  border-radius: 9999px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.btn:hover {
+  background-color: #4a5568;
+}
+
+.btn:focus {
+  outline: 0;
+}
+
+.btn-outlined {
+  background-color: #fff;
+  border-width: 1px;
+  color: #4a5568;
+}
+
+.btn-outlined:hover {
+  color: #fff;
+  border-color: #fff;
+  background-color: #a0aec0;
+}
+
+.btn-teal-outlined {
+  border-width: 1px;
+  border-color: #38b2ac;
+  color: #38b2ac;
+}
+
+.btn-teal-outlined:hover {
+  background-color: #38b2ac;
+}
+
+.btn-teal {
+  background-color: #38b2ac;
+}
+
+.btn-teal:hover {
+  background-color: #2c7a7b;
+}
+
+.input {
+  background-color: #e2e8f0;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-width: 2px;
+  border-color: #e2e8f0;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  color: #4a5568;
+  line-height: 1.25;
+}
+
+.input:focus {
+  outline: 0;
+  background-color: #fff;
+  border-color: #38b2ac;
+}
+
+.link {
+  color: #38b2ac;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #2c7a7b;
 }
 
 .appearance-none {
@@ -3555,12 +3698,16 @@ video {
   clear: both;
 }
 
-.font-display {
-  font-family: Roboto, sans-serif;
+.font-sans {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-.font-body {
-  font-family: Roboto, sans-serif;
+.font-serif {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.font-mono {
+  font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .font-hairline {
@@ -7547,163 +7694,6 @@ video {
   z-index: auto;
 }
 
-.button-teal {
-  background-color: #38b2ac;
-  border-radius: 9999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: #fff;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.button-teal:hover {
-  background-color: #2c7a7b;
-}
-
-.button-teal:focus {
-  outline: 0;
-}
-
-.button-teal.is-outlined {
-  background-color: #fff;
-  border-width: 1px;
-  border-color: #38b2ac;
-  border-radius: 9999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: #38b2ac;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.button-teal.is-outlined:hover {
-  background-color: #2c7a7b;
-  color: #fff;
-  border-color: #fff;
-}
-
-.button-teal.is-outlined:focus {
-  outline: 0;
-}
-
-.button-blue {
-  background-color: #4299e1;
-  border-radius: 9999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: #fff;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.button-blue:hover {
-  background-color: #2b6cb0;
-}
-
-.button-blue.is-outlined {
-  background-color: #fff;
-  border-width: 1px;
-  border-color: #4299e1;
-  border-radius: 9999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: #4299e1;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.button-blue.is-outlined:hover {
-  background-color: #4299e1;
-  color: #fff;
-  border-color: #fff;
-}
-
-.button-blue.is-outlined:focus {
-  outline: 0;
-}
-
-.button {
-  background-color: #a0aec0;
-  border-radius: 9999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: #fff;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.button:hover {
-  background-color: #4a5568;
-}
-
-.button:focus {
-  outline: 0;
-}
-
-.button.is-outlined {
-  background-color: #fff;
-  border-width: 1px;
-  border-color: #a0aec0;
-  border-radius: 9999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: #4a5568;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.button.is-outlined:hover {
-  background-color: #a0aec0;
-  color: #fff;
-  border-color: #fff;
-}
-
-.button.is-outlined:focus {
-  outline: 0;
-}
-
-.input {
-  background-color: #edf2f7;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  border-width: 2px;
-  border-color: #edf2f7;
-  border-radius: 0.5rem;
-  width: 100%;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  color: #4a5568;
-  line-height: 1.25;
-}
-
-.input:focus {
-  outline: 0;
-  background-color: #fff;
-  border-color: #38b2ac;
-}
-
 @media (min-width: 640px) {
   .sm\:appearance-none {
     -webkit-appearance: none;
@@ -10633,12 +10623,16 @@ video {
     clear: both;
   }
 
-  .sm\:font-display {
-    font-family: Roboto, sans-serif;
+  .sm\:font-sans {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
-  .sm\:font-body {
-    font-family: Roboto, sans-serif;
+  .sm\:font-serif {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+
+  .sm\:font-mono {
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
   .sm\:font-hairline {
@@ -17555,12 +17549,16 @@ video {
     clear: both;
   }
 
-  .md\:font-display {
-    font-family: Roboto, sans-serif;
+  .md\:font-sans {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
-  .md\:font-body {
-    font-family: Roboto, sans-serif;
+  .md\:font-serif {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+
+  .md\:font-mono {
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
   .md\:font-hairline {
@@ -24477,12 +24475,16 @@ video {
     clear: both;
   }
 
-  .lg\:font-display {
-    font-family: Roboto, sans-serif;
+  .lg\:font-sans {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
-  .lg\:font-body {
-    font-family: Roboto, sans-serif;
+  .lg\:font-serif {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+
+  .lg\:font-mono {
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
   .lg\:font-hairline {
@@ -31399,12 +31401,16 @@ video {
     clear: both;
   }
 
-  .xl\:font-display {
-    font-family: Roboto, sans-serif;
+  .xl\:font-sans {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
-  .xl\:font-body {
-    font-family: Roboto, sans-serif;
+  .xl\:font-serif {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+
+  .xl\:font-mono {
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
   .xl\:font-hairline {

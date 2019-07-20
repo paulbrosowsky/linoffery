@@ -14,7 +14,7 @@ require('laravel-mix-tailwind');
  */
 
 mix
-    .js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css') 
+    .sass('resources/scss/tailwind.scss', 'public/css/app.css') 
+    .js('resources/js/app.js', 'public/js')    
     .tailwind('tailwind.config.js')
     .browserSync('http://linoffery.test/');

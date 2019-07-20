@@ -5,6 +5,9 @@ Vue.use(Vuex)
 
 export let store = new Vuex.Store({
     state:{
+        token: localStorage.getItem('access_token') || null,
+        user: null,
+
         cargo: null,
         cargos: null,        
         locations: [],
@@ -14,7 +17,26 @@ export let store = new Vuex.Store({
         range: 'Umweg'
     },
 
+    getters:{
+        loggedIn(state){
+           return state.token ? true : false
+        }
+    },
+
     mutations:{
+
+        retrieveToken(state, token){
+            state.token = token
+        },
+
+        destroyToken(state){
+            state.token = null
+        },
+
+        retrieveUser(state, user){
+            state.user = user
+        },
+
         retrieveCargos(state, cargos){
             state.cargos = cargos
         },
@@ -53,6 +75,76 @@ export let store = new Vuex.Store({
     },
 
     actions:{
+        login(context, credentials){
+            return new Promise((resolve, reject) => {
+                axios
+                    .post('/api/auth/login', credentials)
+                    .then((response)=>{
+                        let token = response.data.access_token
+
+                        localStorage.setItem('access_token', token)
+                        context.commit('retrieveToken', token)
+
+                        context.dispatch('fetchLoggedInUser')
+                        resolve(response)
+                    })
+                    .catch(errors =>{                        
+                        reject(errors.response.data)
+                    })
+
+            })
+        },
+
+        logout(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+
+            if (context.getters.loggedIn) {
+                return new Promise((resolve, reject) => {
+                    axios
+                        .get('/api/auth/logout')
+                        .then((response)=>{                               
+                            localStorage.removeItem('access_token')
+                            context.commit('destroyToken')
+                            resolve(response)
+                        })
+                        .catch(errors =>{                        
+                            localStorage.removeItem('access_token')
+                            context.commit('destroyToken')
+                            reject(errors)
+                        })
+    
+                })
+            }            
+        },
+
+        register(context, credentials){
+            return new Promise((resolve, reject) => {
+                axios
+                    .post('/api/auth/register', credentials)
+                    .then((response)=>{                        
+                        resolve(response)
+                    })
+                    .catch(errors =>{                        
+                        reject(errors.response.data.errors)
+                    })
+
+            })
+        },
+
+        fetchLoggedInUser(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+            
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/auth/user')
+                    .then(response =>{                                             
+                        context.commit('retrieveUser', response.data)                        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })  
+        },
+
         fetchCargos(context, route = null){
             return new Promise((resolve, reject)=>{
                 axios

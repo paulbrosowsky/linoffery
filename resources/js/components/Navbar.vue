@@ -23,18 +23,27 @@
             
             <div class="flex items-center">
                 <div class="lg:flex-grow"></div>
-                <div> 
+                <div v-show="!loggedIn"> 
                     <a 
                         class="px-4 py-3 leading-none rounded-full text-sm font-semibold text-gray-700 uppercase hover:text-teal-500 hover:bg-white"
                         @click="$modal.show('login')"
                     >
-                        Login
+                        Anmelden
                     </a>
                 </div>
-                <div class="ml-3">
+                
+                <div class="ml-3" v-show="!loggedIn">
                     <a @click="$modal.show('navDrawerRight')">
                         <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-700"></i>
                     </a>
+                </div>
+
+                <div class="cursor-pointer"
+                  @click="$modal.show('navDrawerRight')" 
+                  v-if="loggedIn && user"
+                >
+                    <img  class="h-10 w-10 rounded-full shadow" :src="user.avatar" v-if="user.avatar">
+                    <default-avatar :name="user.name" v-if="!user.avatar"></default-avatar>
                 </div>
             </div>
             
@@ -43,7 +52,11 @@
     </nav>
 </template>
 <script>
+    import DefaultAvatar from '../components/DefaultAvatar'
+
     export default {
+        components:{DefaultAvatar},
+
         props:{
             layout:{
                 default: null
@@ -53,6 +66,14 @@
         computed:{
             classes(){
                 return this.layout === 'map' ? 'fixed bg-transparent' :'bg-gray-300'
+            },
+
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            },
+
+            user(){
+                return this.$store.state.user
             }
         },
 

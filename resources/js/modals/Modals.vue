@@ -1,17 +1,26 @@
 <template>
     <div>
-        <login></login>
+        <div v-if="!loggedIn"> 
+            <login-modal></login-modal>
+        </div>
+        
         <nav-drawer-right></nav-drawer-right>
     </div>
 </template>
 <script>
-    import Login from '../modals/Login'
+    import LoginModal from '../modals/LoginModal'
     import NavDrawerRight from '../modals/NavDrawerRight'
 
     export default {
         components:{
-            Login,
+            LoginModal,
             NavDrawerRight
+        },
+
+        computed:{
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            }
         }
         
     }

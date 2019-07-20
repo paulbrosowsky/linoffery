@@ -20,6 +20,7 @@
 </template>
 <script>
     import Default from '../layouts/Default'
+    import Fullscreen from '../layouts/Fullscreen'
     import Mapped from '../layouts/Mapped'
     import Modals from '../modals/Modals'
 
@@ -27,6 +28,7 @@
         
         components:{ 
             'default-layout': Default,
+            'fullscreen-layout': Fullscreen,
             'mapped-layout': Mapped,
             Modals
         }, 
@@ -35,7 +37,23 @@
             layout(){
                 let layout = this.$route.meta.layout 
                 return layout ? layout + '-layout': 'default-layout'                
-            },    
+            },   
+            
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            }
+        },
+
+        methods:{
+            fetchLoggedInUser(){                
+                if (this.loggedIn) {
+                    this.$store.dispatch('fetchLoggedInUser')
+                }
+            }
+        },
+
+        mounted(){
+            this.fetchLoggedInUser()
         }
 
     }

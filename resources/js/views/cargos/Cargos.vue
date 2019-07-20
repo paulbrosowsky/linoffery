@@ -43,7 +43,7 @@
 
 </template>
 <script>
-    import CargoCard from '../components/CargoCard'  
+    import CargoCard from '../../components/CargoCard'  
 
     export default {
         components:{CargoCard},   

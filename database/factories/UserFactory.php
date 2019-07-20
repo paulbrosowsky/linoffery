@@ -22,6 +22,9 @@ use App\Freight;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
+        'company_id'=> function(){
+            return factory(App\Company::class)->create()->id;
+        },
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),        

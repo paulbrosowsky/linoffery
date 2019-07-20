@@ -7,12 +7,12 @@
          <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Laravel</title>
+        <title>linoffery</title>
 
-        <!-- Fonts --> 
-        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <!-- Fonts -->         
         <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
         <link href="/css/app.css" rel="stylesheet">
+      
         <script>
             window.App = {!! json_encode([
                 'csrfToken' => csrf_token(),                
