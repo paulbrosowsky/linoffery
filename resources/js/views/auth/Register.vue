@@ -12,9 +12,9 @@
                         <span class="font-light text-2xl">ffery</span>
                     </div>
                 </router-link>
-                <p class="text-3xl text-teal-500 leading-none pb-2 md:text-4xl">Starten Sie mit Ihrem neuen Benutzerkonto.</p>
-                <span class="text-sm text-gray-700">Haben Sie bereits ein Benutzerkonto?</span>
-                <span><a class="link text-sm" @click="$modal.show('login')">Anmelden</a></span>
+                <p class="text-3xl text-teal-500 leading-none pb-2 md:text-4xl">{{ $t('auth.register_header') }}</p>
+                <span class="text-sm text-gray-700">{{ $t('auth.have_account') }}</span>
+                <span><a class="link text-sm" @click="$modal.show('login')">{{ $t('auth.login') }}</a></span>
             </div>
            
             <form class="py-5" @submit.prevent="register"> 
@@ -25,7 +25,7 @@
                         class="input pl-10"
                         :class="errors.name ? 'border-red-300' : ''"
                         type="text" 
-                        placeholder="Ihr Name"
+                        :placeholder="$t('auth.name')"
                         required                        
                         v-model="name"
                         @keyup="errors= []"
@@ -39,7 +39,7 @@
                         class="input pl-10"
                         :class="errors.email ? 'border-red-300' : ''"
                         type="email" 
-                        placeholder="Email"
+                        :placeholder="$t('auth.email')"
                         required                        
                         v-model="email"
                         @keyup="errors= []"
@@ -48,7 +48,7 @@
 
                 <password-input :value="password" :errors="errors" @changed="updatePassword"></password-input>
                
-                <p class="text-sm text-gray-700 py-5">Unser Service können Sie nur als Geschäftskunde nützen. Deshalb brauchen wir noch Angaben zu Ihrem Unternehmen. </p>
+                <p class="text-sm text-gray-700 py-5">{{ $t('auth.service_info') }}</p>
 
                 <p class="text-sm text-red-500 mb-2" v-if="errors.company_name" v-text="errors.company_name[0]"></p>
                 <div class="relative flex items-center mb-2">
@@ -57,8 +57,8 @@
                         class="input pl-10"
                         :class="errors.company_name ? 'border-red-300' : ''"
                         type="text" 
-                        placeholder="Vollständiger Firmenname"
-                        required                        
+                        :placeholder="$t('auth.company_name')"
+                                              
                         v-model="company_name"
                         @keyup="errors= []"
                     >
@@ -70,7 +70,7 @@
                     <input class="input pl-10"
                         :class="errors.vat ? 'border-red-300' : ''"
                         type="text" 
-                        placeholder="Umsatzsteuer ID"
+                        :placeholder="$t('auth.vat')"
                         required                        
                         v-model="vat"
                         @keyup="errors= []"                        
@@ -79,13 +79,13 @@
 
                 <div class="py-5">
                     <div class="text-sm text-gray-700 py-5">
-                        Mit Ihrer Registrierung erstellen Sie ein neues Benutzerkonto, und geben sich mit unseren 
-                        <router-link class="link" to="/terms">allgemeinen Geschäftsbedingungen</router-link>  
-                        sowie
-                        <router-link class="link" to="/privacy">Datenschutzbestimmungen</router-link> 
-                         einverstanden.
+                        <span>{{ $t('auth.signup_info_1') }}</span>
+                        <router-link class="link" to="/terms">{{ $t('content.terms') }}</router-link>  
+                        <span>{{ $t('auth.signup_info_2') }}</span>
+                        <router-link class="link" to="/privacy">{{ $t('content.privacy') }}</router-link> 
+                        
                     </div>
-                    <button class="btn btn-teal w-full px-auto py-3" type="submit"> Registieren </button>
+                    <button class="btn btn-teal w-full px-auto py-3" type="submit"> {{ $t('auth.signup') }} </button>
                 </div>  
 
             </form>
@@ -94,13 +94,13 @@
                 <p class="text-sm text-gray-500 pr-5">linoffery © 2019 </p>
                 <div class="flex">
                     <p><router-link class="link text-sm pr-2" to="/impressum">
-                        Impressum 
+                        {{ $t('content.legals') }}
                     </router-link></p>
                     <p><router-link class="link text-sm pr-2" to="/">
-                        Datenschutzbestimmungen
+                        {{ $t('content.privacy') }}
                     </router-link></p>
                     <p><router-link class="link text-sm" to="/">
-                        AGB
+                        {{ $t('content.terms') }}
                     </router-link></p>  
                 </div>
                         

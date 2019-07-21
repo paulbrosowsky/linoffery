@@ -1,13 +1,15 @@
 import Vue from "vue"
 import VueModal from "vue-js-modal"
+import VueCookies from "vue-cookies"
 
 import router from './routes'
 import {store} from './store'
 import App from './layouts/App'
+import i18n from './utilities/i18n'
 
 Vue.use(VueModal)
-window.Event = new Vue();
-
+Vue.use(VueCookies)
+window.Event = new Vue()
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -53,6 +55,7 @@ router.beforeEach((to, from, next) => {
 const app = new Vue({
     el: '#app',
     router,
-    store
+    store,
+    i18n
 });
 

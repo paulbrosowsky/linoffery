@@ -8,9 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Exception\BadResponseException;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use App\Company;
+use Illuminate\Support\Facades\App;
 
 class AuthController extends Controller
 {  
@@ -20,9 +19,9 @@ class AuthController extends Controller
      * @return Response
      */
     public function login(Request $request)
-    {
+    {        
         $http = new Client;  
-
+    
         try {            
             $response = $http->post(config('services.passport.login_endpoint'), [
                 'form_params' => [
@@ -38,13 +37,14 @@ class AuthController extends Controller
 
         } catch (BadResponseException $e) {
             if($e->getCode() === 400 ){
-                return response()->json('Invalide Request. Please check your email or password.', $e->getCode());
-            }else if($e->getCode() === 401){
-                return response()->json('You credentials are incorrect. Please try again.', $e->getCode());
+                return response()->json(__('Invalid Request. Please check your email or password.'), $e->getCode());
+            }else if($e->getCode() === 401){ 
+                return response()->json(__('You credentials are incorrect. Please try again.'), $e->getCode());
             }
 
-            return response()->json('Something went wrong on the server.', $e->getCode());
+            return response()->json(__('Something went wrong on the server.'), $e->getCode());
         }
+
     }
 
     /**
@@ -86,7 +86,7 @@ class AuthController extends Controller
             $token->delete();
         });
 
-        return response()->json('Logged out successfully.', 200);
+        return response()->json(__('Logged out successfully.'), 200);
     }
 
     /**

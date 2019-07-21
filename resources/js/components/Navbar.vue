@@ -1,5 +1,5 @@
 <template>
-    <nav class="w-full px-5 py-3 z-10 md:px-10 md:py-5" :class="classes"> 
+    <nav class="w-full px-5 py-3 z-10 md:px-10" :class="classes"> 
         <div class="flex items-center justify-between">
             <div class="flex">
                 <button 
@@ -28,7 +28,7 @@
                         class="px-4 py-3 leading-none rounded-full text-sm font-semibold text-gray-700 uppercase hover:text-teal-500 hover:bg-white"
                         @click="$modal.show('login')"
                     >
-                        Anmelden
+                       {{ $t('auth.login') }} 
                     </a>
                 </div>
                 

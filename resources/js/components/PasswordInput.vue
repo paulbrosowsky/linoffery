@@ -7,7 +7,7 @@
                     class="input pl-10 "
                     :class="errors.password ? 'border-red-300' : ''"
                     :type="inputType" 
-                    placeholder="Passwort"  
+                    :placeholder="$t('auth.password')"  
                     v-model="password"              
                     @change="updatePassword"
                     required

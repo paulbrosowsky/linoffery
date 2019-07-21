@@ -15,11 +15,11 @@
                         <div class="flex mt-12">                            
                             <button class="btn btn-teal mr-2">
                                 <router-link to="/register">
-                                    Registrieren
+                                    {{ $t('auth.signup') }}
                                 </router-link>                               
                             </button>
                             <button class="btn btn-outlined btn-teal-outlined is-outlined">
-                                mehr erfahren
+                                {{ $t('content.learn_more') }}
                             </button>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
             </div>            
             <div class="flex flex-col md:flex-row">
                 <div class="bg-gray-200 rounded-lg shadow-lg p-8 md:mr-5">  
-                    <p class="uppercase text-gray-600 mb-5">Versender</p>
+                    <p class="uppercase text-gray-600 mb-5">{{ $t('content.consignor') }}</p>
                     <div class="flex items-center mb-2">
                         <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
                         <span class="text-xl text-gray-700">Fairer Preis</span>
@@ -65,13 +65,13 @@
                     <div class="text-center mt-10">
                         <router-link to="/cargos">
                             <button class="btn btn-teal">
-                                Auftrag abgeben
+                                {{ $t('content.create_tender') }}
                             </button>
                         </router-link>
                     </div>                    
                 </div>
                 <div class="bg-gray-300 rounded-lg shadow-lg p-8 mt-5 md:mt-0">  
-                    <p class="uppercase text-gray-600 mb-5">Spedition</p>
+                    <p class="uppercase text-gray-600 mb-5">{{ $t('content.carrier') }}</p>
 
                     <div class="flex items-center mb-2">
                         <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
@@ -91,7 +91,7 @@
                     <div class="text-center mt-10">
                         <router-link to="/cargos">
                             <button  class="btn btn-teal">
-                                Fracht finden
+                                {{ $t('content.find_fright') }}
                             </button>
                         </router-link>
                         
@@ -119,7 +119,7 @@
                 </p>
                 <div class="mt-10">
                     <button class="btn btn-outlined btn-teal-outlined">
-                        mehr erfahren
+                        {{ $t('content.services') }}
                     </button>
                 </div> 
             </div>

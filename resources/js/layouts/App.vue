@@ -49,11 +49,20 @@
                 if (this.loggedIn) {
                     this.$store.dispatch('fetchLoggedInUser')
                 }
+            },
+
+            //Get a localization settings from a cookie and set a propper app language
+            retriveLocale(){                
+                let locale = this.$cookies.get('locale')
+                if(locale){
+                    this.$i18n.locale = locale
+                }                
             }
         },
 
         mounted(){
             this.fetchLoggedInUser()
+            this.retriveLocale()
         }
 
     }

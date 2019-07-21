@@ -4,9 +4,10 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export let store = new Vuex.Store({
+    
     state:{
         token: localStorage.getItem('access_token') || null,
-        user: null,
+        user: null,   
 
         cargo: null,
         cargos: null,        
@@ -35,7 +36,7 @@ export let store = new Vuex.Store({
 
         retrieveUser(state, user){
             state.user = user
-        },
+        },       
 
         retrieveCargos(state, cargos){
             state.cargos = cargos

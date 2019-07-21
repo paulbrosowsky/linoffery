@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="text-xl text-teal-500 mb-5">Login</h1> 
+        <h1 class="text-xl text-teal-500 mb-5">{{ $t('auth.login') }}</h1> 
               
         <p class="text-sm text-red-500 bg-red-100 p-3 rounded-lg text-center mb-2" 
             v-if="error" 
@@ -13,7 +13,7 @@
                 <input 
                     class="input pl-10"
                     type="email" 
-                    placeholder="Email"                    
+                    :placeholder="$t('auth.email')"                    
                     required
                     autofocus
                     v-model="form.email"
@@ -21,16 +21,16 @@
                 >
             </div>
 
-            <password-input :value="form.password" @changed="updatePassword"></password-input>
+            <password-input :value="form.password" @changed="updatePassword" :errors="[]"></password-input>
 
-            <a href="#" class="link text-sm pl-2">Passwort vergessen</a>
+            <a href="#" class="link text-sm pl-2">{{ $t('auth.forgot_password') }}</a>
 
             <div class="flex justify-end pt-5">
                 <router-link to="/register">
-                    <button class="btn btn-outlined btn-teal-outlined is-outlined mr-2" @click="close">Registrieren</button>
+                    <button class="btn btn-outlined btn-teal-outlined is-outlined mr-2" @click="close">{{ $t('auth.signup') }}</button>
                 </router-link>
                 
-                <button class="btn btn-teal" type="submit">Anmelden</button>            
+                <button class="btn btn-teal" type="submit">{{ $t('auth.login') }}</button>            
             </div>
 
         </form> 
