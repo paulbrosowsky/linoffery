@@ -17,7 +17,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'company_id'
+        'name', 
+        'email', 
+        'password', 
+        'company_id',
+        'confirmation_token'
     ];
 
     /**
@@ -26,7 +30,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'created_at', 'updated_at', 'email_verified_at'
+        'password', 
+        'remember_token', 
+        'created_at', 
+        'updated_at', 
+        'confirmation_token'
     ];
 
     /**
@@ -35,7 +43,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'confirmed' => 'boolean'
     ];
 
     protected $with = ['company'];
@@ -48,5 +56,27 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    /**
+     *  Generate new Token to confirm users email.
+     * 
+     * @param string
+     * @return string
+     */
+    public static function makeConfirmationToken($email)
+    { 
+        return str_limit(md5($email . str_random()), 25, '');
+    }
+
+     /**
+     *  Confirm the users Email adress
+     */
+    public function confirm()
+    {
+        $this->confirmed = true;
+        $this->confirmation_token = null;
+
+        $this->save(); 
     }
 }

@@ -3,17 +3,14 @@
 namespace Tests\Feature\Auth;
 
 use App\User;
+use App\Company;
 use Tests\TestCase;
 use App\Mail\ConfirmYourEmail;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Company;
 
 // use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
-
 
 class RegistrationTest extends TestCase
 {
@@ -23,7 +20,7 @@ class RegistrationTest extends TestCase
     {
         parent::setUp();
 
-        // Mail::fake();
+       
 
         // Pass Recaptcha validation without the Rule
 		// app()->singleton(GoogleReCaptchaV3ValidationRule::class, function (){
@@ -195,39 +192,39 @@ class RegistrationTest extends TestCase
              
     }
 
-//    /** @test */
-//    function a_confirmation_email_is_sent_upon_registration()
-//    {    
-//         $this->registerAccount(); 
+   /** @test */
+   function a_confirmation_email_is_sent_upon_registration()
+   {    
+        Mail::fake();
+        $this->registerAccount(); 
+        Mail::assertQueued(ConfirmYourEmail::class);
+   }
 
-//         Mail::assertQueued(ConfirmYourEmail::class);
-//    }
+   /** @test */
+   function user_can_fully_confirm_thier_email_addresses()
+   {   
+        $this->registerAccount();       
 
-//    /** @test */
-//    function user_can_fully_confirm_thier_email_addresses()
-//    {   
-//         $this->registerAccount();       
-
-//         $user = User::whereName('John Doe')->first();  
+        $user = User::whereName('John Doe')->first();  
        
-//         $this->assertFalse($user->confirmed); 
-//         $this->assertNotNull($user->confirmation_token);  
+        $this->assertFalse($user->confirmed); 
+        $this->assertNotNull($user->confirmation_token);  
 
-//         $this->get( '/api/auth/email-confirmation/confirm?token=' . $user->confirmation_token)
-//             ->assertRedirect('/playground');
+        $this->get( '/api/auth/email-confirmation/confirm?token=' . $user->confirmation_token)
+            ->assertRedirect('/dashboard');
 
-//         tap($user->fresh(), function($user){
-//             $this->assertTrue($user->fresh()->confirmed); 
-//             $this->assertNull($user->fresh()->confirmation_token); 
-//         });            
-//    }   
+        tap($user->fresh(), function($user){
+            $this->assertTrue($user->fresh()->confirmed); 
+            $this->assertNull($user->fresh()->confirmation_token); 
+        });            
+   }   
 
-//     /** @test */
-//     function confirming_an_invalid_token()
-//     {
-//         $this->get('/api/auth/email-confirmation/confirm?token=invalid')
-//             ->assertRedirect('/');            
-//     }
+    /** @test */
+    function confirming_an_invalid_token()
+    {
+        $this->get('/api/auth/email-confirmation/confirm?token=invalid')
+            ->assertRedirect('/');            
+    }
 
     // /** @test */
     // function recaptcha_validation_is_required()

@@ -1,8 +1,14 @@
 {    
     "Invalide Request. Please check your email or password." : "Ungültige Anfrage. Bitte überprüfen Sie Ihre E-Mail oder Ihr Passwort.",
-    "You credentials are incorrect. Please try again." : "Ihre Zugangsdaten sind falsch. Bitte versuche es erneut.",
+    "You credentials are incorrect. Please try again." : "Ihre Zugangsdaten sind falsch. Bitte versuchen Sie es erneut.",
     "Something went wrong on the server." : "Auf dem Server ist ein Fehler aufgetreten.",
     "Logged out successfully." : "Erfolgreich abgemeldet.",
-    "Language changed.": "Sprache geändert."
+    "Language changed.": "Sprache geändert.",
 
+    "Please confirm you email address." : "Bitte bestätigen Sie Ihre Email-Addresse",
+    "Welcome!": "Herzlich Willkommen!",
+    "Now only one step is missing.": "Jetzt fehlt nur noch ein Schritt.",
+    "Please confirm your email address and you are ready to go." : "Bitte bestätigen Sie deine Email-Adresse, und es kann losgehen.",
+    "Confirm Email": "Email bestätigen",
+    "Thank you,": "Vielen Dank,"
 }

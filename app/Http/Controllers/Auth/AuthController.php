@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Exception\BadResponseException;
 use App\Company;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmYourEmail;
 
 class AuthController extends Controller
 {  
@@ -68,12 +70,17 @@ class AuthController extends Controller
             'vat' => $request->vat
         ]);
        
-        return User::create([
+        $user =  User::create([
             'company_id' => $company->id,
             'name' => $request->name,            
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'confirmtion_token' => User::makeConfirmationToken($request->email)
         ]);
+
+        Mail::to($user)->send(new ConfirmYourEmail($user));
+
+        return $user;
 
     }
 

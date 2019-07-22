@@ -2148,10 +2148,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     PasswordInput: _components_PasswordInput__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: {
+    logo: {
+      "default": false
+    }
   },
   data: function data() {
     return {
@@ -2806,6 +2822,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     width: function width() {
@@ -3326,7 +3345,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3542,7 +3560,7 @@ __webpack_require__.r(__webpack_exports__);
         password: this.password
       }).then(function () {
         _this2.$router.push({
-          name: settings
+          name: 'settings'
         });
 
         _this2.close();
@@ -9511,9 +9529,38 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", { staticClass: "text-xl text-teal-500 mb-5" }, [
-      _vm._v(_vm._s(_vm.$t("auth.login")))
-    ]),
+    _c(
+      "div",
+      { staticClass: "flex justify-between" },
+      [
+        _c("h1", { staticClass: "text-xl text-teal-500 mb-5" }, [
+          _vm._v(_vm._s(_vm.$t("auth.login")))
+        ]),
+        _vm._v(" "),
+        _vm.logo
+          ? _c("router-link", { attrs: { to: "/" } }, [
+              _c(
+                "div",
+                { staticClass: "flex items-center flex-1 text-gray-700" },
+                [
+                  _c("span", { staticClass: "font-light text-xl" }, [
+                    _vm._v("lin")
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "text-xl text-teal-500" }, [
+                    _vm._v("o")
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "font-light text-xl" }, [
+                    _vm._v("ffery")
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      ],
+      1
+    ),
     _vm._v(" "),
     _vm.error
       ? _c("p", {
@@ -10402,50 +10449,59 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "flex flex-col min-h-screen items-center justify-center"
+          staticClass: "flex flex-col min-h-screen items-center  justify-center"
         },
         [
-          _c(
-            "router-link",
-            {
-              staticClass:
-                "uppercase text-white font-bold text-lg py-2 hover:text-gray-300",
-              attrs: { to: "/" }
-            },
-            [_c("p", { on: { click: _vm.hide } }, [_vm._v("Home")])]
-          ),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass:
-                "uppercase text-white font-bold text-lg py-2 hover:text-gray-300",
-              attrs: { to: "/" }
-            },
-            [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.$t("content.about")) +
-                  "\n        "
+          !_vm.loggedIn
+            ? _c(
+                "div",
+                { staticClass: "flex flex-col items-center" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      staticClass:
+                        "uppercase text-white font-bold text-lg py-2 hover:text-gray-300",
+                      attrs: { to: "/" }
+                    },
+                    [_c("p", { on: { click: _vm.hide } }, [_vm._v("Home")])]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    {
+                      staticClass:
+                        "uppercase text-white font-bold text-lg py-2 hover:text-gray-300",
+                      attrs: { to: "/" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(_vm.$t("content.about")) +
+                          "\n            "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    {
+                      staticClass:
+                        "uppercase text-white font-bold text-lg py-2 hover:text-gray-300",
+                      attrs: { to: "/" }
+                    },
+                    [
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(_vm.$t("content.services")) +
+                          "\n            "
+                      )
+                    ]
+                  )
+                ],
+                1
               )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass:
-                "uppercase text-white font-bold text-lg py-2 hover:text-gray-300",
-              attrs: { to: "/" }
-            },
-            [
-              _vm._v(
-                "\n           " +
-                  _vm._s(_vm.$t("content.services")) +
-                  "\n        "
-              )
-            ]
-          ),
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "router-link",
@@ -11157,7 +11213,8 @@ var render = function() {
     [
       _c("login-form", {
         staticClass: "p-5",
-        staticStyle: { width: "400px!important" }
+        staticStyle: { width: "400px!important" },
+        attrs: { logo: true }
       })
     ],
     1

@@ -24,28 +24,31 @@
             >EN</a>
         </div>
 
-        <div class="flex flex-col min-h-screen items-center justify-center">
-            <router-link 
-                class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                to="/"
-                
-            >
-               <p @click="hide">Home</p>
-            </router-link>
+        <div class="flex flex-col min-h-screen items-center  justify-center">
+            <div class="flex flex-col items-center" v-if="!loggedIn">
+                <router-link 
+                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    to="/"                
+                >
+                <p @click="hide">Home</p>
+                </router-link>
 
-            <router-link 
-                class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                to="/"
-            >
-                {{ $t('content.about') }}
-            </router-link>
+                <router-link 
+                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    to="/"
+                >
+                    {{ $t('content.about') }}
+                </router-link>
 
-            <router-link 
-                class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                to="/"
-            >
-               {{ $t('content.services') }}
-            </router-link>
+                <router-link 
+                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    to="/"
+                >
+                {{ $t('content.services') }}
+                </router-link>
+
+            </div>
+            
 
             <router-link 
                 class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 

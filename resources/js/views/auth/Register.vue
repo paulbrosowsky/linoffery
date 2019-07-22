@@ -171,7 +171,7 @@
                         password: this.password
                     })
                     .then(()=>{                         
-                        this.$router.push({ name: settings })
+                        this.$router.push({ name: 'settings' })
                         this.close()
                         this.loading = false 
                     })

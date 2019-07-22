@@ -20,6 +20,7 @@ Route::group([
 
     Route::post('/login', 'AuthController@login');
     Route::post('/register', 'AuthController@register');
+    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index');
 
     Route::group([
         'middleware' => 'auth:api'

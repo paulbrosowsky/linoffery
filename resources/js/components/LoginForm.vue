@@ -1,6 +1,17 @@
 <template>
     <div>
-        <h1 class="text-xl text-teal-500 mb-5">{{ $t('auth.login') }}</h1> 
+        <div class="flex justify-between">
+            <h1 class="text-xl text-teal-500 mb-5">{{ $t('auth.login') }}</h1> 
+
+            <router-link to="/" v-if="logo">   
+                <div class="flex items-center flex-1 text-gray-700"> 
+                    <span class="font-light text-xl">lin</span>
+                    <span class="text-xl text-teal-500">o</span>
+                    <span class="font-light text-xl">ffery</span>
+                </div> 
+            </router-link>
+        </div>
+        
               
         <p class="text-sm text-red-500 bg-red-100 p-3 rounded-lg text-center mb-2" 
             v-if="error" 
@@ -47,7 +58,11 @@
     import PasswordInput from '../components/PasswordInput'
 
     export default {
-        components:{ PasswordInput },        
+        components:{ PasswordInput }, 
+        
+        props:{
+            logo:{default:false}
+        },
 
         data(){
             return{
