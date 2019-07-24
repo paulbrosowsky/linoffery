@@ -10,7 +10,7 @@ import Impressum from './views/Impressum'
 import Login from './views/auth/Login'
 import Logout from './views/auth/Logout'
 import Register from './views/auth/Register'
-import Settings from './views/Settings'
+import Settings from './views/settings/Settings'
 import Welcome from './views/Welcome'
 
 import {store} from './store'
@@ -38,7 +38,8 @@ let routes = [
         name:'dashboard',
         path:'/dashboard',
         component: Dashboard,
-        meta:{            
+        meta:{
+            layout: 'dashboard',          
             requiresAuth: true
         }
     },
@@ -48,6 +49,7 @@ let routes = [
         path:'/settings',
         component: Settings,
         meta:{            
+            layout: 'dashboard',          
             requiresAuth: true
         }
     },

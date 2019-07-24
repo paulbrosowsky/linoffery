@@ -48,6 +48,24 @@
                 </router-link>
 
             </div>
+
+            <div class="flex flex-col items-center" v-if="loggedIn">              
+
+                <router-link 
+                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    :to="{name: 'dashboard'}"
+                >
+                   <p @click="hide">Dashboard</p> 
+                </router-link>  
+
+                <router-link 
+                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    :to="{name: 'settings'}"
+                >
+                    <p @click="hide">{{ $t('content.settings') }}</p>                     
+                </router-link>              
+
+            </div>
             
 
             <router-link 

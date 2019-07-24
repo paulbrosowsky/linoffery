@@ -7,7 +7,7 @@
                     class="input pl-10 "
                     :class="errors.password ? 'border-red-300' : ''"
                     :type="inputType" 
-                    :placeholder="$t('auth.password')"  
+                    :placeholder="tPlaceholder"  
                     v-model="password"              
                     @change="updatePassword"
                     required
@@ -22,7 +22,7 @@
 </template>
 <script>
     export default {
-        props:['value', 'errors'],
+        props:['value', 'errors', 'placeholder'],
 
         data(){
             return{
@@ -38,6 +38,10 @@
 
             inputType(){
                 return this.show ? 'text' : 'password'  
+            },
+
+            tPlaceholder(){
+                return this.placeholder ? this.placeholder : this.$i18n.t('auth.password')
             }
         },
 

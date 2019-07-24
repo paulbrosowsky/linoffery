@@ -1,5 +1,5 @@
 <template>
-    <nav class="w-full px-5 py-3 z-10 md:px-10" :class="classes"> 
+    <nav class="w-full px-3 py-3 z-10 md:px-10" :class="classes"> 
         <div class="flex items-center justify-between">
             <div class="flex">
                 <button 
@@ -38,12 +38,11 @@
                     </a>
                 </div>
 
-                <div class="cursor-pointer"
+                <div class="w-10 h-10 cursor-pointer shadow rounded-full overflow-hidden"
                   @click="$modal.show('navDrawerRight')" 
                   v-if="loggedIn && user"
-                >
-                    <img  class="h-10 w-10 rounded-full shadow" :src="user.avatar" v-if="user.avatar">
-                    <default-avatar :name="user.name" v-if="!user.avatar"></default-avatar>
+                >                    
+                    <avatar :user="user"></avatar>
                 </div>
             </div>
             
@@ -51,11 +50,9 @@
       
     </nav>
 </template>
-<script>
-    import DefaultAvatar from '../components/DefaultAvatar'
+<script>   
 
-    export default {
-        components:{DefaultAvatar},
+    export default {       
 
         props:{
             layout:{

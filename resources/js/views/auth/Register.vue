@@ -114,9 +114,8 @@
     </section>  
 </template>
 <script>
-    import PasswordInput from '../../components/PasswordInput'
-    export default {
-        components:{ PasswordInput },
+    
+    export default {        
 
         data(){
             return{

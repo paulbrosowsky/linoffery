@@ -19,7 +19,8 @@
    
 </template>
 <script>
-    import Default from '../layouts/Default'
+    import Dashboard from '../layouts/DashboardLayout'
+    import Default from '../layouts/Default'    
     import Fullscreen from '../layouts/Fullscreen'
     import Mapped from '../layouts/Mapped'
     import Modals from '../modals/Modals'
@@ -27,6 +28,7 @@
     export default {
         
         components:{ 
+            'dashboard-layout': Dashboard,
             'default-layout': Default,
             'fullscreen-layout': Fullscreen,
             'mapped-layout': Mapped,

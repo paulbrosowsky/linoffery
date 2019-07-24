@@ -113,7 +113,7 @@
                 let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput)
 
                 originAutocomplete.addListener('place_changed', ()=>{
-                    let place = originAutocomplete.getPlace()  
+                    let place = originAutocomplete.getPlace()
                     this.$store.commit('retrieveOrigin', place.formatted_address)                 
                     this.origin = place.geometry.location                    
                     this.displayRoute() 

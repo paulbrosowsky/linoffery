@@ -10,6 +10,7 @@ import i18n from './utilities/i18n'
 Vue.use(VueModal)
 Vue.use(VueCookies)
 window.Event = new Vue()
+window._ = require('lodash')
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -22,8 +23,14 @@ if (token) {
 }
 
 Vue.component('app', App)
+Vue.component('avatar', require('./components/Avatar.vue').default);
+Vue.component('card', require('./components/Card.vue').default);
 Vue.component('default-modal', require('./modals/DefaultModal.vue').default);
+Vue.component('Dropdown', require('./components/Dropdown.vue').default);
+Vue.component('password-input', require('./components/PasswordInput.vue').default);
 Vue.component('spinner', require('./components/Spinner.vue').default);
+Vue.component('tab', require('./components/Tab.vue').default);
+Vue.component('tabs', require('./components/Tabs.vue').default);
 
 
 router.beforeEach((to, from, next) => {

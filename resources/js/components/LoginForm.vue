@@ -54,11 +54,8 @@
     </div>
     
 </template>
-<script>
-    import PasswordInput from '../components/PasswordInput'
-
+<script> 
     export default {
-        components:{ PasswordInput }, 
         
         props:{
             logo:{default:false}

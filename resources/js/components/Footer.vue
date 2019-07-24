@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full px-5 md:px-10" :class="classes">
+    <div class="w-full px-3 md:px-10" :class="classes">
         <div class="flex flex-col py-4 md:flex-row" v-if="layout != 'map'">
             <div class="md:flex-grow">
                 <div class="text-gray-700 mr-6"> 
