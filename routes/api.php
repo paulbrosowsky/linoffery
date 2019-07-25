@@ -31,6 +31,20 @@ Route::group([
     });
 });
 
+Route::group([
+    'middleware' => 'auth:api'
+], function(){
+
+    Route::post('/settings/account/avatar', 'AvatarsController@store');
+    Route::post('/settings/company/logo', 'CompanysLogosController@store');
+
+    Route::patch('/settings/account', 'AccountSettingsController@update');
+    Route::patch('/settings/password', 'PasswordSettingsController@update');
+    Route::patch('/settings/company', 'CompaniesController@update');   
+
+});
+
+
 Route::get('/cargos', 'CargosController@index');
 Route::get('/cargos/{cargo}', 'CargosController@show');
 

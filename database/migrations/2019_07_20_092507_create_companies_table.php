@@ -20,7 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->string('logo')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
-            $table->string('zip')->nullable();  
+            $table->string('postcode')->nullable();  
             $table->string('address')->nullable(); 
             $table->float('lat')->nullable();
             $table->float('lng')->nullable(); 

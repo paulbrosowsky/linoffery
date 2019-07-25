@@ -51,6 +51,10 @@
                         this.resetMarkers()                                                             
                         this.displayRoute()                        
                     }) 
+
+                    Event.$on('fetchAddress',() =>{                                       
+                        this.fetchAddress()
+                    }),
                     
                     Event.$on('setAutocomplete',() =>{                
                         this.setAutocomplete()
@@ -104,7 +108,17 @@
                     let position = { lat:location.lat, lng:location.lng }                    
                     this.addMarker(position, location)                                       
                 })
-            },    
+            },  
+            
+            fetchAddress(){
+                let address = document.getElementById('address')
+                let addressAutocomplete = new google.maps.places.Autocomplete(address) 
+
+                addressAutocomplete.addListener('place_changed', ()=>{
+                    let place = addressAutocomplete.getPlace()  
+                    Event.$emit('setAddress', place)
+                })
+            },
             
             setAutocomplete(){
                 let originInput = document.getElementById('search-origin') 

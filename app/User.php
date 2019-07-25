@@ -21,7 +21,10 @@ class User extends Authenticatable
         'email', 
         'password', 
         'company_id',
-        'confirmation_token'
+        'confirmation_token',
+        'position',
+        'phone',
+        'avatar'
     ];
 
     /**
@@ -34,8 +37,7 @@ class User extends Authenticatable
         'remember_token', 
         'created_at', 
         'updated_at', 
-        'confirmation_token',
-        'confirmed'
+        'confirmation_token'        
     ];
 
     /**

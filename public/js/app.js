@@ -2192,6 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['placeholder'],
   data: function data() {
     return {
       file: null,
@@ -2850,6 +2851,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Navbar */ "./resources/js/components/Navbar.vue");
 /* harmony import */ var _components_Footer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Footer */ "./resources/js/components/Footer.vue");
+/* harmony import */ var _views_Map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../views/Map */ "./resources/js/views/Map.vue");
 //
 //
 //
@@ -2868,12 +2870,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Navbar: _components_Navbar__WEBPACK_IMPORTED_MODULE_0__["default"],
-    AppFooter: _components_Footer__WEBPACK_IMPORTED_MODULE_1__["default"]
+    AppFooter: _components_Footer__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Gmap: _views_Map__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   computed: {
     user: function user() {
@@ -3397,7 +3405,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this.displayRoute();
                 });
-                Event.$on('setAutocomplete', function () {
+                Event.$on('fetchAddress', function () {
+                  _this.fetchAddress();
+                }), Event.$on('setAutocomplete', function () {
                   _this.setAutocomplete();
                 }), Event.$on('boxRoute', function (value) {
                   _this.boxRoute(value);
@@ -3469,6 +3479,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         };
 
         _this4.addMarker(position, location);
+      });
+    },
+    fetchAddress: function fetchAddress() {
+      var address = document.getElementById('address');
+      var addressAutocomplete = new google.maps.places.Autocomplete(address);
+      addressAutocomplete.addListener('place_changed', function () {
+        var place = addressAutocomplete.getPlace();
+        Event.$emit('setAddress', place);
       });
     },
     setAutocomplete: function setAutocomplete() {
@@ -4394,9 +4412,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4437,6 +4452,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_ImageUpload__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/ImageUpload */ "./resources/js/components/ImageUpload.vue");
 //
 //
 //
@@ -4515,7 +4531,116 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    ImageUpload: _components_ImageUpload__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: ['company'],
+  data: function data() {
+    return {
+      name: this.company.name,
+      logo: this.company.logo,
+      vat: this.company.vat,
+      website: this.company.website,
+      address: this.company.address,
+      zip: this.company.zip,
+      city: this.company.city,
+      country: this.company.country,
+      lat: null,
+      lng: null,
+      logoPreview: null,
+      errors: []
+    };
+  },
+  computed: {
+    image: function image() {
+      return this.logoPreview ? this.logoPreview : this.logo;
+    }
+  },
+  methods: {
+    update: function update() {},
+    updateLogoPreview: function updateLogoPreview(value) {
+      this.logoPreview = value;
+    },
+    // Get Place from Google Maps and set local address veriables
+    setAddress: function setAddress(place) {
+      var address = place.address_components;
+      var location = place.geometry.location;
+      this.address = address[1].long_name + ' ' + address[0].long_name;
+      this.zip = address[7].long_name;
+      this.city = address[2].long_name;
+      this.country = address[6].long_name;
+      this.lat = location.lat();
+      this.lng = location.lng();
+    }
+  },
+  created: function created() {
+    var _this = this;
+
+    setTimeout(function () {
+      // Initialize location field as Google Map autocomplete form
+      // reference mountMap() in ./views/Map.vue
+      Event.$emit('fetchAddress');
+    }, 2000); // On Event from Google Maps set address fields in the form
+    // reference getAddress() on ./views/Map.vue
+
+    Event.$on('setAddress', function (place) {
+      _this.setAddress(place);
+    });
+  }
+});
 
 /***/ }),
 
@@ -32933,7 +33058,22 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "w-full flex flex-col my-2" }, [
-    _vm._m(0),
+    _c(
+      "label",
+      {
+        staticClass:
+          " text-center py-3 cursor-pointer w-full rounded-lg hover:bg-gray-300",
+        attrs: { for: "file" }
+      },
+      [
+        _c("i", { staticClass: "icon ion-md-camera text-xl text-gray-600" }),
+        _vm._v(" "),
+        _c("p", {
+          staticClass: "text-sm text-gray-600 uppercase",
+          domProps: { textContent: _vm._s(_vm.placeholder) }
+        })
+      ]
+    ),
     _vm._v(" "),
     _c("input", {
       ref: "file",
@@ -32947,28 +33087,7 @@ var render = function() {
     })
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass:
-          " text-center py-3 cursor-pointer w-full rounded-lg hover:bg-gray-300",
-        attrs: { for: "file" }
-      },
-      [
-        _c("i", { staticClass: "icon ion-md-camera text-xl text-gray-600" }),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-sm text-gray-600 uppercase" }, [
-          _vm._v("Update avatar")
-        ])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -33639,7 +33758,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("section", { staticClass: "md:flex" }, [
-    _c("div", { staticClass: " w-full md:w-64" }, [
+    _c("div", { staticClass: " w-full md:w-48" }, [
       _c("div", { staticClass: "uppercase  text-gray-500 text-sm px-2 pb-2" }, [
         _vm._v("Settings")
       ]),
@@ -33741,7 +33860,7 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "w-full" }, [_vm._t("default")], 2)
+    _c("div", { staticClass: "flex-1" }, [_vm._t("default")], 2)
   ])
 }
 var staticRenderFns = []
@@ -33810,17 +33929,33 @@ var render = function() {
       _c("navbar"),
       _vm._v(" "),
       _c("div", { staticClass: "flex-1 bg-gray-300" }, [
-        _c("div", { staticClass: "flex px-3 py-5 md:px-10" }, [
-          _c("div", { staticClass: "flex-grow " }, [_vm._t("default")], 2),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "w-1/3 pl-5 hidden lg:block" },
-            [_c("card", [_vm._v("Aktuelle Ereignisse")])],
-            1
-          )
-        ])
+        _c(
+          "div",
+          {
+            staticClass: "w-full mx-auto",
+            staticStyle: { "max-width": "1408px" }
+          },
+          [
+            _c("div", { staticClass: "flex px-3 py-5 md:px-10" }, [
+              _c(
+                "div",
+                { staticClass: "w-full lg:w-2/3" },
+                [_vm._t("default")],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-1/3 pl-5 hidden lg:block" },
+                [_c("card", [_vm._v("Aktuelle Ereignisse")])],
+                1
+              )
+            ])
+          ]
+        )
       ]),
+      _vm._v(" "),
+      _c("gmap", { staticClass: "hidden" }),
       _vm._v(" "),
       _c("app-footer")
     ],
@@ -35995,7 +36130,7 @@ var render = function() {
         _vm._v("Account Settings")
       ]),
       _vm._v(" "),
-      _c("card", { staticClass: "w-1/2" }, [
+      _c("card", {}, [
         _c("p", { staticClass: "text-teal-500 text-lg mb-5" }, [
           _vm._v("User data")
         ]),
@@ -36003,7 +36138,7 @@ var render = function() {
         _c("div", { staticClass: "xl:flex" }, [
           _c(
             "div",
-            { staticClass: "w-full flex flex-col items-center px-5 lg:w-64" },
+            { staticClass: "w-full flex flex-col items-center px-8 xl:w-48 " },
             [
               _c(
                 "div",
@@ -36019,7 +36154,10 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c("image-upload", { on: { preview: _vm.updateAvatarPreview } })
+              _c("image-upload", {
+                attrs: { placeholder: "Update Avatar" },
+                on: { preview: _vm.updateAvatarPreview }
+              })
             ],
             1
           ),
@@ -36027,6 +36165,7 @@ var render = function() {
           _c(
             "form",
             {
+              staticClass: "flex-grow",
               on: {
                 submit: function($event) {
                   $event.preventDefault()
@@ -36171,7 +36310,7 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "flex justify-end" }, [
+              _c("div", { staticClass: "flex justify-end mt-5" }, [
                 _c(
                   "button",
                   { staticClass: "btn btn-outlined is-outlined mr-2" },
@@ -36198,7 +36337,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("card", { staticClass: "mt-8 lg:px-32" }, [
+      _c("card", { staticClass: "mt-8" }, [
         _c("p", { staticClass: "text-teal-500 text-lg mb-5" }, [
           _vm._v("Password")
         ]),
@@ -36232,7 +36371,7 @@ var render = function() {
               on: { changed: _vm.updatePassword }
             }),
             _vm._v(" "),
-            _c("div", { staticClass: "flex justify-end pt-3" }, [
+            _c("div", { staticClass: "flex justify-end mt-5" }, [
               _c(
                 "button",
                 {
@@ -36286,210 +36425,408 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", { staticClass: "hidden text-gray-700 text-xl mb-5 md:block" }, [
-        _vm._v("Company Settings")
-      ]),
-      _vm._v(" "),
-      _c("card", { staticClass: "w-1/2" }, [
-        _c("p", { staticClass: "text-teal-500 text-lg mb-5" }, [
-          _vm._v("User data")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "xl:flex" }, [
+  return _vm.company
+    ? _c(
+        "div",
+        {},
+        [
           _c(
-            "div",
-            { staticClass: "w-full flex flex-col items-center px-5 lg:w-64" },
-            [
+            "h1",
+            { staticClass: "hidden text-gray-700 text-xl mb-5 md:block" },
+            [_vm._v("Company Settings")]
+          ),
+          _vm._v(" "),
+          _c("card", { staticClass: "w-1/2" }, [
+            _c("p", { staticClass: "text-teal-500 text-lg mb-5" }, [
+              _vm._v("Company data")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "xl:flex" }, [
               _c(
                 "div",
                 {
-                  staticClass:
-                    "w-32 h-32 rounded-full text-2xl shadow-md overflow-hidden mb-3"
+                  staticClass: "w-full flex flex-col items-center px-8 xl:w-48"
                 },
-                [_c("img", { attrs: { src: "", alt: "" } })]
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "w-32 h-32 rounded-full text-2xl shadow-md overflow-hidden mb-3"
+                    },
+                    [
+                      _c("img", {
+                        staticClass: "w-full h-full object-cover",
+                        attrs: { src: _vm.image, alt: "" }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("image-upload", {
+                    attrs: { placeholder: "Update Logo" },
+                    on: { preview: _vm.updateLogoPreview }
+                  })
+                ],
+                1
               ),
               _vm._v(" "),
-              _c("image-upload", { on: { preview: _vm.updateAvatarPreview } })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.update($event)
-                }
-              }
-            },
-            [
-              _vm.errors.name
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.name[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "relative flex items-center mb-2" }, [
-                _c("i", {
-                  staticClass:
-                    "absolute icon ion-md-person text-xl text-gray-500 px-3"
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.name,
-                      expression: "name"
-                    }
-                  ],
-                  staticClass: "input pl-10",
-                  class: _vm.errors.name ? "border-red-300" : "",
-                  attrs: {
-                    type: "text",
-                    placeholder: _vm.$t("auth.name"),
-                    required: ""
-                  },
-                  domProps: { value: _vm.name },
+              _c(
+                "form",
+                {
+                  staticClass: "w-full",
                   on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.name = $event.target.value
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.update($event)
                     }
                   }
-                })
-              ]),
-              _vm._v(" "),
-              _vm.errors.email
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.email[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "relative flex items-center mb-2 " }, [
-                _c("i", {
-                  staticClass:
-                    "absolute icon ion-md-mail text-xl text-gray-500 px-3"
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.email,
-                      expression: "email"
-                    }
-                  ],
-                  staticClass: "input pl-10",
-                  class: _vm.errors.email ? "border-red-300" : "",
-                  attrs: {
-                    type: "email",
-                    placeholder: _vm.$t("auth.email"),
-                    required: ""
-                  },
-                  domProps: { value: _vm.email },
-                  on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.email = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _vm.errors.position
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.position[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "relative flex items-center mb-2 " }, [
-                _c("i", {
-                  staticClass:
-                    "absolute icon ion-md-people text-xl text-gray-500 px-3"
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.position,
-                      expression: "position"
-                    }
-                  ],
-                  staticClass: "input pl-10",
-                  class: _vm.errors.position ? "border-red-300" : "",
-                  attrs: { type: "position", placeholder: "Position" },
-                  domProps: { value: _vm.position },
-                  on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.position = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm text-gray-600 py-3" }, [
-                _vm._v(
-                  "\n                    Wenn Sie Ihre Email-Adresse geändert haben, bekommen sie anschließend eine Bestätigungs-Email.\n                "
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "flex justify-end" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-outlined is-outlined mr-2" },
-                  [
-                    _vm._v(
-                      "\n                        Cancel\n                    "
+                },
+                [
+                  _vm.errors.name
+                    ? _c("p", {
+                        staticClass: "text-sm text-red-500 mb-2",
+                        domProps: { textContent: _vm._s(_vm.errors.name[0]) }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "relative flex items-center mb-2" },
+                    [
+                      _c("i", {
+                        staticClass:
+                          "absolute icon ion-md-person text-xl text-gray-500 px-3"
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.name,
+                            expression: "name"
+                          }
+                        ],
+                        staticClass: "input pl-10",
+                        class: _vm.errors.name ? "border-red-300" : "",
+                        attrs: {
+                          type: "text",
+                          placeholder: _vm.$t("auth.name"),
+                          required: ""
+                        },
+                        domProps: { value: _vm.name },
+                        on: {
+                          keyup: function($event) {
+                            _vm.errors = []
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.name = $event.target.value
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _vm.errors.vat
+                    ? _c("p", {
+                        staticClass: "text-sm text-red-500 mb-2",
+                        domProps: { textContent: _vm._s(_vm.errors.vat[0]) }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "relative flex items-center mb-2" },
+                    [
+                      _c(
+                        "p",
+                        {
+                          staticClass:
+                            "absolute text-xl font-bold text-gray-500 px-3"
+                        },
+                        [_vm._v("§")]
+                      ),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.vat,
+                            expression: "vat"
+                          }
+                        ],
+                        staticClass: "input pl-10",
+                        class: _vm.errors.vat ? "border-red-300" : "",
+                        attrs: {
+                          type: "text",
+                          placeholder: _vm.$t("auth.vat"),
+                          required: ""
+                        },
+                        domProps: { value: _vm.vat },
+                        on: {
+                          keyup: function($event) {
+                            _vm.errors = []
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.vat = $event.target.value
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _vm.errors.vat
+                    ? _c("p", {
+                        staticClass: "text-sm text-red-500 mb-2",
+                        domProps: { textContent: _vm._s(_vm.errors.vat[0]) }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "relative flex items-center mb-2" },
+                    [
+                      _c("i", {
+                        staticClass:
+                          "absolute icon ion-md-globe text-xl text-gray-500 px-3"
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.website,
+                            expression: "website"
+                          }
+                        ],
+                        staticClass: "input pl-10",
+                        class: _vm.errors.vat ? "border-red-300" : "",
+                        attrs: { type: "text", placeholder: "Website" },
+                        domProps: { value: _vm.website },
+                        on: {
+                          keyup: function($event) {
+                            _vm.errors = []
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.website = $event.target.value
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "relative flex items-center mb-2" },
+                    [
+                      _c("i", {
+                        staticClass:
+                          "absolute icon ion-md-pin text-xl text-gray-500 px-3"
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        staticClass: "input pl-10",
+                        attrs: {
+                          id: "address",
+                          type: "text",
+                          placeholder: "Location"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: " bg-gray-100 rounded-lg p-3 mb-2" },
+                    [
+                      _c("p", { staticClass: "text-sm text-gray-600 pb-2" }, [
+                        _vm._v("These fields are filled out automatically")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "relative flex items-center mb-2" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.address,
+                                expression: "address"
+                              }
+                            ],
+                            staticClass: "input",
+                            attrs: {
+                              type: "text",
+                              placeholder: "Street address",
+                              disabled: ""
+                            },
+                            domProps: { value: _vm.address },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.address = $event.target.value
+                              }
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              " w-1/3 relative flex items-center mb-2 mr-2"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.zip,
+                                  expression: "zip"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Postcode",
+                                disabled: ""
+                              },
+                              domProps: { value: _vm.zip },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.zip = $event.target.value
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              " w-2/3 relative flex items-center mb-2"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.city,
+                                  expression: "city"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                type: "text",
+                                placeholder: "City",
+                                disabled: ""
+                              },
+                              domProps: { value: _vm.city },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.city = $event.target.value
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "relative flex items-center" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.country,
+                              expression: "country"
+                            }
+                          ],
+                          staticClass: "input",
+                          attrs: {
+                            type: "text",
+                            placeholder: "Country",
+                            disabled: ""
+                          },
+                          domProps: { value: _vm.country },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.country = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flex justify-end pt-5" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outlined is-outlined mr-2",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Cancel\n                    "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-teal",
+                        attrs: { type: "submit" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Update Account\n                    "
+                        )
+                      ]
                     )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-teal", attrs: { type: "submit" } },
-                  [
-                    _vm._v(
-                      "\n                        Update Account\n                    "
-                    )
-                  ]
-                )
-              ])
-            ]
-          )
-        ])
-      ])
-    ],
-    1
-  )
+                  ])
+                ]
+              )
+            ])
+          ])
+        ],
+        1
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -36570,14 +36907,14 @@ var render = function() {
             [
               _c(
                 "tab",
-                { attrs: { name: "Account", selected: true } },
+                { attrs: { name: "Account" } },
                 [_c("account-settings", { attrs: { user: _vm.user } })],
                 1
               ),
               _vm._v(" "),
               _c(
                 "tab",
-                { attrs: { name: "Company" } },
+                { attrs: { name: "Company", selected: true } },
                 [
                   _c("company-settings", {
                     attrs: { company: _vm.user.company }

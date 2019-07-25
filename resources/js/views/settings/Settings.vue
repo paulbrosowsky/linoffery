@@ -1,10 +1,10 @@
 <template>
     <div v-if="user">
         <tabs>
-            <tab name="Account" :selected="true">
+            <tab name="Account" >
                 <account-settings :user="user"></account-settings>
             </tab>
-            <tab name="Company">
+            <tab name="Company" :selected="true">
                 <company-settings :company="user.company"></company-settings>
             </tab>
             <tab name="Payment">

@@ -1,6 +1,6 @@
 <template>
     <section class="md:flex">
-        <div class=" w-full md:w-64">
+        <div class=" w-full md:w-48">
             <div class="uppercase  text-gray-500 text-sm px-2 pb-2">Settings</div>
             <div class="flex items-center justify-between mb-2 md:block"> 
                 <div 
@@ -36,7 +36,7 @@
             
         </div>
 
-        <div class="w-full">
+        <div class="flex-1">
             <slot></slot>
         </div>
 

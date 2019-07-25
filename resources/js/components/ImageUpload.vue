@@ -7,7 +7,7 @@
             for="file"
         >
             <i class="icon ion-md-camera text-xl text-gray-600"></i>  
-            <p class="text-sm text-gray-600 uppercase">Update avatar</p>
+            <p class="text-sm text-gray-600 uppercase" v-text="placeholder"></p>
         </label>
         <input 
             class="hidden"
@@ -23,7 +23,10 @@
 </template>
 <script>   
 
-    export default {  
+    export default { 
+        
+        props:['placeholder'],
+
         data(){
             return{
                 file: null,
