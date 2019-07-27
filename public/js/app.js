@@ -2328,7 +2328,7 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           this.errors = {
             image: {
-              0: 'The file has an ivalid format. Please use jpg, png or gif.'
+              0: this.$i18n.t('settings.upload_image_error')
             }
           };
         }
@@ -2792,19 +2792,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    name: {
-      required: true
-    }
+    name: '',
+    hash: ''
   },
   data: function data() {
     return {};
   },
   computed: {
-    hashName: function hashName() {
-      return '#' + this.name.toLowerCase().replace(/ /g, '-');
-    },
     isActive: function isActive() {
-      return this.hashName == this.$route.hash;
+      return this.hash == this.$route.hash;
     }
   }
 });
@@ -2904,21 +2900,12 @@ __webpack_require__.r(__webpack_exports__);
     setActiveTab: function setActiveTab(tab) {
       this.$router.push({
         name: 'settings',
-        hash: tab.hashName
+        hash: tab.hash
       });
-    },
-    setInitialActiveTab: function setInitialActiveTab() {
-      if (!this.$route.hash) {
-        this.$router.push({
-          name: 'settings',
-          hash: '#account'
-        });
-      }
     }
   },
   created: function created() {
     this.tabs = this.$children;
-    this.setInitialActiveTab();
   }
 });
 
@@ -2998,6 +2985,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.fetchLoggedInUser();
     this.retriveLocale();
+    console.log(navigator.language);
   }
 });
 
@@ -4639,7 +4627,7 @@ __webpack_require__.r(__webpack_exports__);
         position: this.position,
         phone: this.phone
       }).then(function () {
-        flash('You updated your account successfully');
+        flash(_this.$i18n.t('settings.changed_accout_message'));
       })["catch"](function (errors) {
         _this.errors = errors;
       });
@@ -4651,7 +4639,7 @@ __webpack_require__.r(__webpack_exports__);
         old_password: this.old_password,
         new_password: this.new_password
       }).then(function () {
-        flash('You updated your password successfully');
+        flash(_this2.$i18n.t('settings.changed_password_message'));
       })["catch"](function (errors) {
         console.log(errors);
         _this2.errors = errors;
@@ -4688,6 +4676,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ImageUpload__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/ImageUpload */ "./resources/js/components/ImageUpload.vue");
+//
+//
 //
 //
 //
@@ -4879,7 +4869,7 @@ __webpack_require__.r(__webpack_exports__);
         lat: this.lat,
         lng: this.lng
       }).then(function () {
-        flash('You updated your companys data successfully!');
+        flash(_this.$i18n.t('settings.changed_company_message'));
       })["catch"](function (errors) {
         _this.errors = errors;
       });
@@ -5006,6 +4996,19 @@ __webpack_require__.r(__webpack_exports__);
     user: function user() {
       return this.$store.state.user;
     }
+  },
+  methods: {
+    setInitialActiveTab: function setInitialActiveTab() {
+      if (!this.$route.hash) {
+        this.$router.push({
+          name: 'settings',
+          hash: '#account'
+        });
+      }
+    }
+  },
+  mounted: function mounted() {
+    this.setInitialActiveTab();
   }
 });
 
@@ -16488,7 +16491,7 @@ var render = function() {
             staticClass: "btn btn-teal w-32 mt-2",
             on: { click: _vm.submitFile }
           },
-          [_vm._v("Upload")]
+          [_vm._v(_vm._s(_vm.$t("utilities.upload")))]
         )
       : _vm._e()
   ])
@@ -17083,7 +17086,7 @@ var render = function() {
     attrs: {
       inputClasses: "bg-gray-300 border-grey-300 focus:bg-white",
       wrapperClasses: "bg-gray-300 bodrer-0 border-grey-300",
-      placeholder: "Enter your phone number"
+      placeholder: _vm.$t("settings.phone")
     },
     on: { input: _vm.updateNumber },
     model: {
@@ -17700,7 +17703,7 @@ var render = function() {
               "text-white text-lg uppercase cursor-pointer px-1 hover:text-gray-300",
             on: {
               click: function($event) {
-                return _vm.changeLocale("de")
+                return _vm.changeLocale("de-DE")
               }
             }
           },
@@ -17714,7 +17717,7 @@ var render = function() {
               "text-white text-lg uppercase cursor-pointer px-1 hover:text-gray-300",
             on: {
               click: function($event) {
-                return _vm.changeLocale("en")
+                return _vm.changeLocale("en-EN")
               }
             }
           },
@@ -19581,12 +19584,16 @@ var render = function() {
     "div",
     [
       _c("h1", { staticClass: "text-gray-700 font-light text-2xl mb-5 ml-2" }, [
-        _vm._v("\n        Account Settings                \n    ")
+        _vm._v(
+          "\n        " +
+            _vm._s(_vm.$t("settings.account_settings")) +
+            "               \n    "
+        )
       ]),
       _vm._v(" "),
       _c("card", {}, [
         _c("p", { staticClass: "text-teal-500 text-lg mb-10" }, [
-          _vm._v("Update Account")
+          _vm._v(_vm._s(_vm.$t("settings.update_account")) + " ")
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "xl:flex" }, [
@@ -19610,7 +19617,7 @@ var render = function() {
               _vm._v(" "),
               _c("image-upload", {
                 attrs: {
-                  placeholder: "Update Avatar",
+                  placeholder: _vm.$t("settings.update_avatar"),
                   endpoint: "/api/settings/account/avatar"
                 },
                 on: { preview: _vm.updateAvatarPreview }
@@ -19743,7 +19750,10 @@ var render = function() {
                   ],
                   staticClass: "input pl-10",
                   class: _vm.errors.position ? "border-red-300" : "",
-                  attrs: { type: "position", placeholder: "Position" },
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.$t("settings.position")
+                  },
                   domProps: { value: _vm.position },
                   on: {
                     keyup: function($event) {
@@ -19766,7 +19776,9 @@ var render = function() {
               _vm._v(" "),
               _c("p", { staticClass: "text-sm text-gray-600 py-3" }, [
                 _vm._v(
-                  "\n                    Wenn Sie Ihre Email-Adresse geändert haben, werden wir Ihnen anschließend eine Bestätigungs-Email zuschicken.\n                "
+                  "\n                    " +
+                    _vm._s(_vm.$t("settings.change_email_info")) +
+                    "\n                "
                 )
               ]),
               _vm._v(" "),
@@ -19784,7 +19796,9 @@ var render = function() {
                   },
                   [
                     _vm._v(
-                      "\n                        Cancel\n                    "
+                      "\n                        " +
+                        _vm._s(_vm.$t("utilities.cancel")) +
+                        "\n                    "
                     )
                   ]
                 ),
@@ -19794,7 +19808,9 @@ var render = function() {
                   { staticClass: "btn btn-teal", attrs: { type: "submit" } },
                   [
                     _vm._v(
-                      "\n                        Update Account\n                    "
+                      "\n                        " +
+                        _vm._s(_vm.$t("utilities.update")) +
+                        "\n                    "
                     )
                   ]
                 )
@@ -19807,7 +19823,7 @@ var render = function() {
       _vm._v(" "),
       _c("card", { staticClass: "mt-5" }, [
         _c("p", { staticClass: "text-teal-500 text-lg mb-5" }, [
-          _vm._v("Change Password")
+          _vm._v(_vm._s(_vm.$t("settings.change_password")))
         ]),
         _vm._v(" "),
         _c(
@@ -19836,7 +19852,10 @@ var render = function() {
                     : _vm._e(),
                   _vm._v(" "),
                   _c("password-input", {
-                    attrs: { errors: _vm.errors, placeholder: "Old Password" },
+                    attrs: {
+                      errors: _vm.errors,
+                      placeholder: _vm.$t("settings.old_password")
+                    },
                     on: { changed: _vm.updateOldPassword }
                   })
                 ],
@@ -19857,7 +19876,10 @@ var render = function() {
                     : _vm._e(),
                   _vm._v(" "),
                   _c("password-input", {
-                    attrs: { errors: _vm.errors, placeholder: "New Password" },
+                    attrs: {
+                      errors: _vm.errors,
+                      placeholder: _vm.$t("settings.new_password")
+                    },
                     on: { changed: _vm.updateNewPassword }
                   })
                 ],
@@ -19877,7 +19899,13 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("\n                    Cancel\n                ")]
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.$t("utilities.cancel")) +
+                      "\n                "
+                  )
+                ]
               ),
               _vm._v(" "),
               _c(
@@ -19885,7 +19913,9 @@ var render = function() {
                 { staticClass: "btn btn-teal", attrs: { type: "submit" } },
                 [
                   _vm._v(
-                    "\n                    Update Password\n                "
+                    "\n                    " +
+                      _vm._s(_vm.$t("utilities.change")) +
+                      "\n                "
                   )
                 ]
               )
@@ -19927,12 +19957,18 @@ var render = function() {
           _c(
             "h1",
             { staticClass: "text-gray-700 font-light text-2xl mb-5 ml-2" },
-            [_vm._v("\n        Company Settings                \n    ")]
+            [
+              _vm._v(
+                "\n        " +
+                  _vm._s(_vm.$t("settings.company_settings")) +
+                  "              \n    "
+              )
+            ]
           ),
           _vm._v(" "),
           _c("card", { staticClass: "w-1/2" }, [
             _c("p", { staticClass: "text-teal-500 text-lg mb-10" }, [
-              _vm._v("Update Company")
+              _vm._v(_vm._s(_vm.$t("settings.update_company")))
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "xl:flex" }, [
@@ -19958,7 +19994,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("image-upload", {
                     attrs: {
-                      placeholder: "Update Logo",
+                      placeholder: _vm.$t("settings.update_logo"),
                       endpoint: "/api/settings/company/logo"
                     },
                     on: { preview: _vm.updateLogoPreview }
@@ -20106,7 +20142,10 @@ var render = function() {
                         ],
                         staticClass: "input pl-10",
                         class: _vm.errors.website ? "border-red-300" : "",
-                        attrs: { type: "text", placeholder: "Website" },
+                        attrs: {
+                          type: "text",
+                          placeholder: _vm.$t("settings.website")
+                        },
                         domProps: { value: _vm.website },
                         on: {
                           keyup: function($event) {
@@ -20137,7 +20176,7 @@ var render = function() {
                         attrs: {
                           id: "address",
                           type: "text",
-                          placeholder: "Location"
+                          placeholder: _vm.$t("settings.location")
                         },
                         on: {
                           keyup: function($event) {
@@ -20154,7 +20193,9 @@ var render = function() {
                     [
                       _c("p", { staticClass: "text-sm text-gray-600 pb-2" }, [
                         _vm._v(
-                          "These fields are filled out automatically by entering the location."
+                          "\n                        " +
+                            _vm._s(_vm.$t("settings.address_info")) +
+                            "\n                    "
                         )
                       ]),
                       _vm._v(" "),
@@ -20185,7 +20226,7 @@ var render = function() {
                               class: _vm.errors.address ? "border-red-300" : "",
                               attrs: {
                                 type: "text",
-                                placeholder: "Street address"
+                                placeholder: _vm.$t("settings.street_address")
                               },
                               domProps: { value: _vm.address },
                               on: {
@@ -20243,7 +20284,10 @@ var render = function() {
                               class: _vm.errors.postcode
                                 ? "border-red-300"
                                 : "",
-                              attrs: { type: "text", placeholder: "Postcode" },
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.$t("settings.postcode")
+                              },
                               domProps: { value: _vm.postcode },
                               on: {
                                 keyup: function($event) {
@@ -20278,7 +20322,10 @@ var render = function() {
                               ],
                               staticClass: "input",
                               class: _vm.errors.city ? "border-red-300" : "",
-                              attrs: { type: "text", placeholder: "City" },
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.$t("settings.city")
+                              },
                               domProps: { value: _vm.city },
                               on: {
                                 keyup: function($event) {
@@ -20321,7 +20368,10 @@ var render = function() {
                               ],
                               staticClass: "input",
                               class: _vm.errors.country ? "border-red-300" : "",
-                              attrs: { type: "text", placeholder: "Country" },
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.$t("settings.country")
+                              },
                               domProps: { value: _vm.country },
                               on: {
                                 keyup: function($event) {
@@ -20355,7 +20405,9 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Cancel\n                    "
+                          "\n                        " +
+                            _vm._s(_vm.$t("utilities.cancel")) +
+                            "\n                    "
                         )
                       ]
                     ),
@@ -20368,7 +20420,9 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Update Account\n                    "
+                          "\n                        " +
+                            _vm._s(_vm.$t("utilities.update")) +
+                            "\n                    "
                         )
                       ]
                     )
@@ -20461,14 +20515,18 @@ var render = function() {
             [
               _c(
                 "tab",
-                { attrs: { name: "Account" } },
+                {
+                  attrs: { name: _vm.$t("settings.account"), hash: "#account" }
+                },
                 [_c("account-settings", { attrs: { user: _vm.user } })],
                 1
               ),
               _vm._v(" "),
               _c(
                 "tab",
-                { attrs: { name: "Company" } },
+                {
+                  attrs: { name: _vm.$t("settings.company"), hash: "#company" }
+                },
                 [
                   _c("company-settings", {
                     attrs: { company: _vm.user.company }
@@ -20479,14 +20537,21 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tab",
-                { attrs: { name: "Payment" } },
+                {
+                  attrs: { name: _vm.$t("settings.payment"), hash: "#payment" }
+                },
                 [_c("payment-settings")],
                 1
               ),
               _vm._v(" "),
               _c(
                 "tab",
-                { attrs: { name: "Notifications" } },
+                {
+                  attrs: {
+                    name: _vm.$t("settings.notifications"),
+                    hash: "#notification"
+                  }
+                },
                 [_c("notification-settings")],
                 1
               )
@@ -39615,6 +39680,28 @@ module.exports = {"terms":"AGB","privacy":"Datenschutzbestimmungen","legals":"Im
 
 /***/ }),
 
+/***/ "./resources/js/locales/de/settings.json":
+/*!***********************************************!*\
+  !*** ./resources/js/locales/de/settings.json ***!
+  \***********************************************/
+/*! exports provided: account, company, payment, notifications, account_settings, update_account, update_avatar, company_settings, update_company, update_logo, position, phone, change_email_info, change_password, old_password, new_password, website, location, address_info, street_address, postcode, city, country, changed_accout_message, changed_password_message, changed_company_message, upload_image_error, default */
+/***/ (function(module) {
+
+module.exports = {"account":"Benutzerkonto","company":"Firma","payment":"Bezahlung","notifications":"Mitteilungen","account_settings":"Benutzerkonto - Einstellungen","update_account":"Benutzerkonto aktualizieren","update_avatar":"Profilbild ändern","company_settings":"Firmeninstellungen","update_company":"Firmendaten ändern","update_logo":"Logo ändern","position":"Position","phone":"Telefonnummer","change_email_info":"Wenn Sie Ihre Email-Adresse geändert haben, werden wir Ihnen anschließend eine Bestätigungs-Email zuschicken.","change_password":"Passwort ändern","old_password":"Altes Passwort","new_password":"Neues Passwort","website":"Webseite","location":"Standort","address_info":"Diese Felder werden bei der Eingabe des Standortes automatisch ausgefüllt.","street_address":"Starße, Nr.","postcode":"PLZ","city":"Stadt","country":"Land","changed_accout_message":"Ihr Benutzerkonto wurde erfolgreich aktualisiert.","changed_password_message":"Ihr Passwort wurde erfolgreich aktualisiert.","changed_company_message":"Die Firmendaten wurden erfolgreich aktualisiert.","upload_image_error":"Die Datei hat ein ungültiges Format. Bitte benutzen Sie jpg, png oder gif."};
+
+/***/ }),
+
+/***/ "./resources/js/locales/de/utilities.json":
+/*!************************************************!*\
+  !*** ./resources/js/locales/de/utilities.json ***!
+  \************************************************/
+/*! exports provided: cancel, update, change, upload, default */
+/***/ (function(module) {
+
+module.exports = {"cancel":"Abbrechen","update":"Aktualizieren","change":"Ändern","upload":"Hochladen"};
+
+/***/ }),
+
 /***/ "./resources/js/locales/en/auth.json":
 /*!*******************************************!*\
   !*** ./resources/js/locales/en/auth.json ***!
@@ -39634,6 +39721,28 @@ module.exports = {"login":"Login","signup":"Signup","logout":"Logout","email":"E
 /***/ (function(module) {
 
 module.exports = {"terms":"Terms of use","privacy":"Privacy policy","legals":"Legal disclosure","about":"about","services":"our services","find_fright":"Find fright","create_tender":"Create tender","learn_more":"learn more","consignor":"Consignor","carrier":"Carrier","settings":"Settings"};
+
+/***/ }),
+
+/***/ "./resources/js/locales/en/settings.json":
+/*!***********************************************!*\
+  !*** ./resources/js/locales/en/settings.json ***!
+  \***********************************************/
+/*! exports provided: account, company, payment, notifications, account_settings, update_account, update_avatar, company_settings, update_company, update_logo, position, phone, change_email_info, change_password, old_password, new_password, website, location, address_info, street_address, postcode, city, country, changed_accout_message, changed_password_message, changed_company_message, upload_image_error, default */
+/***/ (function(module) {
+
+module.exports = {"account":"Account","company":"Company","payment":"Payment","notifications":"Notifications","account_settings":"Account Settings","update_account":"Update Account","update_avatar":"Change Avatar","company_settings":"Company Settings","update_company":" Update Companys data","update_logo":"Update Logo","position":"Position","phone":"Phone number","change_email_info":" If you have changed your e-mail address, we will send you a confirmation e-mail.","change_password":"Change Pasword","old_password":"Old Password","new_password":"New Password","website":"Website","location":"Location","address_info":"These fields are filled in automatically when entering the location.","street_address":"Street address","postcode":"Postcode","city":"City","country":"Country","changed_accout_message":"You updated your account successfully.","changed_password_message":"You updated your password successfully.","changed_company_message":"You updated the companys data successfully.","upload_image_error":"The file has an invalid format. Please use jpg, png or gif."};
+
+/***/ }),
+
+/***/ "./resources/js/locales/en/utilities.json":
+/*!************************************************!*\
+  !*** ./resources/js/locales/en/utilities.json ***!
+  \************************************************/
+/*! exports provided: cancel, update, change, upload, default */
+/***/ (function(module) {
+
+module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload"};
 
 /***/ }),
 
@@ -40937,10 +41046,22 @@ __webpack_require__.r(__webpack_exports__);
 var _locales_en_auth_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/en/auth.json */ "./resources/js/locales/en/auth.json", 1);
 /* harmony import */ var _locales_en_content_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../locales/en/content.json */ "./resources/js/locales/en/content.json");
 var _locales_en_content_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/en/content.json */ "./resources/js/locales/en/content.json", 1);
-/* harmony import */ var _locales_de_auth_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../locales/de/auth.json */ "./resources/js/locales/de/auth.json");
-var _locales_de_auth_json__WEBPACK_IMPORTED_MODULE_4___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/de/auth.json */ "./resources/js/locales/de/auth.json", 1);
-/* harmony import */ var _locales_de_content_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../locales/de/content.json */ "./resources/js/locales/de/content.json");
-var _locales_de_content_json__WEBPACK_IMPORTED_MODULE_5___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/de/content.json */ "./resources/js/locales/de/content.json", 1);
+/* harmony import */ var _locales_en_settings_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../locales/en/settings.json */ "./resources/js/locales/en/settings.json");
+var _locales_en_settings_json__WEBPACK_IMPORTED_MODULE_4___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/en/settings.json */ "./resources/js/locales/en/settings.json", 1);
+/* harmony import */ var _locales_en_utilities_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../locales/en/utilities.json */ "./resources/js/locales/en/utilities.json");
+var _locales_en_utilities_json__WEBPACK_IMPORTED_MODULE_5___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/en/utilities.json */ "./resources/js/locales/en/utilities.json", 1);
+/* harmony import */ var _locales_de_auth_json__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../locales/de/auth.json */ "./resources/js/locales/de/auth.json");
+var _locales_de_auth_json__WEBPACK_IMPORTED_MODULE_6___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/de/auth.json */ "./resources/js/locales/de/auth.json", 1);
+/* harmony import */ var _locales_de_content_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../locales/de/content.json */ "./resources/js/locales/de/content.json");
+var _locales_de_content_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/de/content.json */ "./resources/js/locales/de/content.json", 1);
+/* harmony import */ var _locales_de_settings_json__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../locales/de/settings.json */ "./resources/js/locales/de/settings.json");
+var _locales_de_settings_json__WEBPACK_IMPORTED_MODULE_8___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/de/settings.json */ "./resources/js/locales/de/settings.json", 1);
+/* harmony import */ var _locales_de_utilities_json__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../locales/de/utilities.json */ "./resources/js/locales/de/utilities.json");
+var _locales_de_utilities_json__WEBPACK_IMPORTED_MODULE_9___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../locales/de/utilities.json */ "./resources/js/locales/de/utilities.json", 1);
+
+
+
+
 
 
 
@@ -40949,18 +41070,22 @@ var _locales_de_content_json__WEBPACK_IMPORTED_MODULE_5___namespace = /*#__PURE_
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var messages = {
-  'en': {
+  'en-EN': {
     auth: _locales_en_auth_json__WEBPACK_IMPORTED_MODULE_2__,
-    content: _locales_en_content_json__WEBPACK_IMPORTED_MODULE_3__
+    content: _locales_en_content_json__WEBPACK_IMPORTED_MODULE_3__,
+    settings: _locales_en_settings_json__WEBPACK_IMPORTED_MODULE_4__,
+    utilities: _locales_en_utilities_json__WEBPACK_IMPORTED_MODULE_5__
   },
-  'de': {
-    auth: _locales_de_auth_json__WEBPACK_IMPORTED_MODULE_4__,
-    content: _locales_de_content_json__WEBPACK_IMPORTED_MODULE_5__
+  'de-DE': {
+    auth: _locales_de_auth_json__WEBPACK_IMPORTED_MODULE_6__,
+    content: _locales_de_content_json__WEBPACK_IMPORTED_MODULE_7__,
+    settings: _locales_de_settings_json__WEBPACK_IMPORTED_MODULE_8__,
+    utilities: _locales_de_utilities_json__WEBPACK_IMPORTED_MODULE_9__
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (new vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  locale: 'de',
-  fallbackLocale: 'en',
+  locale: navigator.language,
+  fallbackLocale: 'en-EN',
   messages: messages
 }));
 

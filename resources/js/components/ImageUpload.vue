@@ -19,7 +19,7 @@
             @change="handleFileUpload()"
         >
         
-        <button class="btn btn-teal w-32 mt-2" @click="submitFile" v-if="showPreview">Upload</button>
+        <button class="btn btn-teal w-32 mt-2" @click="submitFile" v-if="showPreview">{{$t('utilities.upload')}}</button>
     </div>
 </template>
 <script>   
@@ -64,7 +64,7 @@
                         reader.readAsDataURL(this.file) 
                     }else{
                         this.errors = {
-                            image: {0:'The file has an ivalid format. Please use jpg, png or gif.'}
+                            image: {0: this.$i18n.t('settings.upload_image_error')}
                         }                        
                     }                
                 }

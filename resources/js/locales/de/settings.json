@@ -1,0 +1,32 @@
+{
+    "account": "Benutzerkonto",
+    "company": "Firma",
+    "payment": "Bezahlung",
+    "notifications": "Mitteilungen",
+
+    "account_settings": "Benutzerkonto - Einstellungen",    
+    "update_account": "Benutzerkonto aktualizieren",
+    "update_avatar": "Profilbild ändern",
+    "company_settings": "Firmeninstellungen",
+    "update_company": "Firmendaten ändern",
+    "update_logo": "Logo ändern",
+    
+    "position": "Position",
+    "phone": "Telefonnummer",
+    "change_email_info": "Wenn Sie Ihre Email-Adresse geändert haben, werden wir Ihnen anschließend eine Bestätigungs-Email zuschicken.",
+    "change_password": "Passwort ändern",
+    "old_password": "Altes Passwort",
+    "new_password": "Neues Passwort",
+    "website": "Webseite",
+    "location": "Standort",
+    "address_info": "Diese Felder werden bei der Eingabe des Standortes automatisch ausgefüllt.",
+    "street_address": "Starße, Nr.",
+    "postcode": "PLZ",
+    "city": "Stadt",
+    "country": "Land",
+
+    "changed_accout_message": "Ihr Benutzerkonto wurde erfolgreich aktualisiert.",
+    "changed_password_message": "Ihr Passwort wurde erfolgreich aktualisiert.",
+    "changed_company_message": "Die Firmendaten wurden erfolgreich aktualisiert.",
+    "upload_image_error": "Die Datei hat ein ungültiges Format. Bitte benutzen Sie jpg, png oder gif."
+}

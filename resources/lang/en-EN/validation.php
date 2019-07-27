@@ -147,7 +147,11 @@ return [
 
     'attributes' => [
         'vat'           => 'VAT-Number',
-        'company_name'  => 'Company name'
+        'company_name'  => 'Company name',
+        'old_password'  => 'old password',
+        'new_password'  => 'new password',
+        'image'         => 'image',
+        'postcode'      => 'postcode'
     ],
 
 ];

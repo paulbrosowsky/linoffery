@@ -174,6 +174,10 @@ return [
         'available'             => 'verfügbar',
         'size'                  => 'Größe',
         'vat'                   => 'Umsatzsteuer ID',
-        'company_name'          => 'Firmenname'
+        'company_name'          => 'Firmenname',
+        'old_password'          => 'Altes Passwort',
+        'new_password'          => 'Neues Passwort',
+        'image'                 => 'Bild',
+        'postcode'              => 'PLZ'
     ],
 ];

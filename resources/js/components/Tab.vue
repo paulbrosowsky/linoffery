@@ -6,7 +6,8 @@
 <script>
     export default {
         props:{
-            name:{ required: true },            
+            name:'',
+            hash:''            
         },  
         
         data(){
@@ -16,14 +17,9 @@
         },
 
         computed:{
-            hashName(){
-                return '#'+ this.name.toLowerCase().replace(/ /g, '-')
-            },
-
             isActive(){               
-                return this.hashName == this.$route.hash
-            }
-            
+                return this.hash == this.$route.hash
+            }            
         },
        
         

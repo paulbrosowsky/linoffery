@@ -1,10 +1,10 @@
 <template>
     <div class="" v-if="company"> 
         <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2" >
-            Company Settings                
+            {{$t('settings.company_settings')}}              
         </h1>         
         <card class="w-1/2">
-            <p class="text-teal-500 text-lg mb-10">Update Company</p>
+            <p class="text-teal-500 text-lg mb-10">{{$t('settings.update_company')}}</p>
             
             <div class="xl:flex">
                 <div class="w-full flex flex-col items-center px-8 xl:w-1/3">
@@ -13,7 +13,7 @@
                     </div>
                     <image-upload 
                         @preview="updateLogoPreview" 
-                        placeholder="Update Logo"
+                        :placeholder="$t('settings.update_logo')"
                         :endpoint="'/api/settings/company/logo'"
                     ></image-upload>
                     
@@ -53,7 +53,7 @@
                         <input class="input pl-10"
                             :class="errors.website ? 'border-red-300' : ''"
                             type="text" 
-                            :placeholder="'Website'"                                                 
+                            :placeholder="$t('settings.website')"                                                 
                             v-model="website"
                             @keyup="errors= []"                        
                         >
@@ -66,13 +66,15 @@
                             class="input pl-10"                            
                             id="address"
                             type="text" 
-                            :placeholder="'Location'"
+                            :placeholder="$t('settings.location')"
                             @keyup="errors= []"  
                         >
                     </div> 
 
                     <div class=" bg-gray-100 rounded-lg p-3 mb-2">
-                        <p class="text-sm text-gray-600 pb-2">These fields are filled out automatically by entering the location.</p>
+                        <p class="text-sm text-gray-600 pb-2">
+                            {{$t('settings.address_info')}}
+                        </p>
                         
                         <div>
                             <p class="text-sm text-red-500 mb-2" v-if="errors.address" v-text="errors.address[0]"></p>
@@ -82,7 +84,7 @@
                                     class="input" 
                                     :class="errors.address ? 'border-red-300' : ''"                               
                                     type="text" 
-                                    :placeholder="'Street address'"   
+                                    :placeholder="$t('settings.street_address')"   
                                     v-model="address"
                                     @keyup="errors= []"
                                 >
@@ -97,7 +99,7 @@
                                     class="input" 
                                     :class="errors.postcode ? 'border-red-300' : ''"                                       
                                     type="text" 
-                                    :placeholder="'Postcode'"                                    
+                                    :placeholder="$t('settings.postcode')"                                    
                                     v-model="postcode"
                                     @keyup="errors= []"
                                 >
@@ -108,7 +110,7 @@
                                     class="input" 
                                     :class="errors.city ? 'border-red-300' : ''"                                       
                                     type="text" 
-                                    :placeholder="'City'" 
+                                    :placeholder="$t('settings.city')" 
                                     v-model="city"
                                     @keyup="errors= []"
                                 >
@@ -122,7 +124,7 @@
                                     class="input" 
                                     :class="errors.country ? 'border-red-300' : ''"                                   
                                     type="text" 
-                                    :placeholder="'Country'" 
+                                    :placeholder="$t('settings.country')" 
                                     v-model='country'
                                     @keyup="errors= []"
                                 >
@@ -133,11 +135,11 @@
                     <div class="flex justify-end pt-5">
                         
                         <button class="btn btn-outlined is-outlined mr-2" @click.prevent="$router.go(-1)">
-                            Cancel
+                            {{$t('utilities.cancel')}}
                         </button>
                         
                         <button class="btn btn-teal" type="submit">
-                            Update Account
+                            {{$t('utilities.update')}}
                         </button>            
                     </div>
                     
@@ -195,7 +197,7 @@
                         lng: this.lng   
                     })
                     .then(()=>{
-                        flash('You updated your companys data successfully!')
+                        flash(this.$i18n.t('settings.changed_company_message'))
                     })
                     .catch(errors => {
                         this.errors = errors

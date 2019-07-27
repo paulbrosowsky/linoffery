@@ -84,26 +84,13 @@
             setActiveTab(tab){
                 this.$router.push({
                         name:'settings', 
-                        hash: tab.hashName
-                })                
-                
+                        hash: tab.hash
+                }) 
             },
-            
-
-            setInitialActiveTab() {
-                if(!this.$route.hash){
-                    this.$router.push({
-                            name:'settings', 
-                            hash: '#account'
-                    }) 
-                }
-            }
-
         },       
 
         created(){            
-            this.tabs = this.$children 
-            this.setInitialActiveTab(); 
+            this.tabs = this.$children              
         },
        
     }

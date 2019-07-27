@@ -4,7 +4,7 @@
         inputClasses="bg-gray-300 border-grey-300 focus:bg-white"
         wrapperClasses="bg-gray-300 bodrer-0 border-grey-300"
         v-model="number"
-        placeholder="Enter your phone number"
+        :placeholder="$t('settings.phone')"
         @input="updateNumber"
     ></vue-tel-input>
     

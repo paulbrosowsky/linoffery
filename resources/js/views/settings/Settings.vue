@@ -1,17 +1,17 @@
 <template>
     <div v-if="user">
         <tabs>
-            <tab name="Account">
+            <tab :name="$t('settings.account')" hash="#account">
                 <account-settings :user="user"></account-settings>
             </tab>
-            <tab name="Company">
+            <tab :name="$t('settings.company')" hash="#company">
                 <company-settings :company="user.company"></company-settings>
             </tab>
-            <tab name="Payment">
+            <tab :name="$t('settings.payment')" hash="#payment">
                 <payment-settings></payment-settings>
             </tab>
 
-            <tab name="Notifications">
+            <tab :name="$t('settings.notifications')" hash="#notification">
                 <notification-settings></notification-settings>
             </tab>                      
         </tabs>
@@ -36,6 +36,21 @@
                 return this.$store.state.user
             }
         }, 
+
+        methods:{
+            setInitialActiveTab() {
+                if(!this.$route.hash){
+                    this.$router.push({
+                            name:'settings', 
+                            hash: '#account'
+                    }) 
+                }
+            }
+        },
+
+        mounted(){
+            this.setInitialActiveTab()
+        }
 
     }
 </script>

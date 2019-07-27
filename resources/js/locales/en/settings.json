@@ -1,0 +1,32 @@
+{
+    "account": "Account",
+    "company": "Company",
+    "payment": "Payment",
+    "notifications": "Notifications",    
+
+    "account_settings": "Account Settings",
+    "update_account": "Update Account",
+    "update_avatar": "Change Avatar",
+    "company_settings": "Company Settings",
+    "update_company": " Update Companys data",
+    "update_logo": "Update Logo",
+    
+    "position": "Position",
+    "phone": "Phone number",
+    "change_email_info": " If you have changed your e-mail address, we will send you a confirmation e-mail.",
+    "change_password": "Change Pasword",
+    "old_password": "Old Password",
+    "new_password": "New Password",
+    "website": "Website",
+    "location": "Location",
+    "address_info": "These fields are filled in automatically when entering the location.",
+    "street_address": "Street address",
+    "postcode": "Postcode",
+    "city": "City",
+    "country": "Country",
+
+    "changed_accout_message": "You updated your account successfully.",
+    "changed_password_message": "You updated your password successfully.",
+    "changed_company_message": "You updated the companys data successfully.",
+    "upload_image_error": "The file has an invalid format. Please use jpg, png or gif."
+}

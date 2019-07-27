@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 trait HasAvatar{
 
+    protected static function bootHasAvatar()
+    {
+        static::deleting(function($model){ 
+            Storage::disk('public')->delete( $model->avatar );
+        });
+    }
+
    /**
      * Store a new logo to the company
      * 

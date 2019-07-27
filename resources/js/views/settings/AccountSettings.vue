@@ -1,10 +1,10 @@
 <template>
     <div> 
         <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2">
-            Account Settings                
+            {{ $t('settings.account_settings')}}               
         </h1>  
         <card class="">
-            <p class="text-teal-500 text-lg mb-10">Update Account</p>
+            <p class="text-teal-500 text-lg mb-10">{{ $t('settings.update_account')}} </p>
             
             <div class="xl:flex">
                 <div class="w-full flex flex-col items-center px-8 xl:w-1/3">
@@ -13,7 +13,7 @@
                     </div>                    
                     <image-upload 
                         @preview="updateAvatarPreview" 
-                        placeholder="Update Avatar"
+                        :placeholder=" $t('settings.update_avatar')"
                         endpoint = "/api/settings/account/avatar"
                     ></image-upload>                    
                 </div>
@@ -53,8 +53,8 @@
                         <input 
                             class="input pl-10"
                             :class="errors.position ? 'border-red-300' : ''"
-                            type="position" 
-                            placeholder="Position"                                            
+                            type="text" 
+                            :placeholder="$t('settings.position')"                                            
                             v-model="position"
                             @keyup="errors= []"
                         >
@@ -63,17 +63,17 @@
                     <phone-input :phone="phone" @changed="updatePhone"></phone-input>
 
                     <p class="text-sm text-gray-600 py-3">
-                        Wenn Sie Ihre Email-Adresse geändert haben, werden wir Ihnen anschließend eine Bestätigungs-Email zuschicken.
+                        {{ $t('settings.change_email_info')}}
                     </p>
 
                     <div class="flex justify-end mt-5">
                         
                         <button class="btn btn-outlined is-outlined mr-2" @click.prevent="$router.go(-1)">
-                            Cancel
+                            {{ $t('utilities.cancel')}}
                         </button>
                         
                         <button class="btn btn-teal" type="submit">
-                            Update Account
+                            {{ $t('utilities.update')}}
                         </button>            
                     </div>
                     
@@ -82,7 +82,7 @@
         </card>
     
         <card class="mt-5">            
-            <p class="text-teal-500 text-lg mb-5">Change Password</p>
+            <p class="text-teal-500 text-lg mb-5">{{ $t('settings.change_password')}}</p>
             
             <form @submit.prevent="changePassword">
                 <div class="w-full items-center md:flex ">
@@ -92,7 +92,7 @@
                         <password-input                                  
                             :errors="errors" 
                             @changed="updateOldPassword"
-                            :placeholder= "'Old Password'"
+                            :placeholder= "$t('settings.old_password')"
                         ></password-input>
                     </div>
                     
@@ -101,7 +101,7 @@
                         <password-input           
                             :errors="errors" 
                             @changed="updateNewPassword"
-                            :placeholder= "'New Password'"
+                            :placeholder= "$t('settings.new_password')"
                         ></password-input> 
                    </div>
                     
@@ -111,11 +111,11 @@
                 <div class="flex justify-end mt-5">
                     
                     <button class="btn btn-outlined is-outlined mr-2" @click.prevent="$router.go(-1)">
-                        Cancel
+                        {{ $t('utilities.cancel')}}
                     </button>
                     
                     <button class="btn btn-teal" type="submit">
-                        Update Password
+                        {{ $t('utilities.change')}}
                     </button>            
                 </div>
                 
@@ -163,7 +163,7 @@
                         phone: this.phone
                     })
                     .then(()=>{
-                        flash('You updated your account successfully')
+                        flash(this.$i18n.t('settings.changed_accout_message'))
                     })
                     .catch(errors => {
                         this.errors = errors
@@ -177,7 +177,7 @@
                         new_password: this.new_password,
                     })
                     .then(() =>{
-                        flash('You updated your password successfully')
+                        flash(this.$i18n.t('settings.changed_password_message'))
                     })
                     .catch(errors => {
                         console.log(errors)

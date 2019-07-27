@@ -22,7 +22,7 @@ class PasswordSettingsController extends Controller
                 'min:6',
                 function($attribute, $value, $fail){
                     if(!Hash::check($value, auth()->user()->password)){
-                        $fail('This password is invalid.');
+                        $fail(__('This password is invalid.'));
                     }
                 }
             ],

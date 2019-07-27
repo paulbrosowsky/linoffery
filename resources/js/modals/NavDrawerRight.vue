@@ -16,11 +16,11 @@
         <div class="px-5 py-5">
             <a 
                 class="text-white text-lg uppercase cursor-pointer px-1 hover:text-gray-300"
-                @click="changeLocale('de')"
+                @click="changeLocale('de-DE')"
             >DE</a>
             <a 
                 class="text-white text-lg uppercase cursor-pointer px-1 hover:text-gray-300"
-                @click="changeLocale('en')"
+                @click="changeLocale('en-EN')"
             >EN</a>
         </div>
 
