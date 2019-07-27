@@ -1,5 +1,5 @@
 body {
-  font-family: "PT Sans";
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
@@ -642,6 +642,7 @@ video {
   font-size: 0.875rem;
   text-transform: uppercase;
   font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .btn:hover {

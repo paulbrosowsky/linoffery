@@ -1,7 +1,8 @@
 <template>
-    <div class="w-full flex flex-col my-2">
+    <div class="w-full flex flex-col items-center my-2">
         
-        <!-- <img :src="imagePreview" v-show="showPreview"> -->
+        
+        <p class="text-sm text-red-500 mb-2" v-if="errors.image" v-text="errors.image[0]"></p>
         <label 
             class=" text-center py-3 cursor-pointer w-full rounded-lg hover:bg-gray-300" 
             for="file"
@@ -18,26 +19,30 @@
             @change="handleFileUpload()"
         >
         
-        <!-- <button @click="submitFile()">Submit</button> -->
+        <button class="btn btn-teal w-32 mt-2" @click="submitFile" v-if="showPreview">Upload</button>
     </div>
 </template>
 <script>   
 
     export default { 
         
-        props:['placeholder'],
+        props:['placeholder', 'endpoint'],
 
         data(){
             return{
                 file: null,
                 showPreview: false,
-                imagePreview: null
+                imagePreview: null,
+
+                errors: []
             }
         },
 
         methods:{
             // Handes a change on File uplaod
             handleFileUpload(){
+                this.errors = []
+
                 //set local variable to selected file
                 this.file = this.$refs.file.files[0]               
 
@@ -57,7 +62,11 @@
                     if(imgRegex.test( this.file.name )){
                         // Read the File and display the image upon the load event 
                         reader.readAsDataURL(this.file) 
-                    }
+                    }else{
+                        this.errors = {
+                            image: {0:'The file has an ivalid format. Please use jpg, png or gif.'}
+                        }                        
+                    }                
                 }
             },
 
@@ -65,15 +74,25 @@
                 // Initialize Form Data
                 let formData = new FormData()
 
-                // Add the form data to submit
-                formData.append('file', this.file)                
+                // Add file to the form data 
+                formData.append('image', this.file) 
 
-                axios.post('api/upload-file', {
-                        formData, 
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
+                // Upload the Image to Server
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token 
+                axios.post(this.endpoint ,
+                        formData,                                               
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            } 
                         }
+                    )
+                    .then(()=>{
+                        flash('You companys logo is saved!')
+                        this.$store.dispatch('fetchLoggedInUser')
                     })
+                    .catch(errors => this.errors = errors.response.data.errors ) 
+             
             },  
             
             setPreview(){

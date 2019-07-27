@@ -11,14 +11,17 @@
                     <i class="icon ion-md-list text-xl text-white"></i>
                     
                     
-                </button>                
-                <router-link to="/">                
-                    <div class="flex items-center flex-1 text-gray-700 mr-6"> 
-                        <span class="font-light text-2xl">lin</span>
-                        <span class="text-2xl text-teal-500">o</span>
-                        <span class="font-light text-2xl">ffery</span>
-                    </div>
-                </router-link>
+                </button>
+                <div>
+                    <router-link to="/">                
+                        <div class="flex items-center flex-1 text-gray-700 mr-6"> 
+                            <span class="font-light text-2xl">lin</span>
+                            <span class="text-2xl text-teal-500">o</span>
+                            <span class="font-light text-2xl">ffery</span>
+                        </div>
+                    </router-link>
+                </div>                
+                
             </div>
             
             <div class="flex items-center">

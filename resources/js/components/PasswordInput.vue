@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full">
         <p class="text-sm text-red-500 mb-2" v-if="errors.password" v-text="errors.password[0]"></p>
         <div class="relative flex items-center mb-2">
                 <i class="absolute icon ion-md-lock text-xl text-gray-500 px-3"></i>   

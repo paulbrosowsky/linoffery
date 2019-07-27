@@ -1,26 +1,31 @@
 <template>
-    <div v-if="isActive">
+    <div role="tab-panel" v-show="isActive">
         <slot></slot>
     </div>
 </template>
 <script>
     export default {
         props:{
-            name:{ required: true },
-            selected:{ default: false }
+            name:{ required: true },            
         },  
         
         data(){
             return{
-                isActive: this.selected,
+                
             }
         },
 
         computed:{
-            href(){
-                return '#' + this.name.toLowerCase().replace(/ /g, '-');
-              
+            hashName(){
+                return '#'+ this.name.toLowerCase().replace(/ /g, '-')
+            },
+
+            isActive(){               
+                return this.hashName == this.$route.hash
             }
-        }
+            
+        },
+       
+        
     }
 </script>

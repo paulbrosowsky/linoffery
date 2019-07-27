@@ -50,7 +50,7 @@ let routes = [
         component: Settings,
         meta:{            
             layout: 'dashboard',          
-            requiresAuth: true
+            requiresAuth: true,
         }
     },
 

@@ -1,17 +1,23 @@
 <template>
-    <div>
-        <h1 class="hidden text-gray-700 text-xl mb-5 md:block">Account Settings</h1>
+    <div> 
+        <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2">
+            Account Settings                
+        </h1>  
         <card class="">
-            <p class="text-teal-500 text-lg mb-5">User data</p>
+            <p class="text-teal-500 text-lg mb-10">Update Account</p>
             
             <div class="xl:flex">
-                <div class="w-full flex flex-col items-center px-8 xl:w-48 ">
+                <div class="w-full flex flex-col items-center px-8 xl:w-1/3">
                     <div class="w-32 h-32 rounded-full text-2xl shadow-md overflow-hidden mb-3">
                         <avatar :user="user" :preview="avatarPreview"></avatar>
                     </div>                    
-                    <image-upload @preview="updateAvatarPreview" placeholder="Update Avatar"></image-upload>                    
+                    <image-upload 
+                        @preview="updateAvatarPreview" 
+                        placeholder="Update Avatar"
+                        endpoint = "/api/settings/account/avatar"
+                    ></image-upload>                    
                 </div>
-                <form class="flex-grow" @submit.prevent="update">
+                <form class="w-full xl:w-2/3" @submit.prevent="updateAccount">
                 
                     <p class="text-sm text-red-500 mb-2" v-if="errors.name" v-text="errors.name[0]"></p>               
                     <div class="relative flex items-center mb-2">                    
@@ -54,7 +60,7 @@
                         >
                     </div>
 
-                    <phone-input></phone-input>
+                    <phone-input :phone="phone" @changed="updatePhone"></phone-input>
 
                     <p class="text-sm text-gray-600 py-3">
                         Wenn Sie Ihre Email-Adresse geändert haben, werden wir Ihnen anschließend eine Bestätigungs-Email zuschicken.
@@ -62,7 +68,7 @@
 
                     <div class="flex justify-end mt-5">
                         
-                        <button class="btn btn-outlined is-outlined mr-2">
+                        <button class="btn btn-outlined is-outlined mr-2" @click.prevent="$router.go(-1)">
                             Cancel
                         </button>
                         
@@ -74,29 +80,37 @@
                 </form>
             </div>
         </card>
-
-        <card class="mt-8">            
-            <p class="text-teal-500 text-lg mb-5">Password</p>
-
-            <form  @submit.prevent="update">
-
-                <password-input 
-                    :value="password" 
-                    :errors="errors" 
-                    @changed="updatePassword"
-                    :placeholder= "'Old Password'"
-                ></password-input>
-
-                <password-input 
-                    :value="password" 
-                    :errors="errors" 
-                    @changed="updatePassword"
-                    :placeholder= "'New Password'"
-                ></password-input> 
+    
+        <card class="mt-5">            
+            <p class="text-teal-500 text-lg mb-5">Change Password</p>
+            
+            <form @submit.prevent="changePassword">
+                <div class="w-full items-center md:flex ">
+                    
+                    <div class="w-full mr-2">
+                        <p class="text-sm text-red-500 mb-2" v-if="errors.old_password" v-text="errors.old_password[0]"></p>
+                        <password-input                                  
+                            :errors="errors" 
+                            @changed="updateOldPassword"
+                            :placeholder= "'Old Password'"
+                        ></password-input>
+                    </div>
+                    
+                   <div class="w-full">
+                        <p class="text-sm text-red-500 mb-2" v-if="errors.new_password" v-text="errors.new_password[0]"></p>
+                        <password-input           
+                            :errors="errors" 
+                            @changed="updateNewPassword"
+                            :placeholder= "'New Password'"
+                        ></password-input> 
+                   </div>
+                    
+                </div>
+               
 
                 <div class="flex justify-end mt-5">
                     
-                    <button class="btn btn-outlined is-outlined mr-2" @click.prevent>
+                    <button class="btn btn-outlined is-outlined mr-2" @click.prevent="$router.go(-1)">
                         Cancel
                     </button>
                     
@@ -107,6 +121,7 @@
                 
             </form>
         </card>
+        
     </div>
     
 </template>
@@ -128,7 +143,10 @@
                 name: this.user.name,
                 email: this.user.email,
                 position: this.user.position,
-                password: null,
+                phone: this.user.phone,
+
+                old_password: null,
+                new_password: null,
 
                 avatarPreview: null,
                 errors: []              
@@ -136,18 +154,58 @@
         }, 
 
         methods:{
-            update(){
-
+            updateAccount(){
+                this.$store
+                    .dispatch('updateAccount',{
+                        name: this.name,
+                        email: this.email,
+                        position: this.position,
+                        phone: this.phone
+                    })
+                    .then(()=>{
+                        flash('You updated your account successfully')
+                    })
+                    .catch(errors => {
+                        this.errors = errors
+                    })
             },
 
-            updatePassword(value){
-                this.password = value
+            changePassword(){
+                this.$store
+                    .dispatch('changePassword',{
+                        old_password: this.old_password,
+                        new_password: this.new_password,
+                    })
+                    .then(() =>{
+                        flash('You updated your password successfully')
+                    })
+                    .catch(errors => {
+                        console.log(errors)
+                        this.errors = errors
+                    })
+            },
+
+            // Update Password if password field chanded
+            updateOldPassword(value){               
+                this.old_password = value
+                this.errors = []
+            },
+
+            updateNewPassword(value){                
+                this.new_password = value
+                this.errors = []
             },
 
             updateAvatarPreview(value){                
                 this.avatarPreview = value
-            }
-        }
+            },
+
+            // Update phone number if phone field chanded
+            updatePhone(phone){
+                this.phone = phone
+            },            
+           
+        },       
         
     }
 </script>

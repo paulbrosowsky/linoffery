@@ -14,16 +14,23 @@ class CompaniesController extends Controller
      */
     public function update(Request $request)
     {
+        $company = auth()->user()->company;
+
         $request->validate([
-            'name' => ['required', 'string'],
-            'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies'],
+            'name' => ['required', 'string'],            
             'address' => ['required'],
             'postcode' => ['required'],
             'city' => ['required'],
             'country' => ['required'],
         ]);
 
-        auth()->user()->company->update([
+        if($request->vat != $company->vat){
+            $request->validate([               
+                'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies'],                
+            ]);
+        }
+
+        $company->update([
             'name' => $request->name,
             'vat' => $request->vat,
             'country' => $request->country,

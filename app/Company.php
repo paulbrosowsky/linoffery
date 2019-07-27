@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
+    use HasAvatar;
+
     protected $guarded = [];
 
     /**
@@ -14,12 +16,12 @@ class Company extends Model
      * 
      * @return string
      */
-    public function getLogoAttribute($logo)
-    {
-        $exists = Storage::disk('public')->exists($logo);
-
+    public function getAvatarAttribute($avatar)
+    {       
+        $exists = Storage::disk('public')->exists($avatar);  
+              
         if ($exists) {
-            return '/storage/'. $logo;
+            return '/storage/'. $avatar;
         }
         
         return '/storage/build/images/default_logo.svg';    

@@ -22,8 +22,7 @@
         },
 
         data(){
-            return{
-                name: this.user.name,
+            return{                
                 avatar: this.user.avatar,
                 colors: ['bg-indigo-500', 'bg-teal-500', 'bg-red-500', 'bg-green-500', 'bg-orange-500'],
             }
@@ -31,8 +30,8 @@
 
         computed:{
             firstCharacter(){
-                if(this.name){
-                    return this.name.substring(0,1)
+                if(this.user.name){
+                    return this.user.name.substring(0,1)
                 }                
             },
 

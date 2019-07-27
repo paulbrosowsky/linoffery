@@ -1,6 +1,6 @@
 
 body{
-    font-family: 'PT Sans';
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 @tailwind base;
@@ -8,7 +8,7 @@ body{
 
 
 .btn{
-    @apply .bg-gray-500 .rounded-full .px-5 .py-2 .text-white .text-sm .uppercase .font-semibold;
+    @apply .bg-gray-500 .rounded-full .px-5 .py-2 .text-white .text-sm .uppercase .font-semibold .tracking-tight;
 }
 .btn:hover{
     @apply .bg-gray-700;

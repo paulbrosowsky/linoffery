@@ -36,13 +36,13 @@ class AddCompanysLogoTest extends PassportTestCase
 
         Storage::fake('public');
 
-        $this->postJson('/api/settings/company/logo', [
+        $response = $this->postJson('/api/settings/company/logo', [
             'image' => $file = UploadedFile::fake()->image('logo.jpg')       
-        ]);    
+        ]);   
            
-        $this->assertEquals('logos/' .$file->hashName(), auth()->user()->company->getOriginal('logo'));       
+        $this->assertEquals('avatars/' .$file->hashName(), auth()->user()->company->getOriginal('avatar'));       
         
-        Storage::disk('public')->assertExists('logos/' .$file->hashName());
+        Storage::disk('public')->assertExists('avatars/' .$file->hashName());
    }
     
 } 

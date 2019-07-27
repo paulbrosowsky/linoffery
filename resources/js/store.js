@@ -146,6 +146,61 @@ export let store = new Vuex.Store({
             })  
         },
 
+        // SETTINGS Actions START
+        updateAccount(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject) => {
+                axios
+                    .patch('/api/settings/account', data)
+                    .then((response)=>{ 
+                        context.commit('retrieveUser', response.data)                         
+                        resolve(response)
+                    })
+                    .catch(errors =>{                        
+                        reject(errors.response.data.errors)
+                    })
+            })
+        },
+
+        changePassword(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject) => {
+                axios
+                    .patch('/api/settings/password', data)
+                    .then((response)=>{                              
+                        resolve(response)
+                    })
+                    .catch(errors =>{         
+                        reject(errors.response.data.errors)
+                    })
+            })
+        },
+
+        updateCompany(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject) => {
+                axios
+                    .patch('/api/settings/company', data)
+                    .then((response)=>{                                                 
+                        resolve(response)
+                    })
+                    .catch(errors =>{                        
+                        reject(errors.response.data.errors)
+                    })
+            })
+        },  
+        // SETTINGS Actions END
+
+        
+
+
+
+
+
+
         fetchCargos(context, route = null){
             return new Promise((resolve, reject)=>{
                 axios

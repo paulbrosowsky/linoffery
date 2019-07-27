@@ -1,10 +1,10 @@
 <template>
     <div v-if="user">
         <tabs>
-            <tab name="Account" >
+            <tab name="Account">
                 <account-settings :user="user"></account-settings>
             </tab>
-            <tab name="Company" :selected="true">
+            <tab name="Company">
                 <company-settings :company="user.company"></company-settings>
             </tab>
             <tab name="Payment">
@@ -13,7 +13,7 @@
 
             <tab name="Notifications">
                 <notification-settings></notification-settings>
-            </tab>           
+            </tab>                      
         </tabs>
     </div>
 </template>
@@ -35,8 +35,7 @@
             user(){
                 return this.$store.state.user
             }
-        }
-
+        }, 
 
     }
 </script>

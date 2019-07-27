@@ -5,6 +5,7 @@
         wrapperClasses="bg-gray-300 bodrer-0 border-grey-300"
         v-model="number"
         placeholder="Enter your phone number"
+        @input="updateNumber"
     ></vue-tel-input>
     
     
@@ -24,7 +25,13 @@
             return{
                 number: this.phone
             }
-        },        
+        },  
+        
+        methods:{
+            updateNumber(value){
+                this.$emit('changed', value)
+            }
+        }
         
     }
 </script>

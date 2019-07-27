@@ -18,16 +18,19 @@ class AccountSettingsController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], 
-            'position' => ['string', 'max:255'],
-            'phone' => ['string', 'max:255']
+            'name' => ['required', 'string'],            
+            'position' => ['max:255'],
+            'phone' => ['max:255']
         ]);
 
         $user = auth()->user();
 
         if ($request->email != $user->email) {
-           $this->mustConfirmEmail($request->email);
+            $request->validate([
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'] 
+            ]);
+
+            $this->mustConfirmEmail($request->email);
         }
        
         $user->update([
@@ -36,6 +39,8 @@ class AccountSettingsController extends Controller
             'position' => $request->position,
             'phone' => $request->phone
         ]);
+
+        return $user;
     }
 
     /**
@@ -44,7 +49,7 @@ class AccountSettingsController extends Controller
      * @param string $email    
      */
     protected function mustConfirmEmail($email)
-    {
+    {        
         auth()->user()->update([
             'confirmed' => false,
             'confirmation_token' => User::makeConfirmationToken($email)

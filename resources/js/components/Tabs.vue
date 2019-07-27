@@ -1,17 +1,22 @@
 <template>
-    <section class="md:flex">
-        <div class=" w-full md:w-48">
-            <div class="uppercase  text-gray-500 text-sm px-2 pb-2">Settings</div>
-            <div class="flex items-center justify-between mb-2 md:block"> 
+    <section>
+        <div class="w-full">                      
+            <div class="flex items-center justify-between mb-2 md:justify-start md:-ml-3"> 
                 <div 
                     v-for="(tab, index) in tabsList" 
                     :key="index" 
-                    class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5" 
-                    :class="{ 'text-teal-500 font-bold' : tab.isActive }"
-                >
-                    <a v-text="tab.name" @click="selectTab(tab)"></a>  
+                > 
+                
+                    <button
+                        class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5 focus:outline-none" 
+                        :class="{ 'text-teal-500 font-bold' : tab.isActive }"
+                        role-tab
+                        :aria-selected="tab.isActive"
+                        v-text="tab.name" 
+                        @click="setActiveTab(tab)"
+                    ></button>
 
-                </div>  
+                </div>                  
 
                 <div v-if="dropdownTabs"> 
                     <dropdown>
@@ -20,13 +25,19 @@
                                 <i class="icon ion-md-more  text-2xl text-gray-600 hover:text-teal-500 "></i>
                             </button>
                         </template>
+                        
                         <div 
                             v-for="(tab, index) in dropdownTabs" 
                             :key="index" 
-                            class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5" 
-                            :class="{ 'text-teal-500 font-bold' : tab.isActive }"
-                        >
-                            <a v-text="tab.name" @click="selectTab(tab)"></a>  
+                        >                         
+                            <button
+                                class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5 focus:outline-none" 
+                                :class="{ 'text-teal-500 font-bold' : tab.isActive }"
+                                role-tab
+                                :aria-selected="tab.isActive"
+                                v-text="tab.name" 
+                                @click="setActiveTab(tab)"
+                            ></button>
 
                         </div> 
 
@@ -47,42 +58,53 @@
     export default {  
         data(){
            return{
-               tabs:[], 
-
+               tabs:[],
            }
         },
 
         computed:{
             tabsList(){  
                 // reduce tabs lenght on mobile view   
-                if (screen.width<=640 && this.tabs.length > 5) {
-                    this.tabs.slice(1, 5)
+                if (screen.width<=640 && this.tabs.length > 4) {
+                   return this.tabs.slice(0,4)
                 }                       
-                return  this.tabs                
+                return  this.tabs              
             },
 
             dropdownTabs(){
                 // make tabs array for dropdown on mobile view   
-                if (screen.width<=640 && this.tabs.length > 5) {
-                    return this.tabs.slice(5) 
+                if (screen.width<=640 && this.tabs.length > 4) {
+                    return this.tabs.slice(4, this.tabs.length-1) 
                 }                
                 return null
-            }
-        },
+            },            
+        },        
 
         methods:{
-            selectTab(selectedTab){
-                this.tabs.forEach(tab => {
-                    tab.isActive = (tab.name == selectedTab.name);
-                });
+            setActiveTab(tab){
+                this.$router.push({
+                        name:'settings', 
+                        hash: tab.hashName
+                })                
+                
             },
+            
 
+            setInitialActiveTab() {
+                if(!this.$route.hash){
+                    this.$router.push({
+                            name:'settings', 
+                            hash: '#account'
+                    }) 
+                }
+            }
+
+        },       
+
+        created(){            
+            this.tabs = this.$children 
+            this.setInitialActiveTab(); 
         },
-
-        created(){
-            this.tabs = this.$children;         
-        },
-
        
     }
 </script>

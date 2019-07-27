@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class PasswordSettingsController extends Controller
 {
@@ -15,16 +16,18 @@ class PasswordSettingsController extends Controller
     public function update(Request $request)
     {  
         $request->validate([
-            'old_password' => ['required', 'string', 'min:6'],
+            'old_password' => [
+                'required', 
+                'string', 
+                'min:6',
+                function($attribute, $value, $fail){
+                    if(!Hash::check($value, auth()->user()->password)){
+                        $fail('This password is invalid.');
+                    }
+                }
+            ],
             'new_password' => ['required', 'string', 'min:6']
         ]);
-        
-        // Compare current password with request value
-        if(!Hash::check($request->old_password, auth()->user()->password)){
-            return response()->json(['errors' => [
-                'old_password' =>['Invalid password.'] 
-            ]], 422);
-        }
         
         auth()->user()->update([
             'password' => Hash::make($request->new_password),

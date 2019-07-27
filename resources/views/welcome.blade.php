@@ -10,7 +10,7 @@
         <title>linoffery</title>
 
         <!-- Fonts -->     
-        <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">    
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
         <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
         <link href="/css/app.css" rel="stylesheet">
       
