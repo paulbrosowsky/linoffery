@@ -18,9 +18,12 @@ Route::group([
     'namespace' => 'Auth'
 ], function(){
 
+
     Route::post('/login', 'AuthController@login');
     Route::post('/register', 'AuthController@register');
-    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index');
+    Route::post('/password/email', 'ForgotPasswordController@index');
+    Route::post('/password/reset', 'ForgotPasswordController@update');
+    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index');    
 
     Route::group([
         'middleware' => 'auth:api'

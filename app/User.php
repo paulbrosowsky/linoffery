@@ -24,7 +24,8 @@ class User extends Authenticatable
         'confirmation_token',
         'position',
         'phone',
-        'avatar'
+        'avatar',
+        'password_reset_token'
     ];
 
     /**
@@ -67,7 +68,7 @@ class User extends Authenticatable
      * @param string
      * @return string
      */
-    public static function makeConfirmationToken($email)
+    public static function makeToken($email)
     { 
         return str_limit(md5($email . str_random()), 25, '');
     }

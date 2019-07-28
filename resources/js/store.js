@@ -146,6 +146,33 @@ export let store = new Vuex.Store({
             })  
         },
 
+        sendPasswordResetEmail(context, email){
+            return new Promise((resolve, reject) => {
+                axios
+                    .post('/api/auth/password/email', email)
+                    .then((response)=>{                        
+                        resolve(response)
+                    })
+                    .catch(errors =>{                        
+                        reject(errors.response.data.errors)
+                    })
+
+            })
+        },
+
+        resetPassword(context, data){
+            return new Promise((resolve, reject) => {
+                axios
+                    .post('/api/auth/password/reset', data)
+                    .then((response)=>{                        
+                        resolve(response)
+                    })
+                    .catch(errors =>{                        
+                        reject(errors.response.data.errors)
+                    })
+            })
+        },
+
         // SETTINGS Actions START
         updateAccount(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 

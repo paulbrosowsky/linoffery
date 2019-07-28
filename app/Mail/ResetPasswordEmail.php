@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmYourEmail extends Mailable implements ShouldQueue
+class ResetPasswordEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -18,8 +18,8 @@ class ConfirmYourEmail extends Mailable implements ShouldQueue
      * @return void
      */
     public function __construct($user)
-    {       
-        $this->user = $user;
+    {        
+        $this->user = $user;        
     }
 
     /**
@@ -28,8 +28,8 @@ class ConfirmYourEmail extends Mailable implements ShouldQueue
      * @return $this
      */
     public function build()
-    {               
-        return $this->markdown('emails.confirm-email')
-            ->subject(__('Please confirm you email address.'));
+    {        
+        return $this->markdown('emails.reset-password')
+            ->subject(__('Reset Password'));
     }
 }

@@ -64,8 +64,7 @@
 
         mounted(){
             this.fetchLoggedInUser()
-            this.retriveLocale()
-            console.log(navigator.language)
+            this.retriveLocale()            
         }
 
     }

@@ -34,7 +34,9 @@
 
             <password-input :value="form.password" @changed="updatePassword" :errors="[]"></password-input>
 
-            <a href="#" class="link text-sm pl-2">{{ $t('auth.forgot_password') }}</a>
+            <router-link :to="{name:'forgot_password'}" class="link text-sm pl-2" @click.native="close">
+                {{ $t('auth.forgot_password') }}
+            </router-link>            
 
             <div class="flex justify-end pt-5">
                 <router-link to="/register">
@@ -65,7 +67,7 @@
             return{
                 form:{
                     email: null,
-                    password: null
+                    password: null,                    
                 } ,
                 
                 error: null,
@@ -97,8 +99,7 @@
                 this.form = {}
                 this.loading = false
                 this.error = null
-                this.$modal.hide('login')
-
+                this.$modal.hide('login')                
             }
         }      
         

@@ -6,10 +6,12 @@ import Cargos from './views/cargos/Cargos'
 import Cargo from './views/cargos/Cargo'
 import CreateCargo from './views/cargos/CreateCargo'
 import Dashboard from './views/Dashboard'
+import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
 import Login from './views/auth/Login'
 import Logout from './views/auth/Logout'
 import Register from './views/auth/Register'
+import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
 import Welcome from './views/Welcome'
 
@@ -59,7 +61,7 @@ let routes = [
         path:'/register',
         component: Register,
         meta:{
-            layout: 'fullscreen',
+            
             requiresVisitor: true
         }
     },
@@ -80,6 +82,26 @@ let routes = [
         component: Logout, 
         meta:{            
             requiresAuth: true
+        }       
+    },
+
+    {
+        name: 'forgot_password',
+        path:'/forgot-password',
+        component: ForgotPassword, 
+        meta:{   
+            layout: 'fullscreen',         
+            requiresVisitor: true
+        }       
+    },
+
+    {
+        name: 'reset_password',
+        path:'/password/reset',
+        component: ResetPassword, 
+        meta:{   
+            layout: 'fullscreen',         
+            requiresVisitor: true
         }       
     },
 

@@ -196,7 +196,9 @@ class RegistrationTest extends TestCase
    function a_confirmation_email_is_sent_upon_registration()
    {    
         Mail::fake();
+
         $this->registerAccount(); 
+        
         Mail::assertQueued(ConfirmYourEmail::class);
    }
 
@@ -208,8 +210,7 @@ class RegistrationTest extends TestCase
         $user = User::whereName('John Doe')->first();  
        
         $this->assertFalse($user->confirmed); 
-        $this->assertNotNull($user->confirmation_token);  
-
+                
         $this->get( '/api/auth/email-confirmation/confirm?token=' . $user->confirmation_token)
             ->assertRedirect('/dashboard');
 

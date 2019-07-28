@@ -12,5 +12,11 @@
     "Confirm Email": "Email bestätigen",
     "Thank you,": "Vielen Dank,",
 
-    "This password is invalid.": "Dieses Passwort ist ungültig."
+    "This password is invalid.": "Dieses Passwort ist ungültig.",
+
+    "Reset Password": "Passwort zurücksetzen",
+    "Hello ": "Hallo ",
+    "We received a request for the password change on your user account.": " Wir haben eine Anfrage für die Passwortänderung an Ihrem Benutzerkonto erhalten.",
+    "Do you want to change your password?": "Möchten Sie Ihr Passwort ändern?",
+    "If you have not sent us anything, just ignore this email.": "Wenn Sie uns nichts gesendet haben, ignorieren Sie einfach diese E-Mail."    
 }

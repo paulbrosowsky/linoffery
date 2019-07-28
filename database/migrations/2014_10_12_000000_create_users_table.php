@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('position')->nullable();
             $table->string('phone')->nullable();
             $table->string('confirmation_token')->nullable(); 
+            $table->string('password_reset_token')->nullable(); 
             $table->boolean('confirmed')->default(false);          
             $table->rememberToken();
             $table->timestamps();
