@@ -52,7 +52,7 @@ class AccountSettingsController extends Controller
     {        
         auth()->user()->update([
             'confirmed' => false,
-            'confirmation_token' => User::makeConfirmationToken($email)
+            'confirmation_token' => User::makeToken($email)
         ]);
 
         Mail::to(auth()->user())->send(new ConfirmYourEmail(auth()->user()));

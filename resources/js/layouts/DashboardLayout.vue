@@ -7,6 +7,7 @@
                 <div class="w-full mx-auto" style="max-width: 1408px;">  
                     <div class="flex px-3 py-5 md:px-12">   
                         <div class="w-full xl:mr-10">
+                                <notifications></notifications>
                             <slot></slot> 
                         </div> 
 
@@ -26,20 +27,22 @@
     </div> 
     
 </template>
-<script>
+<script>    
     import DashboardNav from '../components/DashboardNav'
     import Navbar from '../components/Navbar'
+    import Notifications from '../notifications/Notifications'
     import AppFooter from '../components/Footer'  
     import Gmap from '../views/Map'
     import SidebarRight from '../components/SidebarRight'
 
     export default {
-        components:{
+        components:{            
             DashboardNav,
             Navbar,
+            Notifications,
             AppFooter, 
             Gmap,
-            SidebarRight          
+            SidebarRight, 
         }, 
 
         computed:{

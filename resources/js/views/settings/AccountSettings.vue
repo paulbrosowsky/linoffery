@@ -3,7 +3,7 @@
         <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2">
             {{ $t('settings.account_settings')}}               
         </h1>  
-        <card class="">
+        <card class="relative">
             <p class="text-teal-500 text-lg mb-10">{{ $t('settings.update_account')}} </p>
             
             <div class="xl:flex">
@@ -79,9 +79,10 @@
                     
                 </form>
             </div>
+            <loading-spinner :loading="loadingAccount" :position="'absolute'"></loading-spinner>  
         </card>
     
-        <card class="mt-5">            
+        <card class="relative mt-5">            
             <p class="text-teal-500 text-lg mb-5">{{ $t('settings.change_password')}}</p>
             
             <form @submit.prevent="changePassword">
@@ -120,8 +121,11 @@
                 </div>
                 
             </form>
+            <loading-spinner :loading="loadingPassword" :position="'absolute'"></loading-spinner> 
         </card>
+
         
+
     </div>
     
 </template>
@@ -149,12 +153,15 @@
                 new_password: null,
 
                 avatarPreview: null,
-                errors: []              
+                errors: [] ,
+                loadingAccount: false,
+                loadingPassword: false              
             }
         }, 
 
         methods:{
             updateAccount(){
+                this.loadingAccount = true
                 this.$store
                     .dispatch('updateAccount',{
                         name: this.name,
@@ -163,24 +170,28 @@
                         phone: this.phone
                     })
                     .then(()=>{
+                        this.loadingAccount = false
                         flash(this.$i18n.t('settings.changed_accout_message'))
                     })
                     .catch(errors => {
+                         this.loadingAccount = false
                         this.errors = errors
                     })
             },
 
             changePassword(){
+                this.loadingPassword = true
                 this.$store
                     .dispatch('changePassword',{
                         old_password: this.old_password,
                         new_password: this.new_password,
                     })
                     .then(() =>{
+                        this.loadingPassword = false
                         flash(this.$i18n.t('settings.changed_password_message'))
                     })
                     .catch(errors => {
-                        console.log(errors)
+                        this.loadingPassword = false                        
                         this.errors = errors
                     })
             },

@@ -58,13 +58,16 @@
                 let locale = this.$cookies.get('locale')
                 if(locale){
                     this.$i18n.locale = locale
+                }else{
+                    this.$i18n.locale = navigator.language
+                    this.$cookies.set('locale', navigator.language, 365)   
                 }                
             }
         },
 
         mounted(){
             this.fetchLoggedInUser()
-            this.retriveLocale()            
+            this.retriveLocale()                      
         }
 
     }

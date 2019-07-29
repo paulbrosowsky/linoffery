@@ -48,11 +48,8 @@
 
         </form> 
 
-        <div class="absolute w-full h-full bg-white opacity-75  flex justify-center items-center top-0 left-0"
-            v-if="loading"
-        >
-            <spinner :loading="loading" size="48px"></spinner>
-        </div>
+        <loading-spinner :loading="loading" size="48px" :position="'absolute'"></loading-spinner>
+        
     </div>
     
 </template>

@@ -1,4 +1,5 @@
 {
+    "settings": "settings",
     "account": "Account",
     "company": "Company",
     "payment": "Payment",
@@ -28,5 +29,9 @@
     "changed_accout_message": "You updated your account successfully.",
     "changed_password_message": "You updated your password successfully.",
     "changed_company_message": "You updated the companys data successfully.",
-    "upload_image_error": "The file has an invalid format. Please use jpg, png or gif."
+    "upload_image_error": "The file has an invalid format. Please use jpg, png or gif.",
+    "image_uploaded_message": "Your uploded your image successfully.",
+
+    "please_complete_company_address": "Please complete the companys address.",
+    "complete_company_address_info": "You can only use our service as a business customer. That's why we need complete information about your company."
 }

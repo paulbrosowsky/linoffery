@@ -3,7 +3,7 @@
         <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2" >
             {{$t('settings.company_settings')}}              
         </h1>         
-        <card class="w-1/2">
+        <card class="w-1/2 relative">
             <p class="text-teal-500 text-lg mb-10">{{$t('settings.update_company')}}</p>
             
             <div class="xl:flex">
@@ -145,6 +145,7 @@
                     
                 </form>
             </div>
+            <loading-spinner :loading="loading" :position="'absolute'"></loading-spinner>  
         </card>
     </div>
     
@@ -171,7 +172,8 @@
                 lng: null,                
 
                 logoPreview: null,
-                errors:[]
+                errors:[],
+                loading: false
             }
         },
 
@@ -183,6 +185,7 @@
 
         methods:{
             updateCompany(){
+                this.loading = true
                 this.$store
                     .dispatch('updateCompany',{
                         name: this.name,
@@ -197,9 +200,11 @@
                         lng: this.lng   
                     })
                     .then(()=>{
+                        this.loading = false
                         flash(this.$i18n.t('settings.changed_company_message'))
                     })
                     .catch(errors => {
+                        this.loading = false
                         this.errors = errors
                     })
             },

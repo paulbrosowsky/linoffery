@@ -1,11 +1,12 @@
 {
+    "settings": "Einstellungen",
     "account": "Benutzerkonto",
     "company": "Firma",
     "payment": "Bezahlung",
     "notifications": "Mitteilungen",
 
     "account_settings": "Benutzerkonto - Einstellungen",    
-    "update_account": "Benutzerkonto aktualizieren",
+    "update_account": "Benutzerkonto aktualisieren",
     "update_avatar": "Profilbild ändern",
     "company_settings": "Firmeninstellungen",
     "update_company": "Firmendaten ändern",
@@ -28,5 +29,9 @@
     "changed_accout_message": "Ihr Benutzerkonto wurde erfolgreich aktualisiert.",
     "changed_password_message": "Ihr Passwort wurde erfolgreich aktualisiert.",
     "changed_company_message": "Die Firmendaten wurden erfolgreich aktualisiert.",
-    "upload_image_error": "Die Datei hat ein ungültiges Format. Bitte benutzen Sie jpg, png oder gif."
+    "upload_image_error": "Die Datei hat ein ungültiges Format. Bitte benutzen Sie jpg, png oder gif.",
+    "image_uploaded_message": "Ihr Bild wurde erfolgreich gespeichert.",
+
+    "please_complete_company_address": "Bitte vevollständigen Sie die Firmenadresse.",
+    "complete_company_address_info": "Unser Service können Sie nur als Geschäftskunde nutzen. Deshalb benötigen wir vollsändigen Angaben zu Ihrem Unternehmen."
 }

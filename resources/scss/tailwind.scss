@@ -25,7 +25,7 @@ body{
 }
 
 .btn-teal-outlined{
-    @apply .border .border-teal-500 .text-teal-500
+    @apply .border-teal-500 .text-teal-500
 }
 .btn-teal-outlined:hover{
     @apply .bg-teal-500
@@ -36,6 +36,19 @@ body{
 }
 .btn-teal:hover{
     @apply .bg-teal-700;
+}
+
+.btn-blue-outlined{
+    @apply .border-blue-400 .text-blue-400
+}
+.btn-blue-outlined:hover{
+    @apply .bg-blue-400
+}
+.btn-blue{
+    @apply bg-blue-400
+}
+.btn-blue:hover{
+    @apply .bg-blue-600
 }
 
 .input{

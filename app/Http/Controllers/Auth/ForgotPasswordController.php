@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ForgotPasswordController extends Controller
 {
+    /**
+     *  Sent Email to authenticated user to reset password
+     * 
+     * @param Request email
+     */
     public function index(Request $request)
     {
         $request->validate([
@@ -26,6 +31,11 @@ class ForgotPasswordController extends Controller
         Mail::to($user)->send(new ResetPasswordEmail($user));
     }
 
+     /**
+     *  Update Old Password
+     * 
+     * @param Request password, token
+     */
     public function update(Request $request)
     {       
         $request->validate([

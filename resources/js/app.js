@@ -31,7 +31,7 @@ Vue.component('card', require('./components/Card.vue').default);
 Vue.component('default-modal', require('./modals/DefaultModal.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
 Vue.component('password-input', require('./components/PasswordInput.vue').default);
-Vue.component('spinner', require('./components/Spinner.vue').default);
+Vue.component('loading-spinner', require('./components/Spinner.vue').default);
 Vue.component('tab', require('./components/Tab.vue').default);
 Vue.component('tabs', require('./components/Tabs.vue').default);
 

@@ -23,7 +23,8 @@ Route::group([
     Route::post('/register', 'AuthController@register');
     Route::post('/password/email', 'ForgotPasswordController@index');
     Route::post('/password/reset', 'ForgotPasswordController@update');
-    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index');    
+    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index'); 
+      
 
     Route::group([
         'middleware' => 'auth:api'
@@ -31,6 +32,7 @@ Route::group([
 
         Route::get('/logout', 'AuthController@logout');
         Route::get('/user', 'AuthController@user');
+        Route::get('/email-confirmation/email', 'EmailConfirmationController@update');  
     });
 });
 

@@ -21,6 +21,14 @@ export let store = new Vuex.Store({
     getters:{
         loggedIn(state){
            return state.token ? true : false
+        },
+
+        confirmed(state){            
+            return  state.user ? state.user.confirmed : ''
+        },
+
+        company(state){
+            return  state.user ? state.user.company : ''
         }
     },
 
@@ -173,6 +181,19 @@ export let store = new Vuex.Store({
             })
         },
 
+        sendConfirmationEmail(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+            
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/auth/email-confirmation/email')
+                    .then(response =>{        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })  
+        },
+
         // SETTINGS Actions START
         updateAccount(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
@@ -211,7 +232,8 @@ export let store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios
                     .patch('/api/settings/company', data)
-                    .then((response)=>{                                                 
+                    .then((response)=>{  
+                        context.dispatch('fetchLoggedInUser')                                               
                         resolve(response)
                     })
                     .catch(errors =>{                        

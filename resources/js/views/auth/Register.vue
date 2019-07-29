@@ -106,11 +106,9 @@
                         
             </div>
         </div>
-        <div class="fixed w-full h-full bg-white opacity-75  flex justify-center items-center top-0"
-            v-if="loading"
-        >
-            <spinner :loading="loading" size="48px"></spinner>
-        </div>
+        
+        <loading-spinner :loading="loading" size="48px"></loading-spinner>
+        
     </section>  
 </template>
 <script>

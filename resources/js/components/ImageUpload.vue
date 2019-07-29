@@ -19,7 +19,7 @@
             @change="handleFileUpload()"
         >
         
-        <button class="btn btn-teal w-32 mt-2" @click="submitFile" v-if="showPreview">{{$t('utilities.upload')}}</button>
+        <button class="btn btn-teal w-32 mt-2" @click="submitFile" v-if="showUplaodBtn">{{$t('utilities.upload')}}</button>
     </div>
 </template>
 <script>   
@@ -33,7 +33,7 @@
                 file: null,
                 showPreview: false,
                 imagePreview: null,
-
+                showUplaodBtn: false,
                 errors: []
             }
         },
@@ -88,15 +88,17 @@
                         }
                     )
                     .then(()=>{
-                        flash('You companys logo is saved!')
-                        this.$store.dispatch('fetchLoggedInUser')
+                        flash(this.$i18n.t('settings.image_uploaded_message'))
+                        this.$store.dispatch('fetchLoggedInUser')   
+                        this.showUplaodBtn = false                  
                     })
                     .catch(errors => this.errors = errors.response.data.errors ) 
              
             },  
             
             setPreview(){
-                this.$emit('preview', this.imagePreview)  
+                this.$emit('preview', this.imagePreview) 
+                this.showUplaodBtn = true 
             }
         }     
         

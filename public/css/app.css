@@ -666,7 +666,6 @@ video {
 }
 
 .btn-teal-outlined {
-  border-width: 1px;
   border-color: #38b2ac;
   color: #38b2ac;
 }
@@ -681,6 +680,23 @@ video {
 
 .btn-teal:hover {
   background-color: #2c7a7b;
+}
+
+.btn-blue-outlined {
+  border-color: #63b3ed;
+  color: #63b3ed;
+}
+
+.btn-blue-outlined:hover {
+  background-color: #63b3ed;
+}
+
+.btn-blue {
+  background-color: #63b3ed;
+}
+
+.btn-blue:hover {
+  background-color: #3182ce;
 }
 
 .input {
