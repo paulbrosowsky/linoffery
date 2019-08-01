@@ -8,7 +8,7 @@ class Tender extends Model
 {
     protected $guarded = [];
 
-    protected $with = [ 'user', 'locations', 'freights' ];
+    protected $with = [ 'user', 'locations', 'freights', 'category'];
 
     /**
      * A Tender belong to user
@@ -18,6 +18,16 @@ class Tender extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * A Tender belong to a category
+     * 
+     * @return belondsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     /**

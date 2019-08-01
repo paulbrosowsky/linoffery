@@ -18,5 +18,15 @@
     "Hello ": "Hallo ",
     "We received a request for the password change on your user account.": " Wir haben eine Anfrage für die Passwortänderung an Ihrem Benutzerkonto erhalten.",
     "Do you want to change your password?": "Möchten Sie Ihr Passwort ändern?",
-    "If you have not sent us anything, just ignore this email.": "Wenn Sie uns nichts gesendet haben, ignorieren Sie einfach diese E-Mail."    
+    "If you have not sent us anything, just ignore this email.": "Wenn Sie uns nichts gesendet haben, ignorieren Sie einfach diese E-Mail.", 
+    
+    "Standard": "Standard",
+    "Havy load": "Schwertransport",
+    "Foods": "Lebensmittel",
+    "Refrigerated": "Kühltransport",
+    "Car transport": "Kfz Transport",
+    "Bulk": "Schüttgut",
+    "Animals": "Tiere",
+    "Luquids": "Flüssigkeiten",
+    "Dangerous": "Gefahrgut"
 }

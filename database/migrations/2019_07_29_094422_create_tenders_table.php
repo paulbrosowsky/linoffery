@@ -16,6 +16,7 @@ class CreateTendersTable extends Migration
         Schema::create('tenders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('category_id');
             $table->string('title_image')->nullable();
             $table->string('title');
             $table->text('description')->nullable();

@@ -23,8 +23,11 @@
                             </div>
 
                             <div>
-                                <span class="text-sm text-blue-400 border-blue-400 uppercase tracking-tight font-bold"
-                                    v-text="tender.type"></span>
+                                <span 
+                                    class="text-sm uppercase border rounded-full tracking-tight font-bold px-2"
+                                    v-text="category.name"
+                                    :style="{color: category.color, borderColor: category.color }"
+                                ></span>
 
                                 <span class="text-sm ml-2 text-gray-500" v-text="weight"></span>
                             </div>
@@ -53,6 +56,7 @@
 
         data(){
             return{
+                category: this.tender.category,
                 offerCount: 2
             }
         },

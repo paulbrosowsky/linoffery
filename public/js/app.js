@@ -2892,10 +2892,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['tender'],
   data: function data() {
     return {
+      category: this.tender.category,
       offerCount: 2
     };
   },
@@ -5041,6 +5045,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_resize_directive__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-resize-directive */ "./node_modules/vue-resize-directive/dist/Vueresize.js");
 /* harmony import */ var vue_resize_directive__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_resize_directive__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
 //
 //
 //
@@ -18488,8 +18495,12 @@ var render = function() {
                   _c("div", [
                     _c("span", {
                       staticClass:
-                        "text-sm text-blue-400 border-blue-400 uppercase tracking-tight font-bold",
-                      domProps: { textContent: _vm._s(_vm.tender.type) }
+                        "text-sm uppercase border rounded-full tracking-tight font-bold px-2",
+                      style: {
+                        color: _vm.category.color,
+                        borderColor: _vm.category.color
+                      },
+                      domProps: { textContent: _vm._s(_vm.category.name) }
                     }),
                     _vm._v(" "),
                     _c("span", {
@@ -21933,8 +21944,12 @@ var render = function() {
           _c("div", { staticClass: "py-3" }, [
             _c("span", {
               staticClass:
-                "text-base text-blue-400 border-blue-400 uppercase tracking-tight font-bold mr-2",
-              domProps: { textContent: _vm._s(_vm.tender.type) }
+                "text-sm uppercase border rounded-full tracking-tight font-bold px-3 py-1 mr-1",
+              style: {
+                color: _vm.tender.category.color,
+                borderColor: _vm.tender.category.color
+              },
+              domProps: { textContent: _vm._s(_vm.tender.category.name) }
             }),
             _vm._v(" "),
             _c("span", { staticClass: "text-gray-500" }, [

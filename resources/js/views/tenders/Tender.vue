@@ -74,9 +74,12 @@
             <p class="text-2xl font-bold leading-none" v-text="tender.title"></p>
 
             <div class="py-3">
-                <span class="text-base text-blue-400 border-blue-400 uppercase tracking-tight font-bold mr-2"
-                    v-text="tender.type"
+                <span 
+                    class="text-sm uppercase border rounded-full tracking-tight font-bold px-3 py-1 mr-1"
+                    v-text="tender.category.name"
+                    :style="{color: tender.category.color, borderColor: tender.category.color }"
                 ></span>
+                
                 <span class="text-gray-500">{{$t('tender.valid_until')}}</span>
                 <span> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
             </div>
@@ -241,7 +244,7 @@
         },
 
         data(){
-            return{
+            return{               
                 offerCount: 2,
                 cardHeaderSmall: false,                
             }
