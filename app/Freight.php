@@ -6,5 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Freight extends Model
 {
-    //
+    /**
+     *  A Freight belongs to a Tender
+     * 
+     * @return belongsTo
+     */
+    public function tender()
+    {
+        return $this->belongsTo(Tender::class);
+    }
+
 }

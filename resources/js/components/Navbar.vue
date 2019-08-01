@@ -1,17 +1,7 @@
 <template>
     <nav class="w-full px-3 py-3 z-10 md:px-10" :class="classes"> 
         <div class="flex items-center justify-between">
-            <div class="flex">
-                <button 
-                    class="bg-teal-500 rounded-full mr-2 shadow-md px-3 py-1 hover:bg-teal-700 focus:outline-none"
-                    v-if="layout === 'map'" 
-                    @click="toggleDrawerLeft"
-                >
-                    
-                    <i class="icon ion-md-list text-xl text-white"></i>
-                    
-                    
-                </button>
+            <div class="flex"> 
                 <div>
                     <router-link to="/">                
                         <div class="flex items-center flex-1 text-gray-700 mr-6"> 
@@ -75,13 +65,7 @@
             user(){
                 return this.$store.state.user
             }
-        },
-
-        methods:{
-            toggleDrawerLeft(){
-                Event.$emit('toggle-drawer-left')
-            }
-        }
+        },       
         
     }
 </script>

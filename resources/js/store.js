@@ -9,8 +9,8 @@ export let store = new Vuex.Store({
         token: localStorage.getItem('access_token') || null,
         user: null,   
 
-        cargo: null,
-        cargos: null,        
+        tender: null,
+        tenders: null,        
         locations: [],
 
         origin:null,
@@ -29,11 +29,14 @@ export let store = new Vuex.Store({
 
         company(state){
             return  state.user ? state.user.company : ''
+        },
+
+        tenderList(state){            
+            return state.tenders ? state.tenders.data : null
         }
     },
 
     mutations:{
-
         retrieveToken(state, token){
             state.token = token
         },
@@ -46,18 +49,18 @@ export let store = new Vuex.Store({
             state.user = user
         },       
 
-        retrieveCargos(state, cargos){
-            state.cargos = cargos
+        retrieveTenders(state, tenders){
+            state.tenders = tenders
         },
 
-        retrieveCargo(state, cargo){
-            state.cargo = cargo
+        retrieveTender(state, tender){
+            state.tender = tender
         },
 
-        retrieveLocations(state, cargos){ 
+        retrieveLocations(state, tenders){ 
             state.locations = []           
-            cargos.map(cargo => {                
-                cargo.locations.forEach( location => {
+            tenders.data.map(tender => {                
+                tender.locations.forEach( location => {
                     state.locations.push(location)
                 });                
             })
@@ -241,21 +244,14 @@ export let store = new Vuex.Store({
                     })
             })
         },  
-        // SETTINGS Actions END
+        // SETTINGS Actions END 
 
-        
-
-
-
-
-
-
-        fetchCargos(context, route = null){
+        fetchTenders(context, route = null){
             return new Promise((resolve, reject)=>{
                 axios
-                    .get('api/cargos', { params:{route:route} })
+                    .get('/api/tenders', { params:{route:route} })
                     .then(response =>{                       
-                        context.commit('retrieveCargos', response.data)
+                        context.commit('retrieveTenders', response.data)
                         context.commit('retrieveLocations', response.data)
                         resolve(response)
                     })
@@ -263,12 +259,12 @@ export let store = new Vuex.Store({
             })           
         },
 
-        fetchCargo(context, path){
+        fetchTender(context, path){
             return new Promise((resolve, reject)=>{
                 axios
                     .get(path)
                     .then(response =>{                       
-                        context.commit('retrieveCargo', response.data)
+                        context.commit('retrieveTender', response.data)
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response))

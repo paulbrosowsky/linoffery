@@ -1,0 +1,22 @@
+{
+    "offer": "Offer",
+    "offers": "Offers",
+
+    "valid_until": "valid until",
+    "m_offer": "offer",
+
+    "curr_offer": "Curr. Offer",
+    "make_offer": "Make offer",
+    "take_it": "take it now",
+    "pickup_details": "Pick up details",
+    "delivery_details": "Delivery details",
+    "freight_details": "Freight details",
+    "earliest_date": "Erliest date",
+    "latest_date": "Latest date",
+    "loading_driver": "Loading by driver",
+    "latency": "Latency",
+    "transport_type":"Transport type",
+    "dimentions": "Dimentions",
+    "weight": "Weight"
+
+}

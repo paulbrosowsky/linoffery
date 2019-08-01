@@ -50,7 +50,7 @@ Route::group([
 });
 
 
-Route::get('/cargos', 'CargosController@index');
-Route::get('/cargos/{cargo}', 'CargosController@show');
+Route::get('/tenders', 'TendersController@index');
+Route::get('/tenders/{tender}', 'TendersController@show');
 
-Route::get('/locations', 'LocationsController@index');
+// Route::get('/locations', 'LocationsController@index');

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nav class="bg-gray-700 p-4">
+        <!-- <nav class="bg-gray-700 p-4">
             <p class="text-white ml-8 mb-2">Finde die Fracht auf deiner Strecke</p>
 
             <div class="flex items-center mb-2">
@@ -37,16 +37,23 @@
                         </svg>
                     </div>
             </div>
-        </nav>
-        <cargo-card v-for="(cargo, index) in cargos" :key="index" :cargo="cargo"></cargo-card>
+        </nav> -->
+        <card classes="py-5 px-0">
+            <tender-card 
+                v-for="(tender, index) in tenders" 
+                :key="index" 
+                :tender="tender"                
+            ></tender-card>
+        </card>
+        
     </div>
 
 </template>
 <script>
-    import CargoCard from '../../components/CargoCard'  
+    import TenderCard from '../../components/TenderCard'  
 
     export default {
-        components:{CargoCard},   
+        components:{TenderCard},   
         
         data(){
             return{
@@ -57,8 +64,8 @@
         },
 
         computed:{
-            cargos(){
-                return this.$store.state.cargos
+            tenders(){                
+                return this.$store.getters.tenderList
             },   
             
             locations(){
@@ -68,10 +75,10 @@
 
         methods:{          
 
-            fetchCargos(bounds = null){                  
+            fetchTenders(bounds = null){                  
                 this.$store
-                    .dispatch('fetchCargos', bounds)
-                    .then((response) => {
+                    .dispatch('fetchTenders', bounds)
+                    .then(() => {
                         setTimeout(()=>{
                             Event.$emit('updateMarkers', this.locations)
                         }, 1000)                        
@@ -92,15 +99,15 @@
         },
         
         created(){
-            // this.fetchCargos()
-            this.setRouteFilter();
+            this.fetchTenders()
+            // this.setRouteFilter();
 
-            setTimeout(() => {
-                Event.$emit('setAutocomplete')
-                Event.$emit('updateMarkers', this.locations) 
-            },2000); 
+            // setTimeout(() => {
+            //     Event.$emit('setAutocomplete')
+            //     Event.$emit('updateMarkers', this.locations) 
+            // },2000); 
             
-            Event.$on('filterCargosByTheRoute', bounds => this.fetchCargos(bounds))
+            // Event.$on('filterCargosByTheRoute', bounds => this.fetchCargos(bounds))
         }
     }
 </script>

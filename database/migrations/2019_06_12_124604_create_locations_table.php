@@ -15,7 +15,7 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('cargo_id');
+            $table->unsignedInteger('tender_id');
             $table->string('type');            
             $table->string('country');
             $table->string('city');
@@ -26,7 +26,7 @@ class CreateLocationsTable extends Migration
             $table->unsignedSmallInteger('latency');
             $table->string('latest_date');
             $table->string('earliest_date');
-            $table->boolean('loading')->default(true);
+            $table->boolean('loading')->default(false);
             $table->timestamps();
         });
     }

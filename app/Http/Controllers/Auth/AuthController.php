@@ -75,7 +75,7 @@ class AuthController extends Controller
             'name' => $request->name,            
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'confirmtion_token' => User::makeToken($request->email)
+            'confirmation_token' => User::makeToken($request->email)
         ]);        
 
         Mail::to($user)->send(new ConfirmYourEmail($user));

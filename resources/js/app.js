@@ -1,6 +1,7 @@
 import Vue from "vue"
 import VueModal from "vue-js-modal"
 import VueCookies from "vue-cookies"
+import VueMoment from "vue-moment"
 
 import router from './routes'
 import {store} from './store'
@@ -9,6 +10,7 @@ import i18n from './utilities/i18n'
 
 Vue.use(VueModal)
 Vue.use(VueCookies)
+Vue.use(VueMoment)
 window.Event = new Vue()
 
 window.flash = function(message){    

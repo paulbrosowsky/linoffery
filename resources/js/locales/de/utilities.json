@@ -3,5 +3,9 @@
     "update": "Aktualisieren",
     "change": "Ändern",
     "upload": "Hochladen",
-    "send": "Senden"
+    "send": "Senden",
+    "bookmark": "Merken",
+    "yes": "Ja",
+    "no": "Nein" ,
+    "hours": "Stunden"   
 }

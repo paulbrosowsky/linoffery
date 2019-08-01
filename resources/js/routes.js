@@ -2,9 +2,6 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
-import Cargos from './views/cargos/Cargos'
-import Cargo from './views/cargos/Cargo'
-import CreateCargo from './views/cargos/CreateCargo'
 import Dashboard from './views/Dashboard'
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
@@ -13,6 +10,8 @@ import Logout from './views/auth/Logout'
 import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
+import Tender from './views/tenders/Tender'
+import Tenders from './views/tenders/Tenders'
 import Welcome from './views/Welcome'
 
 import {store} from './store'
@@ -34,7 +33,6 @@ let routes = [
         path:'/impressum',
         component: Impressum
     },
-
     
     {
         name:'dashboard',
@@ -106,37 +104,38 @@ let routes = [
     },
 
     {
-        path:'/cargos',
-        component: Cargos,
+        name: 'tenders',
+        path:'/tenders',
+        component: Tenders,
         meta:{
-            layout: 'mapped',
+            layout: 'dashboard',
         },
-        beforeEnter: (to, from, next) => {  
-            if(from.name === 'cargo'){
-                next()
-            }else{                
-                store.dispatch('fetchCargos')
-                store.commit('resetFilters')
-                next()
-            }                   
-        }       
+        // beforeEnter: (to, from, next) => {  
+        //     if(from.name === 'cargo'){
+        //         next()
+        //     }else{                
+        //         store.dispatch('fetchCargos')
+        //         store.commit('resetFilters')
+        //         next()
+        //     }                   
+        // }       
     },
 
-    {
-        path:'/cargos/create',
-        component: CreateCargo,
-        meta:{
-            layout: 'mapped',
-        },        
-    },
+    // {
+    //     path:'/cargos/create',
+    //     component: CreateCargo,
+    //     meta:{
+    //         layout: 'mapped',
+    //     },        
+    // },
    
 
     {
-        name: 'cargo',
-        path:'/cargos/:cargo',
-        component: Cargo,
+        name: 'tender',
+        path:'/tenders/:tender',
+        component: Tender,
         meta:{
-            layout: 'mapped'
+            layout: 'dashboard'
         }
     },    
    

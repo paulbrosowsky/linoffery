@@ -1,5 +1,5 @@
 <template>      
-    <div class="map min-h-screen w-screen"></div>
+    <div class="map min-h-screen w-full"></div>
 </template>
 <script>
     import gmapsInit from '../utilities/gmaps';
@@ -40,7 +40,8 @@
 
                     this.directionsDisplay.setMap(null)  
                                         
-                    Event.$on('updateMarkers',value => {                        
+
+                    Event.$on('updateMarkers',value => {
                         this.resetMarkers()                                               
                         this.updateMarkers(value)                                          
                     }) 
@@ -82,14 +83,13 @@
 
             addMarker(position, location = null){
                                  
-                    let marker = new google.maps.Marker({
-                            position:position,
-                            map: this.map
-                    })
+                let marker = new google.maps.Marker({
+                    position:position,
+                    map: this.map
+                })
 
-                    marker.addListener('click', () => this.$router.push(`/cargos/${location.cargo_id}`))
-                    this.markers.push(marker)
-                
+                marker.addListener('click', () => this.$router.push(`/cargos/${location.tender_id}`))
+                this.markers.push(marker)                
             },
 
             geocodePosition(address){

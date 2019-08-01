@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Location extends Model
 {
     /**
-     *  A Location belongs to a Cargo
+     *  A Location belongs to a Tender
      * 
-     * @return Cargo
+     * @return belongsTo
      */
-    public function cargo()
+    public function tender()
     {
-        return $this->belondsTo(Cargo::class);
+        return $this->belongsTo(Tender::class);
     }
 }

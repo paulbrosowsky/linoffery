@@ -15,9 +15,9 @@ class CreateFreightsTable extends Migration
     {
         Schema::create('freights', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('cargo_id');
+            $table->unsignedInteger('tender_id');
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('pallet');
             $table->unsignedInteger('weight');
             $table->unsignedInteger('width');

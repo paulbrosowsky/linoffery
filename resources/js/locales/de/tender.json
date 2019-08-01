@@ -1,0 +1,21 @@
+{
+    "offer": "Angebot",
+    "offers": "Angebote",
+
+    "valid_until": "gültig bis",
+    "m_offer": "mitbieten",    
+
+    "curr_offer": "Akt. Angebot",
+    "make_offer": "Angebot abgeben",
+    "take_it": "Sofort zugreifen",
+    "pickup_details": "Abholdetails",
+    "delivery_details": "Lieferdetails",
+    "freight_details": "Frachtdetails",
+    "earliest_date": "früestes Termin",
+    "latest_date": "spätestes Termin",
+    "loading_driver": "Verladung durch Fahrer",
+    "latency": "Wartezeit",
+    "transport_type":"Transportart",
+    "dimentions": "Abmaße",
+    "weight": "Gewicht"
+}

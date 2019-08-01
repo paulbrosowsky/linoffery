@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div> 
         <confirm-email v-if="!emailConfirmed"></confirm-email>
         <complete-company-address v-if="!companyAddressComplete && emailConfirmed"></complete-company-address>
     </div>

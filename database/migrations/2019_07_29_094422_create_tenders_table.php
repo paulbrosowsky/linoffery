@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCargosTable extends Migration
+class CreateTendersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateCargosTable extends Migration
      */
     public function up()
     {
-        Schema::create('cargos', function (Blueprint $table) {
+        Schema::create('tenders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->string('title_image')->nullable();
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->unsignedDecimal('immadiate_price', 10, 2)->nullable();
+            $table->unsignedDecimal('min_price', 10, 2)->nullable();
+            $table->dateTime('valid_date');
             $table->string('type')->nullable();
             $table->timestamps();
         });
@@ -31,6 +34,6 @@ class CreateCargosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cargos');
+        Schema::dropIfExists('tenders');
     }
 }

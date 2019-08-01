@@ -43,7 +43,7 @@ class RegistrationTest extends TestCase
         tap(User::first(), function($user){
             $this->assertEquals('John Doe', $user->name);            
             $this->assertEquals('john@mail.me', $user->email);
-            $this->assertTrue(Hash::check('secret', $user->password));
+            $this->assertTrue(Hash::check('secret', $user->password));            
         });
     }
 
@@ -197,7 +197,7 @@ class RegistrationTest extends TestCase
    {    
         Mail::fake();
 
-        $this->registerAccount(); 
+        $this->registerAccount();         
         
         Mail::assertQueued(ConfirmYourEmail::class);
    }
@@ -210,6 +210,7 @@ class RegistrationTest extends TestCase
         $user = User::whereName('John Doe')->first();  
        
         $this->assertFalse($user->confirmed); 
+        $this->assertNotEmpty($user->confirmation_token);
                 
         $this->get( '/api/auth/email-confirmation/confirm?token=' . $user->confirmation_token)
             ->assertRedirect('/dashboard');

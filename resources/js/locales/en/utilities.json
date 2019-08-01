@@ -3,5 +3,9 @@
     "update": "Update",
     "change": "Change",
     "upload": "Upload",
-    "send": "Send"
+    "send": "Send",
+    "bookmark": "Bookmark",   
+    "yes": "Yes",
+    "no": "No",
+    "hours": "Hours" 
 }

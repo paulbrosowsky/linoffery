@@ -4,7 +4,7 @@
             {{ $t('settings.account_settings')}}               
         </h1>  
         <card class="relative">
-            <p class="text-teal-500 text-lg mb-10">{{ $t('settings.update_account')}} </p>
+            <template v-slot:title>{{ $t('settings.update_account')}}</template>
             
             <div class="xl:flex">
                 <div class="w-full flex flex-col items-center px-8 xl:w-1/3">
@@ -82,8 +82,8 @@
             <loading-spinner :loading="loadingAccount" :position="'absolute'"></loading-spinner>  
         </card>
     
-        <card class="relative mt-5">            
-            <p class="text-teal-500 text-lg mb-5">{{ $t('settings.change_password')}}</p>
+        <card class="relative mt-5">       
+            <template v-slot:title>{{ $t('settings.change_password')}}</template> 
             
             <form @submit.prevent="changePassword">
                 <div class="w-full items-center md:flex ">

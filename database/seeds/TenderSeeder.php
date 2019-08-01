@@ -1,11 +1,12 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use App\Cargo;
+use App\Tender;
 use App\Freight;
 use App\Location;
+use Illuminate\Database\Seeder;
 
-class CargoSeeder extends Seeder
+
+class TenderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,20 +24,20 @@ class CargoSeeder extends Seeder
 
     public function content()
     {
-        Cargo::truncate();
+        Tender::truncate();
 
-        factory(Cargo::class, 20)->states('from-existing-data')->create()->each(function($cargo){
+        factory(Tender::class, 50)->states('from-existing-data')->create()->each(function($tender){
             factory(Location::class)->create([
-                'cargo_id' => $cargo->id,
+                'tender_id' => $tender->id,
                 'type' => 'delivery',                
             ]);
             factory(Location::class)->create([
-                'cargo_id' => $cargo->id,
+                'tender_id' => $tender->id,
                 'type' => 'pickup',                
             ]);
             
             factory(Freight::class, 3)->create([
-                'cargo_id' => $cargo->id
+                'tender_id' => $tender->id
             ]);
         });
     }

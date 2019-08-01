@@ -4,7 +4,7 @@
             {{$t('settings.company_settings')}}              
         </h1>         
         <card class="w-1/2 relative">
-            <p class="text-teal-500 text-lg mb-10">{{$t('settings.update_company')}}</p>
+            <template v-slot:title>{{$t('settings.update_company')}}</template>             
             
             <div class="xl:flex">
                 <div class="w-full flex flex-col items-center px-8 xl:w-1/3">
