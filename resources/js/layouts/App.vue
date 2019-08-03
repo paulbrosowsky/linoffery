@@ -62,12 +62,17 @@
                     this.$i18n.locale = navigator.language
                     this.$cookies.set('locale', navigator.language, 365)   
                 }                
+            },
+
+            fetchCatgories(){
+                this.$store.dispatch('fetchCategories')
             }
         },
 
         mounted(){
             this.fetchLoggedInUser()
-            this.retriveLocale()                      
+            this.retriveLocale() 
+            this.fetchCatgories()                     
         }
 
     }

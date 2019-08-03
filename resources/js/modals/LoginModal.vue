@@ -9,7 +9,7 @@
     </default-modal>
 </template>
 <script>
-    import LoginForm from '../components/LoginForm'
+    import LoginForm from '../views/auth/LoginForm'
 
     export default {
         components:{ LoginForm },

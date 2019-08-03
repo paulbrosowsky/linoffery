@@ -9,7 +9,7 @@ body{
 
 
 .btn{
-    @apply .bg-gray-500 .rounded-full .px-5 .py-2 .text-white .text-sm .uppercase .font-semibold .tracking-tight;
+    @apply .bg-gray-500 .rounded-full .px-5 .py-2 .text-white .text-sm .uppercase .font-semibold .tracking-tight shadow-md;
 }
 .btn:hover{
     @apply .bg-gray-700;
@@ -19,7 +19,7 @@ body{
 }
 
 .btn-outlined{
-    @apply .bg-white .border .text-gray-700
+    @apply .bg-white .border .text-gray-700 shadow-none
 }
 .btn-outlined:hover{
     @apply .text-white .border-white .bg-gray-500

@@ -20,8 +20,21 @@ class Category extends Model
         return $this->hasMany(Tender::class);
     }
 
+    /**
+     *  Translate categories name
+     */
     public function getNameAttribute($name)
     {
         return __($name);
+    }
+
+    /**
+	* Overwrite the default route key "id"
+	*	
+	* @return string
+	*/
+    public function getRouteKeyName()
+    {
+    	return 'slug';
     }
 }

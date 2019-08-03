@@ -38,6 +38,7 @@
                     </div>
             </div>
         </nav> -->
+        <action-bar></action-bar>
         <card classes="py-5 px-0">
             <tender-card 
                 v-for="(tender, index) in tenders" 
@@ -50,7 +51,7 @@
 
 </template>
 <script>
-    import TenderCard from '../../components/TenderCard'  
+    import TenderCard from '../tenders/TenderCard'  
 
     export default {
         components:{TenderCard},   

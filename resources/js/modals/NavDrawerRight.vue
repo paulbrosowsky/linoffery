@@ -70,7 +70,7 @@
 
             <router-link 
                 class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                to="/"
+                :to="{name: 'tenders'}"
             >
                {{ $t('content.find_fright') }}
             </router-link>

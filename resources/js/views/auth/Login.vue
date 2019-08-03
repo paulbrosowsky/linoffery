@@ -9,7 +9,7 @@
     </section>
 </template>
 <script>
-    import LoginForm from '../../components/LoginForm'
+    import LoginForm from '../auth/LoginForm'
 
     export default {
         components:{ LoginForm },

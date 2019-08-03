@@ -8,19 +8,21 @@
                         <img class="rounded-lg shadow-lg w-20 h-20 md:w-24 md:h-24"
                             src="https://cdn.vuetifyjs.com/images/cards/road.jpg" :alt="tender.user.name">
 
-                        <div class="pl-3 overflow-hidden md:pl-5">
+                        <div class="pl-3 overflow-hidden py-2 md:pl-5">
+                            <div>
+                                <p class="truncate leading-none md:text-lg" v-text="tender.title"></p>
 
-                            <p class="truncate leading-none md:text-lg" v-text="tender.title"></p>
-
-                            <div class="mb-1">
-                                <span class="text-xl leading-tight font-bold md:text-xl">360€</span>
-                                <span class="text-xs text-gray-500">2</span>
-                                <span class="text-xs text-gray-500">{{offerText}}</span>
-                                <span class="text-sm text-red-500 font-bold md:text-base ml-2">
-                                    <i class="icon ion-md-flash text-sm"></i>
-                                    <span>150€</span>
-                                </span>
+                                <div class="mb-3">
+                                    <span class="text-xl leading-tight font-bold md:text-xl" v-text="tender.min_price + ' €'"></span>
+                                    <span class="text-xs text-gray-500">2</span>
+                                    <span class="text-xs text-gray-500">{{offerText}}</span>
+                                    <span class="text-sm text-red-500 font-bold md:text-base ml-2">
+                                        <i class="icon ion-md-flash text-sm"></i>
+                                        <span v-text="tender.immadiate_price + ' €'"></span>
+                                    </span>
+                                </div>
                             </div>
+                            
 
                             <div>
                                 <span 
@@ -32,10 +34,10 @@
                                 <span class="text-sm ml-2 text-gray-500" v-text="weight"></span>
                             </div>
 
-                            <div class="text-sm ">
+                            <!-- <div class="text-sm ">
                                 <span class="text-gray-500">{{$t('tender.valid_until')}}</span>
                                 <span> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                  </router-link>  

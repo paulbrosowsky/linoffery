@@ -11,6 +11,7 @@ import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
 import Tender from './views/tenders/Tender'
+import CreateTender from './views/tenders/CreateTender'
 import Tenders from './views/tenders/Tenders'
 import Welcome from './views/Welcome'
 
@@ -128,6 +129,16 @@ let routes = [
     //         layout: 'mapped',
     //     },        
     // },
+
+    {
+        name: 'create_tender',
+        path:'/tenders/create',
+        component: CreateTender,
+        meta:{
+            layout: 'dashboard'
+        }
+    },    
+   
    
 
     {

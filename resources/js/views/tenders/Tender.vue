@@ -29,7 +29,7 @@
                
                         <div class="flex flex-col items-center mr-3 ">
                             <p class="text-xs text-gray-500 uppercase ">{{$t('tender.curr_offer')}}</p>
-                            <p class="text-4xl text-teal-500 -my-2">€ 368 </p> 
+                            <p class="text-4xl text-teal-500 -my-2" v-text="'€ '+ tender.min_price"></p> 
                             <p>
                                 <span class="text-sm text-gray-500">2</span> 
                                 <span class="text-sm text-gray-500">{{offerText}}</span>  
@@ -37,14 +37,14 @@
                         </div>
                     
                         <button class="btn btn-teal">
-                            {{$t('tender.make_offer')}}
+                            {{$t('tender.m_offer')}}
                         </button>                    
                     </div> 
                     
                     <div class="flex-none mt-2">
                         <button class="flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white">
                             <span><i class="icon ion-md-flash text-sm mr-3"></i></span>
-                            <span class="text-lg mr-2"> € 150</span>
+                            <span class="text-lg mr-2" v-text="'€ '+ tender.immadiate_price"></span>
                             <span class="uppercase text-sm">{{$t('tender.take_it')}}</span>    
                         </button>
                     </div>  
@@ -235,13 +235,13 @@
     
 </template>
 <script>
-    import resize from 'vue-resize-directive'
+    // import resize from 'vue-resize-directive'
 
     export default {
 
-        directives: {
-            resize,
-        },
+        // directives: {
+        //     resize,
+        // },
 
         data(){
             return{               

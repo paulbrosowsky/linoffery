@@ -130,14 +130,12 @@
     
 </template>
 <script>
-    import PhoneInput from '../../components/PhoneInput'
-    import ImageUpload from '../../components/ImageUpload'
+    import PhoneInput from '../../components/PhoneInput'    
 
     export default { 
 
         components:{
-            PhoneInput,
-            ImageUpload
+            PhoneInput,            
         },
 
         props:['user'],

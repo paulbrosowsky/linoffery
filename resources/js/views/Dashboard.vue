@@ -1,6 +1,6 @@
 <template>
     <div>
-        Dashboard        
+        <action-bar></action-bar>   
     </div>
     
 </template>

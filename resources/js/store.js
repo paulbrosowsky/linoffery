@@ -7,11 +7,12 @@ export let store = new Vuex.Store({
     
     state:{
         token: localStorage.getItem('access_token') || null,
-        user: null,   
+        user: null,          
 
         tender: null,
         tenders: null,        
         locations: [],
+        categories:null,
 
         origin:null,
         destination:null,
@@ -47,7 +48,11 @@ export let store = new Vuex.Store({
 
         retrieveUser(state, user){
             state.user = user
-        },       
+        },   
+        
+        retrieveCategories(state, categories){
+            state.categories = categories
+        },
 
         retrieveTenders(state, tenders){
             state.tenders = tenders
@@ -245,6 +250,18 @@ export let store = new Vuex.Store({
             })
         },  
         // SETTINGS Actions END 
+
+        fetchCategories(context){
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/categories')
+                    .then(response =>{                       
+                        context.commit('retrieveCategories', response.data)                        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
 
         fetchTenders(context, route = null){
             return new Promise((resolve, reject)=>{

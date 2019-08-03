@@ -18,8 +18,8 @@ $factory->define(Tender::class, function(Faker $faker){
 
         'title' => $faker->sentence,
         'description' => $faker->paragraph,        
-        'immadiate_price' => $faker->randomFloat(2, 100, 200),
-        'min_price' => $faker->randomFloat(2, 200, 2000 ),
+        'immadiate_price' => $faker->randomFloat(0, 100, 200),
+        'min_price' => $faker->randomFloat(0, 200, 2000 ),
         'valid_date' => Carbon::now()->addWeeks(2)
     ];
 });
