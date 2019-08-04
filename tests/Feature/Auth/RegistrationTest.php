@@ -36,8 +36,8 @@ class RegistrationTest extends TestCase
     /** @test */
     function an_user_can_register_an_account()
     {        
-       $this->registerAccount();
-
+       $this->registerAccount()->json();
+        
        $this->assertCount(1, User::all());
 
         tap(User::first(), function($user){

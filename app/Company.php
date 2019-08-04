@@ -4,12 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 
 class Company extends Model
 {
     use HasAvatar;
 
     protected $guarded = [];
+
+    protected $appends = ['completed'];
 
     /**
      * Get the right logo path
@@ -25,5 +28,15 @@ class Company extends Model
         }
         
         return '/storage/build/images/default_logo.svg';    
+    }
+
+    /**
+     *  Check if company has a full address
+     * 
+     * @return boolean
+     */
+    public function getCompletedAttribute()
+    {        
+        return !empty($this->address && $this->postcode && $this->city && $this->country);
     }
 }

@@ -16,14 +16,11 @@ class CreateLocationsTable extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('tender_id');
-            $table->string('type');            
-            $table->string('country');
-            $table->string('city');
-            $table->string('zip');  
+            $table->string('type');
             $table->string('address');          
             $table->float('lat');
             $table->float('lng');
-            $table->unsignedSmallInteger('latency');
+            $table->unsignedSmallInteger('latency')->nullable();
             $table->string('latest_date');
             $table->string('earliest_date');
             $table->boolean('loading')->default(false);

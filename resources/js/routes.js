@@ -135,7 +135,8 @@ let routes = [
         path:'/tenders/create',
         component: CreateTender,
         meta:{
-            layout: 'dashboard'
+            layout: 'dashboard',
+            requiresAuth: true
         }
     },    
    

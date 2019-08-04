@@ -112,7 +112,7 @@
     </section>  
 </template>
 <script>
-    
+
     export default {        
 
         data(){
@@ -176,8 +176,7 @@
                         this.loading = false                        
                     })
             },
-        }
-
+        },
         
     }
 </script>

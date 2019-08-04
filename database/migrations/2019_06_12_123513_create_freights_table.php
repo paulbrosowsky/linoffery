@@ -21,7 +21,7 @@ class CreateFreightsTable extends Migration
             $table->string('pallet');
             $table->unsignedInteger('weight');
             $table->unsignedInteger('width');
-            $table->unsignedInteger('depth');
+            $table->unsignedInteger('length');
             $table->unsignedInteger('height');
             $table->timestamps();
 

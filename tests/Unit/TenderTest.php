@@ -33,7 +33,7 @@ class TenderTest extends PassportTestCase
      /** @test */
     function is_has_many_frights()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->tender->frights);
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->tender->freights);
     }
 
      /** @test */

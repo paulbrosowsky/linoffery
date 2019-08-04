@@ -50131,7 +50131,8 @@ var routes = [{
   path: '/tenders/create',
   component: _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_11__["default"],
   meta: {
-    layout: 'dashboard'
+    layout: 'dashboard',
+    requiresAuth: true
   }
 }, {
   name: 'tender',

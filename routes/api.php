@@ -45,8 +45,16 @@ Route::group([
 
     Route::patch('/settings/account', 'AccountSettingsController@update');
     Route::patch('/settings/password', 'PasswordSettingsController@update');
-    Route::patch('/settings/company', 'CompaniesController@update');   
+    Route::patch('/settings/company', 'CompaniesController@update');  
+    
+    Route::group([
+        'middleware' => 'is-confirmed-completed'
+    ], function(){
 
+        Route::post('/tenders/store', 'TendersController@store');
+        Route::post('/locations/store', 'LocationsController@store');
+        Route::post('/freights/store', 'FreightsController@store');
+    }); 
 });
 
 

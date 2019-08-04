@@ -16,7 +16,7 @@ $factory->define(Freight::class, function(Faker $faker){
         'pallet' => $faker->randomElement(['EPAL', 'Gitterbox', 'Sonder']),
         'weight' => $faker->randomNumber(3),
         'width' => $faker->randomNumber(3),
-        'depth' => $faker->randomNumber(3),
+        'length' => $faker->randomNumber(3),
         'height' => $faker->randomNumber(3),        
     ];
 });

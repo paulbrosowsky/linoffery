@@ -15,32 +15,14 @@ class RejectIfNotConfirmedAndCompleted
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->user()->confirmed || $this->companyAddressNotCompleted($request->user)) {
+        $user = $request->user();        
+
+        if (!$user->confirmed || !$user->company->completed) {
             return  response()->json([
-                'message' => 'Bitte bestätige deine Email-Adresse.'
+                'message' => 'Bitte bestätige deine Email-Adresse, oder vervollständige die Firmenadresse'
             ], 401);           
         }  
         return $next($request);
     }
 
-    /** Chack if Company's data are completed
-     * 
-     * @param User
-     * @return boolean
-     */
-    protected function companyAddressNotCompleted($user)
-    {
-        $company = $user->company;
-
-        if (
-            $company->address->exists()
-            && $company->postcode->exists()
-            && $company->city>exists()
-            && $company->country>exists()
-        ){
-            return false;
-        }
-
-        return true;
-    }
-}
+} 

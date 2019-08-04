@@ -45,8 +45,48 @@ class TendersController extends Controller
         return Tender::latest()->paginate(20);
     }
 
+    /**
+     *  Show given Tender 
+     * 
+     * @param id
+     * @return Tender
+     */
     public function show(Tender $tender)
     {
         return $tender;
     }
+
+    /**
+     * Store Tender in DB
+     * 
+     * @param Request
+     * @return Tender
+     */
+    public function store(Request $request)
+    {        
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required',
+            'immediate_price' => 'numeric',
+            'max_price' => 'numeric',
+            'valid_date' => 'required|date'
+        ]);
+
+        // dd($request->category_id);    
+        $tender = Tender::create([
+
+            'user_id' => auth()->id(),
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'description'=> $request->description,
+            'immediate_price' => $request->immediate_price,
+            'max_price' => $request->max_price,
+            'valid_date' => $request->valid_date
+            
+        ]);
+
+        return $tender;
+    }
+
+
 }
