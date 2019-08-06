@@ -1,5 +1,6 @@
 <template>
     <modal
+        class="li-default-modal"
         :name='name'
         height="auto"
         :width= "width"
@@ -46,7 +47,10 @@
 
 <style lang="scss">      
     .v--modal{
-        border-radius: 0.5rem;
+        border-radius: 0.5rem;        
+    }
+
+    .li-default-modal .v--modal{
         overflow: visible !important;
     }
 </style>

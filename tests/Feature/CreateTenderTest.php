@@ -83,13 +83,12 @@ class CreateTenderTest extends PassportTestCase
      /** @test */
     function price_is_numeric()
     {
-        $response = $this->createTender([
-            'immediate_price' => '12323,4545',
+        $response = $this->createTender([            
             'max_price' => 'abc' 
         ])->assertStatus(422); 
         
         $errors = $response->json();
-        $this->assertArrayHasKey('immediate_price', $errors['errors']);
+        
         $this->assertArrayHasKey('max_price', $errors['errors']);           
     } 
 

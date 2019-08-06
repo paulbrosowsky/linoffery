@@ -17,6 +17,24 @@
     "latency": "Latency",
     "transport_type":"Transport type",
     "dimentions": "Dimentions",
-    "weight": "Weight"
+    "weight": "Weight",
+    "weight_kg": "Weight kg",
+    "width_cm": "Width cm",
+    "height_cm": "Height cm",
+    "length_cm": "Length cm",
 
+    "new_tender": "New Tender",
+    "category": "Category",
+    "more_tender_info": "Tell us more about your tender ...",
+    "max_price": "max. Price",
+    "max_price_info": "All offers above this price will be automatically rejected.",
+    "immediate_price": "now Price",
+    "immediate_price_info": "At this price, you would immediately place your order.",
+    "valid_date": "valid until",
+    "valid_date_info": "Your tender will be visible to all offerors by this date",
+    "store_tender_message": "Your tender has been placed under drafts.",
+    "store_location_message": "Your location details have been saved.",
+    "more_freight_info": "Tell more about the freight ...",
+    "add_freight": "Add Freight" ,
+    "store_freight_message": "Your freight details have been saved."
 }

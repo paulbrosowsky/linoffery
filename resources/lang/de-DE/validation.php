@@ -165,7 +165,7 @@ return [
         'hour'                  => 'Stunde',
         'minute'                => 'Minute',
         'second'                => 'Sekunde',
-        'title'                 => 'Titel',
+        'title'                 => 'Bezeichnung',
         'content'               => 'Inhalt',
         'description'           => 'Beschreibung',
         'excerpt'               => 'Auszug',
@@ -178,6 +178,13 @@ return [
         'old_password'          => 'Altes Passwort',
         'new_password'          => 'Neues Passwort',
         'image'                 => 'Bild',
-        'postcode'              => 'PLZ'
+        'postcode'              => 'PLZ', 
+        'category_id'           => 'Kategorie',
+        'max_price'             => 'Max. Preis',
+        'valid_date'            => 'Datum',
+        'earliest_date'         => 'Frühestes Termin',
+        'latest_date'           => 'Spätestes Termin', 
+        'pallet'                => 'Transporttyp',
+        'weight'                => 'Gewicht'   
     ],
 ];

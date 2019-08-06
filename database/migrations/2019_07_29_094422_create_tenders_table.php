@@ -20,9 +20,10 @@ class CreateTendersTable extends Migration
             $table->string('title_image')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->unsignedDecimal('immediate_price', 10, 2)->nullable();
-            $table->unsignedDecimal('max_price', 10, 2)->nullable();
-            $table->dateTime('valid_date');            
+            $table->unsignedInteger('immediate_price')->nullable();
+            $table->unsignedInteger('max_price')->nullable();
+            $table->dateTime('valid_date'); 
+            $table->dateTime('published_at')->nullable();           
             $table->timestamps();
         });
     }

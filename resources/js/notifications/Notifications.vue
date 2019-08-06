@@ -1,5 +1,5 @@
 <template>
-    <div> 
+    <div v-if="loggedIn"> 
         <confirm-email v-if="!emailConfirmed"></confirm-email>
         <complete-company-address v-if="!companyAddressComplete && emailConfirmed"></complete-company-address>
     </div>
@@ -21,7 +21,11 @@
 
             companyAddressComplete(){                                           
                 return this.$store.getters.companyCompleted
-            }  
+            },
+            
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            }
         },
     }
 </script>

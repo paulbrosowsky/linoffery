@@ -1,16 +1,15 @@
 <template>
-    <div class="flex">
-        <date-picker 
-            class="w-1/2 mr-1" 
-            :placeholder="'Frühestes Termin'"             
+    <div>
+        <p class="text-sm text-red-500 mb-2" v-if="errors.earliest_date" v-text="errors.earliest_date[0]"></p>
+        <date-picker  
+            class="mb-2"           
+            :placeholder="$t('tender.earliest_date')"             
             :highlighted="range"
             @changed="updateFrom"
         ></date-picker>
-
-        <date-picker 
-            class="w-1/2 ml-1" 
-            :placeholder="'Spätestes Termin'" 
-            :right="true" 
+        <p class="text-sm text-red-500 mb-2" v-if="errors.latest_date" v-text="errors.latest_date[0]"></p>
+        <date-picker            
+            :placeholder="$t('tender.latest_date')"             
             :disabled-dates="range.from"
             :highlighted="range"
             @changed="updateTo"            
@@ -23,6 +22,8 @@
         components: {
             Datepicker
         },
+
+        props:['errors'],
 
         data(){
             return{

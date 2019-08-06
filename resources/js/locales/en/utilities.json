@@ -7,5 +7,10 @@
     "bookmark": "Bookmark",   
     "yes": "Yes",
     "no": "No",
-    "hours": "Hours" 
+    "hours": "Hours",
+    "title": "Title",
+    "save": "Save",
+    "delete": "Delete",    
+    "save_draft": "Save in drafts",
+    "address": "Address"
 }

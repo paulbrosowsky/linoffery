@@ -42,7 +42,7 @@ class TendersController extends Controller
         //     return  $cargosResult;
         // }   
 
-        return Tender::latest()->paginate(20);
+        return Tender::where('published_at', '!=', NULL )->latest()->paginate(20);
     }
 
     /**
@@ -66,9 +66,8 @@ class TendersController extends Controller
     {        
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required',
-            'immediate_price' => 'numeric',
-            'max_price' => 'numeric',
+            'title' => 'required',            
+            'max_price' => 'required|numeric',
             'valid_date' => 'required|date'
         ]);
 

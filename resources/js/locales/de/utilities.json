@@ -7,5 +7,10 @@
     "bookmark": "Merken",
     "yes": "Ja",
     "no": "Nein" ,
-    "hours": "Stunden"   
+    "hours": "Stunden",
+    "title": "Bezeichnung",
+    "save": "Speichern",
+    "delete": "Löschen",  
+    "save_draft": "Entwurf speichern",
+    "address": "Adresse"
 }

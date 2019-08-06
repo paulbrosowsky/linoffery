@@ -109,7 +109,7 @@ let routes = [
         path:'/tenders',
         component: Tenders,
         meta:{
-            layout: 'dashboard',
+            layout: 'mapped',
         },
         // beforeEnter: (to, from, next) => {  
         //     if(from.name === 'cargo'){
@@ -147,7 +147,7 @@ let routes = [
         path:'/tenders/:tender',
         component: Tender,
         meta:{
-            layout: 'dashboard'
+            layout: 'mapped',
         }
     },    
    

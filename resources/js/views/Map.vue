@@ -41,7 +41,7 @@
                     this.directionsDisplay.setMap(null)  
 
                     
-                    Event.$on('toggle-map-drawer',()=>{
+                    Event.$on('zoom-map',()=>{
                         setTimeout(() => {
                             this.zoomToMarkers()
                         }, 500);

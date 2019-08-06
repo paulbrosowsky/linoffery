@@ -20,9 +20,9 @@ class FreightsController extends Controller
             'title' => 'required',
             'pallet' => 'required',
             'weight' => 'required|numeric|max:100000',
-            'width' => 'required|numeric|max:10000',
-            'height' => 'required|numeric|max:10000',
-            'length' => 'required|numeric|max:10000',             
+            'width' => 'max:10000',
+            'height' => 'max:10000',
+            'depth' => 'max:10000',             
         ]);      
 
         $freight = Freight::create([            
@@ -34,7 +34,7 @@ class FreightsController extends Controller
             'weight' => $request->weight,
             'width' => $request->width,
             'height' => $request->height,
-            'length' => $request->length,            
+            'depth' => $request->depth,            
 
         ]);     
 

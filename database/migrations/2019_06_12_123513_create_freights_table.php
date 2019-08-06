@@ -20,9 +20,9 @@ class CreateFreightsTable extends Migration
             $table->string('description')->nullable();
             $table->string('pallet');
             $table->unsignedInteger('weight');
-            $table->unsignedInteger('width');
-            $table->unsignedInteger('length');
-            $table->unsignedInteger('height');
+            $table->unsignedInteger('width')->nullable();
+            $table->unsignedInteger('depth')->nullable();
+            $table->unsignedInteger('height')->nullable();
             $table->timestamps();
 
         });

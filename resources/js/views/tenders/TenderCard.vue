@@ -1,16 +1,16 @@
 <template> 
-    <section class="py-3 px-3 hover:bg-gray-100 md:px-8 md:py-5 ">
+    <section class="py-3 px-3 hover:bg-gray-100 md:px-8 md:py-2 ">
         
             <div class="flex justify-between items-center">
-                <router-link class="w-full md:w-3/4" :to="{ name: 'tender', params: { tender: tender.id }}">
+                <router-link class="w-full" :to="{ name: 'tender', params: { tender: tender.id }}">
                     <div class="flex items-center">
 
-                        <img class="rounded-lg shadow-lg w-20 h-20 md:w-24 md:h-24"
+                        <img class="rounded-lg shadow-lg w-20 h-20"
                             src="https://cdn.vuetifyjs.com/images/cards/road.jpg" :alt="tender.user.name">
 
                         <div class="pl-3 overflow-hidden py-2 md:pl-5">
                             <div>
-                                <p class="truncate leading-none md:text-lg" v-text="tender.title"></p>
+                                <p class="truncate leading-tight md:text-lg" v-text="tender.title"></p>
 
                                 <div class="mb-3">
                                     <span class="text-xl leading-tight font-bold md:text-xl" v-text="tender.max_price + ' €'"></span>
@@ -40,11 +40,7 @@
                             </div> -->
                         </div>
                     </div>
-                 </router-link>  
-                <div class="hidden md:flex flex-col">                    
-                    <button class="btn btn-teal mb-2">{{$t('tender.m_offer')}}</button> 
-                    <button class="btn btn-outlined">{{$t('utilities.bookmark')}}</button>
-                </div>
+                 </router-link>                  
                 
             </div>
         

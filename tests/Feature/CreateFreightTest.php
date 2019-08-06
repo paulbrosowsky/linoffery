@@ -40,7 +40,7 @@ class CreateFreightTest extends PassportTestCase
             $this->assertEquals($this->tender->id, $freight->tender_id);          
             $this->assertEquals(100, $freight->weight);
             $this->assertEquals(100, $freight->width);
-            $this->assertEquals(100, $freight->length);
+            $this->assertEquals(100, $freight->depth);
             $this->assertEquals(100, $freight->height);
         });
     }
@@ -93,22 +93,7 @@ class CreateFreightTest extends PassportTestCase
         
         $errors = $response->json();
         $this->assertArrayHasKey('pallet', $errors['errors']);         
-    } 
-
-     /** @test */
-    function valid_dimentions_are_required()
-    {
-        $response = $this->createFreight([
-            'width' => '',
-            'height' => 'gfdfgd',
-            'length' => 999999999,  
-        ])->assertStatus(422); 
-        
-        $errors = $response->json();
-        $this->assertArrayHasKey('width', $errors['errors']);   
-        $this->assertArrayHasKey('height', $errors['errors']);  
-        $this->assertArrayHasKey('length', $errors['errors']);        
-    } 
+    }      
 
       /** @test */
     function weight_is_required()
@@ -134,7 +119,7 @@ class CreateFreightTest extends PassportTestCase
             'weight' => 100,
             'width' => 100,
             'height' => 100,
-            'length' => 100,           
+            'depth' => 100,           
 
         ], $overrides ));
         

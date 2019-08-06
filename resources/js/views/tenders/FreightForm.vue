@@ -1,12 +1,12 @@
 <template>
     <div>  
-        <div class="flex justify-end py-2">
+        <div class="flex justify-end pb-2">
             <button 
                 class="text-sm uppercase tracking-tight text-gray-500 pr-2 hover:text-teal-500 focus:outline-none"
                 @click="$emit('remove')"
             >
                 <i class="icon ion-md-trash pr-2"></i>  
-                <span>Löschen</span> 
+                <span>{{$t('utilities.delete')}}</span> 
             </button>  
         </div>
             
@@ -23,7 +23,7 @@
                         class="input"
                         :class="errors.title ? 'border-red-300' : ''" 
                         type="text" 
-                        :placeholder="'Fracht-Bezeichnung'" 
+                        :placeholder="$t('utilities.title')" 
                         required
                         v-model="form.title" 
                         @keyup="errors= []"
@@ -33,18 +33,18 @@
 
                 <textarea-input 
                     :value="form.description" 
-                    :placeholder="'More informations about the freight...'" 
-                    :rows = "4"
-                    :height="104"
+                    :placeholder="$t('tender.more_freight_info')" 
+                    :rows="4"                    
                     @changed="updateDescription"
                 ></textarea-input>
             </div>
 
+            <p class="text-sm text-red-500 mb-2" v-if="errors.pallet" v-text="errors.pallet[0]"></p>
             <div class="w-full" :class="cardSmall ? '': 'w-1/2 ml-1'">
                 <select-input 
                     class="mb-2" 
                     :options="transport"                     
-                    :placeholder="'Transportart'"
+                    :placeholder="$t('tender.transport_type')"
                     @changed="updatePallet"
                 ></select-input>
                 
@@ -54,7 +54,7 @@
                             class="input" 
                             :class="errors.width ? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="'Breite cm'"                            
+                            :placeholder="$t('tender.width_cm')"                            
                             @keyup="errors= []"
                             @blur="setFreightData"
                             v-model="form.width"
@@ -67,7 +67,7 @@
                             class="input" 
                             :class="errors.height ? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="'Höhe cm'"                            
+                            :placeholder="$t('tender.height_cm')"                            
                             @keyup="errors= []"
                             @blur="setFreightData"
                             v-model="form.height"
@@ -77,29 +77,29 @@
                     <div class="relative flex items-center">                        
                         <input
                             class="input" 
-                            :class="errors.length ? 'border-red-300' : ''" 
+                            :class="errors.depth? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="'Länge cm'"                            
+                            :placeholder="$t('tender.length_cm')"                            
                             @keyup="errors= []"
                             @blur="setFreightData"
-                            v-model="form.length"
+                            v-model="form.depth"
                         >
                     </div>                   
 
                 </div>
 
+                <p class="text-sm text-red-500 mb-2" v-if="errors.weight" v-text="errors.weight[0]"></p>
                 <div class="relative flex items-center mb-1">                        
                         <input
                             class="input" 
                             :class="errors.weight ? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="'Gewicht kg'"                            
+                            :placeholder="$t('tender.weight_kg')"                            
                             @keyup="errors= []"
                             @blur="setFreightData"
                             v-model="form.weight"
                         >
-                    </div> 
-                
+                    </div>                 
 
             </div>
 
@@ -111,18 +111,19 @@
 <script>
     export default {    
         
-        props:['freight'],
+        props:['freight', 'error'],
 
         data(){
             return{
                 form:{
+                    tender_id: this.$store.getters.tenderId,
                     id: this.freight.id,
                     title: this.freight.title,
                     description: this.freight.description,
                     pallet: this.freight.pallet,
                     width: this.freight.width,
                     height: this.freight.height,
-                    length: this.freight.length,
+                    depth: this.freight.depth,
                     weight: this.freight.weight
                 },
                
@@ -132,9 +133,9 @@
                     {name: 'Gitterbox'},
                     {name: 'Sonder'}
                 ],
-
-                errors:[],
-                cardSmall:false
+                
+                cardSmall:false,
+                errors: this.error
             }
         },
 

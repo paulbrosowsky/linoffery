@@ -27,36 +27,22 @@
             
         </div> 
 
-        <map-drawer @changed="toggleMapOpened"></map-drawer>
-
-        <button
-            class="li-map-toggle-button fixed bottom-0 right-0 rounded-full bg-teal-500 shadow-lg z-40 px-5 py-5 my-20 mx-5 md:m-8 hover:bg-teal-700 focus:outline-none lg:hidden"
-            :class="hiddenDesktop"
-            @click="toggleMapDrawer"            
-        >      
-            <i class="absolute icon text-white text-2xl top-0" :class="buttonIcon"></i>
-        </button>
+        <map-drawer @changed="toggleMapOpened"></map-drawer>       
 
     </div>    
 
     
 </template>
 
-<script>   
-    import AppFooter from '../components/Footer'   
+<script> 
     import DashboardNav from '../components/DashboardNav'
-    import MapDrawer from '../components/MapDrawer'
-    import Navbar from '../components/Navbar'
-    import Notifications from '../notifications/Notifications'    
     
+    import Notifications from '../notifications/Notifications' 
 
     export default {
-        components:{    
-            AppFooter,        
+        components:{
             DashboardNav,
-            Navbar,
-            Notifications,
-            MapDrawer,   
+            Notifications,             
         }, 
 
         data(){

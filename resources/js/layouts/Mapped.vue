@@ -1,29 +1,35 @@
 <template>
-    <div class="flex flex-col min-h-screen">
-        <navbar :layout="'map'"></navbar> 
+    <div class="flex flex-col min-h-screen w-full">
+        <navbar></navbar>
 
-        <div class="flex-1">
-            <gmap></gmap>
+        <div class="flex-1 bg-gray-300">
+            <div class="w-full mx-auto">
+                <div class="flex px-3 py-5 md:px-12">
+                    <div class="hidden w-1/2 lg:block"></div>
+                    <div class="w-full lg:w-1/2 lg:ml-20">
+
+                        <slot></slot>
+
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <app-footer :layout="'map'"></app-footer> 
-        
+        <app-footer></app-footer>
+
+        <map-drawer :fixed="true"></map-drawer>
+
     </div>
 </template>
-<script>
-    import Navbar from '../components/Navbar'
-    import AppFooter from '../components/Footer'
-   
-    import Gmap from '../views/Map'
+<script> 
+    export default {
 
-    export default {        
+        mounted(){
+            if(window.innerWidth > 1023) {
+                Event.$emit('toggle-map-drawer')
+            }          
 
-         components:{
-            Navbar,
-            AppFooter,
-            
-            Gmap
-        }       
+        }
         
     }
 </script>

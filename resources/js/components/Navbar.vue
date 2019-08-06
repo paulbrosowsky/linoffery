@@ -26,7 +26,7 @@
                 </div>
                 
                 <div class="ml-3" v-show="!loggedIn">
-                    <a @click="$modal.show('navDrawerRight')">
+                    <a class="cursor-pointer" @click="$modal.show('navDrawerRight')">
                         <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-700"></i>
                     </a>
                 </div>

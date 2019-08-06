@@ -38,6 +38,10 @@ export let store = new Vuex.Store({
 
         tenderList(state){            
             return state.tenders ? state.tenders.data : null
+        },
+
+        tenderId(state){
+            return state.tender ? state.tender.id : null
         }
     },
 
@@ -312,8 +316,20 @@ export let store = new Vuex.Store({
             return new Promise((resolve, reject)=>{
                 axios
                     .post('/api/locations/store', data)
-                    .then(response =>{                       
-                        // context.commit('retrieveTender', response.data)
+                    .then(response =>{
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+
+        storeFreight(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .post('/api/freights/store', data)
+                    .then(response =>{
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response.data.errors))

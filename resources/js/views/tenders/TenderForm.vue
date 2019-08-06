@@ -14,7 +14,7 @@
                         class="input"
                         :class="errors.title ? 'border-red-300' : ''" 
                         type="text" 
-                        :placeholder="'Title'" 
+                        :placeholder="$t('utilities.title')" 
                         required
                         v-model="title" 
                         @keyup="errors= []"
@@ -26,14 +26,15 @@
                     class="mb-2" 
                     :options="categories" 
                     v-if="categories" 
-                    :placeholder="'Category'"
+                    :placeholder="$t('tender.category')"
                     @changed="updateCategory"
                 ></select-input>                
 
                 <textarea-input 
                     :value="description"
-                    :placeholder="'More informations about your tender...'"
+                    :placeholder="$t('tender.more_tender_info')"
                     @changed="updateDescription" 
+                    :rows="4"
                 ></textarea-input>
 
                 <div class="flex py-5">
@@ -45,11 +46,11 @@
                                 class="input pl-10" 
                                 :class="errors.max_price ? 'border-red-300' : ''" 
                                 type="number"
-                                :placeholder="'max. Preis'" 
+                                :placeholder="$t('tender.max_price')" 
                                 v-model="maxPrice" 
                                 @keyup="errors= []"
                             ></div>
-                        <p class="text-sm text-gray-500">Angebot Obergrenze</p>
+                        <p class="text-sm text-gray-500">{{$t('tender.max_price_info')}}</p>
                     </div>
 
                     <div class="w-1/2 ml-1">
@@ -60,24 +61,23 @@
                                 class="input pl-10" 
                                 :class="errors.immediate_price ? 'border-red-300' : ''" 
                                 type="number"
-                                :placeholder="'sofort Preis'" 
+                                :placeholder="$t('tender.immediate_price')" 
                                 v-model="immediatePrice" 
                                 @keyup="errors= []"
                             >
                         </div>
-                        <p class="text-sm text-gray-500">Sofort Zuschlag</p>
+                        <p class="text-sm text-gray-500">{{$t('tender.immediate_price_info')}}</p>
                     </div>
                 </div>
 
                 <p class="text-sm text-red-500 mb-2" v-if="errors.valid_date" v-text="errors.valid_date[0]"></p>
                 <date-picker 
                     class="mb-2"                     
-                    :placeholder="'Tender valid until'"
+                    :placeholder="$t('tender.valid_date')"
                     @changed="updateDate"
                 ></date-picker>
                 <p class="text-sm text-gray-500">
-                    Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar
-                    sein.
+                    {{$t('tender.valid_date_info')}}
                 </p>
             </div>             
         </div>
@@ -89,7 +89,7 @@
             </button>
                     
             <button class="btn btn-teal" type="submit" @click="storeTender">
-                <span>Entwurf speichern</span>                  
+                <span>{{ $t('utilities.save_draft')}}</span>                  
             </button>            
         </div>
 
@@ -136,11 +136,10 @@
                     immediate_price: this.immediatePrice,
                     valid_date: this.valid_date
                 })
-                .then(response=>{
+                .then(response=>{ 
 
-                    flash('Ihre Ausschreibung wurde unter Entwürfe abgelegt.')
-                    
                     setTimeout(() => {  
+                        flash(this.$i18n.t('tender.store_tender_message'))
                         this.$router.push(`/tenders/${response.data.id}`) 
                         this.$emit('cancel')
                         this.loading = false

@@ -18,9 +18,10 @@ $factory->define(Tender::class, function(Faker $faker){
 
         'title' => $faker->sentence,
         'description' => $faker->paragraph,        
-        'immediate_price' => $faker->randomFloat(0, 100, 200),
-        'max_price' => $faker->randomFloat(0, 200, 2000 ),
-        'valid_date' => Carbon::now()->addWeeks(2)
+        'max_price' => $faker->numberBetween(200, 10000),
+        'immediate_price' => $faker->numberBetween(100, 200),
+        'valid_date' => Carbon::now()->addWeeks(2),
+        'published_at' => Carbon::now()
     ];
 });
 
@@ -35,8 +36,9 @@ $factory->state(Tender::class, 'from-existing-data', function(Faker $faker){
         },
         'title' => $faker->sentence,
         'description' => $faker->paragraph,              
-        'immediate_price' => $faker->randomFloat(0, 100, 200),
-        'max_price' => $faker->randomFloat(0, 200, 2000 ),
-        'valid_date' => Carbon::now()->addWeeks(2)
+        'max_price' => $faker->numberBetween(200, 10000),
+        'immediate_price' => $faker->numberBetween(100, 200),
+        'valid_date' => Carbon::now()->addWeeks(2),
+        'published_at' => Carbon::now()
     ];
 });

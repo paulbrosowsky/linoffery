@@ -17,5 +17,24 @@
     "latency": "Wartezeit",
     "transport_type":"Transportart",
     "dimentions": "Abmaße",
-    "weight": "Gewicht"
+    "weight": "Gewicht",
+    "weight_kg": "Gewicht kg",
+    "width_cm": "Breite cm",
+    "height_cm": "Höhe cm",
+    "length_cm": "Länge cm",
+
+    "new_tender": "Neue Ausschreibung",
+    "category": "Kategorie",
+    "more_tender_info": "Erzählen Sie mehr zur Ihrer Ausschreibung ...",
+    "max_price": "max. Preis",
+    "max_price_info": "Alle Angebote über diesen Preis werden automatisch abgelehnt.",
+    "immediate_price": "sofort Preis",
+    "immediate_price_info": "Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.",
+    "valid_date": "gültig bis",
+    "valid_date_info": "Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.",
+    "store_tender_message": "Ihre Ausschreibung wurde unter Entwürfe abgelegt.",
+    "store_location_message": "Die Standortdetails wurden gespeichert." ,
+    "more_freight_info": "Erzählen Sie mehr über die Fracht ...",
+    "add_freight": "Fracht hinzu",
+    "store_freight_message": "Die Frachtdetails wurden gespeichert."
 }
