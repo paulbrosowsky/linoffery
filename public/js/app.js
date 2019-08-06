@@ -1967,11 +1967,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['text'],
+  props: ['value', 'text'],
   data: function data() {
     return {
-      show: false
+      show: this.value
     };
+  },
+  methods: {
+    toggle: function toggle() {
+      this.show = !this.show;
+      this.$emit('toggled');
+    }
   }
 });
 
@@ -2057,15 +2063,96 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['placeholder', 'right'],
+  props: {
+    value: Date,
+    placeholder: {
+      "default": 'Pick the Date'
+    },
+    right: {
+      "default": false
+    },
+    highlighted: Object,
+    disabledDates: null
+  },
+  data: function data() {
+    return {
+      date: this.value
+    };
+  },
   computed: {
+    // Switch calender position from left to the right
     calenderClasses: function calenderClasses() {
       return this.right ? 'right-0 rounded-lg shadow-lg p-5 z-20' : 'rounded-lg shadow-lg p-5 z-20';
+    },
+    // If not Props given disable all dates until today
+    inactiveDates: function inactiveDates() {
+      return this.disabledDates ? this.disabledDates : this.$moment().subtract(1, 'days')._d;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DateRange.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DateRange.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      range: {
+        from: null,
+        to: null
+      }
+    };
+  },
+  methods: {
+    updateFrom: function updateFrom(value) {
+      this.range.from = value;
+      this.$emit('inputFrom', this.range.from);
+    },
+    updateTo: function updateTo(value) {
+      this.range.to = value;
+      this.$emit('inputTo', this.range.from);
     }
   }
 });
@@ -2432,6 +2519,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2668,6 +2757,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2875,8 +2965,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['placeholder', 'height', 'value', 'rows'],
+  props: ['placeholder', 'height', 'value', 'rows', 'classes'],
   data: function data() {
     return {
       text: this.value
@@ -3180,6 +3275,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/CreateTender.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _views_tenders_TenderForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/tenders/TenderForm */ "./resources/js/views/tenders/TenderForm.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    TenderForm: _views_tenders_TenderForm__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/DefaultModal.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/DefaultModal.vue?vue&type=script&lang=js& ***!
@@ -3189,6 +3313,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -3269,9 +3396,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Flash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Flash */ "./resources/js/components/Flash.vue");
-/* harmony import */ var _modals_LoginModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modals/LoginModal */ "./resources/js/modals/LoginModal.vue");
-/* harmony import */ var _modals_NavDrawerRight__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../modals/NavDrawerRight */ "./resources/js/modals/NavDrawerRight.vue");
+/* harmony import */ var _modals_CreateTender__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modals/CreateTender */ "./resources/js/modals/CreateTender.vue");
+/* harmony import */ var _components_Flash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Flash */ "./resources/js/components/Flash.vue");
+/* harmony import */ var _modals_LoginModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../modals/LoginModal */ "./resources/js/modals/LoginModal.vue");
+/* harmony import */ var _modals_NavDrawerRight__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modals/NavDrawerRight */ "./resources/js/modals/NavDrawerRight.vue");
 //
 //
 //
@@ -3282,18 +3410,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Flash: _components_Flash__WEBPACK_IMPORTED_MODULE_0__["default"],
-    LoginModal: _modals_LoginModal__WEBPACK_IMPORTED_MODULE_1__["default"],
-    NavDrawerRight: _modals_NavDrawerRight__WEBPACK_IMPORTED_MODULE_2__["default"]
+    CreateTender: _modals_CreateTender__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Flash: _components_Flash__WEBPACK_IMPORTED_MODULE_1__["default"],
+    LoginModal: _modals_LoginModal__WEBPACK_IMPORTED_MODULE_2__["default"],
+    NavDrawerRight: _modals_NavDrawerRight__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   computed: {
     loggedIn: function loggedIn() {
       return this.$store.getters.loggedIn;
+    },
+    confirmedComplated: function confirmedComplated() {
+      return this.$store.getters.confirmed && this.$store.getters.companyCompleted;
     }
   }
 });
@@ -3552,8 +3689,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.$store.getters.confirmed;
     },
     companyAddressComplete: function companyAddressComplete() {
-      var company = this.$store.getters.company;
-      return !company.address && !company.postcode && !company.city && !company.country ? false : true;
+      return this.$store.getters.companyCompleted;
     }
   }
 });
@@ -3715,8 +3851,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   disableDefaultUI: true
                 });
                 this.directionsDisplay.setMap(null);
+                Event.$on('toggle-map-drawer', function () {
+                  setTimeout(function () {
+                    _this.zoomToMarkers();
+                  }, 500);
+                });
                 Event.$on('updateMarkers', function (value) {
-                  _this.resetMarkers();
+                  _this.resetAllMarkers();
 
                   _this.updateMarkers(value);
                 });
@@ -3728,8 +3869,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this.displayRoute();
                 });
-                Event.$on('fetchAddress', function () {
-                  _this.fetchAddress();
+                Event.$on('fetchAddress', function (element) {
+                  _this.fetchAddress(element);
                 }), Event.$on('setAutocomplete', function () {
                   _this.setAutocomplete();
                 }), Event.$on('boxRoute', function (value) {
@@ -3742,20 +3883,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 //     map.fitBounds(results[0].geometry.viewport);
                 // });
 
-                _context.next = 17;
+                _context.next = 18;
                 break;
 
-              case 14:
-                _context.prev = 14;
+              case 15:
+                _context.prev = 15;
                 _context.t0 = _context["catch"](0);
                 console.error(_context.t0);
 
-              case 17:
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 14]]);
+        }, _callee, this, [[0, 15]]);
       }));
 
       function mountMap() {
@@ -3768,12 +3909,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       var location = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var icon = location ? '/build/icons/' + location.type + '_marker.svg' : '';
       var marker = new google.maps.Marker({
         position: position,
-        map: this.map
+        map: this.map,
+        icon: icon,
+        type: location.type
       });
       marker.addListener('click', function () {
-        return _this2.$router.push("/cargos/".concat(location.tender_id));
+        return _this2.$router.push("/tenders/".concat(location.tender_id));
       });
       this.markers.push(marker);
     },
@@ -3792,28 +3936,76 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       }
     },
-    updateMarkers: function updateMarkers(locations) {
-      var _this4 = this;
+    updateMarkers: function () {
+      var _updateMarkers = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(locations) {
+        var _this4 = this;
 
-      locations.map(function (location) {
-        var position = {
-          lat: location.lat,
-          lng: location.lng
-        };
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return locations.map(function (location) {
+                  var position = {
+                    lat: location.lat,
+                    lng: location.lng
+                  };
 
-        _this4.addMarker(position, location);
-      });
+                  _this4.addMarker(position, location);
+                });
+
+              case 2:
+                this.zoomToMarkers();
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function updateMarkers(_x) {
+        return _updateMarkers.apply(this, arguments);
+      }
+
+      return updateMarkers;
+    }(),
+    zoomToMarkers: function zoomToMarkers() {
+      if (this.markers.length > 0) {
+        var bounds = new google.maps.LatLngBounds();
+        this.markers.map(function (marker) {
+          bounds.extend(marker.getPosition());
+        });
+        this.map.fitBounds(bounds);
+      }
     },
-    fetchAddress: function fetchAddress() {
-      var address = document.getElementById('address');
-      var addressAutocomplete = new google.maps.places.Autocomplete(address);
+    fetchAddress: function fetchAddress(input) {
+      var _this5 = this;
+
+      this.resetAllMarkers();
+      var addressAutocomplete = new google.maps.places.Autocomplete(input);
       addressAutocomplete.addListener('place_changed', function () {
-        var place = addressAutocomplete.getPlace();
-        Event.$emit('setAddress', place);
+        _this5.resetMarker(input.id);
+
+        var place = addressAutocomplete.getPlace(); //Add Marker with place location and input id as location type
+
+        _this5.addMarker(place.geometry.location, {
+          type: input.id
+        });
+
+        _this5.zoomToMarkers();
+
+        Event.$emit('setAddress', {
+          type: input.id,
+          place: place
+        });
       });
     },
     setAutocomplete: function setAutocomplete() {
-      var _this5 = this;
+      var _this6 = this;
 
       var originInput = document.getElementById('search-origin');
       var destinationInput = document.getElementById('search-destination');
@@ -3822,20 +4014,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       originAutocomplete.addListener('place_changed', function () {
         var place = originAutocomplete.getPlace();
 
-        _this5.$store.commit('retrieveOrigin', place.formatted_address);
+        _this6.$store.commit('retrieveOrigin', place.formatted_address);
 
-        _this5.origin = place.geometry.location;
+        _this6.origin = place.geometry.location;
 
-        _this5.displayRoute();
+        _this6.displayRoute();
       });
       destinationAutocomplete.addListener('place_changed', function () {
         var place = destinationAutocomplete.getPlace();
 
-        _this5.$store.commit('retrieveDestination', place.formatted_address);
+        _this6.$store.commit('retrieveDestination', place.formatted_address);
 
-        _this5.destination = place.geometry.location;
+        _this6.destination = place.geometry.location;
 
-        _this5.displayRoute();
+        _this6.displayRoute();
       });
     },
     displayRoute: function displayRoute() {
@@ -3869,7 +4061,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var bounds = routeBoxer.box(this.route, range);
       Event.$emit('filterCargosByTheRoute', bounds);
     },
-    resetMarkers: function resetMarkers() {
+    resetMarker: function resetMarker(type) {
+      var index = this.markers.findIndex(function (marker) {
+        return marker.type === type;
+      });
+
+      if (index != -1) {
+        this.markers[index].setMap(null);
+        this.markers.splice(index, 1);
+      }
+    },
+    resetAllMarkers: function resetAllMarkers() {
       this.markers.map(function (marker) {
         return marker.setMap(null);
       });
@@ -5006,8 +5208,8 @@ __webpack_require__.r(__webpack_exports__);
     setTimeout(function () {
       // Initialize location field as Google Map autocomplete form
       // reference mountMap() in ./views/Map.vue
-      Event.$emit('fetchAddress');
-    }, 2000); // On Event from Google Maps set address fields in the form
+      Event.$emit('fetchAddress', document.getElementById('address'));
+    }, 1000); // On Event from Google Maps set address fields in the form
     // reference getAddress() on ./views/Map.vue
 
     Event.$on('setAddress', function (place) {
@@ -5173,7 +5375,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      step: 1
+      step: 3
     };
   },
   methods: {
@@ -5296,13 +5498,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['freight'],
   data: function data() {
     return {
-      id: this.freight.id,
-      title: this.freight.title,
-      description: this.freight.description,
+      form: {
+        id: this.freight.id,
+        title: this.freight.title,
+        description: this.freight.description,
+        pallet: this.freight.pallet,
+        width: this.freight.width,
+        height: this.freight.height,
+        length: this.freight.length,
+        weight: this.freight.weight
+      },
       transport: [{
         name: 'EPAL'
       }, {
@@ -5316,13 +5536,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     setFreightData: function setFreightData() {
-      this.$emit('changed', {
-        id: this.id,
-        title: this.title
-      });
+      this.$emit('changed', this.form);
     },
     oneColumDesign: function oneColumDesign() {
       this.cardSmall = this.$refs.form.clientWidth < 640 ? true : false;
+    },
+    updatePallet: function updatePallet(value) {
+      this.form.pallet = value.name;
+      this.setFreightData();
+    },
+    updateDescription: function updateDescription(value) {
+      this.form.description = value;
+      this.setFreightData();
     }
   }
 });
@@ -5388,7 +5613,6 @@ __webpack_require__.r(__webpack_exports__);
       this.id++;
     },
     removeFreight: function removeFreight(index) {
-      console.log(index);
       this.freights.splice(index, 1);
     },
     addData: function addData(data, index) {
@@ -5415,6 +5639,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_DateRange__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/DateRange */ "./resources/js/components/DateRange.vue");
 //
 //
 //
@@ -5517,25 +5742,95 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    DateRange: _components_DateRange__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
+      locations: {
+        pickup: {
+          tender_id: this.$store.state.tender.id,
+          type: 'pickup',
+          address: null,
+          earliest_date: null,
+          latest_date: null,
+          loading: false,
+          latency: null,
+          lat: null,
+          lng: null
+        },
+        delivery: {
+          tender_id: this.$store.state.tender.id,
+          type: 'delivery',
+          address: null,
+          earliest_date: null,
+          latest_date: null,
+          loading: false,
+          latency: null,
+          lat: null,
+          lng: null
+        }
+      },
       errors: [],
-      cardSmall: false
+      cardSmall: false,
+      loading: false
     };
   },
   methods: {
+    storeLocation: function storeLocation() {
+      var _this = this;
+
+      this.loading = true;
+      Object.keys(this.locations).forEach(function (key) {
+        _this.$store.dispatch('storeLocation', _this.locations[key]).then(function () {
+          flash('Abhol- und Lieferderails wurden gespeichert.');
+          setTimeout(function () {
+            _this.$emit('forward');
+
+            _this.loading = false;
+          }, 2000);
+        })["catch"](function (errors) {
+          return _this.errors = errors;
+        });
+      });
+    },
     oneColumDesign: function oneColumDesign() {
       this.cardSmall = this.$refs.form.clientWidth < 640 ? true : false;
+    },
+    // Set Address on Event at ./view/Map.vue getAddress()
+    setAddress: function setAddress(address) {
+      // Address type corresponds to emlement id
+      var location = this.locations[address.type]; // Address place is an intance of Google Maps Places
+
+      location.address = address.place.formatted_address;
+      location.lat = address.place.geometry.location.lat();
+      location.lng = address.place.geometry.location.lng();
+    },
+    updateEarliestPickup: function updateEarliestPickup(value) {
+      this.locations.pickup.earliest_date = value;
+    },
+    updateLatestPickup: function updateLatestPickup(value) {
+      this.locations.pickup.latest_date = value;
+    },
+    updateEarliestDelivery: function updateEarliestDelivery(value) {
+      this.locations.delivery.earliest_date = value;
+    },
+    updateLatestDelivery: function updateLatestDelivery(value) {
+      this.locations.delivery.latest_date = value;
     }
   },
   mounted: function mounted() {
+    var _this2 = this;
+
     setTimeout(function () {
-      Event.$emit('fetchAddress');
+      Event.$emit('fetchAddress', document.getElementById('pickup'));
+      Event.$emit('fetchAddress', document.getElementById('delivery'));
     }, 500);
+    Event.$on('setAddress', function (value) {
+      return _this2.setAddress(value);
+    });
   }
 });
 
@@ -6033,15 +6328,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      category_id: null,
       title: null,
-      category: 'Category',
-      minPrice: null,
-      immadinatePrice: null,
+      description: null,
+      maxPrice: null,
+      immediatePrice: null,
+      valid_date: null,
       errors: [],
-      cardSmall: false
+      cardSmall: false,
+      loading: false
     };
   },
   computed: {
@@ -6050,8 +6352,42 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    storeTender: function storeTender() {
+      var _this = this;
+
+      this.loading = true;
+      this.$store.dispatch('storeTender', {
+        category_id: this.category_id,
+        title: this.title,
+        description: this.description,
+        max_price: this.maxPrice,
+        immediate_price: this.immediatePrice,
+        valid_date: this.valid_date
+      }).then(function (response) {
+        flash('Ihre Ausschreibung wurde unter Entwürfe abgelegt.');
+        setTimeout(function () {
+          _this.$router.push("/tenders/".concat(response.data.id));
+
+          _this.$emit('cancel');
+
+          _this.loading = false;
+        }, 2000);
+      })["catch"](function (errors) {
+        _this.errors = errors;
+        _this.loading = false;
+      });
+    },
     oneColumDesign: function oneColumDesign() {
       this.cardSmall = this.$refs.cardHeader.clientWidth < 640 ? true : false;
+    },
+    updateCategory: function updateCategory(category) {
+      this.category_id = category.id;
+    },
+    updateDescription: function updateDescription(text) {
+      this.description = text;
+    },
+    updateDate: function updateDate(date) {
+      this.valid_date = date;
     }
   }
 });
@@ -6563,7 +6899,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".v--modal {\n  border-radius: 0.5rem;\n}", ""]);
+exports.push([module.i, ".v--modal {\n  border-radius: 0.5rem;\n  overflow: visible !important;\n}", ""]);
 
 // exports
 
@@ -6658,7 +6994,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".vdp-datepicker__calendar .cell{\n  border-radius: 0.5rem;\n  height: 38px !important;\n  line-height: 36px !important;\n}\n\n", ""]);
+exports.push([module.i, ".vdp-datepicker__calendar .cell{\n  height: 38px !important;\n  line-height: 36px !important;\n} \n\n", ""]);
 
 // exports
 
@@ -17831,22 +18167,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "flex px-2 mb-8" },
-    [
-      _c("router-link", { attrs: { to: { name: "create_tender" } } }, [
-        _c("button", { staticClass: "btn btn-teal shadow-md" }, [
-          _c("span", [_c("i", { staticClass: "icon ion-md-add mr-2" })]),
-          _vm._v(" "),
-          _c("span", [_vm._v("New Tender")])
-        ])
-      ])
-    ],
-    1
-  )
+  return _c("div", { staticClass: "flex px-2 mb-8" }, [
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-teal shadow-md",
+        on: {
+          click: function($event) {
+            return _vm.$modal.show("create-tender")
+          }
+        }
+      },
+      [_vm._m(0), _vm._v(" "), _c("span", [_vm._v("New Tender")])]
+    )
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [_c("i", { staticClass: "icon ion-md-add mr-2" })])
+  }
+]
 render._withStripped = true
 
 
@@ -17984,11 +18327,7 @@ var render = function() {
     _c("p", {
       staticClass: "text-gray-600 cursor-pointer",
       domProps: { textContent: _vm._s(_vm.text) },
-      on: {
-        click: function($event) {
-          _vm.show = !_vm.show
-        }
-      }
+      on: { click: _vm.toggle }
     })
   ])
 }
@@ -18115,8 +18454,69 @@ var render = function() {
           "input-class":
             "bg-gray-300 w-full rounded-lg border-2 leading-none py-3 pl-10 focus:border-teal-500 focus:bg-white",
           "calendar-class": _vm.calenderClasses,
-          placeholder: _vm.placeholder
+          placeholder: _vm.placeholder,
+          format: "dd.MM.yyyy",
+          highlighted: _vm.highlighted,
+          "disabled-dates": { to: _vm.inactiveDates }
+        },
+        on: {
+          input: function($event) {
+            return _vm.$emit("changed", _vm.date)
+          }
+        },
+        model: {
+          value: _vm.date,
+          callback: function($$v) {
+            _vm.date = $$v
+          },
+          expression: "date"
         }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DateRange.vue?vue&type=template&id=6678f0d4&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DateRange.vue?vue&type=template&id=6678f0d4& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "flex" },
+    [
+      _c("date-picker", {
+        staticClass: "w-1/2 mr-1",
+        attrs: { placeholder: "Frühestes Termin", highlighted: _vm.range },
+        on: { changed: _vm.updateFrom }
+      }),
+      _vm._v(" "),
+      _c("date-picker", {
+        staticClass: "w-1/2 ml-1",
+        attrs: {
+          placeholder: "Spätestes Termin",
+          right: true,
+          "disabled-dates": _vm.range.from,
+          highlighted: _vm.range
+        },
+        on: { changed: _vm.updateTo }
       })
     ],
     1
@@ -18227,7 +18627,7 @@ var render = function() {
           }
         ],
         staticClass:
-          "li-flash-container flex items-center fixed bg-green-500 shadow-lg rounded-lg py-2 px-5 z-20 m-auto md:m-0 md:w-auto"
+          "li-flash-container flex items-center fixed bg-green-500 shadow-lg rounded-lg py-2 px-5 z-50 m-auto md:m-0 md:w-auto"
       },
       [
         _c("i", {
@@ -18682,7 +19082,7 @@ var render = function() {
               }
             ],
             staticClass:
-              "li-map-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0 lg:w-1/2 "
+              "li-map-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0 md:pl-20 lg:w-1/2 "
           },
           [
             _c("gmap"),
@@ -19092,6 +19492,11 @@ var render = function() {
           searchable: false,
           "allow-empty": false
         },
+        on: {
+          input: function($event) {
+            return _vm.$emit("changed", _vm.selected)
+          }
+        },
         scopedSlots: _vm._u([
           {
             key: "singleLabel",
@@ -19322,23 +19727,34 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("textarea", {
-    directives: [
-      { name: "model", rawName: "v-model", value: _vm.text, expression: "text" }
-    ],
-    staticClass:
-      "w-full bg-gray-300 rounded-lg border-2 resize-none leading-tight px-4 py-3 focus:outline-none focus:border-teal-500 focus:bg-white",
-    attrs: { placeholder: _vm.placeholder, rows: _vm.rows },
-    domProps: { value: _vm.text },
-    on: {
-      input: function($event) {
-        if ($event.target.composing) {
-          return
+  return _c("div", [
+    _c("textarea", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.text,
+          expression: "text"
         }
-        _vm.text = $event.target.value
+      ],
+      staticClass:
+        "w-full bg-gray-300 rounded-lg border-2 resize-none leading-tight px-4 py-3 focus:outline-none focus:border-teal-500 focus:bg-white",
+      class: _vm.classes,
+      attrs: { placeholder: _vm.placeholder, rows: _vm.rows },
+      domProps: { value: _vm.text },
+      on: {
+        keyup: function($event) {
+          return _vm.$emit("changed", _vm.text)
+        },
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.text = $event.target.value
+        }
       }
-    }
-  })
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -19585,6 +20001,54 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=template&id=3bf244ea&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/CreateTender.vue?vue&type=template&id=3bf244ea& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "default-modal",
+    {
+      attrs: { name: "create-tender" },
+      on: {
+        close: function($event) {
+          return _vm.$modal.hide("create-tender")
+        }
+      }
+    },
+    [
+      _c("h1", { staticClass: "text-xl text-teal-500 mb-5" }, [
+        _vm._v("New Tender")
+      ]),
+      _vm._v(" "),
+      _c("tender-form", {
+        on: {
+          cancel: function($event) {
+            return _vm.$modal.hide("create-tender")
+          }
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/DefaultModal.vue?vue&type=template&id=32c1a187&":
 /*!***********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/DefaultModal.vue?vue&type=template&id=32c1a187& ***!
@@ -19624,14 +20088,18 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "absolute right-0 p-5 focus:outline-none",
+          staticClass: "absolute top-0 right-0 p-5  focus:outline-none",
           on: {
             click: function($event) {
               return _vm.$emit("close")
             }
           }
         },
-        [_c("i", { staticClass: "icon ion-md-close text-xl text-gray-500" })]
+        [
+          _c("div", [
+            _c("i", { staticClass: "icon ion-md-close text-xl text-gray-500" })
+          ])
+        ]
       ),
       _vm._v(" "),
       _c("div", { staticClass: "p-5" }, [_vm._t("default")], 2)
@@ -19700,6 +20168,8 @@ var render = function() {
     "div",
     [
       !_vm.loggedIn ? _c("div", [_c("login-modal")], 1) : _vm._e(),
+      _vm._v(" "),
+      _vm.confirmedComplated ? _c("div", [_c("create-tender")], 1) : _vm._e(),
       _vm._v(" "),
       _c("nav-drawer-right"),
       _vm._v(" "),
@@ -22752,41 +23222,19 @@ var render = function() {
         "card",
         { ref: "card" },
         [
-          _c("tender-form", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.step == 1,
-                expression: "step == 1"
-              }
-            ],
-            on: { forward: _vm.forward }
-          }),
+          _vm.step == 1
+            ? _c("tender-form", { on: { forward: _vm.forward } })
+            : _vm._e(),
           _vm._v(" "),
-          _c("location-form", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.step == 2,
-                expression: "step == 2"
-              }
-            ],
-            on: { forward: _vm.forward, back: _vm.back }
-          }),
+          _vm.step == 2
+            ? _c("location-form", {
+                on: { forward: _vm.forward, back: _vm.back }
+              })
+            : _vm._e(),
           _vm._v(" "),
-          _c("freights-form", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.step == 3,
-                expression: "step == 3"
-              }
-            ],
-            on: { back: _vm.back }
-          })
+          _vm.step == 3
+            ? _c("freights-form", { on: { back: _vm.back } })
+            : _vm._e()
         ],
         1
       )
@@ -22857,10 +23305,10 @@ var render = function() {
           "div",
           { staticClass: "w-full", class: _vm.cardSmall ? "" : "w-1/2 mr-1" },
           [
-            _vm.errors.name
+            _vm.errors.title
               ? _c("p", {
                   staticClass: "text-sm text-red-500 mb-2",
-                  domProps: { textContent: _vm._s(_vm.errors.name[0]) }
+                  domProps: { textContent: _vm._s(_vm.errors.title[0]) }
                 })
               : _vm._e(),
             _vm._v(" "),
@@ -22870,18 +23318,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.title,
-                    expression: "title"
+                    value: _vm.form.title,
+                    expression: "form.title"
                   }
                 ],
                 staticClass: "input",
-                class: _vm.errors.name ? "border-red-300" : "",
+                class: _vm.errors.title ? "border-red-300" : "",
                 attrs: {
                   type: "text",
                   placeholder: "Fracht-Bezeichnung",
                   required: ""
                 },
-                domProps: { value: _vm.title },
+                domProps: { value: _vm.form.title },
                 on: {
                   keyup: function($event) {
                     _vm.errors = []
@@ -22891,7 +23339,7 @@ var render = function() {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.title = $event.target.value
+                    _vm.$set(_vm.form, "title", $event.target.value)
                   }
                 }
               })
@@ -22899,11 +23347,12 @@ var render = function() {
             _vm._v(" "),
             _c("textarea-input", {
               attrs: {
-                value: _vm.description,
+                value: _vm.form.description,
                 placeholder: "More informations about the freight...",
                 rows: 4,
                 height: 104
-              }
+              },
+              on: { changed: _vm.updateDescription }
             })
           ],
           1
@@ -22915,18 +23364,35 @@ var render = function() {
           [
             _c("select-input", {
               staticClass: "mb-2",
-              attrs: { options: _vm.transport, placeholder: "Transportart" }
+              attrs: { options: _vm.transport, placeholder: "Transportart" },
+              on: { changed: _vm.updatePallet }
             }),
             _vm._v(" "),
             _c("div", { staticClass: "flex mb-2" }, [
               _c("div", { staticClass: "relative flex items-center mr-2" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.width,
+                      expression: "form.width"
+                    }
+                  ],
                   staticClass: "input",
-                  class: _vm.errors.name ? "border-red-300" : "",
+                  class: _vm.errors.width ? "border-red-300" : "",
                   attrs: { type: "number", placeholder: "Breite cm" },
+                  domProps: { value: _vm.form.width },
                   on: {
                     keyup: function($event) {
                       _vm.errors = []
+                    },
+                    blur: _vm.setFreightData,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "width", $event.target.value)
                     }
                   }
                 })
@@ -22934,12 +23400,28 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "relative flex items-center mr-2" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.height,
+                      expression: "form.height"
+                    }
+                  ],
                   staticClass: "input",
-                  class: _vm.errors.name ? "border-red-300" : "",
+                  class: _vm.errors.height ? "border-red-300" : "",
                   attrs: { type: "number", placeholder: "Höhe cm" },
+                  domProps: { value: _vm.form.height },
                   on: {
                     keyup: function($event) {
                       _vm.errors = []
+                    },
+                    blur: _vm.setFreightData,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "height", $event.target.value)
                     }
                   }
                 })
@@ -22947,12 +23429,28 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "relative flex items-center" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.length,
+                      expression: "form.length"
+                    }
+                  ],
                   staticClass: "input",
-                  class: _vm.errors.name ? "border-red-300" : "",
-                  attrs: { type: "number", placeholder: "Tiefe cm" },
+                  class: _vm.errors.length ? "border-red-300" : "",
+                  attrs: { type: "number", placeholder: "Länge cm" },
+                  domProps: { value: _vm.form.length },
                   on: {
                     keyup: function($event) {
                       _vm.errors = []
+                    },
+                    blur: _vm.setFreightData,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "length", $event.target.value)
                     }
                   }
                 })
@@ -22961,12 +23459,28 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "relative flex items-center mb-1" }, [
               _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.weight,
+                    expression: "form.weight"
+                  }
+                ],
                 staticClass: "input",
-                class: _vm.errors.name ? "border-red-300" : "",
+                class: _vm.errors.weight ? "border-red-300" : "",
                 attrs: { type: "number", placeholder: "Gewicht kg" },
+                domProps: { value: _vm.form.weight },
                 on: {
                   keyup: function($event) {
                     _vm.errors = []
+                  },
+                  blur: _vm.setFreightData,
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "weight", $event.target.value)
                   }
                 }
               })
@@ -23091,227 +23605,255 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "resize",
-            rawName: "v-resize",
-            value: _vm.oneColumDesign,
-            expression: "oneColumDesign"
-          }
-        ],
-        ref: "form",
-        staticClass: "block",
-        class: _vm.cardSmall ? "" : "md:flex"
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "w-full mb-5 ",
-            class: _vm.cardSmall ? "" : "w-1/2 mr-2"
-          },
-          [
-            _c("p", { staticClass: "font-bold mb-5" }, [
-              _vm._v("Abholdetails")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "relative flex items-center mb-2" }, [
-              _c("i", {
-                staticClass:
-                  "absolute icon ion-md-pin text-xl text-gray-500 px-3"
-              }),
+  return _c(
+    "div",
+    { staticClass: "relative" },
+    [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "resize",
+              rawName: "v-resize",
+              value: _vm.oneColumDesign,
+              expression: "oneColumDesign"
+            }
+          ],
+          ref: "form",
+          staticClass: "block",
+          class: _vm.cardSmall ? "" : "md:flex"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "w-full mb-5 ",
+              class: _vm.cardSmall ? "" : "w-1/2 mr-2"
+            },
+            [
+              _c("p", { staticClass: "font-bold mb-5" }, [
+                _vm._v("Abholdetails")
+              ]),
               _vm._v(" "),
-              _c("input", {
-                staticClass: "input pl-10",
-                attrs: {
-                  id: "address",
-                  type: "text",
-                  placeholder: "Abholadresse"
-                },
-                on: {
-                  keyup: function($event) {
-                    _vm.errors = []
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "flex mb-2" },
-              [
-                _c("date-picker", {
-                  staticClass: "w-1/2 mr-1",
-                  attrs: { placeholder: "Frühestes Termin" }
-                }),
-                _vm._v(" "),
-                _c("date-picker", {
-                  staticClass: "w-1/2 ml-1",
-                  attrs: { placeholder: "Spätestes Termin", right: true }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              [_c("checkbox", { attrs: { text: "Veladung durch Fahrer" } })],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", [
-              _vm.errors.name
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.name[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "relative flex items-center mb-1" }, [
+              _c("div", { staticClass: "relative flex items-center mb-2" }, [
                 _c("i", {
                   staticClass:
-                    "absolute icon ion-md-time text-xl text-gray-500 px-3"
+                    "absolute icon ion-md-pin text-xl text-gray-500 px-3"
                 }),
                 _vm._v(" "),
                 _c("input", {
                   staticClass: "input pl-10",
-                  class: _vm.errors.name ? "border-red-300" : "",
-                  attrs: { type: "number", placeholder: "Wartezeit in Studen" },
+                  attrs: {
+                    id: "pickup",
+                    type: "text",
+                    placeholder: "Abholadresse"
+                  },
                   on: {
                     keyup: function($event) {
                       _vm.errors = []
                     }
                   }
                 })
+              ]),
+              _vm._v(" "),
+              _c("date-range", {
+                on: {
+                  inputFrom: _vm.updateEarliestPickup,
+                  inputTo: _vm.updateLatestPickup
+                }
+              }),
+              _vm._v(" "),
+              _c("checkbox", {
+                attrs: {
+                  value: _vm.locations.pickup.loading,
+                  text: "Veladung durch Fahrer"
+                },
+                on: {
+                  toggled: function($event) {
+                    _vm.locations.pickup.loading = !_vm.locations.pickup.loading
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("div", [
+                _c("div", { staticClass: "relative flex items-center mb-1" }, [
+                  _c("i", {
+                    staticClass:
+                      "absolute icon ion-md-time text-xl text-gray-500 px-3"
+                  }),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.locations.pickup.latency,
+                        expression: "locations.pickup.latency"
+                      }
+                    ],
+                    staticClass: "input pl-10",
+                    attrs: {
+                      type: "number",
+                      placeholder: "Wartezeit in Studen"
+                    },
+                    domProps: { value: _vm.locations.pickup.latency },
+                    on: {
+                      keyup: function($event) {
+                        _vm.errors = []
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.locations.pickup,
+                          "latency",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
               ])
-            ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "w-full", class: _vm.cardSmall ? "" : "w-1/2 ml-2" },
+            [
+              _c("p", { staticClass: "font-bold mb-5" }, [
+                _vm._v("Lieferdetails")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "relative flex items-center mb-2" }, [
+                _c("i", {
+                  staticClass:
+                    "absolute icon ion-md-pin text-xl text-gray-500 px-3"
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "input pl-10",
+                  attrs: {
+                    id: "delivery",
+                    type: "text",
+                    placeholder: "Lieferadresse"
+                  },
+                  on: {
+                    keyup: function($event) {
+                      _vm.errors = []
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("date-range", {
+                on: {
+                  inputFrom: _vm.updateEarliestDelivery,
+                  inputTo: _vm.updateLatestDelivery
+                }
+              }),
+              _vm._v(" "),
+              _c("checkbox", {
+                attrs: {
+                  value: _vm.locations.delivery.loading,
+                  text: "Veladung durch Fahrer"
+                },
+                on: {
+                  toggled: function($event) {
+                    _vm.locations.delivery.loading = !_vm.locations.delivery
+                      .loading
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("div", [
+                _c("div", { staticClass: "relative flex items-center mb-1" }, [
+                  _c("i", {
+                    staticClass:
+                      "absolute icon ion-md-time text-xl text-gray-500 px-3"
+                  }),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.locations.delivery.latency,
+                        expression: "locations.delivery.latency"
+                      }
+                    ],
+                    staticClass: "input pl-10",
+                    attrs: {
+                      type: "number",
+                      placeholder: "Wartezeit in Studen"
+                    },
+                    domProps: { value: _vm.locations.delivery.latency },
+                    on: {
+                      keyup: function($event) {
+                        _vm.errors = []
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.locations.delivery,
+                          "latency",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ])
+            ],
+            1
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex justify-end mt-5" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-outlined is-outlined mr-2",
+            on: {
+              click: function($event) {
+                return _vm.$emit("back")
+              }
+            }
+          },
+          [
+            _c("i", { staticClass: "icon ion-md-arrow-round-back pr-2" }),
+            _vm._v(" "),
+            _c("span", [_vm._v("zurück")])
           ]
         ),
         _vm._v(" "),
         _c(
-          "div",
-          { staticClass: "w-full", class: _vm.cardSmall ? "" : "w-1/2 ml-2" },
+          "button",
+          {
+            staticClass: "btn btn-teal",
+            attrs: { type: "submit" },
+            on: { click: _vm.storeLocation }
+          },
           [
-            _c("p", { staticClass: "font-bold mb-5" }, [
-              _vm._v("Lieferdetails")
-            ]),
+            _c("span", [_vm._v("weiter")]),
             _vm._v(" "),
-            _c("div", { staticClass: "relative flex items-center mb-2" }, [
-              _c("i", {
-                staticClass:
-                  "absolute icon ion-md-pin text-xl text-gray-500 px-3"
-              }),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "input pl-10",
-                attrs: {
-                  id: "address",
-                  type: "text",
-                  placeholder: "Lieferadresse"
-                },
-                on: {
-                  keyup: function($event) {
-                    _vm.errors = []
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "flex mb-2" },
-              [
-                _c("date-picker", {
-                  staticClass: "w-1/2 mr-1",
-                  attrs: { placeholder: "Frühestes Termin" }
-                }),
-                _vm._v(" "),
-                _c("date-picker", {
-                  staticClass: "w-1/2 ml-1",
-                  attrs: { placeholder: "Spätestes Termin", right: true }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              [_c("checkbox", { attrs: { text: "Veladung durch Fahrer" } })],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", [
-              _vm.errors.name
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.name[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "relative flex items-center mb-1" }, [
-                _c("i", {
-                  staticClass:
-                    "absolute icon ion-md-time text-xl text-gray-500 px-3"
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "input pl-10",
-                  class: _vm.errors.name ? "border-red-300" : "",
-                  attrs: { type: "number", placeholder: "Wartezeit in Studen" },
-                  on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    }
-                  }
-                })
-              ])
-            ])
+            _c("i", { staticClass: "icon ion-md-arrow-round-forward pl-2" })
           ]
         )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex justify-end mt-5" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outlined is-outlined mr-2",
-          on: {
-            click: function($event) {
-              return _vm.$emit("back")
-            }
-          }
-        },
-        [
-          _c("i", { staticClass: "icon ion-md-arrow-round-back pr-2" }),
-          _vm._v(" "),
-          _c("span", [_vm._v("zurück")])
-        ]
-      ),
+      ]),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-teal",
-          attrs: { type: "submit" },
-          on: {
-            click: function($event) {
-              return _vm.$emit("forward")
-            }
-          }
-        },
-        [
-          _c("span", [_vm._v("weiter")]),
-          _vm._v(" "),
-          _c("i", { staticClass: "icon ion-md-arrow-round-forward pl-2" })
-        ]
-      )
-    ])
-  ])
+      _c("loading-spinner", {
+        attrs: { loading: _vm.loading, position: "absolute" }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -23404,7 +23946,7 @@ var render = function() {
                         _c("p", {
                           staticClass: "text-4xl text-teal-500 -my-2",
                           domProps: {
-                            textContent: _vm._s("€ " + _vm.tender.min_price)
+                            textContent: _vm._s("€ " + _vm.tender.max_price)
                           }
                         }),
                         _vm._v(" "),
@@ -23447,7 +23989,7 @@ var render = function() {
                           staticClass: "text-lg mr-2",
                           domProps: {
                             textContent: _vm._s(
-                              "€ " + _vm.tender.immadiate_price
+                              "€ " + _vm.tender.immediate_price
                             )
                           }
                         }),
@@ -23544,249 +24086,261 @@ var render = function() {
           "div",
           { staticClass: "block bg-gray-100 py-5 px-5 md:flex md:px-10" },
           [
-            _c("div", { staticClass: "w-full pb-5 md:w-1/2 md:pb-0" }, [
-              _c("p", { staticClass: "uppercase text-sm text-gray-500 mb-2" }, [
-                _vm._v(_vm._s(_vm.$t("tender.pickup_details")))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "pl-3" }, [
-                _c("div", { staticClass: "flex pb-5" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-pin text-2xl text-teal-400 pt-1 mr-5"
-                  }),
+            _vm.pickup
+              ? _c("div", { staticClass: "w-full pb-5 md:w-1/2 md:pb-0" }, [
+                  _c(
+                    "p",
+                    { staticClass: "uppercase text-sm text-gray-500 mb-2" },
+                    [_vm._v(_vm._s(_vm.$t("tender.pickup_details")))]
+                  ),
                   _vm._v(" "),
-                  _c("div", [
-                    _c("p", {
-                      domProps: { textContent: _vm._s(_vm.pickup.address) }
-                    }),
-                    _vm._v(" "),
-                    _c("span", {
-                      domProps: { textContent: _vm._s(_vm.pickup.zip) }
-                    }),
-                    _vm._v(" "),
-                    _c("span", {
-                      domProps: { textContent: _vm._s(_vm.pickup.city) }
-                    }),
-                    _vm._v(" "),
-                    _c("span", {
-                      staticClass: "text-gray-500 text-sm",
-                      domProps: {
-                        textContent: _vm._s(", " + _vm.pickup.country)
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex pb-5" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-calendar text-2xl text-teal-400 mr-5"
-                  }),
-                  _vm._v(" "),
-                  _c("div", [
-                    _c("div", { staticClass: "mb-2" }, [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(_vm.pickup.earliest_date)
-                        }
+                  _c("div", { staticClass: "pl-3" }, [
+                    _c("div", { staticClass: "flex pb-5" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-pin text-2xl text-teal-400 pt-1 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.earliest_date")))
+                      _c("div", [
+                        _c("p", {
+                          domProps: { textContent: _vm._s(_vm.pickup.address) }
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          domProps: { textContent: _vm._s(_vm.pickup.zip) }
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          domProps: { textContent: _vm._s(_vm.pickup.city) }
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          staticClass: "text-gray-500 text-sm",
+                          domProps: {
+                            textContent: _vm._s(", " + _vm.pickup.country)
+                          }
+                        })
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(_vm.pickup.latest_date)
-                        }
+                    _c("div", { staticClass: "flex pb-5" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-calendar text-2xl text-teal-400 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.latest_date")))
+                      _c("div", [
+                        _c("div", { staticClass: "mb-2" }, [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(_vm.pickup.earliest_date)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.earliest_date")))
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(_vm.pickup.latest_date)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.latest_date")))
+                          ])
+                        ])
                       ])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex pb-5" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-fitness text-2xl text-teal-400 mr-5"
-                  }),
-                  _vm._v(" "),
-                  _c("div", [
-                    _c("div", [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.pickup.loading
-                              ? _vm.$t("utilities.yes")
-                              : _vm.$t("utilities.no")
-                          )
-                        }
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex pb-5" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-fitness text-2xl text-teal-400 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.loading_driver")))
+                      _c("div", [
+                        _c("div", [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.pickup.loading
+                                  ? _vm.$t("utilities.yes")
+                                  : _vm.$t("utilities.no")
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.loading_driver")))
+                          ])
+                        ])
                       ])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex pb-2" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-time text-xl text-teal-400 pt-1 mr-5"
-                  }),
-                  _vm._v(" "),
-                  _c("div", [
-                    _c("div", [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.pickup.latency + " " + _vm.$t("utilities.hours")
-                          )
-                        }
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex pb-2" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-time text-xl text-teal-400 pt-1 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.latency")))
+                      _c("div", [
+                        _c("div", [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.pickup.latency +
+                                  " " +
+                                  _vm.$t("utilities.hours")
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.latency")))
+                          ])
+                        ])
                       ])
                     ])
                   ])
                 ])
-              ])
-            ]),
+              : _vm._e(),
             _vm._v(" "),
-            _c("div", { staticClass: "w-full md:w-1/2" }, [
-              _c("p", { staticClass: "uppercase text-sm text-gray-500 mb-2" }, [
-                _vm._v(_vm._s(_vm.$t("tender.delivery_details")))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "pl-3" }, [
-                _c("div", { staticClass: "flex pb-5" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-pin text-2xl text-teal-400 pt-1 mr-5"
-                  }),
+            _vm.delivery
+              ? _c("div", { staticClass: "w-full md:w-1/2" }, [
+                  _c(
+                    "p",
+                    { staticClass: "uppercase text-sm text-gray-500 mb-2" },
+                    [_vm._v(_vm._s(_vm.$t("tender.delivery_details")))]
+                  ),
                   _vm._v(" "),
-                  _c("div", [
-                    _c("p", {
-                      domProps: { textContent: _vm._s(_vm.delivery.address) }
-                    }),
-                    _vm._v(" "),
-                    _c("span", {
-                      domProps: { textContent: _vm._s(_vm.delivery.zip) }
-                    }),
-                    _vm._v(" "),
-                    _c("span", {
-                      domProps: { textContent: _vm._s(_vm.delivery.city) }
-                    }),
-                    _vm._v(" "),
-                    _c("span", {
-                      staticClass: "text-gray-500 text-sm",
-                      domProps: {
-                        textContent: _vm._s(", " + _vm.delivery.country)
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex pb-5" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-calendar text-2xl text-teal-400 mr-5"
-                  }),
-                  _vm._v(" "),
-                  _c("div", [
-                    _c("div", { staticClass: "mb-2" }, [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(_vm.delivery.earliest_date)
-                        }
+                  _c("div", { staticClass: "pl-3" }, [
+                    _c("div", { staticClass: "flex pb-5" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-pin text-2xl text-teal-400 pt-1 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.earliest_date")))
+                      _c("div", [
+                        _c("p", {
+                          domProps: {
+                            textContent: _vm._s(_vm.delivery.address)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          domProps: { textContent: _vm._s(_vm.delivery.zip) }
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          domProps: { textContent: _vm._s(_vm.delivery.city) }
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          staticClass: "text-gray-500 text-sm",
+                          domProps: {
+                            textContent: _vm._s(", " + _vm.delivery.country)
+                          }
+                        })
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(_vm.delivery.latest_date)
-                        }
+                    _c("div", { staticClass: "flex pb-5" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-calendar text-2xl text-teal-400 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.latest_date")))
+                      _c("div", [
+                        _c("div", { staticClass: "mb-2" }, [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(_vm.delivery.earliest_date)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.earliest_date")))
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(_vm.delivery.latest_date)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.latest_date")))
+                          ])
+                        ])
                       ])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex pb-5" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-fitness text-2xl text-teal-400 mr-5"
-                  }),
-                  _vm._v(" "),
-                  _c("div", [
-                    _c("div", [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.delivery.loading
-                              ? _vm.$t("utilities.yes")
-                              : _vm.$t("utilities.no")
-                          )
-                        }
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex pb-5" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-fitness text-2xl text-teal-400 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.loading_driver")))
+                      _c("div", [
+                        _c("div", [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.delivery.loading
+                                  ? _vm.$t("utilities.yes")
+                                  : _vm.$t("utilities.no")
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.loading_driver")))
+                          ])
+                        ])
                       ])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex pb-2" }, [
-                  _c("i", {
-                    staticClass:
-                      "icon ion-md-time text-xl text-teal-400 pt-1 mr-5"
-                  }),
-                  _vm._v(" "),
-                  _c("div", [
-                    _c("div", [
-                      _c("p", {
-                        staticClass: "leading-none",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.delivery.latency +
-                              " " +
-                              _vm.$t("utilities.hours")
-                          )
-                        }
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex pb-2" }, [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-time text-xl text-teal-400 pt-1 mr-5"
                       }),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-gray-500 text-sm" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.latency")))
+                      _c("div", [
+                        _c("div", [
+                          _c("p", {
+                            staticClass: "leading-none",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.delivery.latency +
+                                  " " +
+                                  _vm.$t("utilities.hours")
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                            _vm._v(_vm._s(_vm.$t("tender.latency")))
+                          ])
+                        ])
                       ])
                     ])
                   ])
                 ])
-              ])
-            ])
+              : _vm._e()
           ]
         ),
         _vm._v(" "),
@@ -23938,7 +24492,7 @@ var render = function() {
                           staticClass:
                             "text-xl leading-tight font-bold md:text-xl",
                           domProps: {
-                            textContent: _vm._s(_vm.tender.min_price + " €")
+                            textContent: _vm._s(_vm.tender.max_price + " €")
                           }
                         }),
                         _vm._v(" "),
@@ -23964,7 +24518,7 @@ var render = function() {
                             _c("span", {
                               domProps: {
                                 textContent: _vm._s(
-                                  _vm.tender.immadiate_price + " €"
+                                  _vm.tender.immediate_price + " €"
                                 )
                               }
                             })
@@ -24032,239 +24586,258 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "resize",
-            rawName: "v-resize",
-            value: _vm.oneColumDesign,
-            expression: "oneColumDesign"
-          }
-        ],
-        ref: "cardHeader",
-        staticClass: "block",
-        class: _vm.cardSmall ? "" : "md:flex"
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "w-full pr-5",
-            class: _vm.cardSmall ? "" : "md:w-1/2"
-          },
-          [
-            _c("image-upload", {
-              attrs: { placeholder: "Upload Images", endpoint: "/api/tenders/" }
-            })
+  return _c(
+    "div",
+    { staticClass: "relative" },
+    [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "resize",
+              rawName: "v-resize",
+              value: _vm.oneColumDesign,
+              expression: "oneColumDesign"
+            }
           ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "w-full", class: _vm.cardSmall ? "" : "md:w-1/2" },
-          [
-            _c("p", { staticClass: "font-bold mb-5" }, [
-              _vm._v("Ausschreibungs-Informationen")
-            ]),
-            _vm._v(" "),
-            _vm.errors.name
-              ? _c("p", {
-                  staticClass: "text-sm text-red-500 mb-2",
-                  domProps: { textContent: _vm._s(_vm.errors.name[0]) }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "relative flex items-center mb-2" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.title,
-                    expression: "title"
-                  }
-                ],
-                staticClass: "input",
-                class: _vm.errors.name ? "border-red-300" : "",
-                attrs: { type: "text", placeholder: "Title", required: "" },
-                domProps: { value: _vm.title },
-                on: {
-                  keyup: function($event) {
-                    _vm.errors = []
-                  },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.title = $event.target.value
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _vm.categories
-              ? _c("select-input", {
-                  staticClass: "mb-2",
-                  attrs: { options: _vm.categories, placeholder: "Category" }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _c("textarea-input", {
-              attrs: { placeholder: "More informations about your tender..." }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "flex py-5" }, [
-              _c("div", { staticClass: "w-1/2 mr-1" }, [
-                _vm.errors.name
-                  ? _c("p", {
-                      staticClass: "text-sm text-red-500 mb-2",
-                      domProps: { textContent: _vm._s(_vm.errors.name[0]) }
-                    })
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("div", { staticClass: "relative flex items-center mb-1" }, [
-                  _c("i", {
-                    staticClass:
-                      "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
-                  }),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.minPrice,
-                        expression: "minPrice"
-                      }
-                    ],
-                    staticClass: "input pl-10",
-                    class: _vm.errors.name ? "border-red-300" : "",
-                    attrs: { type: "number", placeholder: "min. Preis" },
-                    domProps: { value: _vm.minPrice },
-                    on: {
-                      keyup: function($event) {
-                        _vm.errors = []
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.minPrice = $event.target.value
-                      }
-                    }
+          ref: "cardHeader",
+          staticClass: "block",
+          class: _vm.cardSmall ? "" : "md:flex"
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "w-full", class: _vm.cardSmall ? "" : "md:w-1/2" },
+            [
+              _vm.errors.title
+                ? _c("p", {
+                    staticClass: "text-sm text-red-500 mb-2",
+                    domProps: { textContent: _vm._s(_vm.errors.title[0]) }
                   })
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "relative flex items-center mb-2" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.title,
+                      expression: "title"
+                    }
+                  ],
+                  staticClass: "input",
+                  class: _vm.errors.title ? "border-red-300" : "",
+                  attrs: { type: "text", placeholder: "Title", required: "" },
+                  domProps: { value: _vm.title },
+                  on: {
+                    keyup: function($event) {
+                      _vm.errors = []
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.title = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _vm.errors.category_id
+                ? _c("p", {
+                    staticClass: "text-sm text-red-500 mb-2",
+                    domProps: { textContent: _vm._s(_vm.errors.category_id[0]) }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.categories
+                ? _c("select-input", {
+                    staticClass: "mb-2",
+                    attrs: { options: _vm.categories, placeholder: "Category" },
+                    on: { changed: _vm.updateCategory }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _c("textarea-input", {
+                attrs: {
+                  value: _vm.description,
+                  placeholder: "More informations about your tender..."
+                },
+                on: { changed: _vm.updateDescription }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex py-5" }, [
+                _c("div", { staticClass: "w-1/2 mr-1" }, [
+                  _vm.errors.max_price
+                    ? _c("p", {
+                        staticClass: "text-sm text-red-500 mb-2",
+                        domProps: {
+                          textContent: _vm._s(_vm.errors.max_price[0])
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "relative flex items-center mb-1" },
+                    [
+                      _c("i", {
+                        staticClass:
+                          "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.maxPrice,
+                            expression: "maxPrice"
+                          }
+                        ],
+                        staticClass: "input pl-10",
+                        class: _vm.errors.max_price ? "border-red-300" : "",
+                        attrs: { type: "number", placeholder: "max. Preis" },
+                        domProps: { value: _vm.maxPrice },
+                        on: {
+                          keyup: function($event) {
+                            _vm.errors = []
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.maxPrice = $event.target.value
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "text-sm text-gray-500" }, [
+                    _vm._v("Angebot Obergrenze")
+                  ])
                 ]),
                 _vm._v(" "),
-                _c("p", { staticClass: "text-sm text-gray-500" }, [
-                  _vm._v("Angebot Untergrenze")
+                _c("div", { staticClass: "w-1/2 ml-1" }, [
+                  _vm.errors.immediate_price
+                    ? _c("p", {
+                        staticClass: "text-sm text-red-500 mb-2",
+                        domProps: {
+                          textContent: _vm._s(_vm.errors.immediate_price[0])
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "relative flex items-center mb-1" },
+                    [
+                      _c("i", {
+                        staticClass:
+                          "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.immediatePrice,
+                            expression: "immediatePrice"
+                          }
+                        ],
+                        staticClass: "input pl-10",
+                        class: _vm.errors.immediate_price
+                          ? "border-red-300"
+                          : "",
+                        attrs: { type: "number", placeholder: "sofort Preis" },
+                        domProps: { value: _vm.immediatePrice },
+                        on: {
+                          keyup: function($event) {
+                            _vm.errors = []
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.immediatePrice = $event.target.value
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "text-sm text-gray-500" }, [
+                    _vm._v("Sofort Zuschlag")
+                  ])
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "w-1/2 ml-1" }, [
-                _vm.errors.name
-                  ? _c("p", {
-                      staticClass: "text-sm text-red-500 mb-2",
-                      domProps: { textContent: _vm._s(_vm.errors.name[0]) }
-                    })
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("div", { staticClass: "relative flex items-center mb-1" }, [
-                  _c("i", {
-                    staticClass:
-                      "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
-                  }),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.immadinatePrice,
-                        expression: "immadinatePrice"
-                      }
-                    ],
-                    staticClass: "input pl-10",
-                    class: _vm.errors.name ? "border-red-300" : "",
-                    attrs: { type: "number", placeholder: "sofort Preis" },
-                    domProps: { value: _vm.immadinatePrice },
-                    on: {
-                      keyup: function($event) {
-                        _vm.errors = []
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.immadinatePrice = $event.target.value
-                      }
-                    }
+              _vm.errors.valid_date
+                ? _c("p", {
+                    staticClass: "text-sm text-red-500 mb-2",
+                    domProps: { textContent: _vm._s(_vm.errors.valid_date[0]) }
                   })
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "text-sm text-gray-500" }, [
-                  _vm._v("Sofort Zuschlag")
-                ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("date-picker", {
+                staticClass: "mb-2",
+                attrs: { placeholder: "Tender valid until" },
+                on: { changed: _vm.updateDate }
+              }),
+              _vm._v(" "),
+              _c("p", { staticClass: "text-sm text-gray-500" }, [
+                _vm._v(
+                  "\n                Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar\n                sein.\n            "
+                )
               ])
-            ]),
-            _vm._v(" "),
-            _c("date-picker", {
-              staticClass: "mb-2",
-              attrs: { placeholder: "Tender valid until" }
-            }),
-            _vm._v(" "),
-            _c("p", { staticClass: "text-sm text-gray-500" }, [
-              _vm._v(
-                "\n                Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar\n                sein.\n            "
-              )
-            ])
-          ],
-          1
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex justify-end mt-5" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outlined is-outlined mr-2",
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.$router.go(-1)
-            }
-          }
-        },
-        [
-          _vm._v(
-            "\n            " + _vm._s(_vm.$t("utilities.cancel")) + "\n        "
+            ],
+            1
           )
         ]
       ),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-teal",
-          attrs: { type: "submit" },
-          on: {
-            click: function($event) {
-              return _vm.$emit("forward")
+      _c("div", { staticClass: "flex justify-end mt-5" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-outlined is-outlined mr-2",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.$emit("cancel")
+              }
             }
-          }
-        },
-        [
-          _c("span", [_vm._v("weiter")]),
-          _vm._v(" "),
-          _c("i", { staticClass: "icon ion-md-arrow-round-forward pl-2" })
-        ]
-      )
-    ])
-  ])
+          },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.$t("utilities.cancel")) +
+                "\n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-teal",
+            attrs: { type: "submit" },
+            on: { click: _vm.storeTender }
+          },
+          [_c("span", [_vm._v("Entwurf speichern")])]
+        )
+      ]),
+      _vm._v(" "),
+      _c("loading-spinner", {
+        attrs: { loading: _vm.loading, position: "absolute" }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -48016,6 +48589,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/DateRange.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/DateRange.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DateRange_vue_vue_type_template_id_6678f0d4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DateRange.vue?vue&type=template&id=6678f0d4& */ "./resources/js/components/DateRange.vue?vue&type=template&id=6678f0d4&");
+/* harmony import */ var _DateRange_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DateRange.vue?vue&type=script&lang=js& */ "./resources/js/components/DateRange.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DateRange_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DateRange_vue_vue_type_template_id_6678f0d4___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DateRange_vue_vue_type_template_id_6678f0d4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/DateRange.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/DateRange.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/DateRange.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DateRange_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./DateRange.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DateRange.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DateRange_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/DateRange.vue?vue&type=template&id=6678f0d4&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/DateRange.vue?vue&type=template&id=6678f0d4& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateRange_vue_vue_type_template_id_6678f0d4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./DateRange.vue?vue&type=template&id=6678f0d4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DateRange.vue?vue&type=template&id=6678f0d4&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateRange_vue_vue_type_template_id_6678f0d4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateRange_vue_vue_type_template_id_6678f0d4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Dropdown.vue":
 /*!**********************************************!*\
   !*** ./resources/js/components/Dropdown.vue ***!
@@ -49478,6 +50120,75 @@ module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload"
 
 /***/ }),
 
+/***/ "./resources/js/modals/CreateTender.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/modals/CreateTender.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateTender_vue_vue_type_template_id_3bf244ea___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateTender.vue?vue&type=template&id=3bf244ea& */ "./resources/js/modals/CreateTender.vue?vue&type=template&id=3bf244ea&");
+/* harmony import */ var _CreateTender_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateTender.vue?vue&type=script&lang=js& */ "./resources/js/modals/CreateTender.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CreateTender_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateTender_vue_vue_type_template_id_3bf244ea___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateTender_vue_vue_type_template_id_3bf244ea___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/modals/CreateTender.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/modals/CreateTender.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/modals/CreateTender.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateTender_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateTender.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateTender_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/modals/CreateTender.vue?vue&type=template&id=3bf244ea&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/modals/CreateTender.vue?vue&type=template&id=3bf244ea& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateTender_vue_vue_type_template_id_3bf244ea___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateTender.vue?vue&type=template&id=3bf244ea& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=template&id=3bf244ea&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateTender_vue_vue_type_template_id_3bf244ea___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateTender_vue_vue_type_template_id_3bf244ea___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/modals/DefaultModal.vue":
 /*!**********************************************!*\
   !*** ./resources/js/modals/DefaultModal.vue ***!
@@ -50070,6 +50781,7 @@ var routes = [{
   path: '/register',
   component: _views_auth_Register__WEBPACK_IMPORTED_MODULE_7__["default"],
   meta: {
+    layout: 'fullscreen',
     requiresVisitor: true
   }
 }, {
@@ -50193,6 +50905,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     },
     confirmed: function confirmed(state) {
       return state.user ? state.user.confirmed : '';
+    },
+    companyCompleted: function companyCompleted(state) {
+      return state.user ? state.user.company.completed : false;
     },
     company: function company(state) {
       return state.user ? state.user.company : '';
@@ -50390,18 +51105,25 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
         });
       });
     },
-    fetchLocations: function fetchLocations(context) {
-      var route = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    storeTender: function storeTender(context, data) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
-        axios.get('api/locations', {
-          params: {
-            route: route
-          }
-        }).then(function (response) {
-          // context.commit('retrieveLocations', response.data)
+        axios.post('/api/tenders/store', data).then(function (response) {
+          context.commit('retrieveTender', response.data);
           resolve(response);
         })["catch"](function (errors) {
-          return reject(errors.response);
+          return reject(errors.response.data.errors);
+        });
+      });
+    },
+    storeLocation: function storeLocation(context, data) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+      return new Promise(function (resolve, reject) {
+        axios.post('/api/locations/store', data).then(function (response) {
+          // context.commit('retrieveTender', response.data)
+          resolve(response);
+        })["catch"](function (errors) {
+          return reject(errors.response.data.errors);
         });
       });
     }

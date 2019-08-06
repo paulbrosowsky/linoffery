@@ -230,8 +230,8 @@
             setTimeout(() => {
                 // Initialize location field as Google Map autocomplete form
                 // reference mountMap() in ./views/Map.vue
-                Event.$emit('fetchAddress')
-            },2000); 
+                Event.$emit('fetchAddress', document.getElementById('address'))
+            },1000); 
             
             // On Event from Google Maps set address fields in the form
             // reference getAddress() on ./views/Map.vue

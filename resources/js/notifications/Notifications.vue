@@ -19,9 +19,8 @@
                return this.$store.getters.confirmed 
             },
 
-            companyAddressComplete(){
-                let company = this.$store.getters.company                            
-                return !company.address && !company.postcode && !company.city && !company.country ? false : true
+            companyAddressComplete(){                                           
+                return this.$store.getters.companyCompleted
             }  
         },
     }

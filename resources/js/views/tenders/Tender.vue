@@ -29,7 +29,7 @@
                
                         <div class="flex flex-col items-center mr-3 ">
                             <p class="text-xs text-gray-500 uppercase ">{{$t('tender.curr_offer')}}</p>
-                            <p class="text-4xl text-teal-500 -my-2" v-text="'€ '+ tender.min_price"></p> 
+                            <p class="text-4xl text-teal-500 -my-2" v-text="'€ '+ tender.max_price"></p> 
                             <p>
                                 <span class="text-sm text-gray-500">2</span> 
                                 <span class="text-sm text-gray-500">{{offerText}}</span>  
@@ -44,7 +44,7 @@
                     <div class="flex-none mt-2">
                         <button class="flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white">
                             <span><i class="icon ion-md-flash text-sm mr-3"></i></span>
-                            <span class="text-lg mr-2" v-text="'€ '+ tender.immadiate_price"></span>
+                            <span class="text-lg mr-2" v-text="'€ '+ tender.immediate_price"></span>
                             <span class="uppercase text-sm">{{$t('tender.take_it')}}</span>    
                         </button>
                     </div>  
@@ -89,7 +89,7 @@
         </div>  
 
         <div class="block bg-gray-100 py-5 px-5 md:flex md:px-10">
-            <div class="w-full pb-5 md:w-1/2 md:pb-0">
+            <div class="w-full pb-5 md:w-1/2 md:pb-0" v-if="pickup">
                 <p class="uppercase text-sm text-gray-500 mb-2">{{$t('tender.pickup_details')}}</p>
                 <div class="pl-3">
                     <div class="flex pb-5">
@@ -141,7 +141,7 @@
                              
             </div>
 
-             <div class="w-full md:w-1/2">
+             <div class="w-full md:w-1/2" v-if="delivery">
                 <p class="uppercase text-sm text-gray-500 mb-2">{{$t('tender.delivery_details')}}</p>
                 <div class="pl-3">
                     <div class="flex pb-5">

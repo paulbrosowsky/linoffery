@@ -4,17 +4,20 @@
         height="auto"
         :width= "width"
         :scrollable="true" 
-        :adaptive="true"              
+        :adaptive="true"                    
         @before-open="beforeOpen" 
         @opened="$emit('opened')"
         @closed="$emit('close')"
         v-cloak
     >
         <button 
-            class="absolute right-0 p-5 focus:outline-none"  
+            class="absolute top-0 right-0 p-5  focus:outline-none"  
             @click="$emit('close')"
-        >        
-            <i class="icon ion-md-close text-xl text-gray-500"></i>            
+        >     
+            <div>
+                <i class="icon ion-md-close text-xl text-gray-500"></i> 
+            </div>   
+                       
         </button>
 
         <div class="p-5">
@@ -44,6 +47,7 @@
 <style lang="scss">      
     .v--modal{
         border-radius: 0.5rem;
+        overflow: visible !important;
     }
 </style>
 

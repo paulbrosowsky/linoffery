@@ -8,6 +8,7 @@
             :placeholder="placeholder"
             :searchable="false" 
             :allow-empty="false"
+            @input="$emit('changed', selected)"
         >
              <template slot="singleLabel" slot-scope="{ option }">
                 {{ option.name }}

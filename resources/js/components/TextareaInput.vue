@@ -1,15 +1,20 @@
 <template>
-    <textarea
-        class="w-full bg-gray-300 rounded-lg border-2 resize-none leading-tight px-4 py-3 focus:outline-none focus:border-teal-500 focus:bg-white"
-        :placeholder="placeholder"        
-        v-model="text"
-        :rows = "rows"
-    ></textarea>
+    <div>
+        <textarea
+            class="w-full bg-gray-300 rounded-lg border-2 resize-none leading-tight px-4 py-3 focus:outline-none focus:border-teal-500 focus:bg-white"
+            :class="classes"
+            :placeholder="placeholder"        
+            v-model="text"
+            :rows = "rows"
+            @keyup="$emit('changed', text)"
+        ></textarea>
+    </div>
+    
 </template>
 <script>
     export default {
 
-        props:['placeholder', 'height', 'value', 'rows'],
+        props:['placeholder', 'height', 'value', 'rows', 'classes'],
 
         data(){
             return{

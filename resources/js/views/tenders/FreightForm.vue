@@ -17,25 +17,27 @@
             :class="cardSmall ? '': 'md:flex'"
         >
             <div class="w-full" :class="cardSmall ? '': 'w-1/2 mr-1'">
-                <p class="text-sm text-red-500 mb-2" v-if="errors.name" v-text="errors.name[0]"></p>
+                <p class="text-sm text-red-500 mb-2" v-if="errors.title" v-text="errors.title[0]"></p>
                 <div class="relative flex items-center mb-2">
                     <input 
                         class="input"
-                        :class="errors.name ? 'border-red-300' : ''" 
+                        :class="errors.title ? 'border-red-300' : ''" 
                         type="text" 
                         :placeholder="'Fracht-Bezeichnung'" 
                         required
-                        v-model="title" 
+                        v-model="form.title" 
                         @keyup="errors= []"
                         @blur="setFreightData"
                     >
                 </div>
 
                 <textarea-input 
-                    :value="description" 
+                    :value="form.description" 
                     :placeholder="'More informations about the freight...'" 
                     :rows = "4"
-                    :height="104"></textarea-input>
+                    :height="104"
+                    @changed="updateDescription"
+                ></textarea-input>
             </div>
 
             <div class="w-full" :class="cardSmall ? '': 'w-1/2 ml-1'">
@@ -43,16 +45,19 @@
                     class="mb-2" 
                     :options="transport"                     
                     :placeholder="'Transportart'"
+                    @changed="updatePallet"
                 ></select-input>
                 
                 <div class="flex mb-2">
                     <div class="relative flex items-center mr-2">                        
                         <input
                             class="input" 
-                            :class="errors.name ? 'border-red-300' : ''" 
+                            :class="errors.width ? 'border-red-300' : ''" 
                             type="number"
                             :placeholder="'Breite cm'"                            
                             @keyup="errors= []"
+                            @blur="setFreightData"
+                            v-model="form.width"
                         >
                     </div>
 
@@ -60,20 +65,24 @@
                     <div class="relative flex items-center mr-2">                        
                         <input
                             class="input" 
-                            :class="errors.name ? 'border-red-300' : ''" 
+                            :class="errors.height ? 'border-red-300' : ''" 
                             type="number"
                             :placeholder="'Höhe cm'"                            
                             @keyup="errors= []"
+                            @blur="setFreightData"
+                            v-model="form.height"
                         >
                     </div>
 
                     <div class="relative flex items-center">                        
                         <input
                             class="input" 
-                            :class="errors.name ? 'border-red-300' : ''" 
+                            :class="errors.length ? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="'Tiefe cm'"                            
+                            :placeholder="'Länge cm'"                            
                             @keyup="errors= []"
+                            @blur="setFreightData"
+                            v-model="form.length"
                         >
                     </div>                   
 
@@ -82,10 +91,12 @@
                 <div class="relative flex items-center mb-1">                        
                         <input
                             class="input" 
-                            :class="errors.name ? 'border-red-300' : ''" 
+                            :class="errors.weight ? 'border-red-300' : ''" 
                             type="number"
                             :placeholder="'Gewicht kg'"                            
                             @keyup="errors= []"
+                            @blur="setFreightData"
+                            v-model="form.weight"
                         >
                     </div> 
                 
@@ -104,9 +115,17 @@
 
         data(){
             return{
-                id: this.freight.id,
-                title: this.freight.title,
-                description: this.freight.description,
+                form:{
+                    id: this.freight.id,
+                    title: this.freight.title,
+                    description: this.freight.description,
+                    pallet: this.freight.pallet,
+                    width: this.freight.width,
+                    height: this.freight.height,
+                    length: this.freight.length,
+                    weight: this.freight.weight
+                },
+               
 
                 transport:[
                     {name: 'EPAL'},
@@ -121,16 +140,22 @@
 
         methods:{
             setFreightData(){
-                this.$emit('changed', {
-                    id: this.id,
-                    title: this.title
-                })
+                this.$emit('changed', this.form)
             },
-
            
             oneColumDesign(){
                 this.cardSmall = this.$refs.form.clientWidth < 640 ? true : false
-            }            
+            },
+            
+            updatePallet(value){
+                this.form.pallet = value.name
+                this.setFreightData()
+            },
+
+            updateDescription(value){
+                this.form.description= value
+                this.setFreightData()
+            }
             
         }
         

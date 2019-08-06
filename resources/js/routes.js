@@ -60,7 +60,7 @@ let routes = [
         path:'/register',
         component: Register,
         meta:{
-            
+            layout: 'fullscreen',
             requiresVisitor: true
         }
     },

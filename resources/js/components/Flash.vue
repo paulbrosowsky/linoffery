@@ -1,7 +1,7 @@
 <template>
     <transition name="slide-out">
         <div 
-            class="li-flash-container flex items-center fixed bg-green-500 shadow-lg rounded-lg py-2 px-5 z-20 m-auto md:m-0 md:w-auto"
+            class="li-flash-container flex items-center fixed bg-green-500 shadow-lg rounded-lg py-2 px-5 z-50 m-auto md:m-0 md:w-auto"
             v-show="show"
         >
             <i class="icon ion-md-checkmark-circle-outline text-3xl text-white pr-5 "></i> 

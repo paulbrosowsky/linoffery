@@ -13,12 +13,12 @@
                                 <p class="truncate leading-none md:text-lg" v-text="tender.title"></p>
 
                                 <div class="mb-3">
-                                    <span class="text-xl leading-tight font-bold md:text-xl" v-text="tender.min_price + ' €'"></span>
+                                    <span class="text-xl leading-tight font-bold md:text-xl" v-text="tender.max_price + ' €'"></span>
                                     <span class="text-xs text-gray-500">2</span>
                                     <span class="text-xs text-gray-500">{{offerText}}</span>
                                     <span class="text-sm text-red-500 font-bold md:text-base ml-2">
                                         <i class="icon ion-md-flash text-sm"></i>
-                                        <span v-text="tender.immadiate_price + ' €'"></span>
+                                        <span v-text="tender.immediate_price + ' €'"></span>
                                     </span>
                                 </div>
                             </div>

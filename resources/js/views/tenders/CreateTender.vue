@@ -6,18 +6,18 @@
         <card ref="card">
             <tender-form 
                 @forward="forward" 
-                v-show="step == 1"
+                v-if="step == 1"
             ></tender-form>
 
             <location-form 
                 @forward="forward" 
                 @back="back" 
-                v-show="step == 2"
+                v-if="step == 2"
             ></location-form>
 
             <freights-form
                 @back="back" 
-                v-show="step == 3"
+                v-if="step == 3"
             ></freights-form>
 
         </card>
@@ -37,7 +37,7 @@
 
         data(){
             return{
-                step: 1
+                step: 3
             }
         },
 

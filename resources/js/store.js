@@ -28,6 +28,10 @@ export let store = new Vuex.Store({
             return  state.user ? state.user.confirmed : ''
         },
 
+        companyCompleted(state){
+            return state.user ? state.user.company.completed : false
+        },
+
         company(state){
             return  state.user ? state.user.company : ''
         },
@@ -288,17 +292,35 @@ export let store = new Vuex.Store({
             })           
         },
 
-        fetchLocations(context, route = null){
-            return new Promise((resolve, reject)=>{                
+        storeTender(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
                 axios
-                    .get('api/locations', { params:{route:route} })
+                    .post('/api/tenders/store', data)
                     .then(response =>{                       
-                        // context.commit('retrieveLocations', response.data)
+                        context.commit('retrieveTender', response.data)
                         resolve(response)
                     })
-                    .catch(errors => reject(errors.response))
+                    .catch(errors => reject(errors.response.data.errors))
             })           
-        },      
+        },
+
+        storeLocation(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .post('/api/locations/store', data)
+                    .then(response =>{                       
+                        // context.commit('retrieveTender', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+
+            
       
     }
 })

@@ -39,10 +39,17 @@
                     });
 
                     this.directionsDisplay.setMap(null)  
-                                        
+
+                    
+                    Event.$on('toggle-map-drawer',()=>{
+                        setTimeout(() => {
+                            this.zoomToMarkers()
+                        }, 500);
+                        
+                    })                    
 
                     Event.$on('updateMarkers',value => {
-                        this.resetMarkers()                                               
+                        this.resetAllMarkers()                                               
                         this.updateMarkers(value)                                          
                     }) 
 
@@ -53,8 +60,8 @@
                         this.displayRoute()                        
                     }) 
 
-                    Event.$on('fetchAddress',() =>{                                       
-                        this.fetchAddress()
+                    Event.$on('fetchAddress',(element) =>{                                       
+                        this.fetchAddress(element)
                     }),
                     
                     Event.$on('setAutocomplete',() =>{                
@@ -82,14 +89,18 @@
             },
 
             addMarker(position, location = null){
+
+                let icon = location ? '/build/icons/' + location.type + '_marker.svg' : ''                
                                  
                 let marker = new google.maps.Marker({
                     position:position,
-                    map: this.map
-                })
+                    map: this.map,
+                    icon: icon,
+                    type: location.type                                      
+                })                
 
-                marker.addListener('click', () => this.$router.push(`/cargos/${location.tender_id}`))
-                this.markers.push(marker)                
+                marker.addListener('click', () => this.$router.push(`/tenders/${location.tender_id}`))
+                this.markers.push(marker) 
             },
 
             geocodePosition(address){
@@ -103,20 +114,44 @@
                 }               
             },
 
-            updateMarkers(locations){ 
-                locations.map(location =>{                    
+            async updateMarkers(locations){ 
+                await locations.map(location =>{                    
                     let position = { lat:location.lat, lng:location.lng }                    
-                    this.addMarker(position, location)                                       
-                })
+                    this.addMarker(position, location)                                                     
+                }) 
+
+                this.zoomToMarkers()                               
             },  
+
+            zoomToMarkers(){
+                if(this.markers.length > 0){
+                    let bounds = new google.maps.LatLngBounds();
+
+                    this.markers.map( marker =>{
+                        bounds.extend(marker.getPosition())
+                    })
+
+                    this.map.fitBounds(bounds)
+                }               
+            },
             
-            fetchAddress(){
-                let address = document.getElementById('address')
-                let addressAutocomplete = new google.maps.places.Autocomplete(address) 
+            fetchAddress(input){  
+                this.resetAllMarkers()              
+                let addressAutocomplete = new google.maps.places.Autocomplete(input) 
 
                 addressAutocomplete.addListener('place_changed', ()=>{
-                    let place = addressAutocomplete.getPlace()  
-                    Event.$emit('setAddress', place)
+                    this.resetMarker(input.id)
+                    let place = addressAutocomplete.getPlace()                      
+
+                    //Add Marker with place location and input id as location type
+                    this.addMarker(place.geometry.location, {type: input.id})
+
+                    this.zoomToMarkers()
+
+                    Event.$emit('setAddress', {
+                        type: input.id,
+                        place: place
+                    })
                 })
             },
             
@@ -175,8 +210,19 @@
                 let bounds = routeBoxer.box(this.route, range)
                 Event.$emit('filterCargosByTheRoute', bounds)                
             },
+
+            resetMarker(type){
+                let index = this.markers.findIndex(marker =>{                    
+                   return marker.type === type
+                })
+
+                if (index!= -1) {
+                    this.markers[index].setMap(null)  
+                    this.markers.splice(index, 1)
+                }     
+            },
             
-            resetMarkers(){                
+            resetAllMarkers(){                
                 this.markers.map(marker => marker.setMap(null))
                 this.markers = []
             },            

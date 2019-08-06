@@ -49,8 +49,7 @@
                 this.id++                            
             },
 
-            removeFreight(index){  
-                console.log(index)              
+            removeFreight(index){
                 this.freights.splice(index, 1)
             },
 

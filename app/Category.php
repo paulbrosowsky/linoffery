@@ -8,7 +8,7 @@ class Category extends Model
 {
     protected $guarded = [];
 
-    protected $visible= ['name', 'slug', 'color'];
+    protected $hidden= ['created_at', 'updated_at'];
 
     /**
      *  Category consists of tenders

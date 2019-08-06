@@ -1,8 +1,10 @@
 <template>
     <div>
         <transition name="toggle-drawer">
-            <section v-show="show"
-                class="li-map-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0 lg:w-1/2 ">
+            <section 
+                v-show="show"
+                class="li-map-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0 md:pl-20 lg:w-1/2 "
+            >
                 <gmap></gmap>
 
                 <button
@@ -54,7 +56,7 @@
     }
 
     .toggle-drawer-enter, .toggle-drawer-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        width: 0;             
+        width: 0;                
     }     
 </style>
 
