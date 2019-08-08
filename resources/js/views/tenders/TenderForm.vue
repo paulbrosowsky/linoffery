@@ -1,12 +1,10 @@
 <template>
     <div class="relative">        
         <div 
-            class="block" 
-            :class="cardSmall ? '': 'md:flex'" 
-            v-resize="oneColumDesign" 
+            class="block"
             ref="cardHeader"
         >   
-            <div class="w-full" :class="cardSmall ? '': 'md:w-1/2'">  
+            <div class="w-full">  
 
                 <p class="text-sm text-red-500 mb-2" v-if="errors.title" v-text="errors.title[0]"></p>
                 <div class="relative flex items-center mb-2">
@@ -23,7 +21,8 @@
 
                 <p class="text-sm text-red-500 mb-2" v-if="errors.category_id" v-text="errors.category_id[0]"></p>
                 <select-input 
-                    class="mb-2" 
+                    class="mb-2"
+                    :value="category" 
                     :options="categories" 
                     v-if="categories" 
                     :placeholder="$t('tender.category')"
@@ -72,6 +71,7 @@
 
                 <p class="text-sm text-red-500 mb-2" v-if="errors.valid_date" v-text="errors.valid_date[0]"></p>
                 <date-picker 
+                    :value="valid_date"
                     class="mb-2"                     
                     :placeholder="$t('tender.valid_date')"
                     @changed="updateDate"
@@ -88,7 +88,7 @@
                 {{ $t('utilities.cancel')}}
             </button>
                     
-            <button class="btn btn-teal" type="submit" @click="storeTender">
+            <button class="btn btn-teal" type="submit" @click="submit">
                 <span>{{ $t('utilities.save_draft')}}</span>                  
             </button>            
         </div>
@@ -100,19 +100,21 @@
 </template>
 <script>    
     export default {        
+        props:['tender', 'edit'],
 
         data(){
             return{   
-                category_id: null,             
-                title:null,                
+                category_id:null,            
+                title:null,            
                 description:null,
-                maxPrice: null,
+                maxPrice:null, 
                 immediatePrice:null,
                 valid_date:null,
 
                 errors:[],
                 cardSmall:false,
-                loading: false
+                loading: false,
+                category: null
             }
         },
 
@@ -124,8 +126,11 @@
 
         methods:{
 
-            storeTender(){
-                
+            submit(){
+                this.edit ? this.updateTender() : this.storeTender() 
+            },
+
+            storeTender(){                
                 this.loading = true
 
                 this.$store.dispatch('storeTender', {
@@ -150,11 +155,34 @@
                     this.errors = errors
                     this.loading =false
                 })
-            },
+            }, 
+            
+            updateTender(){
+                this.loading = true
+                this.$store
+                    .dispatch('updateTender', {
+                        path: this.$route.path,
+                        category_id: this.category_id,
+                        title: this.title,
+                        description: this.description,
+                        max_price: this.maxPrice,
+                        immediate_price: this.immediatePrice,
+                        valid_date: this.valid_date
+                    })
+                    .then(response=>{ 
 
-            oneColumDesign(){
-                this.cardSmall = this.$refs.cardHeader.clientWidth < 640 ? true : false
-            } ,
+                        setTimeout(() => {  
+                            flash(this.$i18n.t('tender.store_tender_message'))                            
+                            this.$emit('cancel')
+                            this.loading = false
+                        }, 2000);
+                        
+                    })
+                    .catch(errors => {
+                        this.errors = errors
+                        this.loading =false
+                    })              
+            },
             
             updateCategory(category){                
                 this.category_id = category.id
@@ -167,8 +195,23 @@
             updateDate(date){
                 this.valid_date = date
             },
-        }
+
+            setData(){
+                if(this.tender){
+                    this.category_id =  this.tender.category_id             
+                    this.title = this.tender.title                
+                    this.description = this.tender.description
+                    this.maxPrice =  this.tender.max_price
+                    this.immediatePrice = this.tender.immediate_price
+                    this.valid_date = this.tender.valid_date
+                    this.category = this.tender.category
+                }
+            }
+        },  
         
+        created(){
+            this.setData()
+        }
     }   
 </script>
 

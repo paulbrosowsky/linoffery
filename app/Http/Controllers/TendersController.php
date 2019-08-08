@@ -70,8 +70,7 @@ class TendersController extends Controller
             'max_price' => 'required|numeric',
             'valid_date' => 'required|date'
         ]);
-
-        // dd($request->category_id);    
+            
         $tender = Tender::create([
 
             'user_id' => auth()->id(),
@@ -88,4 +87,33 @@ class TendersController extends Controller
     }
 
 
+    /**
+     *  Update given Tender in DB
+     * 
+     * @param Tender
+     * @param Request 
+     * @return Tender
+     */
+    public function update(Tender $tender, Request $request)
+    {
+        $this->authorize('update', $tender);
+
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required',            
+            'max_price' => 'required|numeric',
+            'valid_date' => 'required|date'
+        ]);
+
+        $tender->update([            
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'description'=> $request->description,
+            'immediate_price' => $request->immediate_price,
+            'max_price' => $request->max_price,
+            'valid_date' => $request->valid_date            
+        ]);
+
+        return $tender;
+    }
 }

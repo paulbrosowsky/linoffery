@@ -185,6 +185,9 @@ return [
         'earliest_date'         => 'Frühestes Termin',
         'latest_date'           => 'Spätestes Termin', 
         'pallet'                => 'Transporttyp',
-        'weight'                => 'Gewicht'   
+        'weight'                => 'Gewicht',
+        'freights.*.weight'     => 'Gewicht',
+        'freights.*.pallet'     => 'Transportart',
+        'freights.*.title'      => 'Bezeichnung',
     ],
 ];

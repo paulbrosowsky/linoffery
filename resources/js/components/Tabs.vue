@@ -8,7 +8,7 @@
                 > 
                 
                     <button
-                        class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5 focus:outline-none" 
+                        class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-3 focus:outline-none" 
                         :class="{ 'text-teal-500 font-bold' : tab.isActive }"
                         role-tab
                         :aria-selected="tab.isActive"
@@ -83,14 +83,14 @@
         methods:{
             setActiveTab(tab){
                 this.$router.push({
-                        name:'settings', 
+                        name: this.$route.name, 
                         hash: tab.hash
                 }) 
             },
         },       
 
         created(){            
-            this.tabs = this.$children              
+            this.tabs = this.$children 
         },
        
     }

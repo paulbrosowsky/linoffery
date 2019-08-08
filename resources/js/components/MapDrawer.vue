@@ -1,11 +1,19 @@
 <template>
     <div>
         <transition name="toggle-drawer">
-            <section 
+            <section                     
                 v-show="show"
                 class="li-map-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0 lg:w-1/2 "
                 :class="fixed ? '' : 'md:pl-20'"
             >
+                <router-link class="absolute top-0 left-0 px-10 py-3 z-20" to="/" v-show="fixed">                
+                        <div class="flex items-center flex-1 text-gray-700 mr-6"> 
+                            <span class="font-light text-2xl">lin</span>
+                            <span class="text-2xl text-teal-500">o</span>
+                            <span class="font-light text-2xl">ffery</span>
+                        </div>
+                </router-link>
+
                 <gmap></gmap>
 
                 <button

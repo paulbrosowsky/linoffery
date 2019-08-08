@@ -35,7 +35,7 @@
             <i class="icon ion-md-time text-xl text-teal-400 pt-1 mr-5"></i>
             <div>
                 <div>
-                    <p class="leading-none" v-text="location.latency+' '+$t('utilities.hours')"></p>
+                    <p class="leading-none" v-text="latency+' '+$t('utilities.hours')"></p>
                     <span class="text-gray-500 text-sm">{{$t('tender.latency')}}</span>
                 </div>
 
@@ -46,7 +46,13 @@
 </template>
 <script>
     export default {
-        props:['location']
+        props:['location'],
+
+        computed:{
+            latency(){
+                return this.location.latency ? this.location.latency : 0
+            }
+        }
         
     }
 </script>

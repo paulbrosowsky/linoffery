@@ -1861,6 +1861,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -2032,6 +2033,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
     toggleMapDrawer: function toggleMapDrawer() {
@@ -2074,7 +2081,7 @@ __webpack_require__.r(__webpack_exports__);
     Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: {
-    value: Date,
+    value: '',
     placeholder: {
       "default": 'Pick the Date'
     },
@@ -2131,12 +2138,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['errors'],
+  props: ['errors', 'from', 'to'],
   data: function data() {
     return {
       range: {
@@ -2502,6 +2511,14 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_Map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/Map */ "./resources/js/views/Map.vue");
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2959,7 +2976,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     setActiveTab: function setActiveTab(tab) {
       this.$router.push({
-        name: 'settings',
+        name: this.$route.name,
         hash: tab.hash
       });
     }
@@ -3552,6 +3569,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     width: function width() {
@@ -3991,7 +4010,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     fetchAddress: function fetchAddress(input) {
       var _this5 = this;
 
-      this.resetAllMarkers();
+      // this.resetAllMarkers()              
       var addressAutocomplete = new google.maps.places.Autocomplete(input);
       addressAutocomplete.addListener('place_changed', function () {
         _this5.resetMarker(input.id);
@@ -5511,17 +5530,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['freight', 'error'],
+  props: ['freight', 'errors'],
   data: function data() {
     return {
       form: {
-        tender_id: this.$store.getters.tenderId,
-        id: this.freight.id,
+        tender_id: this.freight.tender_id,
+        index: this.freight.index,
         title: this.freight.title,
         description: this.freight.description,
         pallet: this.freight.pallet,
@@ -5537,9 +5552,23 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         name: 'Sonder'
       }],
-      cardSmall: false,
-      errors: this.error
+      cardSmall: false
     };
+  },
+  computed: {
+    selectedErrors: function selectedErrors() {
+      var errors = [];
+
+      for (var key in this.errors) {
+        var string = "".concat(this.form.index, " = ").concat(key.match(/\d/));
+
+        if (this.form.index == key.match(/\d/)) {
+          errors.push(this.errors[key][0]);
+        }
+      }
+
+      return errors;
+    }
   },
   methods: {
     setFreightData: function setFreightData() {
@@ -5570,6 +5599,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -5641,10 +5673,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     FreightForm: _tenders_FreightForm__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['values'],
   data: function data() {
     return {
       freights: [],
-      id: 1,
+      index: 0,
       loading: false,
       errors: []
     };
@@ -5654,26 +5687,52 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      this.freights.map(function (freight) {
-        return _this.$store.dispatch('storeFreight', freight).then(function () {
-          setTimeout(function () {
-            flash(_this.$i18n.t('tender.store_freight_message'));
+      this.$store.dispatch('storeFreight', {
+        'freights': this.freights
+      }).then(function () {
+        setTimeout(function () {
+          flash(_this.$i18n.t('tender.store_freight_message'));
 
-            _this.$store.dispatch('fetchTender', "/api".concat(_this.$route.path));
+          _this.$store.dispatch('fetchTender', "/api".concat(_this.$route.path));
 
-            _this.loading = false;
-          }, 2000);
-        })["catch"](function (errors) {
+          _this.$emit('close');
+
           _this.loading = false;
-          _this.errors = errors;
-        });
+        }, 2000);
+      })["catch"](function (errors) {
+        _this.loading = false;
+        _this.errors = errors;
       });
     },
+    setFreights: function setFreights() {
+      var _this2 = this;
+
+      if (this.values.length > 0) {
+        this.values.forEach(function (value) {
+          value.index = _this2.index;
+
+          _this2.freights.push(value);
+
+          _this2.index++;
+        });
+      } else {
+        this.addFreight();
+      }
+    },
     addFreight: function addFreight() {
-      this.freights.push({
-        id: this.id
-      });
-      this.id++;
+      var freight = {
+        tender_id: this.$store.getters.tenderId,
+        index: this.index,
+        title: null,
+        description: null,
+        pallet: null,
+        width: null,
+        height: null,
+        depth: null,
+        weight: null
+      };
+      this.freights.push(freight);
+      this.index++;
     },
     removeFreight: function removeFreight(index) {
       this.freights.splice(index, 1);
@@ -5682,11 +5741,11 @@ __webpack_require__.r(__webpack_exports__);
       this.freights[index] = data;
     }
   },
-  mounted: function mounted() {
-    var _this2 = this;
+  created: function created() {
+    var _this3 = this;
 
     setTimeout(function () {
-      _this2.freights.length === 0 ? _this2.addFreight() : '';
+      _this3.setFreights();
     }, 500);
   }
 });
@@ -5752,12 +5811,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     DateRange: _components_DateRange__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['name'],
+  props: ['name', 'value'],
   data: function data() {
     return {
       form: {
@@ -5766,7 +5832,7 @@ __webpack_require__.r(__webpack_exports__);
         address: null,
         earliest_date: null,
         latest_date: null,
-        loading: false,
+        loading: null,
         latency: null,
         lat: null,
         lng: null
@@ -5776,6 +5842,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    submit: function submit() {
+      this.value ? this.updateLocation() : this.storeLocation();
+    },
     storeLocation: function storeLocation() {
       var _this = this;
 
@@ -5786,11 +5855,35 @@ __webpack_require__.r(__webpack_exports__);
 
           _this.$store.dispatch('fetchTender', "/api".concat(_this.$route.path));
 
+          _this.$emit('close');
+
           _this.loading = false;
         }, 2000);
       })["catch"](function (errors) {
         _this.loading = false;
         _this.errors = errors;
+      });
+    },
+    updateLocation: function updateLocation() {
+      var _this2 = this;
+
+      this.loading = true;
+      this.$store.dispatch('updateLocation', {
+        location_id: this.value.id,
+        form: this.form
+      }).then(function () {
+        setTimeout(function () {
+          flash(_this2.$i18n.t('tender.store_location_message'));
+
+          _this2.$store.dispatch('fetchTender', "/api".concat(_this2.$route.path));
+
+          _this2.$emit('close');
+
+          _this2.loading = false;
+        }, 2000);
+      })["catch"](function (errors) {
+        _this2.loading = false;
+        _this2.errors = errors;
       });
     },
     // Set Address on Event at ./view/Map.vue getAddress()
@@ -5809,18 +5902,24 @@ __webpack_require__.r(__webpack_exports__);
     updateLatestDate: function updateLatestDate(value) {
       this.form.latest_date = value;
       this.errors = [];
+    },
+    setData: function setData() {
+      if (this.value) {
+        this.form.address = this.value.address, this.form.earliest_date = this.value.earliest_date, this.form.latest_date = this.value.latest_date, this.form.loading = this.value.loading, this.form.latency = this.value.latency, this.form.lat = this.value.lat, this.form.lng = this.value.lng;
+      }
     }
   },
-  mounted: function mounted() {
-    var _this2 = this;
+  created: function created() {
+    var _this3 = this;
 
     setTimeout(function () {
       Event.$emit('fetchAddress', document.getElementById('pickup'));
       Event.$emit('fetchAddress', document.getElementById('delivery'));
     }, 500);
     Event.$on('setAddress', function (value) {
-      return _this2.setAddress(value);
+      return _this3.setAddress(value);
     });
+    this.setData();
   }
 });
 
@@ -5882,7 +5981,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['location']
+  props: ['location'],
+  computed: {
+    latency: function latency() {
+      return this.location.latency ? this.location.latency : 0;
+    }
+  }
 });
 
 /***/ }),
@@ -5900,7 +6004,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tenders_FreightsForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../tenders/FreightsForm */ "./resources/js/views/tenders/FreightsForm.vue");
 /* harmony import */ var _tenders_LocationForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tenders/LocationForm */ "./resources/js/views/tenders/LocationForm.vue");
 /* harmony import */ var _tenders_LocationInfo__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../tenders/LocationInfo */ "./resources/js/views/tenders/LocationInfo.vue");
-/* harmony import */ var _tenders_TenderInfo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../tenders/TenderInfo */ "./resources/js/views/tenders/TenderInfo.vue");
+/* harmony import */ var _tenders_TenderForm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../tenders/TenderForm */ "./resources/js/views/tenders/TenderForm.vue");
+/* harmony import */ var _tenders_TenderInfo__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../tenders/TenderInfo */ "./resources/js/views/tenders/TenderInfo.vue");
 //
 //
 //
@@ -5964,6 +6069,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -5975,7 +6122,16 @@ __webpack_require__.r(__webpack_exports__);
     FreightsForm: _tenders_FreightsForm__WEBPACK_IMPORTED_MODULE_1__["default"],
     LocationForm: _tenders_LocationForm__WEBPACK_IMPORTED_MODULE_2__["default"],
     LocationInfo: _tenders_LocationInfo__WEBPACK_IMPORTED_MODULE_3__["default"],
-    TenderInfo: _tenders_TenderInfo__WEBPACK_IMPORTED_MODULE_4__["default"]
+    TenderForm: _tenders_TenderForm__WEBPACK_IMPORTED_MODULE_4__["default"],
+    TenderInfo: _tenders_TenderInfo__WEBPACK_IMPORTED_MODULE_5__["default"]
+  },
+  data: function data() {
+    return {
+      editTender: false,
+      editPickup: false,
+      editDelivery: false,
+      editFreights: false
+    };
   },
   computed: {
     tender: function tender() {
@@ -5993,12 +6149,16 @@ __webpack_require__.r(__webpack_exports__);
       return this.tender.locations.find(function (location) {
         return location.type === 'pickup';
       });
+    },
+    draft: function draft() {
+      return !this.tender.published_at;
     }
   },
   methods: {
     fetchData: function fetchData() {
       this.$store.dispatch('fetchTender', "/api".concat(this.$route.path)).then(function (response) {
         Event.$emit('updateMarkers', response.data.locations);
+        Event.$emit('zoom-map');
       });
     }
   },
@@ -6205,6 +6365,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['tender', 'edit'],
   data: function data() {
     return {
       category_id: null,
@@ -6215,7 +6376,8 @@ __webpack_require__.r(__webpack_exports__);
       valid_date: null,
       errors: [],
       cardSmall: false,
-      loading: false
+      loading: false,
+      category: null
     };
   },
   computed: {
@@ -6224,6 +6386,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    submit: function submit() {
+      this.edit ? this.updateTender() : this.storeTender();
+    },
     storeTender: function storeTender() {
       var _this = this;
 
@@ -6250,8 +6415,30 @@ __webpack_require__.r(__webpack_exports__);
         _this.loading = false;
       });
     },
-    oneColumDesign: function oneColumDesign() {
-      this.cardSmall = this.$refs.cardHeader.clientWidth < 640 ? true : false;
+    updateTender: function updateTender() {
+      var _this2 = this;
+
+      this.loading = true;
+      this.$store.dispatch('updateTender', {
+        path: this.$route.path,
+        category_id: this.category_id,
+        title: this.title,
+        description: this.description,
+        max_price: this.maxPrice,
+        immediate_price: this.immediatePrice,
+        valid_date: this.valid_date
+      }).then(function (response) {
+        setTimeout(function () {
+          flash(_this2.$i18n.t('tender.store_tender_message'));
+
+          _this2.$emit('cancel');
+
+          _this2.loading = false;
+        }, 2000);
+      })["catch"](function (errors) {
+        _this2.errors = errors;
+        _this2.loading = false;
+      });
     },
     updateCategory: function updateCategory(category) {
       this.category_id = category.id;
@@ -6261,7 +6448,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateDate: function updateDate(date) {
       this.valid_date = date;
+    },
+    setData: function setData() {
+      if (this.tender) {
+        this.category_id = this.tender.category_id;
+        this.title = this.tender.title;
+        this.description = this.tender.description;
+        this.maxPrice = this.tender.max_price;
+        this.immediatePrice = this.tender.immediate_price;
+        this.valid_date = this.tender.valid_date;
+        this.category = this.tender.category;
+      }
     }
+  },
+  created: function created() {
+    this.setData();
   }
 });
 
@@ -6276,6 +6477,19 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6502,6 +6716,83 @@ __webpack_require__.r(__webpack_exports__);
     //     Event.$emit('updateMarkers', this.locations) 
     // },2000); 
     // Event.$on('filterCargosByTheRoute', bounds => this.fetchCargos(bounds))
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/TendersDashboard.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/TendersDashboard.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../tenders/TenderCard */ "./resources/js/views/tenders/TenderCard.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    TenderCard: _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  computed: {
+    tenders: function tenders() {
+      return this.$store.state.tenders;
+    },
+    active: function active() {
+      if (this.tenders) {
+        return this.tenders.filter(function (tender) {
+          return tender.published_at;
+        });
+      }
+    },
+    drafts: function drafts() {
+      if (this.tenders) {
+        return this.tenders.filter(function (tender) {
+          return !tender.published_at;
+        });
+      }
+    },
+    filtered: function filtered() {
+      return this[this.$route.hash.substring(1)];
+    }
+  },
+  methods: {
+    fetchUsersTenders: function fetchUsersTenders() {
+      this.$store.dispatch('fetchUsersTenders');
+    }
+  },
+  created: function created() {
+    this.fetchUsersTenders(); // Set initial Route(Tab-Filter) as active
+
+    if (!this.$route.hash) {
+      this.$router.push({
+        name: 'dashboard_tenders',
+        hash: '#active'
+      });
+    }
   }
 });
 
@@ -18165,24 +18456,31 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex px-2 mb-8" }, [
-    _c(
-      "button",
-      {
-        staticClass: "btn btn-teal shadow-md",
-        on: {
-          click: function($event) {
-            return _vm.$modal.show("create-tender")
+  return _c(
+    "div",
+    { staticClass: "flex px-2 mb-8" },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-teal shadow-md",
+          on: {
+            click: function($event) {
+              return _vm.$modal.show("create-tender")
+            }
           }
-        }
-      },
-      [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("span", [_vm._v(_vm._s(_vm.$t("tender.new_tender")))])
-      ]
-    )
-  ])
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("span", [_vm._v(_vm._s(_vm.$t("tender.new_tender")))])
+        ]
+      ),
+      _vm._v(" "),
+      _vm._t("default")
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
@@ -18366,7 +18664,11 @@ var render = function() {
         "router-link",
         {
           staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
-          attrs: { "active-class": "text-teal-500", to: { name: "dashboard" } }
+          attrs: {
+            "active-class": "text-teal-500",
+            to: { name: "dashboard" },
+            exact: ""
+          }
         },
         [_c("i", { staticClass: "icon ion-md-home text-2xl" })]
       ),
@@ -18375,7 +18677,10 @@ var render = function() {
         "router-link",
         {
           staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
-          attrs: { "active-class": "text-teal-500", to: { name: "tenders" } }
+          attrs: {
+            "active-class": "text-teal-500",
+            to: { name: "dashboard_tenders" }
+          }
         },
         [_c("i", { staticClass: "icon ion-md-cube text-2xl" })]
       ),
@@ -18513,6 +18818,7 @@ var render = function() {
       _c("date-picker", {
         staticClass: "mb-2",
         attrs: {
+          value: _vm.from,
           placeholder: _vm.$t("tender.earliest_date"),
           highlighted: _vm.range
         },
@@ -18528,6 +18834,7 @@ var render = function() {
       _vm._v(" "),
       _c("date-picker", {
         attrs: {
+          value: _vm.to,
           placeholder: _vm.$t("tender.latest_date"),
           "disabled-dates": _vm.range.from,
           highlighted: _vm.range
@@ -19102,6 +19409,43 @@ var render = function() {
             class: _vm.fixed ? "" : "md:pl-20"
           },
           [
+            _c(
+              "router-link",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.fixed,
+                    expression: "fixed"
+                  }
+                ],
+                staticClass: "absolute top-0 left-0 px-10 py-3 z-20",
+                attrs: { to: "/" }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex items-center flex-1 text-gray-700 mr-6"
+                  },
+                  [
+                    _c("span", { staticClass: "font-light text-2xl" }, [
+                      _vm._v("lin")
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "text-2xl text-teal-500" }, [
+                      _vm._v("o")
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "font-light text-2xl" }, [
+                      _vm._v("ffery")
+                    ])
+                  ]
+                )
+              ]
+            ),
+            _vm._v(" "),
             _c("gmap"),
             _vm._v(" "),
             _c(
@@ -19662,7 +20006,7 @@ var render = function() {
             return _c("div", { key: index }, [
               _c("button", {
                 staticClass:
-                  "text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5 focus:outline-none",
+                  "text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-3 focus:outline-none",
                 class: { "text-teal-500 font-bold": tab.isActive },
                 attrs: { "role-tab": "", "aria-selected": tab.isActive },
                 domProps: { textContent: _vm._s(tab.name) },
@@ -20020,7 +20364,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "w-full lg:w-1/2 lg:ml-20" },
+              { staticClass: "w-full lg:w-1/2 lg:pl-10" },
               [_vm._t("default")],
               2
             )
@@ -20331,11 +20675,9 @@ var render = function() {
                       attrs: { to: "/" }
                     },
                     [
-                      _vm._v(
-                        "\n                " +
-                          _vm._s(_vm.$t("content.about")) +
-                          "\n            "
-                      )
+                      _c("p", { on: { click: _vm.hide } }, [
+                        _vm._v(_vm._s(_vm.$t("content.about")))
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -20347,11 +20689,9 @@ var render = function() {
                       attrs: { to: "/" }
                     },
                     [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(_vm.$t("content.services")) +
-                          "\n            "
-                      )
+                      _c("p", { on: { click: _vm.hide } }, [
+                        _vm._v(_vm._s(_vm.$t("content.services")))
+                      ])
                     ]
                   )
                 ],
@@ -20404,11 +20744,9 @@ var render = function() {
               attrs: { to: { name: "tenders" } }
             },
             [
-              _vm._v(
-                "\n           " +
-                  _vm._s(_vm.$t("content.find_fright")) +
-                  "\n        "
-              )
+              _c("p", { on: { click: _vm.hide } }, [
+                _vm._v(_vm._s(_vm.$t("content.find_fright")))
+              ])
             ]
           ),
           _vm._v(" "),
@@ -23334,6 +23672,29 @@ var render = function() {
       {
         directives: [
           {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.selectedErrors.length > 0,
+            expression: "selectedErrors.length > 0"
+          }
+        ],
+        staticClass: "bg-red-100 px-5 py-2 rounded-lg mb-2 text-sm"
+      },
+      _vm._l(_vm.selectedErrors, function(error, index) {
+        return _c("p", {
+          key: index,
+          staticClass: "text-red-500",
+          domProps: { textContent: _vm._s(error) }
+        })
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
             name: "resize",
             rawName: "v-resize",
             value: _vm.oneColumDesign,
@@ -23349,13 +23710,6 @@ var render = function() {
           "div",
           { staticClass: "w-full", class: _vm.cardSmall ? "" : "w-1/2 mr-1" },
           [
-            _vm.errors.title
-              ? _c("p", {
-                  staticClass: "text-sm text-red-500 mb-2",
-                  domProps: { textContent: _vm._s(_vm.errors.title[0]) }
-                })
-              : _vm._e(),
-            _vm._v(" "),
             _c("div", { staticClass: "relative flex items-center mb-2" }, [
               _c("input", {
                 directives: [
@@ -23367,7 +23721,6 @@ var render = function() {
                   }
                 ],
                 staticClass: "input",
-                class: _vm.errors.title ? "border-red-300" : "",
                 attrs: {
                   type: "text",
                   placeholder: _vm.$t("utilities.title"),
@@ -23375,9 +23728,6 @@ var render = function() {
                 },
                 domProps: { value: _vm.form.title },
                 on: {
-                  keyup: function($event) {
-                    _vm.errors = []
-                  },
                   blur: _vm.setFreightData,
                   input: function($event) {
                     if ($event.target.composing) {
@@ -23400,13 +23750,6 @@ var render = function() {
           ],
           1
         ),
-        _vm._v(" "),
-        _vm.errors.pallet
-          ? _c("p", {
-              staticClass: "text-sm text-red-500 mb-2",
-              domProps: { textContent: _vm._s(_vm.errors.pallet[0]) }
-            })
-          : _vm._e(),
         _vm._v(" "),
         _c(
           "div",
@@ -23433,16 +23776,12 @@ var render = function() {
                     }
                   ],
                   staticClass: "input",
-                  class: _vm.errors.width ? "border-red-300" : "",
                   attrs: {
                     type: "number",
                     placeholder: _vm.$t("tender.width_cm")
                   },
                   domProps: { value: _vm.form.width },
                   on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
                     blur: _vm.setFreightData,
                     input: function($event) {
                       if ($event.target.composing) {
@@ -23465,16 +23804,12 @@ var render = function() {
                     }
                   ],
                   staticClass: "input",
-                  class: _vm.errors.height ? "border-red-300" : "",
                   attrs: {
                     type: "number",
                     placeholder: _vm.$t("tender.height_cm")
                   },
                   domProps: { value: _vm.form.height },
                   on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
                     blur: _vm.setFreightData,
                     input: function($event) {
                       if ($event.target.composing) {
@@ -23497,16 +23832,12 @@ var render = function() {
                     }
                   ],
                   staticClass: "input",
-                  class: _vm.errors.depth ? "border-red-300" : "",
                   attrs: {
                     type: "number",
                     placeholder: _vm.$t("tender.length_cm")
                   },
                   domProps: { value: _vm.form.depth },
                   on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
                     blur: _vm.setFreightData,
                     input: function($event) {
                       if ($event.target.composing) {
@@ -23519,13 +23850,6 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm.errors.weight
-              ? _c("p", {
-                  staticClass: "text-sm text-red-500 mb-2",
-                  domProps: { textContent: _vm._s(_vm.errors.weight[0]) }
-                })
-              : _vm._e(),
-            _vm._v(" "),
             _c("div", { staticClass: "relative flex items-center mb-1" }, [
               _c("input", {
                 directives: [
@@ -23537,16 +23861,12 @@ var render = function() {
                   }
                 ],
                 staticClass: "input",
-                class: _vm.errors.weight ? "border-red-300" : "",
                 attrs: {
                   type: "number",
                   placeholder: _vm.$t("tender.weight_kg")
                 },
                 domProps: { value: _vm.form.weight },
                 on: {
-                  keyup: function($event) {
-                    _vm.errors = []
-                  },
                   blur: _vm.setFreightData,
                   input: function($event) {
                     if ($event.target.composing) {
@@ -23599,6 +23919,14 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("p", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: freight.description,
+                expression: "freight.description"
+              }
+            ],
             staticClass: "text-sm py-2",
             domProps: { textContent: _vm._s(freight.description) }
           }),
@@ -23611,19 +23939,34 @@ var render = function() {
             _c("span", { domProps: { textContent: _vm._s(freight.pallet) } })
           ]),
           _vm._v(" "),
-          _c("span", { staticClass: "text-gray-500 text-sm" }, [
-            _vm._v(_vm._s(_vm.$t("tender.dimentions") + ": ") + " ")
-          ]),
-          _vm._v(" "),
-          _c("span", { domProps: { textContent: _vm._s(freight.width) } }),
-          _vm._v(" "),
-          _c("span", {
-            domProps: { textContent: _vm._s("x " + freight.height) }
-          }),
-          _vm._v(" "),
-          _c("span", {
-            domProps: { textContent: _vm._s("x " + freight.depth) }
-          }),
+          _c(
+            "p",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: freight.width && freight.height && freight.depth,
+                  expression: "freight.width && freight.height && freight.depth"
+                }
+              ]
+            },
+            [
+              _c("span", { staticClass: "text-gray-500 text-sm" }, [
+                _vm._v(_vm._s(_vm.$t("tender.dimentions") + ": ") + " ")
+              ]),
+              _vm._v(" "),
+              _c("span", { domProps: { textContent: _vm._s(freight.width) } }),
+              _vm._v(" "),
+              _c("span", {
+                domProps: { textContent: _vm._s("x " + freight.height) }
+              }),
+              _vm._v(" "),
+              _c("span", {
+                domProps: { textContent: _vm._s("x " + freight.depth) }
+              })
+            ]
+          ),
           _vm._v(" "),
           _c("p", [
             _c("span", { staticClass: "text-gray-500 text-sm" }, [
@@ -23668,9 +24011,9 @@ var render = function() {
     [
       _vm._l(_vm.freights, function(freight, index) {
         return _c("freight-form", {
-          key: freight.id,
+          key: freight.index,
           staticClass: "mb-5",
-          attrs: { freight: freight, error: _vm.errors },
+          attrs: { freight: freight, errors: _vm.errors },
           on: {
             remove: function($event) {
               return _vm.removeFreight(index)
@@ -23742,7 +24085,7 @@ var render = function() {
           on: {
             submit: function($event) {
               $event.preventDefault()
-              return _vm.storeLocation($event)
+              return _vm.submit($event)
             }
           }
         },
@@ -23758,6 +24101,14 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.address,
+                      expression: "form.address"
+                    }
+                  ],
                   staticClass: "input pl-10",
                   attrs: {
                     id: _vm.name,
@@ -23765,16 +24116,27 @@ var render = function() {
                     required: "",
                     placeholder: _vm.$t("utilities.address")
                   },
+                  domProps: { value: _vm.form.address },
                   on: {
                     keyup: function($event) {
                       _vm.errors = []
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "address", $event.target.value)
                     }
                   }
                 })
               ]),
               _vm._v(" "),
               _c("date-range", {
-                attrs: { errors: _vm.errors },
+                attrs: {
+                  from: _vm.form.earliest_date,
+                  to: _vm.form.latest_date,
+                  errors: _vm.errors
+                },
                 on: {
                   inputFrom: _vm.updateEarliestDate,
                   inputTo: _vm.updateLatestDate
@@ -23948,9 +24310,7 @@ var render = function() {
           _c("p", {
             staticClass: "leading-none",
             domProps: {
-              textContent: _vm._s(
-                _vm.location.latency + " " + _vm.$t("utilities.hours")
-              )
+              textContent: _vm._s(_vm.latency + " " + _vm.$t("utilities.hours"))
             }
           }),
           _vm._v(" "),
@@ -23989,69 +24349,147 @@ var render = function() {
         "card",
         { attrs: { classes: "py-5" } },
         [
-          _c("tender-info", { attrs: { tender: _vm.tender } }),
+          _vm.draft
+            ? _c(
+                "p",
+                {
+                  staticClass:
+                    "uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 text-right"
+                },
+                [
+                  _c("i", { staticClass: "icon ion-md-create mr-2" }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Entwurf")])
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "block bg-gray-100 py-5 px-5 md:flex" }, [
-            _c(
-              "div",
-              { staticClass: "w-full pb-5 md:w-1/2 md:pb-0 md:mr-2" },
-              [
-                _c("div", { staticClass: "flex items-center mb-2" }, [
-                  _c("p", { staticClass: "uppercase text-sm text-gray-500" }, [
-                    _vm._v(_vm._s(_vm.$t("tender.pickup_details")))
+          !_vm.editTender
+            ? _c("tender-info", {
+                attrs: { tender: _vm.tender },
+                on: {
+                  edit: function($event) {
+                    _vm.editTender = !_vm.editTender
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.editTender && _vm.draft
+            ? _c(
+                "div",
+                { staticClass: "px-5 py-5" },
+                [
+                  _c("tender-form", {
+                    attrs: { tender: _vm.tender, edit: true },
+                    on: {
+                      cancel: function($event) {
+                        _vm.editTender = false
+                      }
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "block bg-gray-100 py-5 px-5 md:flex md:px-8" },
+            [
+              _c(
+                "div",
+                { staticClass: "w-full pb-5 md:w-1/2 md:pb-0 md:mr-2" },
+                [
+                  _c("div", { staticClass: "flex items-center mb-2" }, [
+                    _c(
+                      "p",
+                      { staticClass: "uppercase text-sm text-gray-500" },
+                      [_vm._v(_vm._s(_vm.$t("tender.pickup_details")))]
+                    ),
+                    _vm._v(" "),
+                    _vm.draft
+                      ? _c(
+                          "button",
+                          {
+                            staticClass:
+                              "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
+                            on: {
+                              click: function($event) {
+                                _vm.editPickup = !_vm.editPickup
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "icon ion-md-create" })]
+                        )
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                    },
-                    [_c("i", { staticClass: "icon ion-md-create" })]
-                  )
-                ]),
-                _vm._v(" "),
-                !_vm.pickup
-                  ? _c("location-form", { attrs: { name: "pickup" } })
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.pickup
-                  ? _c("location-info", { attrs: { location: _vm.pickup } })
-                  : _vm._e()
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-full md:w-1/2 md:ml-2" },
-              [
-                _c("div", { staticClass: "flex items-center mb-2" }, [
-                  _c("p", { staticClass: "uppercase text-sm text-gray-500" }, [
-                    _vm._v(_vm._s(_vm.$t("tender.delivery_details")))
+                  !_vm.pickup || (_vm.editPickup && _vm.draft)
+                    ? _c("location-form", {
+                        attrs: { value: _vm.pickup, name: "pickup" },
+                        on: {
+                          close: function($event) {
+                            _vm.editPickup = false
+                          }
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.pickup && !_vm.editPickup
+                    ? _c("location-info", { attrs: { location: _vm.pickup } })
+                    : _vm._e()
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-full md:w-1/2 md:ml-2" },
+                [
+                  _c("div", { staticClass: "flex items-center mb-2" }, [
+                    _c(
+                      "p",
+                      { staticClass: "uppercase text-sm text-gray-500" },
+                      [_vm._v(_vm._s(_vm.$t("tender.delivery_details")))]
+                    ),
+                    _vm._v(" "),
+                    _vm.draft
+                      ? _c(
+                          "button",
+                          {
+                            staticClass:
+                              "py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
+                            on: {
+                              click: function($event) {
+                                _vm.editDelivery = !_vm.editDelivery
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "icon ion-md-create" })]
+                        )
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                    },
-                    [_c("i", { staticClass: "icon ion-md-create" })]
-                  )
-                ]),
-                _vm._v(" "),
-                !_vm.delivery
-                  ? _c("location-form", { attrs: { name: "delivery" } })
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.delivery
-                  ? _c("location-info", { attrs: { location: _vm.delivery } })
-                  : _vm._e()
-              ],
-              1
-            )
-          ]),
+                  !_vm.delivery || (_vm.editDelivery && _vm.draft)
+                    ? _c("location-form", {
+                        attrs: { value: _vm.delivery, name: "delivery" },
+                        on: {
+                          close: function($event) {
+                            _vm.editDelivery = false
+                          }
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.delivery && !_vm.editDelivery
+                    ? _c("location-info", { attrs: { location: _vm.delivery } })
+                    : _vm._e()
+                ],
+                1
+              )
+            ]
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -24062,19 +24500,35 @@ var render = function() {
                   _vm._v(_vm._s(_vm.$t("tender.freight_details")))
                 ]),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass:
-                      "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                  },
-                  [_c("i", { staticClass: "icon ion-md-create" })]
-                )
+                _vm.draft
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
+                        on: {
+                          click: function($event) {
+                            _vm.editFreights = !_vm.editFreights
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "icon ion-md-create" })]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
-              !_vm.hasFreights ? _c("freights-form") : _vm._e(),
+              !_vm.hasFreights || (_vm.editFreights && _vm.draft)
+                ? _c("freights-form", {
+                    attrs: { values: _vm.tender.freights },
+                    on: {
+                      close: function($event) {
+                        _vm.editFreights = false
+                      }
+                    }
+                  })
+                : _vm._e(),
               _vm._v(" "),
-              _vm.hasFreights
+              _vm.hasFreights && !_vm.editFreights
                 ? _c("freight-info", {
                     attrs: { freights: _vm.tender.freights }
                   })
@@ -24256,231 +24710,207 @@ var render = function() {
     "div",
     { staticClass: "relative" },
     [
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "resize",
-              rawName: "v-resize",
-              value: _vm.oneColumDesign,
-              expression: "oneColumDesign"
-            }
-          ],
-          ref: "cardHeader",
-          staticClass: "block",
-          class: _vm.cardSmall ? "" : "md:flex"
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "w-full", class: _vm.cardSmall ? "" : "md:w-1/2" },
-            [
-              _vm.errors.title
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.title[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "relative flex items-center mb-2" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.title,
-                      expression: "title"
-                    }
-                  ],
-                  staticClass: "input",
-                  class: _vm.errors.title ? "border-red-300" : "",
-                  attrs: {
-                    type: "text",
-                    placeholder: _vm.$t("utilities.title"),
-                    required: ""
-                  },
-                  domProps: { value: _vm.title },
-                  on: {
-                    keyup: function($event) {
-                      _vm.errors = []
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.title = $event.target.value
-                    }
-                  }
+      _c("div", { ref: "cardHeader", staticClass: "block" }, [
+        _c(
+          "div",
+          { staticClass: "w-full" },
+          [
+            _vm.errors.title
+              ? _c("p", {
+                  staticClass: "text-sm text-red-500 mb-2",
+                  domProps: { textContent: _vm._s(_vm.errors.title[0]) }
                 })
-              ]),
-              _vm._v(" "),
-              _vm.errors.category_id
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.category_id[0]) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.categories
-                ? _c("select-input", {
-                    staticClass: "mb-2",
-                    attrs: {
-                      options: _vm.categories,
-                      placeholder: _vm.$t("tender.category")
-                    },
-                    on: { changed: _vm.updateCategory }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("textarea-input", {
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "relative flex items-center mb-2" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.title,
+                    expression: "title"
+                  }
+                ],
+                staticClass: "input",
+                class: _vm.errors.title ? "border-red-300" : "",
                 attrs: {
-                  value: _vm.description,
-                  placeholder: _vm.$t("tender.more_tender_info"),
-                  rows: 4
+                  type: "text",
+                  placeholder: _vm.$t("utilities.title"),
+                  required: ""
                 },
-                on: { changed: _vm.updateDescription }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "flex py-5" }, [
-                _c("div", { staticClass: "w-1/2 mr-1" }, [
-                  _vm.errors.max_price
-                    ? _c("p", {
-                        staticClass: "text-sm text-red-500 mb-2",
-                        domProps: {
-                          textContent: _vm._s(_vm.errors.max_price[0])
-                        }
-                      })
-                    : _vm._e(),
+                domProps: { value: _vm.title },
+                on: {
+                  keyup: function($event) {
+                    _vm.errors = []
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.title = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _vm.errors.category_id
+              ? _c("p", {
+                  staticClass: "text-sm text-red-500 mb-2",
+                  domProps: { textContent: _vm._s(_vm.errors.category_id[0]) }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.categories
+              ? _c("select-input", {
+                  staticClass: "mb-2",
+                  attrs: {
+                    value: _vm.category,
+                    options: _vm.categories,
+                    placeholder: _vm.$t("tender.category")
+                  },
+                  on: { changed: _vm.updateCategory }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("textarea-input", {
+              attrs: {
+                value: _vm.description,
+                placeholder: _vm.$t("tender.more_tender_info"),
+                rows: 4
+              },
+              on: { changed: _vm.updateDescription }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex py-5" }, [
+              _c("div", { staticClass: "w-1/2 mr-1" }, [
+                _vm.errors.max_price
+                  ? _c("p", {
+                      staticClass: "text-sm text-red-500 mb-2",
+                      domProps: { textContent: _vm._s(_vm.errors.max_price[0]) }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "relative flex items-center mb-1" }, [
+                  _c("i", {
+                    staticClass:
+                      "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
+                  }),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "relative flex items-center mb-1" },
-                    [
-                      _c("i", {
-                        staticClass:
-                          "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
-                      }),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.maxPrice,
-                            expression: "maxPrice"
-                          }
-                        ],
-                        staticClass: "input pl-10",
-                        class: _vm.errors.max_price ? "border-red-300" : "",
-                        attrs: {
-                          type: "number",
-                          placeholder: _vm.$t("tender.max_price")
-                        },
-                        domProps: { value: _vm.maxPrice },
-                        on: {
-                          keyup: function($event) {
-                            _vm.errors = []
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.maxPrice = $event.target.value
-                          }
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.maxPrice,
+                        expression: "maxPrice"
+                      }
+                    ],
+                    staticClass: "input pl-10",
+                    class: _vm.errors.max_price ? "border-red-300" : "",
+                    attrs: {
+                      type: "number",
+                      placeholder: _vm.$t("tender.max_price")
+                    },
+                    domProps: { value: _vm.maxPrice },
+                    on: {
+                      keyup: function($event) {
+                        _vm.errors = []
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
                         }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "text-sm text-gray-500" }, [
-                    _vm._v(_vm._s(_vm.$t("tender.max_price_info")))
-                  ])
+                        _vm.maxPrice = $event.target.value
+                      }
+                    }
+                  })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "w-1/2 ml-1" }, [
-                  _vm.errors.immediate_price
-                    ? _c("p", {
-                        staticClass: "text-sm text-red-500 mb-2",
-                        domProps: {
-                          textContent: _vm._s(_vm.errors.immediate_price[0])
-                        }
-                      })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "relative flex items-center mb-1" },
-                    [
-                      _c("i", {
-                        staticClass:
-                          "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
-                      }),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.immediatePrice,
-                            expression: "immediatePrice"
-                          }
-                        ],
-                        staticClass: "input pl-10",
-                        class: _vm.errors.immediate_price
-                          ? "border-red-300"
-                          : "",
-                        attrs: {
-                          type: "number",
-                          placeholder: _vm.$t("tender.immediate_price")
-                        },
-                        domProps: { value: _vm.immediatePrice },
-                        on: {
-                          keyup: function($event) {
-                            _vm.errors = []
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.immediatePrice = $event.target.value
-                          }
-                        }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "text-sm text-gray-500" }, [
-                    _vm._v(_vm._s(_vm.$t("tender.immediate_price_info")))
-                  ])
+                _c("p", { staticClass: "text-sm text-gray-500" }, [
+                  _vm._v(_vm._s(_vm.$t("tender.max_price_info")))
                 ])
               ]),
               _vm._v(" "),
-              _vm.errors.valid_date
-                ? _c("p", {
-                    staticClass: "text-sm text-red-500 mb-2",
-                    domProps: { textContent: _vm._s(_vm.errors.valid_date[0]) }
+              _c("div", { staticClass: "w-1/2 ml-1" }, [
+                _vm.errors.immediate_price
+                  ? _c("p", {
+                      staticClass: "text-sm text-red-500 mb-2",
+                      domProps: {
+                        textContent: _vm._s(_vm.errors.immediate_price[0])
+                      }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "relative flex items-center mb-1" }, [
+                  _c("i", {
+                    staticClass:
+                      "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
+                  }),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.immediatePrice,
+                        expression: "immediatePrice"
+                      }
+                    ],
+                    staticClass: "input pl-10",
+                    class: _vm.errors.immediate_price ? "border-red-300" : "",
+                    attrs: {
+                      type: "number",
+                      placeholder: _vm.$t("tender.immediate_price")
+                    },
+                    domProps: { value: _vm.immediatePrice },
+                    on: {
+                      keyup: function($event) {
+                        _vm.errors = []
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.immediatePrice = $event.target.value
+                      }
+                    }
                   })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("date-picker", {
-                staticClass: "mb-2",
-                attrs: { placeholder: _vm.$t("tender.valid_date") },
-                on: { changed: _vm.updateDate }
-              }),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm text-gray-500" }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(_vm.$t("tender.valid_date_info")) +
-                    "\n            "
-                )
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "text-sm text-gray-500" }, [
+                  _vm._v(_vm._s(_vm.$t("tender.immediate_price_info")))
+                ])
               ])
-            ],
-            1
-          )
-        ]
-      ),
+            ]),
+            _vm._v(" "),
+            _vm.errors.valid_date
+              ? _c("p", {
+                  staticClass: "text-sm text-red-500 mb-2",
+                  domProps: { textContent: _vm._s(_vm.errors.valid_date[0]) }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("date-picker", {
+              staticClass: "mb-2",
+              attrs: {
+                value: _vm.valid_date,
+                placeholder: _vm.$t("tender.valid_date")
+              },
+              on: { changed: _vm.updateDate }
+            }),
+            _vm._v(" "),
+            _c("p", { staticClass: "text-sm text-gray-500" }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.$t("tender.valid_date_info")) +
+                  "\n            "
+              )
+            ])
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "flex justify-end mt-5" }, [
         _c(
@@ -24508,7 +24938,7 @@ var render = function() {
           {
             staticClass: "btn btn-teal",
             attrs: { type: "submit" },
-            on: { click: _vm.storeTender }
+            on: { click: _vm.submit }
           },
           [_c("span", [_vm._v(_vm._s(_vm.$t("utilities.save_draft")))])]
         )
@@ -24684,10 +25114,30 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "px-5 my-5 md:px-10" }, [
-      _c("p", {
-        staticClass: "text-2xl font-bold leading-none",
-        domProps: { textContent: _vm._s(_vm.tender.title) }
-      }),
+      _c("div", [
+        _c("span", [
+          !_vm.tender.published_at
+            ? _c(
+                "button",
+                {
+                  staticClass:
+                    "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
+                  on: {
+                    click: function($event) {
+                      return _vm.$emit("edit")
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "icon ion-md-create" })]
+              )
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("span", {
+          staticClass: "text-2xl font-bold leading-none",
+          domProps: { textContent: _vm._s(_vm.tender.title) }
+        })
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "py-3" }, [
         _c("span", {
@@ -24781,6 +25231,65 @@ var render = function() {
         "card",
         { attrs: { classes: "py-5 px-0" } },
         _vm._l(_vm.tenders, function(tender, index) {
+          return _c("tender-card", { key: index, attrs: { tender: tender } })
+        }),
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/TendersDashboard.vue?vue&type=template&id=380c2cc4&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/TendersDashboard.vue?vue&type=template&id=380c2cc4& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("action-bar"),
+      _vm._v(" "),
+      _c(
+        "h1",
+        {
+          staticClass:
+            "text-gray-700 font-light leading-none text-2xl ml-2 mb-5"
+        },
+        [_vm._v("\n        Meine Ausschreibungen            \n    ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "tabs",
+        { staticClass: "ml-2 " },
+        [
+          _c("tab", { attrs: { name: "Aktiv", hash: "#active" } }),
+          _vm._v(" "),
+          _c("tab", { attrs: { name: "Entwürfe", hash: "#drafts" } })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "card",
+        { attrs: { classes: "py-5 px-0" } },
+        _vm._l(_vm.filtered, function(tender, index) {
           return _c("tender-card", { key: index, attrs: { tender: tender } })
         }),
         1
@@ -50643,10 +51152,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_auth_ResetPassword__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./views/auth/ResetPassword */ "./resources/js/views/auth/ResetPassword.vue");
 /* harmony import */ var _views_settings_Settings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./views/settings/Settings */ "./resources/js/views/settings/Settings.vue");
 /* harmony import */ var _views_tenders_Tender__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./views/tenders/Tender */ "./resources/js/views/tenders/Tender.vue");
-/* harmony import */ var _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./views/tenders/CreateTender */ "./resources/js/views/tenders/CreateTender.vue");
-/* harmony import */ var _views_tenders_Tenders__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./views/tenders/Tenders */ "./resources/js/views/tenders/Tenders.vue");
-/* harmony import */ var _views_Welcome__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./views/Welcome */ "./resources/js/views/Welcome.vue");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
+/* harmony import */ var _views_tenders_TendersDashboard__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./views/tenders/TendersDashboard */ "./resources/js/views/tenders/TendersDashboard.vue");
+/* harmony import */ var _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./views/tenders/CreateTender */ "./resources/js/views/tenders/CreateTender.vue");
+/* harmony import */ var _views_tenders_Tenders__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./views/tenders/Tenders */ "./resources/js/views/tenders/Tenders.vue");
+/* harmony import */ var _views_Welcome__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./views/Welcome */ "./resources/js/views/Welcome.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -50663,10 +51173,11 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 
 
 
+
 var routes = [{
   name: 'home',
   path: '/',
-  component: _views_Welcome__WEBPACK_IMPORTED_MODULE_13__["default"],
+  component: _views_Welcome__WEBPACK_IMPORTED_MODULE_14__["default"],
   meta: {
     requiresVisitor: true
   }
@@ -50678,6 +51189,14 @@ var routes = [{
   name: 'dashboard',
   path: '/dashboard',
   component: _views_Dashboard__WEBPACK_IMPORTED_MODULE_2__["default"],
+  meta: {
+    layout: 'dashboard',
+    requiresAuth: true
+  }
+}, {
+  name: 'dashboard_tenders',
+  path: '/dashboard/tenders',
+  component: _views_tenders_TendersDashboard__WEBPACK_IMPORTED_MODULE_11__["default"],
   meta: {
     layout: 'dashboard',
     requiresAuth: true
@@ -50732,7 +51251,7 @@ var routes = [{
 }, {
   name: 'tenders',
   path: '/tenders',
-  component: _views_tenders_Tenders__WEBPACK_IMPORTED_MODULE_12__["default"],
+  component: _views_tenders_Tenders__WEBPACK_IMPORTED_MODULE_13__["default"],
   meta: {
     layout: 'mapped'
   } // beforeEnter: (to, from, next) => {  
@@ -50755,7 +51274,7 @@ var routes = [{
 {
   name: 'create_tender',
   path: '/tenders/create',
-  component: _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_11__["default"],
+  component: _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_12__["default"],
   meta: {
     layout: 'dashboard',
     requiresAuth: true
@@ -50855,9 +51374,11 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     retrieveLocations: function retrieveLocations(state, tenders) {
       state.locations = [];
       tenders.data.map(function (tender) {
-        tender.locations.forEach(function (location) {
-          state.locations.push(location);
-        });
+        if (tender.locations.length > 0) {
+          tender.locations.forEach(function (location) {
+            state.locations.push(location);
+          });
+        }
       });
     },
     retrieveOrigin: function retrieveOrigin(state, origin) {
@@ -50996,6 +51517,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
         });
       });
     },
+    // Tenders endpoints START
     fetchTenders: function fetchTenders(context) {
       var route = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       return new Promise(function (resolve, reject) {
@@ -51006,6 +51528,19 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
         }).then(function (response) {
           context.commit('retrieveTenders', response.data);
           context.commit('retrieveLocations', response.data);
+          resolve(response);
+        })["catch"](function (errors) {
+          return reject(errors.response);
+        });
+      });
+    },
+    // Fetch all tenders created by autenticated user
+    fetchUsersTenders: function fetchUsersTenders(context) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+      return new Promise(function (resolve, reject) {
+        axios.get('/api/dashboard/tenders').then(function (response) {
+          context.commit('retrieveTenders', response.data); // context.commit('retrieveLocations', response.data)
+
           resolve(response);
         })["catch"](function (errors) {
           return reject(errors.response);
@@ -51033,10 +51568,31 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
         });
       });
     },
+    updateTender: function updateTender(context, data) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+      return new Promise(function (resolve, reject) {
+        axios.patch("/api".concat(data.path, "/update"), data).then(function (response) {
+          context.commit('retrieveTender', response.data);
+          resolve(response);
+        })["catch"](function (errors) {
+          return reject(errors.response.data.errors);
+        });
+      });
+    },
     storeLocation: function storeLocation(context, data) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
         axios.post('/api/locations/store', data).then(function (response) {
+          resolve(response);
+        })["catch"](function (errors) {
+          return reject(errors.response.data.errors);
+        });
+      });
+    },
+    updateLocation: function updateLocation(context, data) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+      return new Promise(function (resolve, reject) {
+        axios.patch('/api/locations/' + data.location_id + '/update', data.form).then(function (response) {
           resolve(response);
         })["catch"](function (errors) {
           return reject(errors.response.data.errors);
@@ -53574,6 +54130,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Tenders_vue_vue_type_template_id_ecb0cc40___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Tenders_vue_vue_type_template_id_ecb0cc40___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/TendersDashboard.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/views/tenders/TendersDashboard.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TendersDashboard_vue_vue_type_template_id_380c2cc4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TendersDashboard.vue?vue&type=template&id=380c2cc4& */ "./resources/js/views/tenders/TendersDashboard.vue?vue&type=template&id=380c2cc4&");
+/* harmony import */ var _TendersDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TendersDashboard.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/TendersDashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TendersDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TendersDashboard_vue_vue_type_template_id_380c2cc4___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TendersDashboard_vue_vue_type_template_id_380c2cc4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/TendersDashboard.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/TendersDashboard.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/views/tenders/TendersDashboard.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TendersDashboard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/TendersDashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/TendersDashboard.vue?vue&type=template&id=380c2cc4&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/views/tenders/TendersDashboard.vue?vue&type=template&id=380c2cc4& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersDashboard_vue_vue_type_template_id_380c2cc4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TendersDashboard.vue?vue&type=template&id=380c2cc4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/TendersDashboard.vue?vue&type=template&id=380c2cc4&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersDashboard_vue_vue_type_template_id_380c2cc4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersDashboard_vue_vue_type_template_id_380c2cc4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

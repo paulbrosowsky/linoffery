@@ -1,12 +1,13 @@
 <template>
     <div class="relative">
-        <form @submit.prevent="storeLocation"> 
+        <form @submit.prevent="submit"> 
             <div class="w-full mb-5 ">                
 
                 <div class="relative flex items-center mb-2">                    
                     <i class="absolute icon ion-md-pin text-xl text-gray-500 px-3"></i>   
                     <input 
-                        class="input pl-10"                            
+                        class="input pl-10" 
+                        v-model="form.address"                           
                         :id="name"
                         type="text" 
                         required
@@ -15,7 +16,13 @@
                     >
                 </div> 
                 
-                <date-range @inputFrom="updateEarliestDate" @inputTo="updateLatestDate" :errors="errors"></date-range> 
+                <date-range 
+                    :from="form.earliest_date"
+                    :to="form.latest_date"
+                    @inputFrom="updateEarliestDate" 
+                    @inputTo="updateLatestDate" 
+                    :errors="errors"
+                ></date-range> 
                 
                 <checkbox 
                     :value="form.loading" 
@@ -55,20 +62,20 @@
             DateRange
         },
 
-        props:['name'],
+        props:['name', 'value'],
 
         data() {
             return {
                 form: {   
                     tender_id: this.$store.getters.tenderId,                 
                     type: this.name,
-                    address: null,
-                    earliest_date: null,
-                    latest_date: null,
-                    loading: false,
-                    latency: null,
-                    lat: null,
-                    lng: null
+                    address:null, 
+                    earliest_date:null,
+                    latest_date:null,
+                    loading:null,
+                    latency:null,
+                    lat:null, 
+                    lng:null, 
                 },
 
                 errors: [],
@@ -78,6 +85,10 @@
 
         methods: {
 
+            submit(){
+                this.value ? this.updateLocation() : this.storeLocation()
+            },
+
             storeLocation() {
                 this.loading = true
 
@@ -86,7 +97,31 @@
                     .then(() => {                       
                         setTimeout(() => {  
                             flash(this.$i18n.t('tender.store_location_message'))
-                            this.$store.dispatch('fetchTender', `/api${this.$route.path}`)                          
+                            this.$store.dispatch('fetchTender', `/api${this.$route.path}`) 
+                            this.$emit('close')                           
+                            this.loading = false
+                        }, 2000);
+
+                    })
+                    .catch(errors =>{
+                        this.loading = false
+                        this.errors = errors
+                    })
+            },
+
+            updateLocation() {
+                this.loading = true
+
+                this.$store
+                    .dispatch('updateLocation', {
+                        location_id: this.value.id, 
+                        form: this.form
+                    })
+                    .then(() => {                       
+                        setTimeout(() => {  
+                            flash(this.$i18n.t('tender.store_location_message'))
+                            this.$store.dispatch('fetchTender', `/api${this.$route.path}`)  
+                            this.$emit('close')                       
                             this.loading = false
                         }, 2000);
 
@@ -115,17 +150,31 @@
             updateLatestDate(value){
                 this.form.latest_date = value
                 this.errors = []
-            },           
+            },  
+            
+            setData(){
+                if(this.value){
+                    this.form.address= this.value.address,
+                    this.form.earliest_date= this.value.earliest_date,
+                    this.form.latest_date= this.value.latest_date,
+                    this.form.loading= this.value.loading,
+                    this.form.latency= this.value.latency,
+                    this.form.lat= this.value.lat,
+                    this.form.lng= this.value.lng
+                }
+            }
 
         },
 
-        mounted(){
+        created(){
             setTimeout(() => {                
                 Event.$emit('fetchAddress', document.getElementById('pickup'))   
                 Event.$emit('fetchAddress', document.getElementById('delivery')) 
             }, 500);  
             
             Event.$on('setAddress', (value) => this.setAddress(value))
+
+            this.setData()
         }
     }
 </script>

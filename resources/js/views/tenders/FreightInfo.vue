@@ -6,15 +6,18 @@
 
             <div>
                 <p class="text-lg font-bold leading-none" v-text="freight.title"></p>
-                <p class="text-sm py-2" v-text="freight.description"></p>
+                <p v-show="freight.description" class="text-sm py-2" v-text="freight.description"></p>
                 <p>
                     <span class="text-gray-500 text-sm">{{$t('tender.transport_type')+": "}}</span>
                     <span v-text="freight.pallet"></span>
                 </p>
-                <span class="text-gray-500 text-sm">{{$t('tender.dimentions')+": "}} </span>
-                <span v-text="freight.width"></span>
-                <span v-text="'x '+ freight.height"></span>
-                <span v-text="'x '+ freight.depth"></span>
+                <p v-show="freight.width && freight.height && freight.depth">
+                    <span class="text-gray-500 text-sm">{{$t('tender.dimentions')+": "}} </span>
+                    <span v-text="freight.width"></span>
+                    <span v-text="'x '+ freight.height"></span>
+                    <span v-text="'x '+ freight.depth"></span>
+                </p>
+                
                 <p>
                     <span class="text-gray-500 text-sm">{{$t('tender.weight')+": "}} </span>
                     <span v-text="freight.weight + 'kg'"></span>

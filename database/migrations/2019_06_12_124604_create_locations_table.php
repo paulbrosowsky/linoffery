@@ -23,7 +23,7 @@ class CreateLocationsTable extends Migration
             $table->unsignedSmallInteger('latency')->nullable();
             $table->string('latest_date');
             $table->string('earliest_date');
-            $table->boolean('loading')->default(false);
+            $table->boolean('loading')->nullable();
             $table->timestamps();
         });
     }

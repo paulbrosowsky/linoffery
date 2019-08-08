@@ -1,36 +1,69 @@
 <template>
     <card v-if="tender" :classes="'py-5'">  
 
-        <tender-info :tender="tender"></tender-info> 
+        <p 
+            class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 text-right" 
+            v-if="draft"
+        >
+            <i class="icon ion-md-create mr-2"></i>  
+            <span>Entwurf</span> 
+        </p>
 
-        <div class="block bg-gray-100 py-5 px-5 md:flex">
+        <tender-info 
+            :tender="tender"
+            v-if="!editTender"
+            @edit="editTender = !editTender"
+        ></tender-info> 
+        
+        <div class="px-5 py-5" v-if="editTender && draft">
+            <tender-form :tender="tender" :edit="true" @cancel="editTender = false"></tender-form>
+        </div>
+        
+
+        <div class="block bg-gray-100 py-5 px-5 md:flex md:px-8">
             
             <div class="w-full pb-5 md:w-1/2 md:pb-0 md:mr-2" >                 
                 <div class="flex items-center mb-2">
                     <p class="uppercase text-sm text-gray-500">{{$t('tender.pickup_details')}}</p>
                     <button 
                         class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
+                        @click="editPickup = !editPickup"
+                        v-if="draft"
                     >
                         <i class="icon ion-md-create"></i>  
                     </button>
                 </div>  
 
-                <location-form :name="'pickup'" v-if="!pickup"></location-form>              
+                <location-form 
+                    :value="pickup" 
+                    :name="'pickup'" 
+                    v-if="!pickup || editPickup && draft "
+                    @close="editPickup = false"
+                ></location-form>              
 
-                <location-info :location="pickup" v-if="pickup"></location-info> 
+                <location-info :location="pickup" v-if="pickup && !editPickup"></location-info> 
             </div>
 
             <div class="w-full md:w-1/2 md:ml-2" > 
                 <div class="flex items-center mb-2">
                     <p class="uppercase text-sm text-gray-500">{{$t('tender.delivery_details')}}</p>
-                    <button class="py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none">
+                    <button 
+                        class="py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
+                        @click="editDelivery = !editDelivery"
+                        v-if="draft"
+                    >
                         <i class="icon ion-md-create"></i>  
                     </button>
                 </div>   
 
-                <location-form :name="'delivery'" v-if="!delivery"></location-form>   
+                <location-form 
+                    :value="delivery" 
+                    :name="'delivery'" 
+                    v-if="!delivery || editDelivery && draft"
+                    @close="editDelivery = false"
+                ></location-form>   
 
-                <location-info :location="delivery" v-if="delivery"></location-info>                                            
+                <location-info :location="delivery" v-if="delivery && !editDelivery"></location-info>                                            
             </div>
         </div>
         
@@ -38,14 +71,22 @@
         <div class="px-5 py-5 md:px-10">
             <div class="flex items-center mb-2">
                 <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>
-                <button class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none">
+                <button 
+                    class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
+                    @click="editFreights = !editFreights"
+                    v-if="draft"
+                >
                     <i class="icon ion-md-create"></i>  
                 </button>
             </div>  
             
-            <freights-form v-if="!hasFreights"></freights-form>
+            <freights-form 
+                :values="tender.freights" 
+                v-if="!hasFreights || editFreights && draft"
+                @close="editFreights = false"
+            ></freights-form>
 
-            <freight-info :freights="tender.freights" v-if="hasFreights"></freight-info>            
+            <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
         </div>
 
         <div class="flex justify-end py-5 px-5 md:px-10">
@@ -66,6 +107,7 @@
     import FreightsForm from '../tenders/FreightsForm'
     import LocationForm from '../tenders/LocationForm'
     import LocationInfo from '../tenders/LocationInfo'
+    import TenderForm from '../tenders/TenderForm'
     import TenderInfo from '../tenders/TenderInfo'
 
     export default {
@@ -75,8 +117,18 @@
            FreightsForm,
            LocationForm,
            LocationInfo,
+           TenderForm,
            TenderInfo
-       },      
+       },   
+       
+       data(){
+           return{
+               editTender: false,
+               editPickup: false,
+               editDelivery: false,
+               editFreights: false,
+           }
+       },
        
 
         computed:{
@@ -94,8 +146,11 @@
 
             pickup(){
                 return this.tender.locations.find(location => location.type === 'pickup')                
-            },
+            },   
             
+            draft(){
+                return !this.tender.published_at
+            }
             
         },
 
@@ -105,6 +160,7 @@
                     .dispatch('fetchTender', `/api${this.$route.path}`) 
                     .then(response => {
                         Event.$emit('updateMarkers', response.data.locations)
+                        Event.$emit('zoom-map')
                     })               
             },           
             

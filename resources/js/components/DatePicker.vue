@@ -23,7 +23,7 @@
         },
 
         props:{
-            value: Date, 
+            value: '', 
             placeholder: {default: 'Pick the Date'}, 
             right:{ default:false},
             highlighted: Object,

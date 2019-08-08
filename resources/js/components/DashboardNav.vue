@@ -4,7 +4,8 @@
         <router-link 
             class="text-gray-400 py-3 px-5 hover:text-teal-500"  
             active-class="text-teal-500" 
-            :to="{name: 'dashboard'}"          
+            :to="{name: 'dashboard'}"   
+            exact       
         >
             <i class="icon ion-md-home text-2xl"></i> 
         </router-link>
@@ -12,12 +13,17 @@
         <router-link 
             class="text-gray-400 py-3 px-5 hover:text-teal-500" 
             active-class="text-teal-500" 
-            :to="{name: 'tenders'}"
+            :to="{name: 'dashboard_tenders'}"
+           
         >
             <i class="icon ion-md-cube text-2xl"></i> 
         </router-link>
 
-        <router-link class="text-gray-400 py-3 px-5 hover:text-teal-500" active-class="text-teal-500" to="/messages">
+        <router-link 
+            class="text-gray-400 py-3 px-5 hover:text-teal-500" 
+            active-class="text-teal-500" 
+            to="/messages"            
+        >
             <i class="icon ion-md-mail text-2xl "></i> 
         </router-link>
 

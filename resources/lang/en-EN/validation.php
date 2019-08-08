@@ -146,19 +146,22 @@ return [
     */
 
     'attributes' => [
-        'vat'               => 'VAT-Number',
-        'company_name'      => 'Company name',
-        'old_password'      => 'old password',
-        'new_password'      => 'new password',
-        'image'             => 'image',
-        'postcode'          => 'postcode',
-        'category_id'       => 'category',
-        'max_price'         => 'max. price',
-        'valid_date'        => 'date',
-        'earliest_date'     => 'earliest date',
-        'latest_date'       => 'latest date',  
-        'pallet'            => 'transport type',
-        'weight'            => 'weight'          
+        'vat'                   => 'VAT-Number',
+        'company_name'          => 'Company name',
+        'old_password'          => 'old password',
+        'new_password'          => 'new password',
+        'image'                 => 'image',
+        'postcode'              => 'postcode',
+        'category_id'           => 'category',
+        'max_price'             => 'max. price',
+        'valid_date'            => 'date',
+        'earliest_date'         => 'earliest date',
+        'latest_date'           => 'latest date',  
+        'pallet'                => 'transport type',
+        'weight'                => 'weight',
+        'freights.*.weight'     => 'weight',
+        'freights.*.pallet'     => 'transport type',
+        'freights.*.title'      => 'title',          
     ],
 
 ];

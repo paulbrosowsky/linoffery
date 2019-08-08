@@ -9,6 +9,15 @@
                 <span>{{$t('utilities.delete')}}</span> 
             </button>  
         </div>
+
+        <div class="bg-red-100 px-5 py-2 rounded-lg mb-2 text-sm" v-show="selectedErrors.length > 0">
+            <p 
+                class="text-red-500" 
+                v-for="(error, index) in selectedErrors" 
+                :key="index" 
+                v-text="error"
+            ></p>
+        </div>
             
         <div 
             class="block"   
@@ -16,17 +25,14 @@
             v-resize="oneColumDesign"
             :class="cardSmall ? '': 'md:flex'"
         >
-            <div class="w-full" :class="cardSmall ? '': 'w-1/2 mr-1'">
-                <p class="text-sm text-red-500 mb-2" v-if="errors.title" v-text="errors.title[0]"></p>
+            <div class="w-full" :class="cardSmall ? '': 'w-1/2 mr-1'">                
                 <div class="relative flex items-center mb-2">
                     <input 
-                        class="input"
-                        :class="errors.title ? 'border-red-300' : ''" 
+                        class="input"                        
                         type="text" 
                         :placeholder="$t('utilities.title')" 
                         required
-                        v-model="form.title" 
-                        @keyup="errors= []"
+                        v-model="form.title"
                         @blur="setFreightData"
                     >
                 </div>
@@ -38,8 +44,7 @@
                     @changed="updateDescription"
                 ></textarea-input>
             </div>
-
-            <p class="text-sm text-red-500 mb-2" v-if="errors.pallet" v-text="errors.pallet[0]"></p>
+            
             <div class="w-full" :class="cardSmall ? '': 'w-1/2 ml-1'">
                 <select-input 
                     class="mb-2" 
@@ -51,11 +56,9 @@
                 <div class="flex mb-2">
                     <div class="relative flex items-center mr-2">                        
                         <input
-                            class="input" 
-                            :class="errors.width ? 'border-red-300' : ''" 
+                            class="input"
                             type="number"
-                            :placeholder="$t('tender.width_cm')"                            
-                            @keyup="errors= []"
+                            :placeholder="$t('tender.width_cm')"  
                             @blur="setFreightData"
                             v-model="form.width"
                         >
@@ -64,11 +67,9 @@
                                             
                     <div class="relative flex items-center mr-2">                        
                         <input
-                            class="input" 
-                            :class="errors.height ? 'border-red-300' : ''" 
+                            class="input"                             
                             type="number"
-                            :placeholder="$t('tender.height_cm')"                            
-                            @keyup="errors= []"
+                            :placeholder="$t('tender.height_cm')" 
                             @blur="setFreightData"
                             v-model="form.height"
                         >
@@ -77,25 +78,20 @@
                     <div class="relative flex items-center">                        
                         <input
                             class="input" 
-                            :class="errors.depth? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="$t('tender.length_cm')"                            
-                            @keyup="errors= []"
+                            :placeholder="$t('tender.length_cm')" 
                             @blur="setFreightData"
                             v-model="form.depth"
                         >
                     </div>                   
 
                 </div>
-
-                <p class="text-sm text-red-500 mb-2" v-if="errors.weight" v-text="errors.weight[0]"></p>
+                
                 <div class="relative flex items-center mb-1">                        
                         <input
                             class="input" 
-                            :class="errors.weight ? 'border-red-300' : ''" 
                             type="number"
-                            :placeholder="$t('tender.weight_kg')"                            
-                            @keyup="errors= []"
+                            :placeholder="$t('tender.weight_kg')"  
                             @blur="setFreightData"
                             v-model="form.weight"
                         >
@@ -111,13 +107,13 @@
 <script>
     export default {    
         
-        props:['freight', 'error'],
+        props:['freight', 'errors'],
 
         data(){
             return{
                 form:{
-                    tender_id: this.$store.getters.tenderId,
-                    id: this.freight.id,
+                    tender_id: this.freight.tender_id,
+                    index: this.freight.index,
                     title: this.freight.title,
                     description: this.freight.description,
                     pallet: this.freight.pallet,
@@ -134,8 +130,22 @@
                     {name: 'Sonder'}
                 ],
                 
-                cardSmall:false,
-                errors: this.error
+                cardSmall:false  ,
+            }
+        }, 
+        
+        computed:{
+            selectedErrors(){
+                let errors = []
+
+                for (let key in this.errors) {
+                   let string =  `${this.form.index} = ${key.match(/\d/)}`
+                   if(this.form.index == key.match(/\d/)){
+                       errors.push(this.errors[key][0])
+                   }
+                }
+
+                return errors;                
             }
         },
 
@@ -156,10 +166,8 @@
             updateDescription(value){
                 this.form.description= value
                 this.setFreightData()
-            }
-            
-        }
-        
+            }, 
+        },
         
     }
 </script>

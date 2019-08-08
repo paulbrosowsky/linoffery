@@ -30,21 +30,22 @@
                     class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
                     to="/"                
                 >
-                <p @click="hide">Home</p>
+                 <p @click="hide">Home</p>
                 </router-link>
 
                 <router-link 
                     class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
                     to="/"
                 >
-                    {{ $t('content.about') }}
+                    <p @click="hide">{{ $t('content.about') }}</p>
+                    
                 </router-link>
 
                 <router-link 
                     class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
                     to="/"
                 >
-                {{ $t('content.services') }}
+                    <p @click="hide">{{ $t('content.services') }}</p>
                 </router-link>
 
             </div>
@@ -72,7 +73,8 @@
                 class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
                 :to="{name: 'tenders'}"
             >
-               {{ $t('content.find_fright') }}
+              
+                <p @click="hide">{{ $t('content.find_fright') }}</p>   
             </router-link>
 
             <router-link 

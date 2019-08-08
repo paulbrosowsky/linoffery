@@ -2,13 +2,15 @@
     <div>
         <p class="text-sm text-red-500 mb-2" v-if="errors.earliest_date" v-text="errors.earliest_date[0]"></p>
         <date-picker  
-            class="mb-2"           
+            class="mb-2"    
+            :value="from"       
             :placeholder="$t('tender.earliest_date')"             
             :highlighted="range"
             @changed="updateFrom"
         ></date-picker>
         <p class="text-sm text-red-500 mb-2" v-if="errors.latest_date" v-text="errors.latest_date[0]"></p>
-        <date-picker            
+        <date-picker     
+            :value="to"        
             :placeholder="$t('tender.latest_date')"             
             :disabled-dates="range.from"
             :highlighted="range"
@@ -23,7 +25,7 @@
             Datepicker
         },
 
-        props:['errors'],
+        props:['errors', 'from', 'to'],
 
         data(){
             return{

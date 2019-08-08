@@ -11,6 +11,7 @@ import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
 import Tender from './views/tenders/Tender'
+import TendersDashboard from './views/tenders/TendersDashboard'
 import CreateTender from './views/tenders/CreateTender'
 import Tenders from './views/tenders/Tenders'
 import Welcome from './views/Welcome'
@@ -39,6 +40,16 @@ let routes = [
         name:'dashboard',
         path:'/dashboard',
         component: Dashboard,
+        meta:{
+            layout: 'dashboard',          
+            requiresAuth: true
+        }
+    },
+
+    {
+        name:'dashboard_tenders',
+        path:'/dashboard/tenders',
+        component: TendersDashboard,
         meta:{
             layout: 'dashboard',          
             requiresAuth: true

@@ -16,7 +16,7 @@
 
         props:['placeholder', 'height', 'value', 'rows', 'classes'],
 
-        data(){
+        data(){         
             return{
                 text: this.value,                                
             }

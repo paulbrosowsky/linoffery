@@ -71,11 +71,13 @@ export let store = new Vuex.Store({
         },
 
         retrieveLocations(state, tenders){ 
-            state.locations = []           
-            tenders.data.map(tender => {                
-                tender.locations.forEach( location => {
-                    state.locations.push(location)
-                });                
+            state.locations = []                       
+            tenders.data.map(tender => {  
+                if(tender.locations.length > 0){
+                    tender.locations.forEach( location => {
+                        state.locations.push(location)
+                    }); 
+                }              
             })
         },      
         
@@ -271,6 +273,8 @@ export let store = new Vuex.Store({
             })           
         },
 
+
+        // Tenders endpoints START
         fetchTenders(context, route = null){
             return new Promise((resolve, reject)=>{
                 axios
@@ -278,6 +282,22 @@ export let store = new Vuex.Store({
                     .then(response =>{                       
                         context.commit('retrieveTenders', response.data)
                         context.commit('retrieveLocations', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        // Fetch all tenders created by autenticated user
+        fetchUsersTenders(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/dashboard/tenders')
+                    .then(response =>{                       
+                        context.commit('retrieveTenders', response.data)
+                        // context.commit('retrieveLocations', response.data)
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response))
@@ -294,7 +314,7 @@ export let store = new Vuex.Store({
                     })
                     .catch(errors => reject(errors.response))
             })           
-        },
+        },      
 
         storeTender(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
@@ -310,12 +330,41 @@ export let store = new Vuex.Store({
             })           
         },
 
+        updateTender(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch(`/api${data.path}/update`, data)
+                    .then(response =>{                       
+                        context.commit('retrieveTender', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+
+
+
         storeLocation(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
             return new Promise((resolve, reject)=>{
                 axios
                     .post('/api/locations/store', data)
+                    .then(response =>{
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+
+        updateLocation(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch('/api/locations/'+data.location_id+'/update', data.form)
                     .then(response =>{
                         resolve(response)
                     })
@@ -335,6 +384,7 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response.data.errors))
             })           
         },
+        // Tenders endpoints END
 
             
       

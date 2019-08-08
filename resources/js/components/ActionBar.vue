@@ -6,6 +6,7 @@
                 <span>{{$t('tender.new_tender')}}</span> 
             </button>
         <!-- </router-link> -->
+            <slot></slot>
     </div>
     
 </template>

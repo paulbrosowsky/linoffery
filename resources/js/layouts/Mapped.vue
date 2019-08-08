@@ -6,7 +6,7 @@
             <div class="w-full mx-auto">
                 <div class="flex px-3 py-5 md:px-12">
                     <div class="hidden w-1/2 lg:block"></div>
-                    <div class="w-full lg:w-1/2 lg:ml-20">
+                    <div class="w-full lg:w-1/2 lg:pl-10">
 
                         <slot></slot>
 

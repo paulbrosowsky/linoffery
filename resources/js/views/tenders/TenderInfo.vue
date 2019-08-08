@@ -70,7 +70,20 @@
 
         <div class="px-5 my-5 md:px-10">
             
-            <p class="text-2xl font-bold leading-none" v-text="tender.title"></p>
+            <div>
+                <span>
+                    <button 
+                        class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
+                        @click="$emit('edit')"
+                        v-if="!tender.published_at"
+                    >
+                        <i class="icon ion-md-create"></i>  
+                    </button>
+                </span>
+                
+                <span class="text-2xl font-bold leading-none" v-text="tender.title"></span>
+            </div>
+            
 
             <div class="py-3">
                 <span 

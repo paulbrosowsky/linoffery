@@ -20,7 +20,10 @@ class CreateFreightTest extends PassportTestCase
         $this->withExceptionHandling();
 
         $this->user = create('App\User');
-        $this->tender = create('App\Tender');   
+        $this->tender = create('App\Tender', [
+            'user_id' => $this->user->id,
+            'published_at' => NULL
+        ]);   
     }
     
     /** @test */
@@ -33,7 +36,7 @@ class CreateFreightTest extends PassportTestCase
     /** @test */
     function authenticated_users_may_create_freights()
     {
-        $this->createFreight();    
+        $this->createFreight();
         
         tap(Freight::first(), function($freight){
             $this->assertEquals('New Freight', $freight->title);  
@@ -66,10 +69,7 @@ class CreateFreightTest extends PassportTestCase
     {
         $response = $this->createFreight([
             'tender_id' => '2' 
-        ])->assertStatus(422); 
-        
-        $errors = $response->json();
-        $this->assertArrayHasKey('tender_id', $errors['errors']);         
+        ])->assertStatus(403);               
     }  
     
 
@@ -80,8 +80,8 @@ class CreateFreightTest extends PassportTestCase
             'title' => '' 
         ])->assertStatus(422); 
         
-        $errors = $response->json();
-        $this->assertArrayHasKey('title', $errors['errors']);         
+        $errors = $response->json();        
+        $this->assertArrayHasKey('freights.0.title', $errors['errors']);         
     } 
 
      /** @test */
@@ -92,7 +92,7 @@ class CreateFreightTest extends PassportTestCase
         ])->assertStatus(422); 
         
         $errors = $response->json();
-        $this->assertArrayHasKey('pallet', $errors['errors']);         
+        $this->assertArrayHasKey('freights.0.pallet', $errors['errors']);         
     }      
 
       /** @test */
@@ -103,15 +103,14 @@ class CreateFreightTest extends PassportTestCase
         ])->assertStatus(422); 
         
         $errors = $response->json();
-        $this->assertArrayHasKey('weight', $errors['errors']);         
+        $this->assertArrayHasKey('freights.0.weight', $errors['errors']);         
     }    
     
     public function createFreight($overrides = [])
     {
         $this->signIn($this->user);
 
-        return $this->postJson('api/freights/store', array_merge([
-
+        $freights = make('App\Freight', array_merge([
             'tender_id' => $this->tender->id,
             'title' => 'New Freight',
             'description' => 'New Freight Description',
@@ -119,11 +118,10 @@ class CreateFreightTest extends PassportTestCase
             'weight' => 100,
             'width' => 100,
             'height' => 100,
-            'depth' => 100,           
+            'depth' => 100, 
+        ], $overrides), 2);
 
-        ], $overrides ));
-        
+        return $this->postJson('api/freights/store', ['freights' => $freights ]);        
     }
-
     
 }

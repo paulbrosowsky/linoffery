@@ -44,8 +44,7 @@
                     Event.$on('zoom-map',()=>{
                         setTimeout(() => {
                             this.zoomToMarkers()
-                        }, 500);
-                        
+                        }, 500);                        
                     })                    
 
                     Event.$on('updateMarkers',value => {
@@ -136,7 +135,7 @@
             },
             
             fetchAddress(input){  
-                this.resetAllMarkers()              
+                // this.resetAllMarkers()              
                 let addressAutocomplete = new google.maps.places.Autocomplete(input) 
 
                 addressAutocomplete.addListener('place_changed', ()=>{

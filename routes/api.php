@@ -40,6 +40,8 @@ Route::group([
     'middleware' => 'auth:api'
 ], function(){
 
+    Route::get('/dashboard/tenders', 'TendersDashboardController@index');
+
     Route::post('/settings/account/avatar', 'AvatarsController@store');
     Route::post('/settings/company/logo', 'CompanysLogosController@store');
 
@@ -54,6 +56,10 @@ Route::group([
         Route::post('/tenders/store', 'TendersController@store');
         Route::post('/locations/store', 'LocationsController@store');
         Route::post('/freights/store', 'FreightsController@store');
+
+        Route::patch('/tenders/{tender}/update', 'TendersController@update');
+        Route::patch('/locations/{location}/update', 'LocationsController@update');
+        Route::patch('/freights/{freight}/update', 'FreightsController@update');
     }); 
 });
 

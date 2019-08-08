@@ -3,9 +3,9 @@
         <freight-form 
             class="mb-5"
             v-for="(freight, index) in freights" 
-            :key="freight.id"
+            :key="freight.index"
             :freight="freight"
-            :error="errors"
+            :errors="errors"
             @remove="removeFreight(index)"
             @changed="(data)=>{addData(data, index)}"
         ></freight-form>        
@@ -31,10 +31,12 @@
             FreightForm
         },
 
+        props:['values'],
+
         data(){
             return{
                 freights:[], 
-                id: 1,
+                index: 0,
                 loading: false,
                 errors:[]           
             }
@@ -43,15 +45,14 @@
         methods:{
             
             storeFreights(){
-                this.loading = true
-
-                this.freights.map(freight => {
-                    return this.$store
-                        .dispatch('storeFreight', freight)
+                this.loading = true                
+                    this.$store
+                        .dispatch('storeFreight', {'freights': this.freights})
                         .then(()=>{
                             setTimeout(() => {  
                                 flash(this.$i18n.t('tender.store_freight_message'))
-                                this.$store.dispatch('fetchTender', `/api${this.$route.path}`)                          
+                                this.$store.dispatch('fetchTender', `/api${this.$route.path}`)
+                                this.$emit('close')                          
                                 this.loading = false
                             }, 2000);
                         })
@@ -59,12 +60,36 @@
                             this.loading = false
                             this.errors = errors
                         })
-                })
+                
             },
 
-            addFreight(){                
-                this.freights.push({id: this.id})
-                this.id++                            
+            setFreights(){  
+                           
+                if(this.values.length > 0){
+                    this.values.forEach(value => {
+                        value.index = this.index
+                       this.freights.push(value)
+                       this.index++   
+                    });
+                }else{
+                    this.addFreight()
+                }                      
+            },
+
+            addFreight(){
+                let freight = {
+                    tender_id: this.$store.getters.tenderId,
+                    index: this.index,
+                    title: null,
+                    description: null,
+                    pallet: null,
+                    width: null,
+                    height: null,
+                    depth: null,
+                    weight: null
+                }
+                this.freights.push(freight)
+                this.index++  
             },
 
             removeFreight(index){
@@ -73,12 +98,12 @@
 
             addData(data, index){
                 this.freights[index] = data            
-            }
+            },            
         },
 
-        mounted(){
+        created(){
             setTimeout(() => {
-                this.freights.length === 0 ? this.addFreight() :''
+                this.setFreights()            
             }, 500);
             
         }       
