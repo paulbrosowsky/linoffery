@@ -2,6 +2,7 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
+import CreateTender from './views/tenders/CreateTender'
 import Dashboard from './views/Dashboard'
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
@@ -12,8 +13,8 @@ import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
 import Tender from './views/tenders/Tender'
 import TendersDashboard from './views/tenders/TendersDashboard'
-import CreateTender from './views/tenders/CreateTender'
 import Tenders from './views/tenders/Tenders'
+import Terms from './views/Terms'
 import Welcome from './views/Welcome'
 
 import {store} from './store'
@@ -34,6 +35,12 @@ let routes = [
         name:'impressum',
         path:'/impressum',
         component: Impressum
+    },
+
+    {
+        name:'terms',
+        path:'/terms',
+        component: Terms
     },
     
     {

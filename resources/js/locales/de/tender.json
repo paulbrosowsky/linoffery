@@ -36,5 +36,8 @@
     "store_location_message": "Die Standortdetails wurden gespeichert." ,
     "more_freight_info": "Erzählen Sie mehr über die Fracht ...",
     "add_freight": "Fracht hinzu",
-    "store_freight_message": "Die Frachtdetails wurden gespeichert."
+    "store_freight_message": "Die Frachtdetails wurden gespeichert.",
+    "publish_info": "Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.",
+    "publish_info_terms": "Mehr Informationen erhalten Sie aus unseren AGB.",
+    "published_message": "Ihre Auschreibung wurde veröffentlicht."
 }

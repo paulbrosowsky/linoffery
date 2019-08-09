@@ -12,5 +12,7 @@
     "save": "Speichern",
     "delete": "Löschen",  
     "save_draft": "Entwurf speichern",
-    "address": "Adresse"
+    "address": "Adresse",
+    "publish": "Veröffentlichen",
+    "draft": "Entwurf"
 }

@@ -58,6 +58,7 @@ Route::group([
         Route::post('/freights/store', 'FreightsController@store');
 
         Route::patch('/tenders/{tender}/update', 'TendersController@update');
+        Route::patch('/tenders/{tender}/publish', 'TendersController@publish');
         Route::patch('/locations/{location}/update', 'LocationsController@update');
         Route::patch('/freights/{freight}/update', 'FreightsController@update');
     }); 

@@ -6,7 +6,7 @@
             v-if="draft"
         >
             <i class="icon ion-md-create mr-2"></i>  
-            <span>Entwurf</span> 
+            <span>{{$t('utilities.draft')}}</span> 
         </p>
 
         <tender-info 
@@ -89,15 +89,30 @@
             <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
         </div>
 
-        <div class="flex justify-end py-5 px-5 md:px-10">
+        <div class="flex justify-end py-5 px-5 md:px-10" v-if="!draft" >            
             <button class="btn btn-outlined mr-2">
                 <i class="icon ion-md-bookmark text-grey-500 mr-2"></i>   
                 <span>{{$t('utilities.bookmark')}} </span> 
             </button>
             <button class="btn btn-teal">
                 {{$t('tender.make_offer')}}
-            </button>            
-        </div>        
+            </button>                                      
+        </div>  
+
+        <div class="py-3 px-5 md:px-10" v-if="draft && dataComplete">
+                <div class="flex bg-yellow-200 p-5 rounded-lg mb-3">
+                    <i class="icon ion-md-warning text-2xl text-yellow-500 mr-5 mt-1"></i>  
+                    <div class="text-sm">
+                        <span>{{$t('tender.publish_info')}}</span>
+                        <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
+                    </div>                    
+                </div>
+               <div class="flex justify-end">
+                    <button class="btn btn-teal" @click="publishTender">                     
+                        <span>{{$t('utilities.publish')}} </span> 
+                    </button>
+               </div>
+            </div>             
     
     </card>
     
@@ -150,11 +165,27 @@
             
             draft(){
                 return !this.tender.published_at
+            },
+
+            dataComplete(){
+                return this.hasFreights && this.delivery && this.pickup
             }
             
         },
 
         methods:{
+
+            publishTender(){
+                if(this.dataComplete) {
+                    this.$store
+                        .dispatch('publishTender', `/api${this.$route.path}/publish`)
+                        .then(()=>{
+                            flash( this.$i18n.t('tender.published_message'))
+                        })
+                        .catch(errors => console.log(errors))
+                }               
+            },
+
             fetchData(){
                 this.$store
                     .dispatch('fetchTender', `/api${this.$route.path}`) 

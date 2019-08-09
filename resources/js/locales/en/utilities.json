@@ -12,5 +12,7 @@
     "save": "Save",
     "delete": "Delete",    
     "save_draft": "Save in drafts",
-    "address": "Address"
+    "address": "Address",
+    "publish": "Publish",
+    "draft": "Draft"
 }

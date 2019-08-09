@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Tender;
+use App\Location;
+use Illuminate\Queue\Console\RetryCommand;
 
 class TendersController extends Controller
 {
@@ -52,7 +54,11 @@ class TendersController extends Controller
      * @return Tender
      */
     public function show(Tender $tender)
-    {
+    {  
+        if($tender->published_at === NULL) {
+            $this->authorize('show', $tender);
+        } 
+
         return $tender;
     }
 
@@ -113,6 +119,26 @@ class TendersController extends Controller
             'max_price' => $request->max_price,
             'valid_date' => $request->valid_date            
         ]);
+
+        return $tender;
+    }   
+
+    /**
+     *  Publish a given Tender
+     * 
+     * @param Tender $id
+     * @return Tender
+     */
+    public function publish(Tender $tender)
+    {
+        $this->authorize('update', $tender); 
+        
+        if($tender->locations->isEmpty() || $tender->freights->isEmpty())
+        {           
+            return response()->json(['message' => 'Tenders data are not completed.'], 403);
+        } 
+
+        $tender->update(['published_at' => \Carbon\Carbon::now()]);
 
         return $tender;
     }

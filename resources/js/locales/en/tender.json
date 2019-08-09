@@ -36,5 +36,8 @@
     "store_location_message": "Your location details have been saved.",
     "more_freight_info": "Tell more about the freight ...",
     "add_freight": "Add Freight" ,
-    "store_freight_message": "Your freight details have been saved."
+    "store_freight_message": "Your freight details have been saved.",
+    "publish_info": "Please note! After publishing, you will not be able to update your tender.",
+    "publish_info_terms": "More information can be found in our terms of use.",
+    "published_message": "Your tender is now published."
 }

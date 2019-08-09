@@ -42,5 +42,38 @@ class ViewTendersTest extends PassportTestCase
         
         $this->assertCount(1, $response['data']);  
     }
+
+    /** @test */
+    function not_owners_may_not_view_unpublished_tenders()
+    {
+        $this->withExceptionHandling();
+
+        $user = create('App\User');
+        $tender = create('App\Tender', [
+            'user_id' => $user->id,
+            'published_at' => null
+        ]);
+
+        $this->signIn();        
+
+        $this->getJson('api/tenders/'.$tender->id)
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    function only_owners_can_view_unpublished_tenders()
+    { 
+        $user = create('App\User');
+        $tender = create('App\Tender', [
+            'user_id' => $user->id,
+            'published_at' => null
+        ]);
+
+        $this->signIn($user);        
+
+        $response = $this->getJson('api/tenders/'.$tender->id)->json();
+
+        $this->assertContains($tender->title, $response['title']);             
+    }
     
 }

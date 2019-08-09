@@ -344,7 +344,19 @@ export let store = new Vuex.Store({
             })           
         },
 
+        publishTender(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch(path)
+                    .then(response =>{                       
+                        context.commit('retrieveTender', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
 
         storeLocation(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 

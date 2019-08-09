@@ -4110,6 +4110,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Terms.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Terms.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Welcome.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Welcome.vue?vue&type=script&lang=js& ***!
@@ -6110,6 +6126,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -6152,9 +6183,23 @@ __webpack_require__.r(__webpack_exports__);
     },
     draft: function draft() {
       return !this.tender.published_at;
+    },
+    dataComplete: function dataComplete() {
+      return this.hasFreights && this.delivery && this.pickup;
     }
   },
   methods: {
+    publishTender: function publishTender() {
+      var _this = this;
+
+      if (this.dataComplete) {
+        this.$store.dispatch('publishTender', "/api".concat(this.$route.path, "/publish")).then(function () {
+          flash(_this.$i18n.t('tender.published_message'));
+        })["catch"](function (errors) {
+          return console.log(errors);
+        });
+      }
+    },
     fetchData: function fetchData() {
       this.$store.dispatch('fetchTender', "/api".concat(this.$route.path)).then(function (response) {
         Event.$emit('updateMarkers', response.data.locations);
@@ -21192,6 +21237,30 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Terms.vue?vue&type=template&id=19695710&":
+/*!***************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Terms.vue?vue&type=template&id=19695710& ***!
+  \***************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Welcome.vue?vue&type=template&id=1ae8ae93&":
 /*!*****************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Welcome.vue?vue&type=template&id=1ae8ae93& ***!
@@ -24359,7 +24428,7 @@ var render = function() {
                 [
                   _c("i", { staticClass: "icon ion-md-create mr-2" }),
                   _vm._v(" "),
-                  _c("span", [_vm._v("Entwurf")])
+                  _c("span", [_vm._v(_vm._s(_vm.$t("utilities.draft")))])
                 ]
               )
             : _vm._e(),
@@ -24537,23 +24606,81 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "flex justify-end py-5 px-5 md:px-10" }, [
-            _c("button", { staticClass: "btn btn-outlined mr-2" }, [
-              _c("i", {
-                staticClass: "icon ion-md-bookmark text-grey-500 mr-2"
-              }),
-              _vm._v(" "),
-              _c("span", [_vm._v(_vm._s(_vm.$t("utilities.bookmark")) + " ")])
-            ]),
-            _vm._v(" "),
-            _c("button", { staticClass: "btn btn-teal" }, [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.$t("tender.make_offer")) +
-                  "\n        "
+          !_vm.draft
+            ? _c(
+                "div",
+                { staticClass: "flex justify-end py-5 px-5 md:px-10" },
+                [
+                  _c("button", { staticClass: "btn btn-outlined mr-2" }, [
+                    _c("i", {
+                      staticClass: "icon ion-md-bookmark text-grey-500 mr-2"
+                    }),
+                    _vm._v(" "),
+                    _c("span", [
+                      _vm._v(_vm._s(_vm.$t("utilities.bookmark")) + " ")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "btn btn-teal" }, [
+                    _vm._v(
+                      "\n            " +
+                        _vm._s(_vm.$t("tender.make_offer")) +
+                        "\n        "
+                    )
+                  ])
+                ]
               )
-            ])
-          ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.draft && _vm.dataComplete
+            ? _c("div", { staticClass: "py-3 px-5 md:px-10" }, [
+                _c(
+                  "div",
+                  { staticClass: "flex bg-yellow-200 p-5 rounded-lg mb-3" },
+                  [
+                    _c("i", {
+                      staticClass:
+                        "icon ion-md-warning text-2xl text-yellow-500 mr-5 mt-1"
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "text-sm" },
+                      [
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.$t("tender.publish_info")))
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "text-teal-500 hover:text-teal-700",
+                            attrs: { to: "/terms" }
+                          },
+                          [_vm._v(_vm._s(_vm.$t("tender.publish_info_terms")))]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex justify-end" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-teal",
+                      on: { click: _vm.publishTender }
+                    },
+                    [
+                      _c("span", [
+                        _vm._v(_vm._s(_vm.$t("utilities.publish")) + " ")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            : _vm._e()
         ],
         1
       )
@@ -50470,10 +50597,10 @@ module.exports = {"settings":"Einstellungen","account":"Benutzerkonto","company"
 /*!*********************************************!*\
   !*** ./resources/js/locales/de/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, valid_until, m_offer, curr_offer, make_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, default */
+/*! exports provided: offer, offers, valid_until, m_offer, curr_offer, make_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Angebot","offers":"Angebote","valid_until":"gültig bis","m_offer":"mitbieten","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert."};
+module.exports = {"offer":"Angebot","offers":"Angebote","valid_until":"gültig bis","m_offer":"mitbieten","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht."};
 
 /***/ }),
 
@@ -50481,10 +50608,10 @@ module.exports = {"offer":"Angebot","offers":"Angebote","valid_until":"gültig b
 /*!************************************************!*\
   !*** ./resources/js/locales/de/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse"};
+module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf"};
 
 /***/ }),
 
@@ -50525,10 +50652,10 @@ module.exports = {"settings":"settings","account":"Account","company":"Company",
 /*!*********************************************!*\
   !*** ./resources/js/locales/en/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, valid_until, m_offer, curr_offer, make_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, default */
+/*! exports provided: offer, offers, valid_until, m_offer, curr_offer, make_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","valid_until":"valid until","m_offer":"offer","curr_offer":"Curr. Offer","make_offer":"Make offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Delivery details","freight_details":"Freight details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the freight ...","add_freight":"Add Freight","store_freight_message":"Your freight details have been saved."};
+module.exports = {"offer":"Offer","offers":"Offers","valid_until":"valid until","m_offer":"offer","curr_offer":"Curr. Offer","make_offer":"Make offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Delivery details","freight_details":"Freight details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the freight ...","add_freight":"Add Freight","store_freight_message":"Your freight details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published."};
 
 /***/ }),
 
@@ -50536,10 +50663,10 @@ module.exports = {"offer":"Offer","offers":"Offers","valid_until":"valid until",
 /*!************************************************!*\
   !*** ./resources/js/locales/en/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address"};
+module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft"};
 
 /***/ }),
 
@@ -51143,20 +51270,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _views_Dashboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./views/Dashboard */ "./resources/js/views/Dashboard.vue");
-/* harmony import */ var _views_auth_ForgotPassword__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/auth/ForgotPassword */ "./resources/js/views/auth/ForgotPassword.vue");
-/* harmony import */ var _views_Impressum__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/Impressum */ "./resources/js/views/Impressum.vue");
-/* harmony import */ var _views_auth_Login__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/auth/Login */ "./resources/js/views/auth/Login.vue");
-/* harmony import */ var _views_auth_Logout__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/auth/Logout */ "./resources/js/views/auth/Logout.vue");
-/* harmony import */ var _views_auth_Register__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./views/auth/Register */ "./resources/js/views/auth/Register.vue");
-/* harmony import */ var _views_auth_ResetPassword__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./views/auth/ResetPassword */ "./resources/js/views/auth/ResetPassword.vue");
-/* harmony import */ var _views_settings_Settings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./views/settings/Settings */ "./resources/js/views/settings/Settings.vue");
-/* harmony import */ var _views_tenders_Tender__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./views/tenders/Tender */ "./resources/js/views/tenders/Tender.vue");
-/* harmony import */ var _views_tenders_TendersDashboard__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./views/tenders/TendersDashboard */ "./resources/js/views/tenders/TendersDashboard.vue");
-/* harmony import */ var _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./views/tenders/CreateTender */ "./resources/js/views/tenders/CreateTender.vue");
+/* harmony import */ var _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./views/tenders/CreateTender */ "./resources/js/views/tenders/CreateTender.vue");
+/* harmony import */ var _views_Dashboard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/Dashboard */ "./resources/js/views/Dashboard.vue");
+/* harmony import */ var _views_auth_ForgotPassword__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/auth/ForgotPassword */ "./resources/js/views/auth/ForgotPassword.vue");
+/* harmony import */ var _views_Impressum__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/Impressum */ "./resources/js/views/Impressum.vue");
+/* harmony import */ var _views_auth_Login__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/auth/Login */ "./resources/js/views/auth/Login.vue");
+/* harmony import */ var _views_auth_Logout__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./views/auth/Logout */ "./resources/js/views/auth/Logout.vue");
+/* harmony import */ var _views_auth_Register__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./views/auth/Register */ "./resources/js/views/auth/Register.vue");
+/* harmony import */ var _views_auth_ResetPassword__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./views/auth/ResetPassword */ "./resources/js/views/auth/ResetPassword.vue");
+/* harmony import */ var _views_settings_Settings__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./views/settings/Settings */ "./resources/js/views/settings/Settings.vue");
+/* harmony import */ var _views_tenders_Tender__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./views/tenders/Tender */ "./resources/js/views/tenders/Tender.vue");
+/* harmony import */ var _views_tenders_TendersDashboard__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./views/tenders/TendersDashboard */ "./resources/js/views/tenders/TendersDashboard.vue");
 /* harmony import */ var _views_tenders_Tenders__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./views/tenders/Tenders */ "./resources/js/views/tenders/Tenders.vue");
-/* harmony import */ var _views_Welcome__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./views/Welcome */ "./resources/js/views/Welcome.vue");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
+/* harmony import */ var _views_Terms__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./views/Terms */ "./resources/js/views/Terms.vue");
+/* harmony import */ var _views_Welcome__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./views/Welcome */ "./resources/js/views/Welcome.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -51174,21 +51302,26 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 
 
 
+
 var routes = [{
   name: 'home',
   path: '/',
-  component: _views_Welcome__WEBPACK_IMPORTED_MODULE_14__["default"],
+  component: _views_Welcome__WEBPACK_IMPORTED_MODULE_15__["default"],
   meta: {
     requiresVisitor: true
   }
 }, {
   name: 'impressum',
   path: '/impressum',
-  component: _views_Impressum__WEBPACK_IMPORTED_MODULE_4__["default"]
+  component: _views_Impressum__WEBPACK_IMPORTED_MODULE_5__["default"]
+}, {
+  name: 'terms',
+  path: '/terms',
+  component: _views_Terms__WEBPACK_IMPORTED_MODULE_14__["default"]
 }, {
   name: 'dashboard',
   path: '/dashboard',
-  component: _views_Dashboard__WEBPACK_IMPORTED_MODULE_2__["default"],
+  component: _views_Dashboard__WEBPACK_IMPORTED_MODULE_3__["default"],
   meta: {
     layout: 'dashboard',
     requiresAuth: true
@@ -51196,7 +51329,7 @@ var routes = [{
 }, {
   name: 'dashboard_tenders',
   path: '/dashboard/tenders',
-  component: _views_tenders_TendersDashboard__WEBPACK_IMPORTED_MODULE_11__["default"],
+  component: _views_tenders_TendersDashboard__WEBPACK_IMPORTED_MODULE_12__["default"],
   meta: {
     layout: 'dashboard',
     requiresAuth: true
@@ -51204,7 +51337,7 @@ var routes = [{
 }, {
   name: 'settings',
   path: '/settings',
-  component: _views_settings_Settings__WEBPACK_IMPORTED_MODULE_9__["default"],
+  component: _views_settings_Settings__WEBPACK_IMPORTED_MODULE_10__["default"],
   meta: {
     layout: 'dashboard',
     requiresAuth: true
@@ -51212,7 +51345,7 @@ var routes = [{
 }, {
   name: 'register',
   path: '/register',
-  component: _views_auth_Register__WEBPACK_IMPORTED_MODULE_7__["default"],
+  component: _views_auth_Register__WEBPACK_IMPORTED_MODULE_8__["default"],
   meta: {
     layout: 'fullscreen',
     requiresVisitor: true
@@ -51220,7 +51353,7 @@ var routes = [{
 }, {
   name: 'login',
   path: '/login',
-  component: _views_auth_Login__WEBPACK_IMPORTED_MODULE_5__["default"],
+  component: _views_auth_Login__WEBPACK_IMPORTED_MODULE_6__["default"],
   meta: {
     layout: 'fullscreen',
     requiresVisitor: true
@@ -51228,14 +51361,14 @@ var routes = [{
 }, {
   name: 'logout',
   path: '/logout',
-  component: _views_auth_Logout__WEBPACK_IMPORTED_MODULE_6__["default"],
+  component: _views_auth_Logout__WEBPACK_IMPORTED_MODULE_7__["default"],
   meta: {
     requiresAuth: true
   }
 }, {
   name: 'forgot_password',
   path: '/forgot-password',
-  component: _views_auth_ForgotPassword__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_auth_ForgotPassword__WEBPACK_IMPORTED_MODULE_4__["default"],
   meta: {
     layout: 'fullscreen',
     requiresVisitor: true
@@ -51243,7 +51376,7 @@ var routes = [{
 }, {
   name: 'reset_password',
   path: '/password/reset',
-  component: _views_auth_ResetPassword__WEBPACK_IMPORTED_MODULE_8__["default"],
+  component: _views_auth_ResetPassword__WEBPACK_IMPORTED_MODULE_9__["default"],
   meta: {
     layout: 'fullscreen',
     requiresVisitor: true
@@ -51274,7 +51407,7 @@ var routes = [{
 {
   name: 'create_tender',
   path: '/tenders/create',
-  component: _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_12__["default"],
+  component: _views_tenders_CreateTender__WEBPACK_IMPORTED_MODULE_2__["default"],
   meta: {
     layout: 'dashboard',
     requiresAuth: true
@@ -51282,7 +51415,7 @@ var routes = [{
 }, {
   name: 'tender',
   path: '/tenders/:tender',
-  component: _views_tenders_Tender__WEBPACK_IMPORTED_MODULE_10__["default"],
+  component: _views_tenders_Tender__WEBPACK_IMPORTED_MODULE_11__["default"],
   meta: {
     layout: 'mapped'
   }
@@ -51572,6 +51705,17 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
         axios.patch("/api".concat(data.path, "/update"), data).then(function (response) {
+          context.commit('retrieveTender', response.data);
+          resolve(response);
+        })["catch"](function (errors) {
+          return reject(errors.response.data.errors);
+        });
+      });
+    },
+    publishTender: function publishTender(context, path) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+      return new Promise(function (resolve, reject) {
+        axios.patch(path).then(function (response) {
           context.commit('retrieveTender', response.data);
           resolve(response);
         })["catch"](function (errors) {
@@ -52525,6 +52669,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_template_id_185be00d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_template_id_185be00d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/Terms.vue":
+/*!**************************************!*\
+  !*** ./resources/js/views/Terms.vue ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Terms_vue_vue_type_template_id_19695710___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Terms.vue?vue&type=template&id=19695710& */ "./resources/js/views/Terms.vue?vue&type=template&id=19695710&");
+/* harmony import */ var _Terms_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Terms.vue?vue&type=script&lang=js& */ "./resources/js/views/Terms.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Terms_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Terms_vue_vue_type_template_id_19695710___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Terms_vue_vue_type_template_id_19695710___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/Terms.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/Terms.vue?vue&type=script&lang=js&":
+/*!***************************************************************!*\
+  !*** ./resources/js/views/Terms.vue?vue&type=script&lang=js& ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Terms_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Terms.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Terms.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Terms_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/Terms.vue?vue&type=template&id=19695710&":
+/*!*********************************************************************!*\
+  !*** ./resources/js/views/Terms.vue?vue&type=template&id=19695710& ***!
+  \*********************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Terms_vue_vue_type_template_id_19695710___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Terms.vue?vue&type=template&id=19695710& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Terms.vue?vue&type=template&id=19695710&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Terms_vue_vue_type_template_id_19695710___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Terms_vue_vue_type_template_id_19695710___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
