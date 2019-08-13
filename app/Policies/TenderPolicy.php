@@ -36,12 +36,12 @@ class TenderPolicy
      * @return mixed
     */
     public function show(?User $user, Tender $tender)
-    {           
+    {                  
         $userId = $tender->user_id;        
         if (gettype($tender->user_id) == 'string') {
             $userId = intval($userId);
         } 
-
+        
         // If tender umpublished check for owner
         return $userId === auth('api')->id();
     }

@@ -3538,6 +3538,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modals_NavDrawerRight__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../modals/NavDrawerRight */ "./resources/js/modals/NavDrawerRight.vue");
 /* harmony import */ var _modals_OfferCancel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../modals/OfferCancel */ "./resources/js/modals/OfferCancel.vue");
 /* harmony import */ var _modals_OfferView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../modals/OfferView */ "./resources/js/modals/OfferView.vue");
+/* harmony import */ var _modals_TakeItNow__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../modals/TakeItNow */ "./resources/js/modals/TakeItNow.vue");
 //
 //
 //
@@ -3561,6 +3562,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 
 
@@ -3576,7 +3579,8 @@ __webpack_require__.r(__webpack_exports__);
     MakeOffer: _modals_MakeOffer__WEBPACK_IMPORTED_MODULE_3__["default"],
     NavDrawerRight: _modals_NavDrawerRight__WEBPACK_IMPORTED_MODULE_4__["default"],
     OfferCancel: _modals_OfferCancel__WEBPACK_IMPORTED_MODULE_5__["default"],
-    OfferView: _modals_OfferView__WEBPACK_IMPORTED_MODULE_6__["default"]
+    OfferView: _modals_OfferView__WEBPACK_IMPORTED_MODULE_6__["default"],
+    TakeItNow: _modals_TakeItNow__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   computed: {
     loggedIn: function loggedIn() {
@@ -3924,10 +3928,112 @@ __webpack_require__.r(__webpack_exports__);
     setData: function setData(data) {
       this.offer = data;
     },
+    acceptOffer: function acceptOffer() {
+      var _this = this;
+
+      this.$store.dispatch('acceptOffer', this.offer.id).then(function () {
+        flash(_this.$i18n.t('tender.place_order_message'));
+
+        _this.close();
+      });
+    },
     close: function close() {
       this.confirmOffer = false;
       this.cancelOffer = false;
       this.$modal.hide('offer-view');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/TakeItNow.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/TakeItNow.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_ConfirmationButtons__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/ConfirmationButtons */ "./resources/js/components/ConfirmationButtons.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    ConfirmationButtons: _components_ConfirmationButtons__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      tender: null,
+      confirmation: false
+    };
+  },
+  computed: {
+    company: function company() {
+      return this.offer ? this.offer.user.company : '';
+    }
+  },
+  methods: {
+    setData: function setData(data) {
+      this.tender = data;
+    },
+    acceptOffer: function acceptOffer() {
+      var _this = this;
+
+      this.$store.dispatch('makeOffer', {
+        price: this.tender.immediate_price,
+        path: this.$route.path,
+        takeNow: true
+      }).then(function () {
+        flash(_this.$i18n.t('tender.take_now_message'));
+
+        _this.close();
+      });
+    },
+    close: function close() {
+      this.confirmation = false;
+      this.$modal.hide('take-it-now');
     }
   }
 });
@@ -6485,6 +6591,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -6632,8 +6744,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['tender'],
   data: function data() {
     return {
-      category: this.tender.category,
-      offerCount: 2
+      category: this.tender.category
     };
   },
   computed: {
@@ -6647,8 +6758,8 @@ __webpack_require__.r(__webpack_exports__);
     latestDelivery: function latestDelivery() {
       return this.deliveryLocation.latest_date;
     },
-    offerText: function offerText() {
-      return this.offerCount > 1 ? this.$i18n.t('tender.offers') : this.$i18n.t('tender.offer');
+    price: function price() {
+      return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price;
     }
   }
 });
@@ -6982,11 +7093,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['tender'],
   data: function data() {
     return {
-      offerCount: 2,
       cardHeaderSmall: false
     };
   },
@@ -6999,6 +7112,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     ownsTender: function ownsTender() {
       return this.$store.getters.ownsTender;
+    },
+    price: function price() {
+      return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price;
     }
   },
   methods: {
@@ -7160,6 +7276,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -7177,7 +7294,7 @@ __webpack_require__.r(__webpack_exports__);
     active: function active() {
       if (this.tenders) {
         return this.tenders.filter(function (tender) {
-          return tender.published_at;
+          return tender.isActive;
         });
       }
     },
@@ -7185,6 +7302,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.tenders) {
         return this.tenders.filter(function (tender) {
           return !tender.published_at;
+        });
+      }
+    },
+    completed: function completed() {
+      if (this.tenders) {
+        return this.tenders.filter(function (tender) {
+          return tender.completed_at;
         });
       }
     },
@@ -37495,15 +37619,6 @@ var render = function() {
         "router-link",
         {
           staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
-          attrs: { "active-class": "text-teal-500", to: "/messages" }
-        },
-        [_c("i", { staticClass: "icon ion-md-mail text-2xl " })]
-      ),
-      _vm._v(" "),
-      _c(
-        "router-link",
-        {
-          staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
           attrs: { "active-class": "text-teal-500", to: "/offers" }
         },
         [_c("i", { staticClass: "icon ion-md-list-box text-2xl" })]
@@ -39493,7 +39608,13 @@ var render = function() {
               !_vm.ownsTender && _vm.$route.name === "tender"
                 ? _c(
                     "div",
-                    [_c("make-offer"), _vm._v(" "), _c("offer-cancel")],
+                    [
+                      _c("make-offer"),
+                      _vm._v(" "),
+                      _c("offer-cancel"),
+                      _vm._v(" "),
+                      _c("take-it-now")
+                    ],
                     1
                   )
                 : _vm._e(),
@@ -40085,7 +40206,8 @@ var render = function() {
         on: {
           canceled: function($event) {
             _vm.confirmation = false
-          }
+          },
+          confirmed: _vm.acceptOffer
         }
       }),
       _vm._v(" "),
@@ -40100,6 +40222,134 @@ var render = function() {
           { staticClass: "text-sm" },
           [
             _c("span", [_vm._v(_vm._s(_vm.$t("tender.accept_offer_info")))]),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "text-teal-500 hover:text-teal-700",
+                attrs: { to: "/terms" }
+              },
+              [_vm._v(_vm._s(_vm.$t("tender.publish_info_terms")))]
+            )
+          ],
+          1
+        )
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/TakeItNow.vue?vue&type=template&id=e6d01e4e&":
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/TakeItNow.vue?vue&type=template&id=e6d01e4e& ***!
+  \********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "default-modal",
+    {
+      attrs: { name: "take-it-now", width: "400" },
+      on: { close: _vm.close, data: _vm.setData }
+    },
+    [
+      _c("h1", { staticClass: "text-xl text-teal-500 " }, [
+        _vm._v(_vm._s(_vm.$t("tender.take_it")))
+      ]),
+      _vm._v(" "),
+      _vm.tender
+        ? _c("div", { staticClass: "flex flex-col items-center py-8" }, [
+            _c("div", { staticClass: "mb-3" }, [
+              _c("p", {
+                staticClass: "text-5xl text-red-500 ",
+                domProps: {
+                  textContent: _vm._s("€ " + _vm.tender.immediate_price)
+                }
+              })
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.confirmation,
+              expression: "!confirmation"
+            }
+          ]
+        },
+        [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-teal w-full mb-5",
+              on: {
+                click: function($event) {
+                  _vm.confirmation = true
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: " icon ion-md-flash mr-2" }),
+              _vm._v(
+                "  \n            " +
+                  _vm._s(_vm.$t("tender.take_it")) +
+                  "\n        "
+              )
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("confirmation-buttons", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.confirmation,
+            expression: "confirmation"
+          }
+        ],
+        staticClass: "mb-5",
+        attrs: { text: _vm.$t("tender.accept_offer_question") },
+        on: {
+          canceled: function($event) {
+            _vm.confirmation = false
+          },
+          confirmed: _vm.acceptOffer
+        }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex bg-yellow-200 p-3 rounded-lg" }, [
+        _c("i", {
+          staticClass:
+            "icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "text-sm" },
+          [
+            _c("span", [_vm._v(_vm._s(_vm.$t("tender.take_now_info")))]),
             _vm._v(" "),
             _c(
               "router-link",
@@ -43703,20 +43953,14 @@ var render = function() {
     ? _c(
         "div",
         [
-          _vm.hasOffers
+          _vm.hasOffers && !_vm.tender.completed_at
             ? _c(
                 "card",
                 { staticClass: "mb-5", attrs: { classes: "py-5" } },
                 [
                   _c("div", { staticClass: "pl-5 mb-2" }, [
-                    _c(
-                      "span",
-                      { staticClass: "font-bold text-gray-500 mr-2" },
-                      [_vm._v("4")]
-                    ),
-                    _vm._v(" "),
                     _c("span", { staticClass: "font-bold mb-3" }, [
-                      _vm._v("Angebote")
+                      _vm._v(_vm._s(_vm.$t("tender.offers")))
                     ])
                   ]),
                   _vm._v(" "),
@@ -43735,6 +43979,21 @@ var render = function() {
             "card",
             { attrs: { classes: "py-5" } },
             [
+              _vm.tender.completed_at
+                ? _c(
+                    "p",
+                    {
+                      staticClass:
+                        "uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 text-right"
+                    },
+                    [
+                      _c("i", { staticClass: "icon ion-md-checkmark mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Abgeshlossen")])
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
               _vm.draft
                 ? _c(
                     "p",
@@ -44090,18 +44349,40 @@ var render = function() {
                         _c("span", {
                           staticClass:
                             "text-xl leading-tight font-bold md:text-xl",
-                          domProps: {
-                            textContent: _vm._s(_vm.tender.max_price + " €")
-                          }
+                          domProps: { textContent: _vm._s(_vm.price + " €") }
                         }),
                         _vm._v(" "),
-                        _c("span", { staticClass: "text-xs text-gray-500" }, [
-                          _vm._v("2")
-                        ]),
+                        _c(
+                          "span",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.tender.offersCount,
+                                expression: "tender.offersCount"
+                              }
+                            ],
+                            staticClass: "text-xs text-gray-500"
+                          },
+                          [_vm._v(_vm._s(_vm.tender.offersCount))]
+                        ),
                         _vm._v(" "),
-                        _c("span", { staticClass: "text-xs text-gray-500" }, [
-                          _vm._v(_vm._s(_vm.offerText))
-                        ]),
+                        _c(
+                          "span",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.tender.offersCount,
+                                expression: "tender.offersCount"
+                              }
+                            ],
+                            staticClass: "text-xs text-gray-500"
+                          },
+                          [_vm._v(_vm._s(_vm.$t("tender.offers")))]
+                        ),
                         _vm._v(" "),
                         _c(
                           "span",
@@ -44485,20 +44766,32 @@ var render = function() {
                   _vm._v(" "),
                   _c("p", {
                     staticClass: "text-4xl text-teal-500 leading-none",
-                    domProps: {
-                      textContent: _vm._s("€ " + _vm.tender.max_price)
-                    }
+                    domProps: { textContent: _vm._s("€ " + _vm.price) }
                   }),
                   _vm._v(" "),
-                  _c("p", { staticClass: "leading-none" }, [
-                    _c("span", { staticClass: "text-sm text-gray-500" }, [
-                      _vm._v("2")
-                    ]),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "text-sm text-gray-500" }, [
-                      _vm._v(_vm._s(_vm.offerText))
-                    ])
-                  ])
+                  _c(
+                    "p",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.tender.offersCount,
+                          expression: "tender.offersCount"
+                        }
+                      ],
+                      staticClass: "leading-none"
+                    },
+                    [
+                      _c("span", { staticClass: "text-sm text-gray-500" }, [
+                        _vm._v(_vm._s(_vm.tender.offersCount))
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text-sm text-gray-500" }, [
+                        _vm._v(_vm._s(_vm.$t("tender.offers")))
+                      ])
+                    ]
+                  )
                 ]),
                 _vm._v(" "),
                 !_vm.ownsTender
@@ -44529,7 +44822,12 @@ var render = function() {
                       "button",
                       {
                         staticClass:
-                          "flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white"
+                          "flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white",
+                        on: {
+                          click: function($event) {
+                            return _vm.$modal.show("take-it-now", _vm.tender)
+                          }
+                        }
                       },
                       [
                         _vm._m(1),
@@ -44763,7 +45061,9 @@ var render = function() {
         [
           _c("tab", { attrs: { name: "Aktiv", hash: "#active" } }),
           _vm._v(" "),
-          _c("tab", { attrs: { name: "Entwürfe", hash: "#drafts" } })
+          _c("tab", { attrs: { name: "Entwürfe", hash: "#drafts" } }),
+          _vm._v(" "),
+          _c("tab", { attrs: { name: "Abgeschlossen", hash: "#completed" } })
         ],
         1
       ),
@@ -70059,10 +70359,10 @@ module.exports = {"settings":"Einstellungen","account":"Benutzerkonto","company"
 /*!*********************************************!*\
   !*** ./resources/js/locales/de/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, valid_until, m_offer, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, default */
+/*! exports provided: offer, offers, offerer, offered_at, valid_until, m_offer, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"angeboten am","valid_until":"gültig bis","m_offer":"mitbieten","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Button bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht."};
+module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"angeboten am","valid_until":"gültig bis","m_offer":"mitbieten","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen."};
 
 /***/ }),
 
@@ -70114,10 +70414,10 @@ module.exports = {"settings":"settings","account":"Account","company":"Company",
 /*!*********************************************!*\
   !*** ./resources/js/locales/en/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, valid_until, m_offer, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, default */
+/*! exports provided: offer, offers, offerer, offered_at, valid_until, m_offer, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"offered at","valid_until":"valid until","m_offer":"offer","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Delivery details","freight_details":"Freight details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the freight ...","add_freight":"Add Freight","store_freight_message":"Your freight details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted."};
+module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"offered at","valid_until":"valid until","m_offer":"offer","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Delivery details","freight_details":"Freight details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the freight ...","add_freight":"Add Freight","store_freight_message":"Your freight details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order."};
 
 /***/ }),
 
@@ -70733,6 +71033,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OfferView_vue_vue_type_template_id_37d3dc16___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OfferView_vue_vue_type_template_id_37d3dc16___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/modals/TakeItNow.vue":
+/*!*******************************************!*\
+  !*** ./resources/js/modals/TakeItNow.vue ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TakeItNow_vue_vue_type_template_id_e6d01e4e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TakeItNow.vue?vue&type=template&id=e6d01e4e& */ "./resources/js/modals/TakeItNow.vue?vue&type=template&id=e6d01e4e&");
+/* harmony import */ var _TakeItNow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TakeItNow.vue?vue&type=script&lang=js& */ "./resources/js/modals/TakeItNow.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TakeItNow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TakeItNow_vue_vue_type_template_id_e6d01e4e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TakeItNow_vue_vue_type_template_id_e6d01e4e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/modals/TakeItNow.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/modals/TakeItNow.vue?vue&type=script&lang=js&":
+/*!********************************************************************!*\
+  !*** ./resources/js/modals/TakeItNow.vue?vue&type=script&lang=js& ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TakeItNow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TakeItNow.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/TakeItNow.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TakeItNow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/modals/TakeItNow.vue?vue&type=template&id=e6d01e4e&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/modals/TakeItNow.vue?vue&type=template&id=e6d01e4e& ***!
+  \**************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TakeItNow_vue_vue_type_template_id_e6d01e4e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TakeItNow.vue?vue&type=template&id=e6d01e4e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/TakeItNow.vue?vue&type=template&id=e6d01e4e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TakeItNow_vue_vue_type_template_id_e6d01e4e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TakeItNow_vue_vue_type_template_id_e6d01e4e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -71446,12 +71815,11 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       });
     },
     // Tenders endpoints END
+    //Offers endpoints START
     makeOffer: function makeOffer(context, data) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
-        axios.post('/api' + data.path + '/offers/store', {
-          price: data.price
-        }).then(function (response) {
+        axios.post('/api' + data.path + '/offers/store', data).then(function (response) {
           resolve(response);
         })["catch"](function (errors) {
           return reject(errors.response.data.errors);
@@ -71462,6 +71830,16 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
         axios["delete"]('/api/offers/' + offerId + '/destroy').then(function (response) {
+          resolve(response);
+        })["catch"](function (errors) {
+          return reject(errors.response.data.errors);
+        });
+      });
+    },
+    acceptOffer: function acceptOffer(context, offerId) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+      return new Promise(function (resolve, reject) {
+        axios.patch('/api/offers/' + offerId + '/update').then(function (response) {
           resolve(response);
         })["catch"](function (errors) {
           return reject(errors.response.data.errors);

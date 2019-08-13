@@ -64,6 +64,7 @@ Route::group([
 
         Route::post('/tenders/{tender}/offers/store', 'OffersController@store');
         Route::delete('/offers/{offer}/destroy', 'OffersController@destroy');
+        Route::patch('/offers/{offer}/update', 'OffersController@update');
     }); 
 });
 

@@ -50,5 +50,8 @@
     "accept_offer_question": "Do you really want to accept the offer?",
     "withdraw_offer_question": "Do you really want to withdraw your offer?",
     "accept_offer_info": "By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.",
-    "withdraw_offer_message": "Your offer has been deleted."
+    "withdraw_offer_message": "Your offer has been deleted.",
+    "place_order_message": "Congratulation! You have placed your order.",
+    "take_now_info": "By clicking the (take it now) button you confirm a binding order at the above price.",
+    "take_now_message": "Congratulation! You have accepted the instant order."
 }

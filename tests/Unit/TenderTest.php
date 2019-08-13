@@ -40,6 +40,22 @@ class TenderTest extends PassportTestCase
 	function it_belongs_to_a_category()
 	{   
 		$this->assertInstanceOf('App\Category', $this->tender->category);		
+    }   
+
+    /** @test */
+    function it_knows_the_lowest_offer()
+    {
+        $tender = create('App\Tender');
+        create('App\Offer', [
+            'tender_id' => $tender->id,
+            'price' => 100
+        ]);
+        create('App\Offer', [
+            'tender_id' => $tender->id,
+            'price' => 200
+        ]);
+
+        $this->assertEquals(100, $tender->lowestOffer );
     }
     
 }

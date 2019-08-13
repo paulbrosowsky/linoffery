@@ -10,6 +10,7 @@
             <div v-if="!ownsTender && $route.name === 'tender'">
                 <make-offer></make-offer>
                 <offer-cancel></offer-cancel>
+                <take-it-now></take-it-now>
             </div>
 
             <div v-if="ownsTender">
@@ -29,6 +30,7 @@
     import NavDrawerRight from '../modals/NavDrawerRight' 
     import OfferCancel from '../modals/OfferCancel' 
     import OfferView from '../modals/OfferView' 
+    import TakeItNow from '../modals/TakeItNow' 
 
     export default {
         components:{
@@ -38,7 +40,8 @@
             MakeOffer,
             NavDrawerRight,
             OfferCancel,
-            OfferView
+            OfferView,
+            TakeItNow
         },
 
         computed:{

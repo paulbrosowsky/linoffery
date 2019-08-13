@@ -8,6 +8,7 @@
         <tabs class="ml-2 ">
             <tab name="Aktiv" hash="#active"></tab>
             <tab name="Entwürfe" hash="#drafts"></tab>
+            <tab name="Abgeschlossen" hash="#completed"></tab>
         </tabs> 
         
         <card classes="py-5 px-0">
@@ -36,11 +37,11 @@
             //     return this.$store.state.tenders
             // },
 
-            active(){               
+            active(){              
 
                 if(this.tenders){
                     return this.tenders.filter((tender)=>{
-                    return tender.published_at
+                        return tender.isActive
                     })
                 }                
             },
@@ -51,6 +52,14 @@
                         return !tender.published_at
                     })
                 }               
+            },
+
+            completed(){
+                if(this.tenders){
+                    return this.tenders.filter((tender)=>{
+                        return tender.completed_at
+                    })
+                } 
             },
 
             filtered(){

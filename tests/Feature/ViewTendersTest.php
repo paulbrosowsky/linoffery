@@ -5,6 +5,7 @@ namespace Tests\Features;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Tender;
+use Carbon\Carbon;
 
 class ViewTendersTest extends PassportTestCase
 {
@@ -61,12 +62,45 @@ class ViewTendersTest extends PassportTestCase
     }
 
     /** @test */
+    function not_owners_may_not_view_completed_tenders()
+    {
+        $this->withExceptionHandling();
+
+        $user = create('App\User');
+        $tender = create('App\Tender', [
+            'user_id' => $user->id,
+            'completed_at' => Carbon::now()
+        ]);
+
+        $this->signIn();        
+
+        $this->getJson('api/tenders/'.$tender->id)
+            ->assertStatus(403);
+    }
+
+    /** @test */
     function only_owners_can_view_unpublished_tenders()
     { 
         $user = create('App\User');
         $tender = create('App\Tender', [
             'user_id' => $user->id,
             'published_at' => null
+        ]);
+
+        $this->signIn($user);        
+
+        $response = $this->getJson('api/tenders/'.$tender->id)->json();
+
+        $this->assertContains($tender->title, $response['title']);             
+    }
+
+    /** @test */
+    function only_owners_can_view_completed_tenders()
+    { 
+        $user = create('App\User');
+        $tender = create('App\Tender', [
+            'user_id' => $user->id,
+            'completed_at' => Carbon::now()
         ]);
 
         $this->signIn($user);        

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Tender extends Model
@@ -9,6 +10,8 @@ class Tender extends Model
     protected $guarded = [];
 
     protected $with = [ 'user', 'locations', 'freights', 'category'];
+
+    protected $appends = ['lowestOffer', 'offersCount', 'isActive'];
 
     /**
      * A Tender belong to user
@@ -66,5 +69,36 @@ class Tender extends Model
     public function owner()
     {
         return $this->user->id === auth('api')->id();
+    }
+
+    /**
+    *  Get Lowest Offers Pricew
+    * @return nummeric
+    */
+    public function getLowestOfferAttribute()
+    {
+        return $this->offers()->min('price');
+    }
+
+    /**
+    *  Get Offers Counter
+    * @return nummeric
+    */
+    public function getOffersCountAttribute()
+    {
+        return $this->offers()->count();
+    }
+
+    /**
+     * Set Tender as completed
+     */
+    public function complete()
+    {
+        $this->update(['completed_at' => Carbon::now()]);
+    }
+
+    public function getIsActiveAttribute()
+    {
+        return isset($this->published_at) && !isset($this->completed_at) ;
     }
 }

@@ -49,6 +49,9 @@
     "make_offer_message": "Ihr Angebot wurde an den Ausschreiber weitergeleitet.",
     "accept_offer_question": "Möchten Sie wirklich das Angebot annehmen?",
     "withdraw_offer_question": "Möchten Sie wirklich Ihr Angebot zurückziehen?",
-    "accept_offer_info": "Durch das Anklicken des (Angebot-Annehmen) Button bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.",
-    "withdraw_offer_message": "Ihr Angebot wurde gelöscht."
+    "accept_offer_info": "Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.",
+    "withdraw_offer_message": "Ihr Angebot wurde gelöscht.",
+    "place_order_message": "Glückwunsch! Sie haben Ihr Auftrag erteilt.",
+    "take_now_info": "Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.",
+    "take_now_message": "Glückwunsch! Sie haben den Sofort-Auftrag angenommen."
 }

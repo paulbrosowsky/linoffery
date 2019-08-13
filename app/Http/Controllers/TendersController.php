@@ -42,9 +42,12 @@ class TendersController extends Controller
         //     } 
 
         //     return  $cargosResult;
-        // }   
+        // }        
 
-        return Tender::where('published_at', '!=', NULL )->latest()->paginate(20);
+        return Tender::where('published_at', '!=', NULL )
+                    ->where('completed_at', '=', NULL)
+                    ->latest()
+                    ->paginate(20);
     }
 
     /**
@@ -56,7 +59,7 @@ class TendersController extends Controller
     public function show(Tender $tender)
     {   
         // Only Owners can view unpublished threads       
-        if($tender->published_at === NULL) {            
+        if(!$tender->isActive) {            
             $this->authorize('show', $tender);
         } 
         

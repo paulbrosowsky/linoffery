@@ -13,9 +13,9 @@
                                 <p class="truncate leading-tight md:text-lg" v-text="tender.title"></p>
 
                                 <div class="mb-3">
-                                    <span class="text-xl leading-tight font-bold md:text-xl" v-text="tender.max_price + ' €'"></span>
-                                    <span class="text-xs text-gray-500">2</span>
-                                    <span class="text-xs text-gray-500">{{offerText}}</span>
+                                    <span class="text-xl leading-tight font-bold md:text-xl" v-text="price + ' €'"></span>
+                                    <span class="text-xs text-gray-500" v-show="tender.offersCount">{{tender.offersCount}}</span>
+                                    <span class="text-xs text-gray-500" v-show="tender.offersCount">{{$t('tender.offers')}}</span>
                                     <span class="text-sm text-red-500 font-bold md:text-base ml-2">
                                         <i class="icon ion-md-flash text-sm"></i>
                                         <span v-text="tender.immediate_price + ' €'"></span>
@@ -54,8 +54,7 @@
 
         data(){
             return{
-                category: this.tender.category,
-                offerCount: 2
+                category: this.tender.category,               
             }
         },
         
@@ -73,11 +72,12 @@
 
             latestDelivery(){
                 return this.deliveryLocation.latest_date
-            },
+            },          
 
-            offerText(){
-                return this.offerCount > 1 ? this.$i18n.t('tender.offers') : this.$i18n.t('tender.offer') 
+            price(){
+                return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price
             }
+
         }
     }
 </script>

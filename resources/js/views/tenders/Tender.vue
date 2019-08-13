@@ -1,10 +1,8 @@
 <template>
     <div v-if="tender">
-        <card :classes="'py-5'" class="mb-5" v-if="hasOffers">
-            
-            <div class="pl-5 mb-2"> 
-                <span class="font-bold text-gray-500 mr-2">4</span>
-                <span class="font-bold mb-3">Angebote</span>               
+        <card :classes="'py-5'" class="mb-5" v-if="hasOffers && !tender.completed_at">            
+            <div class="pl-5 mb-2">                 
+                <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
             </div>
             
             <offer-card 
@@ -16,6 +14,14 @@
 
         <card :classes="'py-5'">  
              
+            <p 
+                class="uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 text-right"  
+                v-if="tender.completed_at"               
+            >
+                <i class="icon ion-md-checkmark mr-2"></i>  
+                <span>Abgeshlossen</span> 
+            </p>
+
             <p 
                 class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 text-right" 
                 v-if="draft"

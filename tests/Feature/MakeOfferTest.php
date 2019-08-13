@@ -3,6 +3,7 @@
 
 namespace Tests\Feature;
 
+use App\Order;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -34,11 +35,10 @@ class MakeOfferTest extends PassportTestCase
     /** @test */
     function authorized_users_may_make_offers()
     {
-        $this->makeOffer();
+        $this->makeOffer();      
         
-        $this->assertCount(1, $this->tender->offers);
+        $this->assertCount(1, $this->tender->offers);  
         $this->assertDatabaseHas('offers', ['price' => 100]);
-
     }
 
     /** @test */
@@ -114,6 +114,19 @@ class MakeOfferTest extends PassportTestCase
         
         $this->assertArrayHasKey('price', $errors['errors']);           
     }    
+
+    /** @test */
+    function users_may_place_order_immedatly()
+    {
+        $this->makeOffer(['takeNow' => true]);
+
+        $this->assertCount(1, $this->tender->offers);
+
+        $order = Order::first();        
+        
+        $this->assertEquals($this->tender->id, $order->tender_id);        
+        $this->assertEquals($this->tender->user_id, $order->tenderer_id);
+    }
 
     public function makeOffer($overrides = [])
     {

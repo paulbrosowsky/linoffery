@@ -43,7 +43,7 @@
             :text="$t('tender.accept_offer_question')" 
             v-show="confirmation"
             @canceled="confirmation = false"
-            
+            @confirmed="acceptOffer"
         ></confirmation-buttons>        
 
         <div class="flex bg-yellow-200 p-3 rounded-lg">
@@ -78,6 +78,15 @@
         methods:{
             setData(data){
                 this.offer = data
+            },
+
+            acceptOffer(){
+                this.$store
+                    .dispatch('acceptOffer', this.offer.id)
+                    .then(()=>{
+                        flash(this.$i18n.t('tender.place_order_message'))
+                        this.close()
+                    })
             },
 
             close(){

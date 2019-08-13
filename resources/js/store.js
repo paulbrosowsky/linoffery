@@ -407,12 +407,13 @@ export let store = new Vuex.Store({
         },
         // Tenders endpoints END
 
+        //Offers endpoints START
         makeOffer(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
             return new Promise((resolve, reject)=>{
                 axios
-                    .post('/api'+data.path+'/offers/store', {price: data.price })
+                    .post('/api'+data.path+'/offers/store', data)
                     .then(response =>{
                         resolve(response)
                     })
@@ -432,6 +433,20 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response.data.errors))
             })           
         },
+
+        acceptOffer(context, offerId){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch('/api/offers/'+ offerId +'/update')
+                    .then(response =>{
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+        //Offers endpoints END
 
             
       
