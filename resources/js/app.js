@@ -2,6 +2,7 @@ import Vue from "vue"
 import VueModal from "vue-js-modal"
 import VueCookies from "vue-cookies"
 import VueMoment from "vue-moment"
+import moment from 'moment-timezone'
 import VueResize from "vue-resize-directive"
  
 import router from './routes'
@@ -11,7 +12,10 @@ import i18n from './utilities/i18n'
 
 Vue.use(VueModal)
 Vue.use(VueCookies)
-Vue.use(VueMoment)
+Vue.use(VueMoment, {
+    moment,
+})
+
 window.Event = new Vue()
 
 window.flash = function(message){    

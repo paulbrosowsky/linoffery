@@ -161,7 +161,7 @@ return [
         'weight'                => 'weight',
         'freights.*.weight'     => 'weight',
         'freights.*.pallet'     => 'transport type',
-        'freights.*.title'      => 'title',          
+        'freights.*.title'      => 'title',               
     ],
 
 ];

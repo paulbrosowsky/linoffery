@@ -19,8 +19,8 @@ $factory->define(Location::class, function($faker){
         'lat' => $faker->latitude($min = 47, $max = 54),
         'lng' => $faker->longitude($min = 6, $max = 15),
         'latency' => $faker->randomDigit,
-        'earliest_date' => $date->isoFormat('DD.MM.YYYY'),
-        'latest_date' => $date->addWeeks(1)->isoFormat('DD.MM.YYYY'), 
+        'earliest_date' => $date,
+        'latest_date' => $date->addWeeks(1), 
         'loading' => $faker -> boolean()
     ];
 });

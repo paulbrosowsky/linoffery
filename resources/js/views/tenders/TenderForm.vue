@@ -48,7 +48,8 @@
                                 :placeholder="$t('tender.max_price')" 
                                 v-model="maxPrice" 
                                 @keyup="errors= []"
-                            ></div>
+                            >
+                        </div>
                         <p class="text-sm text-gray-500">{{$t('tender.max_price_info')}}</p>
                     </div>
 

@@ -28,19 +28,19 @@
                
                         <div class="flex flex-col items-center mr-3 ">
                             <p class="text-xs text-gray-500 uppercase ">{{$t('tender.curr_offer')}}</p>
-                            <p class="text-4xl text-teal-500 -my-2" v-text="'€ '+ tender.max_price"></p> 
-                            <p>
+                            <p class="text-4xl text-teal-500 leading-none" v-text="'€ '+ tender.max_price"></p> 
+                            <p class="leading-none">
                                 <span class="text-sm text-gray-500">2</span> 
                                 <span class="text-sm text-gray-500">{{offerText}}</span>  
                             </p>                                         
                         </div>
                     
-                        <button class="btn btn-teal">
+                        <button class="btn btn-teal" @click="$modal.show('make-offer')" v-if="!ownsTender">
                             {{$t('tender.m_offer')}}
                         </button>                    
                     </div> 
                     
-                    <div class="flex-none mt-2" v-if="tender.immediate_price">
+                    <div class="flex-none mt-5" v-if="tender.immediate_price">
                         <button class="flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white">
                             <span><i class="icon ion-md-flash text-sm mr-3"></i></span>
                             <span class="text-lg mr-2" v-text="'€ '+ tender.immediate_price"></span>
@@ -120,6 +120,10 @@
 
             offerText(){
                 return this.offerCount > 1 ? this.$i18n.t('tender.offers') : this.$i18n.t('tender.offer') 
+            },
+
+            ownsTender(){
+                return this.$store.getters.ownsTender
             }
         },
 

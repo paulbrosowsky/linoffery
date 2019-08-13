@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white w-full rounded-lg shadow" :class="classes">
-        <div class="text-gray-700 font-bold mb-10" v-if="$slots.title">
+        <div class="text-gray-700 font-bold mb-5" v-if="$slots.title">
             <slot name="title"></slot>
         </div>           
         <slot></slot>

@@ -42,6 +42,13 @@ export let store = new Vuex.Store({
 
         tenderId(state){
             return state.tender ? state.tender.id : null
+        },
+
+        ownsTender(state){
+            if(state.user && state.tender){
+                return state.tender.user_id === state.user.id
+            }
+            return false
         }
     },
 
@@ -305,6 +312,8 @@ export let store = new Vuex.Store({
         },
 
         fetchTender(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
             return new Promise((resolve, reject)=>{
                 axios
                     .get(path)
@@ -397,6 +406,32 @@ export let store = new Vuex.Store({
             })           
         },
         // Tenders endpoints END
+
+        makeOffer(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .post('/api'+data.path+'/offers/store', {price: data.price })
+                    .then(response =>{
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+
+        cancelOffer(context, offerId){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .delete('/api/offers/'+ offerId +'/destroy')
+                    .then(response =>{
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
 
             
       

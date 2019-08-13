@@ -54,12 +54,20 @@ class TendersController extends Controller
      * @return Tender
      */
     public function show(Tender $tender)
-    {  
-        if($tender->published_at === NULL) {
+    {   
+        // Only Owners can view unpublished threads       
+        if($tender->published_at === NULL) {            
             $this->authorize('show', $tender);
         } 
+        
+        //Load with Offers if tenders owner view the tender
+        if($tender->owner()){
+            return $tender->load('offers');
+        }
 
-        return $tender;
+        return $tender->load(['offers' => function($query){
+            $query->where('user_id', auth('api')->id());
+        }]);
     }
 
     /**
@@ -73,7 +81,8 @@ class TendersController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required',            
-            'max_price' => 'required|numeric',
+            'max_price' => 'required|numeric|min:0',
+            'immadiate_price' => 'min:0',
             'valid_date' => 'required|date'
         ]);
             

@@ -76,15 +76,16 @@
 
         methods:{          
 
-            fetchTenders(bounds = null){                  
-                this.$store
-                    .dispatch('fetchTenders', bounds)
-                    .then(() => {
-                        setTimeout(()=>{
-                            Event.$emit('updateMarkers', this.locations)
-                        }, 1000)                        
-                    })       
-            },
+            // fetchTenders(bounds = null){  
+            //     console.log('fetch tenders')                 
+            //     this.$store
+            //         .dispatch('fetchTenders', bounds)
+            //         .then(() => {
+            //             setTimeout(()=>{
+            //                 Event.$emit('updateMarkers', this.locations)
+            //             }, 1000)                        
+            //         })       
+            // },
 
             triggerRouteBoxer(){                
                 Event.$emit('boxRoute', this.range)
@@ -100,7 +101,10 @@
         },
         
         created(){
-            this.fetchTenders()
+            setTimeout(()=>{
+                Event.$emit('updateMarkers', this.locations)
+            }, 500)
+            
             // this.setRouteFilter();
 
             // setTimeout(() => {

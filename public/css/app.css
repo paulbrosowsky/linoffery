@@ -701,6 +701,23 @@ video {
   background-color: #3182ce;
 }
 
+.btn-red {
+  background-color: #fc8181;
+}
+
+.btn-red:hover {
+  background-color: #e53e3e;
+}
+
+.btn-red-outlined {
+  border-color: #fc8181;
+  color: #fc8181;
+}
+
+.btn-red-outlined:hover {
+  background-color: #fc8181;
+}
+
 .input {
   background-color: #e2e8f0;
   -webkit-appearance: none;

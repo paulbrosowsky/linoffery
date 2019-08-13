@@ -25,12 +25,19 @@
     export default {
         components:{TenderCard}, 
 
-        computed:{
-            tenders(){
-                return this.$store.state.tenders
-            },
+        data(){
+            return{
+                tenders: null
+            }
+        },
 
-            active(){
+        computed:{
+            // tenders(){ 
+            //     return this.$store.state.tenders
+            // },
+
+            active(){               
+
                 if(this.tenders){
                     return this.tenders.filter((tender)=>{
                     return tender.published_at
@@ -52,21 +59,25 @@
         },
 
         methods:{
-            fetchUsersTenders(){
-                this.$store.dispatch('fetchUsersTenders')
+            fetchUsersTenders(){                
+                this.$store
+                    .dispatch('fetchUsersTenders')
+                    .then(()=>{
+                        this.tenders = this.$store.state.tenders   
+                    })     
             },
         },
 
         created(){             
-            this.fetchUsersTenders()
+            // this.fetchUsersTenders()    
+            setTimeout(() => {
+                this.tenders = this.$store.state.tenders 
+            }, 500);          
            
-            // Set initial Route(Tab-Filter) as active
+
             if(!this.$route.hash){
-                this.$router.push({
-                    name: 'dashboard_tenders',
-                    hash: '#active'
-                }) 
-            }              
+                this.$router.push({name: 'dashboard_tenders', hash: '#active'})   
+            }          
         }        
     }
 </script>

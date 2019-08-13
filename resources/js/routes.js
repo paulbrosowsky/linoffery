@@ -1,8 +1,9 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
+import {store} from './store'
+
 Vue.use(VueRouter)
 
-import CreateTender from './views/tenders/CreateTender'
 import Dashboard from './views/Dashboard'
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
@@ -17,7 +18,7 @@ import Tenders from './views/tenders/Tenders'
 import Terms from './views/Terms'
 import Welcome from './views/Welcome'
 
-import {store} from './store'
+
 
 
 let routes = [
@@ -55,12 +56,20 @@ let routes = [
 
     {
         name:'dashboard_tenders',
-        path:'/dashboard/tenders',
+        path:'/dashboard/tenders',        
         component: TendersDashboard,
         meta:{
             layout: 'dashboard',          
             requiresAuth: true
-        }
+        },
+        beforeEnter: (to, from, next) => { 
+            if(from.name === 'dashboard_tenders' || from.name === 'tender'){
+                next()
+            }else{                
+                store.dispatch('fetchUsersTenders')                
+                next()
+            }                   
+        }     
     },
 
     {
@@ -129,15 +138,14 @@ let routes = [
         meta:{
             layout: 'mapped',
         },
-        // beforeEnter: (to, from, next) => {  
-        //     if(from.name === 'cargo'){
-        //         next()
-        //     }else{                
-        //         store.dispatch('fetchCargos')
-        //         store.commit('resetFilters')
-        //         next()
-        //     }                   
-        // }       
+        beforeEnter: (to, from, next) => {  
+            if(from.name === 'tender'){
+                next()
+            }else{                
+                store.dispatch('fetchTenders')                
+                next()
+            }                   
+        }       
     },
 
     // {
@@ -146,19 +154,7 @@ let routes = [
     //     meta:{
     //         layout: 'mapped',
     //     },        
-    // },
-
-    {
-        name: 'create_tender',
-        path:'/tenders/create',
-        component: CreateTender,
-        meta:{
-            layout: 'dashboard',
-            requiresAuth: true
-        }
-    },    
-   
-   
+    // },  
 
     {
         name: 'tender',

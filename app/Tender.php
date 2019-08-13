@@ -49,4 +49,22 @@ class Tender extends Model
     {
         return $this->hasMany(Freight::class);
     }
+
+    /**
+     * A Tender has many Offers
+     * 
+     * @return hasMany
+     */
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+    /**
+     *  Check if current User owns a tender
+     */
+    public function owner()
+    {
+        return $this->user->id === auth('api')->id();
+    }
 }

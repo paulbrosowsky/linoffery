@@ -21,7 +21,7 @@ class TenderPolicy
     {   
         $userId = $tender->user_id;
 
-        if (gettype($tender->user_id) == 'string') {
+        if (gettype($userId) == 'string') {
             $userId = intval($userId);
         }
         // Update when owner and tender not published
@@ -35,15 +35,14 @@ class TenderPolicy
      * @param \App\Tender $tender
      * @return mixed
     */
-    public function show(User $user, Tender $tender)
-    {   
-        $userId = $tender->user_id;
-
+    public function show(?User $user, Tender $tender)
+    {           
+        $userId = $tender->user_id;        
         if (gettype($tender->user_id) == 'string') {
             $userId = intval($userId);
         } 
 
         // If tender umpublished check for owner
-        return $userId === $user->id;
+        return $userId === auth('api')->id();
     }
 }

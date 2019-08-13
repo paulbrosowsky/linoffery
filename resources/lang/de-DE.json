@@ -28,5 +28,7 @@
     "Bulk": "Schüttgut",
     "Animals": "Tiere",
     "Luquids": "Flüssigkeiten",
-    "Dangerous": "Gefahrgut"
+    "Dangerous": "Gefahrgut",
+
+    "The value is greater them tenders max. price.": "Der Wert ist höher als der max. Preis in der Ausschreibung."
 }

@@ -10,11 +10,11 @@
             <i class="icon ion-md-calendar text-2xl text-teal-400 mr-5"></i>
             <div>
                 <div class="mb-2">
-                    <p class="leading-none">{{ location.earliest_date | moment("DD.MM.YYYY") }}</p>
+                    <p class="leading-none">{{ new Date(location.earliest_date) | moment("DD.MM.YYYY") }}</p>
                     <span class="text-gray-500 text-sm">{{$t('tender.earliest_date')}}</span>
                 </div>
                 <div>
-                    <p class="leading-none">{{ location.latest_date | moment("DD.MM.YYYY") }}</p>
+                    <p class="leading-none">{{ new Date(location.latest_date) | moment("DD.MM.YYYY") }}</p>
                     <span class="text-gray-500 text-sm">{{$t('tender.latest_date')}}</span>
                 </div>
             </div>

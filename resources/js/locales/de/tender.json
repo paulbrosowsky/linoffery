@@ -1,12 +1,16 @@
 {
     "offer": "Angebot",
     "offers": "Angebote",
+    "offerer": "Anbieter",
+    "offered_at": "angeboten am",
 
     "valid_until": "gültig bis",
     "m_offer": "mitbieten",    
 
     "curr_offer": "Akt. Angebot",
     "make_offer": "Angebot abgeben",
+    "accept_offer": "Angebot annehmen",
+    "withdraw_offer": "Angebot zurückziehen",
     "take_it": "Sofort zugreifen",
     "pickup_details": "Abholdetails",
     "delivery_details": "Lieferdetails",
@@ -39,5 +43,12 @@
     "store_freight_message": "Die Frachtdetails wurden gespeichert.",
     "publish_info": "Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.",
     "publish_info_terms": "Mehr Informationen erhalten Sie aus unseren AGB.",
-    "published_message": "Ihre Auschreibung wurde veröffentlicht."
+    "published_message": "Ihre Auschreibung wurde veröffentlicht.",
+
+    "make_offer_info": "Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.",
+    "make_offer_message": "Ihr Angebot wurde an den Ausschreiber weitergeleitet.",
+    "accept_offer_question": "Möchten Sie wirklich das Angebot annehmen?",
+    "withdraw_offer_question": "Möchten Sie wirklich Ihr Angebot zurückziehen?",
+    "accept_offer_info": "Durch das Anklicken des (Angebot-Annehmen) Button bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.",
+    "withdraw_offer_message": "Ihr Angebot wurde gelöscht."
 }

@@ -61,6 +61,9 @@ Route::group([
         Route::patch('/tenders/{tender}/publish', 'TendersController@publish');
         Route::patch('/locations/{location}/update', 'LocationsController@update');
         Route::patch('/freights/{freight}/update', 'FreightsController@update');
+
+        Route::post('/tenders/{tender}/offers/store', 'OffersController@store');
+        Route::delete('/offers/{offer}/destroy', 'OffersController@destroy');
     }); 
 });
 

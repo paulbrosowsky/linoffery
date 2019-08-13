@@ -1,12 +1,16 @@
 {
     "offer": "Offer",
-    "offers": "Offers",
+    "offers": "Offers", 
+    "offerer": "Offerer",
+    "offered_at": "offered at",
 
     "valid_until": "valid until",
     "m_offer": "offer",
 
     "curr_offer": "Curr. Offer",
     "make_offer": "Make offer",
+    "accept_offer": "Accept offer",
+    "withdraw_offer": "Withdraw offer",
     "take_it": "take it now",
     "pickup_details": "Pick up details",
     "delivery_details": "Delivery details",
@@ -39,5 +43,12 @@
     "store_freight_message": "Your freight details have been saved.",
     "publish_info": "Please note! After publishing, you will not be able to update your tender.",
     "publish_info_terms": "More information can be found in our terms of use.",
-    "published_message": "Your tender is now published."
+    "published_message": "Your tender is now published.",
+
+    "make_offer_info": "Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.",
+    "make_offer_message": "Your offer has been forwarded to the tenderer.",
+    "accept_offer_question": "Do you really want to accept the offer?",
+    "withdraw_offer_question": "Do you really want to withdraw your offer?",
+    "accept_offer_info": "By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.",
+    "withdraw_offer_message": "Your offer has been deleted."
 }
