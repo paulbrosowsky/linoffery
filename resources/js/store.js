@@ -13,6 +13,9 @@ export let store = new Vuex.Store({
         tenders: null,        
         locations: [],
         categories:null,
+        offers: null,
+        orders: null,
+        order:null,
 
         origin:null,
         destination:null,
@@ -104,8 +107,19 @@ export let store = new Vuex.Store({
             state.origin = null,
             state.destination = null,
             state.range = 'Umweg'
-        }
+        },
 
+        retrieveOffers(state, offers){
+            state.offers = offers
+        },
+
+        retrieveOrders(state, orders){
+            state.orders = orders
+        },
+
+        retrieveOrder(state, order){
+            state.order = order
+        },
     },
 
     actions:{
@@ -408,6 +422,20 @@ export let store = new Vuex.Store({
         // Tenders endpoints END
 
         //Offers endpoints START
+        fetchOffers(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/offers')
+                    .then(response =>{                       
+                        context.commit('retrieveOffers', response.data)                        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
         makeOffer(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
@@ -447,6 +475,38 @@ export let store = new Vuex.Store({
             })           
         },
         //Offers endpoints END
+
+        //Orders Endpoints START 
+
+        fetchOrders(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/orders')
+                    .then(response =>{                       
+                        context.commit('retrieveOrders', response.data)                        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        fetchOrder(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get(path)
+                    .then(response =>{                       
+                        context.commit('retrieveOrder', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        //Orders Endpoints END
 
             
       

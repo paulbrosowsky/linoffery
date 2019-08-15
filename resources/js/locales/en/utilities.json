@@ -15,5 +15,9 @@
     "address": "Address",
     "publish": "Publish",
     "draft": "Draft",
-    "price": "Price"
+    "drafts": "Drafts",
+    "price": "Price",
+    "active": "Active",
+    "completed": "Completed",
+    "contact_person": "Contact"
 }

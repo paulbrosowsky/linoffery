@@ -64,8 +64,22 @@ class ViewOffersTest extends PassportTestCase
     {         
         $this->signIn($this->user);
         $response = $this->viewTender();
-
+        
         $this->assertCount(3, $response['offers']);
+    }
+
+    /** @test */
+    function owners_can_view_all_thier_offers()
+    {        
+        create('App\Offer', ['user_id' => $this->user->id], 3);
+
+        $this->signIn();
+        $response = $this->getJson('api/offers')->json();        
+        $this->assertCount(0, $response);
+
+        $this->signIn($this->user);
+        $response = $this->getJson('api/offers')->json();        
+        $this->assertCount(3, $response);
     }
 
     public function viewTender()

@@ -2,13 +2,13 @@
     <div>
         <action-bar></action-bar>
         <h1 class="text-gray-700 font-light leading-none text-2xl ml-2 mb-5">
-            Meine Ausschreibungen            
+            {{$t('tender.my_tenders')}}          
         </h1> 
 
         <tabs class="ml-2 ">
-            <tab name="Aktiv" hash="#active"></tab>
-            <tab name="Entwürfe" hash="#drafts"></tab>
-            <tab name="Abgeschlossen" hash="#completed"></tab>
+            <tab :name="$i18n.t('utilities.active')" hash="#active"></tab>
+            <tab :name="$i18n.t('utilities.drafts')" hash="#drafts"></tab>
+            <tab :name="$i18n.t('utilities.completed')" hash="#completed"></tab>
         </tabs> 
         
         <card classes="py-5 px-0">
@@ -17,6 +17,13 @@
                 :key="index" 
                 :tender="tender"                
             ></tender-card>
+            <div v-if="filtered">
+                <p class="px-5 md:px-10 text-lg font-light text-gray-500" v-show="!filtered.length ">
+                    <i class="icon ion-md-beer mr-2"></i>
+                    <span>{{$t('tender.no_tenders_info')}}</span> 
+                </p>
+            </div>
+           
         </card>
     </div>    
 </template>
@@ -28,17 +35,13 @@
 
         data(){
             return{
-                tenders: null
+                tenders:null,                
             }
         },
 
-        computed:{
-            // tenders(){ 
-            //     return this.$store.state.tenders
-            // },
+        computed:{           
 
-            active(){              
-
+            active(){
                 if(this.tenders){
                     return this.tenders.filter((tender)=>{
                         return tender.isActive
@@ -65,28 +68,20 @@
             filtered(){
                 return this[this.$route.hash.substring(1)]
             }
-        },
+        },      
 
-        methods:{
-            fetchUsersTenders(){                
-                this.$store
-                    .dispatch('fetchUsersTenders')
-                    .then(()=>{
-                        this.tenders = this.$store.state.tenders   
-                    })     
-            },
-        },
-
-        created(){             
-            // this.fetchUsersTenders()    
+        created(){
             setTimeout(() => {
-                this.tenders = this.$store.state.tenders 
-            }, 500);          
-           
-
-            if(!this.$route.hash){
-                this.$router.push({name: 'dashboard_tenders', hash: '#active'})   
-            }          
-        }        
+                this.tenders = this.$store.state.tenders
+            }, 200);                  
+        },     
+        
+        beforeRouteEnter(to, from, next){            
+           if(!to.hash){
+               next({name: 'dashboard_tenders', hash: '#active'})
+           }else{
+               next()
+           }
+        }
     }
 </script>

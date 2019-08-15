@@ -1,14 +1,14 @@
 <template>
     <section>
         <div class="w-full">                      
-            <div class="flex items-center justify-between mb-2 md:justify-start md:-ml-3"> 
+            <div class="flex items-center mb-2 md:justify-start md:-ml-3"> 
                 <div 
                     v-for="(tab, index) in tabsList" 
                     :key="index" 
                 > 
                 
                     <button
-                        class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-3 focus:outline-none" 
+                        class="text-gray-500 text-sm tracking-tight cursor-pointer px-2 pb-2 md:text-base md:px-3 focus:outline-none" 
                         :class="{ 'text-teal-500 font-bold' : tab.isActive }"
                         role-tab
                         :aria-selected="tab.isActive"

@@ -9,6 +9,8 @@ import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
 import Login from './views/auth/Login'
 import Logout from './views/auth/Logout'
+import Order from './views/orders/Order'
+import Orders from './views/orders/Orders'
 import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
@@ -18,9 +20,6 @@ import Tenders from './views/tenders/Tenders'
 import Terms from './views/Terms'
 import Welcome from './views/Welcome'
 
-
-
-
 let routes = [
     {
         name: 'home',
@@ -29,7 +28,6 @@ let routes = [
         meta:{            
             requiresVisitor: true
         }
-        
     },   
 
     {
@@ -63,8 +61,8 @@ let routes = [
             requiresAuth: true
         },
         beforeEnter: (to, from, next) => { 
-            if(from.name === 'dashboard_tenders' || from.name === 'tender'){
-                next()
+            if(window.popStateDetected){
+                next() 
             }else{                
                 store.dispatch('fetchUsersTenders')                
                 next()
@@ -137,24 +135,16 @@ let routes = [
         component: Tenders,
         meta:{
             layout: 'mapped',
-        },
-        beforeEnter: (to, from, next) => {  
-            if(from.name === 'tender'){
+        },       
+        beforeEnter: (to, from, next) => {                       
+            if(window.popStateDetected){
+                next()               
+            }else{             
+                store.dispatch('fetchTenders')                              
                 next()
-            }else{                
-                store.dispatch('fetchTenders')                
-                next()
-            }                   
+            }                                
         }       
     },
-
-    // {
-    //     path:'/cargos/create',
-    //     component: CreateCargo,
-    //     meta:{
-    //         layout: 'mapped',
-    //     },        
-    // },  
 
     {
         name: 'tender',
@@ -164,10 +154,39 @@ let routes = [
             layout: 'mapped',
         }
     },    
+
+    {
+        name:'orders',
+        path:'/orders',
+        component: Orders,
+        meta:{            
+            layout: 'dashboard',          
+            requiresAuth: true,
+        },
+        beforeEnter: (to, from, next) => { 
+            if(window.popStateDetected){
+                next() 
+            }else{                
+                store.dispatch('fetchOrders') 
+                store.dispatch('fetchOffers')                
+                next()
+            }                   
+        }     
+    },
+
+    {
+        name:'order',
+        path:'/orders/:order',
+        component: Order,
+        meta:{            
+            layout: 'dashboard',          
+            requiresAuth: true,
+        },      
+    },
    
 ]
 
-export default new VueRouter({
+export const router = new VueRouter({
     mode: 'hash',
     routes,
     scrollBehavior(to,from, savedPosition){        
@@ -177,3 +196,40 @@ export default new VueRouter({
         return { x: 0, y: 0 }
     }   
 })
+
+window.popStateDetected = false
+window.addEventListener('popstate', () => {
+    window.popStateDetected = true
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        if (!store.getters.loggedIn) {        
+            next({
+                name: 'login',            
+            })
+        } else {
+            next()
+        }
+    }else if (to.matched.some(record => record.meta.requiresVisitor)) {  
+        // Auth users will redirect to dashbord if a route requires Visitor      
+        if (store.getters.loggedIn) {        
+            next({
+                name: 'dashboard',            
+            })
+        } else {
+            next()
+        }
+    }else{
+        next() // make sure to always call next()!
+    } 
+})
+
+router.afterEach(()=>{
+    window.popStateDetected = false
+})
+
+
+    

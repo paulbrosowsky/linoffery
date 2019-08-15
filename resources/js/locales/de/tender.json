@@ -2,10 +2,22 @@
     "offer": "Angebot",
     "offers": "Angebote",
     "offerer": "Anbieter",
-    "offered_at": "angeboten am",
+    "offered_at": "Angeboten am",
+    "active_offers": "Aktive Angebote",
+    "offer_id": "Angebot ID",
+
+    "order": "Auftrag", 
+    "my_orders": "Meine Aufträge",   
+    
+    "my_tenders": "Meine Ausschreibungen",     
+    "tender_id": "Ausschreibung ID", 
+    "tender_on": "Ausschreibung vom",  
+    "consignor": "Absender",  
+    "carrier": "Spediteur", 
 
     "valid_until": "gültig bis",
-    "m_offer": "mitbieten",    
+    "m_offer": "mitbieten", 
+    "agreed_price": "Vereinbarter Preis",    
 
     "curr_offer": "Akt. Angebot",
     "make_offer": "Angebot abgeben",
@@ -53,5 +65,8 @@
     "withdraw_offer_message": "Ihr Angebot wurde gelöscht.",
     "place_order_message": "Glückwunsch! Sie haben Ihr Auftrag erteilt.",
     "take_now_info": "Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.",
-    "take_now_message": "Glückwunsch! Sie haben den Sofort-Auftrag angenommen."
+    "take_now_message": "Glückwunsch! Sie haben den Sofort-Auftrag angenommen.",
+    "no_tenders_info": "Momentan keine Ausschreibungen vorhanden.",
+    "no_orders_info": "Momentan keine Aufträge vorhanden.",
+    "no_offers_info": "Momentan keine Angebote vorhanden."
 }

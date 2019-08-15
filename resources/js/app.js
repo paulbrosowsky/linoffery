@@ -5,10 +5,12 @@ import VueMoment from "vue-moment"
 import moment from 'moment-timezone'
 import VueResize from "vue-resize-directive"
  
-import router from './routes'
+import {router} from './routes'
 import {store} from './store'
 import App from './layouts/App'
 import i18n from './utilities/i18n'
+
+window._ = require('lodash');
 
 Vue.use(VueModal)
 Vue.use(VueCookies)
@@ -52,33 +54,6 @@ Vue.component('tabs', require('./components/Tabs.vue').default);
 Vue.component('textarea-input', require('./components/TextareaInput.vue').default);
 
 Vue.directive('resize', VueResize );
-
-
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        // this route requires auth, check if logged in
-        // if not, redirect to login page.
-        if (!store.getters.loggedIn) {        
-            next({
-                name: 'login',            
-            })
-        } else {
-            next()
-        }
-    }else if (to.matched.some(record => record.meta.requiresVisitor)) {  
-        // Auth users will redirect to dashbord if a route requires Visitor      
-        if (store.getters.loggedIn) {        
-            next({
-            name: 'dashboard',            
-            })
-        } else {
-            next()
-        }
-    }else{
-        next() // make sure to always call next()!
-    }    
-   
-})
 
 const app = new Vue({
     el: '#app',

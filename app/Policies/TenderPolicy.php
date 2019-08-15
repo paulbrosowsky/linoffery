@@ -19,13 +19,13 @@ class TenderPolicy
     */
     public function update(User $user, Tender $tender)
     {   
-        $userId = $tender->user_id;
+        // $userId = $tender->user_id;
 
-        if (gettype($userId) == 'string') {
-            $userId = intval($userId);
-        }
+        // if (gettype($userId) == 'string') {
+        //     $userId = intval($userId);
+        // }
         // Update when owner and tender not published
-        return $userId === $user->id && $tender->published_at === NULL;    
+        return intval($tender->user_id) === $user->id && $tender->published_at === NULL;    
     }
 
      /**
@@ -37,12 +37,12 @@ class TenderPolicy
     */
     public function show(?User $user, Tender $tender)
     {                  
-        $userId = $tender->user_id;        
-        if (gettype($tender->user_id) == 'string') {
-            $userId = intval($userId);
-        } 
+        // $userId = $tender->user_id;        
+        // if (gettype($tender->user_id) == 'string') {
+        //     $userId = intval($userId);
+        // } 
         
         // If tender umpublished check for owner
-        return $userId === auth('api')->id();
+        return intval($tender->user_id) === auth('api')->id();
     }
 }

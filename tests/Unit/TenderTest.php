@@ -26,7 +26,7 @@ class TenderTest extends PassportTestCase
 
     /** @test */
     function is_has_many_locations()
-    {
+    {        
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->tender->locations);
     }
 

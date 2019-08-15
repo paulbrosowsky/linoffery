@@ -67,8 +67,8 @@ class Tender extends Model
      *  Check if current User owns a tender
      */
     public function owner()
-    {
-        return $this->user->id === auth('api')->id();
+    {        
+        return intval($this->user_id) === auth('api')->id();
     }
 
     /**
@@ -97,6 +97,11 @@ class Tender extends Model
         $this->update(['completed_at' => Carbon::now()]);
     }
 
+    /**
+     *  Check if Tender still Active
+     * 
+     * @return boolean
+     */
     public function getIsActiveAttribute()
     {
         return isset($this->published_at) && !isset($this->completed_at) ;

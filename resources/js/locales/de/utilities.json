@@ -15,5 +15,9 @@
     "address": "Adresse",
     "publish": "Veröffentlichen",
     "draft": "Entwurf",
-    "price": "Preis"
+    "drafts": "Entwürfe",
+    "price": "Preis",
+    "active": "Aktiv",
+    "completed": "Abgeschlossen",
+    "contact_person": "Ansprechpartner"    
 }

@@ -42,6 +42,11 @@ Route::group([
 
     Route::get('/dashboard/tenders', 'TendersDashboardController@index');
 
+    Route::get('/orders', 'OrdersController@index');
+    Route::get('/orders/{order}', 'OrdersController@show');
+
+    Route::get('/offers', 'OffersController@index');
+
     Route::post('/settings/account/avatar', 'AvatarsController@store');
     Route::post('/settings/company/logo', 'CompanysLogosController@store');
 

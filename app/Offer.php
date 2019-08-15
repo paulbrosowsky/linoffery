@@ -31,6 +31,16 @@ class Offer extends Model
         return $this->belongsTo(Tender::class);
     }
 
+     /**
+     * A Offer has one order
+     * 
+     * @return hasOne
+     */
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+
     /**
      *  Set an order as accepted
      */

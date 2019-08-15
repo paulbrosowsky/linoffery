@@ -9,6 +9,21 @@ use App\Order;
 
 class OffersController extends Controller
 {
+
+    /**
+     *  Get All Offers by authenicated user
+     * 
+     * @return Offer
+     */
+    public function index()
+    {
+        return Offer::where('user_id', auth()->id())
+                    ->where('accepted_at', NULL)
+                    ->with('tender')
+                    ->get();
+    }
+
+
     /**
      *  Create New Offer in DB
      * 
@@ -32,12 +47,9 @@ class OffersController extends Controller
                     }
                 },
             ]
-        ]); 
+        ]);   
         
-        $userId = $tender->user_id;        
-        gettype($userId) === 'string' ? $userId = intval($userId) : '';        
-        
-        if($userId === auth()->id()){
+        if(intval($tender->user_id) === auth()->id()){
             return response()->json(['message' => 'Your can not make offers for own tender.'], 403);
         }
         
@@ -83,7 +95,12 @@ class OffersController extends Controller
         $offer->delete();
     }
 
-       
+    /**
+     * Update Offer As accepted and create Order
+     * 
+     * @param Offer
+     * @return Order
+     */   
     protected function acceptOffer($offer)
     {        
         $offer->accept();

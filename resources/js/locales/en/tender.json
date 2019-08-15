@@ -2,10 +2,22 @@
     "offer": "Offer",
     "offers": "Offers", 
     "offerer": "Offerer",
-    "offered_at": "offered at",
+    "offered_at": "Offered at",
+    "active_offers": "Active offers",
+    "offer_id": "Offer ID",
+
+    "order": "Order",    
+    "my_orders": "My Orders", 
+
+    "my_tenders": "My Tenders",  
+    "tender_id": "Tender ID", 
+    "tender_on": "Tender on",  
+    "consignor": "Consignor",  
+    "carrier": "Carrier",      
 
     "valid_until": "valid until",
     "m_offer": "offer",
+    "agreed_price": "Agreed Price", 
 
     "curr_offer": "Curr. Offer",
     "make_offer": "Make offer",
@@ -53,5 +65,8 @@
     "withdraw_offer_message": "Your offer has been deleted.",
     "place_order_message": "Congratulation! You have placed your order.",
     "take_now_info": "By clicking the (take it now) button you confirm a binding order at the above price.",
-    "take_now_message": "Congratulation! You have accepted the instant order."
+    "take_now_message": "Congratulation! You have accepted the instant order.",
+    "no_tenders_info": "Currently no tenders available.",
+    "no_orders_info": "Currently no orders available.",
+    "no_offers_info": "Currently no offers available."
 }

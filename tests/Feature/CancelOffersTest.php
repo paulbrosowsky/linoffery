@@ -32,7 +32,7 @@ class CancelOffersTest extends PassportTestCase
     }
 
      /** @test */
-    function owners_can_not_cancel_thier_offers()
+    function owners_can_cancel_thier_offers()
     {
         $this->signIn($this->user);
 
