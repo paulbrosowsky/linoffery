@@ -38,26 +38,49 @@
                     </div>
             </div>
         </nav> -->
-        <action-bar></action-bar>
-        <card classes="py-5 px-0">
+        <!-- <action-bar></action-bar> -->
+           
             <tender-card 
                 v-for="(tender, index) in tenders" 
                 :key="index" 
                 :tender="tender"                
             ></tender-card>
-        </card>
+          
+
+            <div class="flex justify-center py-5">
+                <button 
+                    class="btn btn-outlined" 
+                    v-show="!loading && !noData"
+                    @click="fetchTenders"
+                >
+                   {{$t('utilities.more_results')}}
+                </button>
+
+                <p class="text-gray-500" v-show="noData">
+                    {{$t('utilities.no_more_results')}}
+                </p>
+
+                <loading-spinner :loading="loading" size="48px" position="unset"></loading-spinner>
+            </div>
+            
+        
         
     </div>
 
 </template>
 <script>
     import TenderCard from '../tenders/TenderCard'  
+    import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
+    import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
     export default {
-        components:{TenderCard},   
+        components:{TenderCard, PerfectScrollbar},   
         
         data(){
-            return{
+            return{                
+                
+                loading: false,                
+
                 origin:null,
                 destination:null,
                 range: 'Umweg'
@@ -66,26 +89,36 @@
 
         computed:{
             tenders(){                
-                return this.$store.getters.tenderList
+                return this.$store.state.tenders
             },   
             
             locations(){
-                return this.$store.state.locations
+                return this.$store.getters.locations
             },  
+            
+            page(){
+                return this.$store.state.page
+            },
+
+            noData(){
+                return this.$store.getters.noTenders
+            }
         },   
 
         methods:{          
-
-            // fetchTenders(bounds = null){  
-            //     console.log('fetch tenders')                 
-            //     this.$store
-            //         .dispatch('fetchTenders', bounds)
-            //         .then(() => {
-            //             setTimeout(()=>{
-            //                 Event.$emit('updateMarkers', this.locations)
-            //             }, 1000)                        
-            //         })       
-            // },
+            
+            fetchTenders(){  
+                this.loading = true
+                               
+                this.$store
+                    .dispatch('fetchTenders', { page: this.page })
+                    .then(response => {
+                        this.loading = false 
+                        setTimeout(()=>{
+                            Event.$emit('updateMarkers', this.locations)
+                        }, 500)                        
+                    })       
+            },            
 
             triggerRouteBoxer(){                
                 Event.$emit('boxRoute', this.range)
@@ -101,6 +134,7 @@
         },
         
         created(){
+            // this.resetPagintion()
             setTimeout(()=>{
                 Event.$emit('updateMarkers', this.locations)
             }, 500)
@@ -113,6 +147,8 @@
             // },2000); 
             
             // Event.$on('filterCargosByTheRoute', bounds => this.fetchCargos(bounds))
-        }
+        },
+
+           
     }
 </script>

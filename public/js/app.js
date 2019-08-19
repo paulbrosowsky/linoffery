@@ -98,6 +98,1337 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 
 /***/ }),
 
+/***/ "./node_modules/@google/markerclusterer/src/markerclusterer.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@google/markerclusterer/src/markerclusterer.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// ==ClosureCompiler==
+// @compilation_level ADVANCED_OPTIMIZATIONS
+// @externs_url http://closure-compiler.googlecode.com/svn/trunk/contrib/externs/maps/google_maps_api_v3_3.js
+// ==/ClosureCompiler==
+
+/**
+ * @name MarkerClusterer for Google Maps v3
+ * @version version 1.0.3
+ * @author Luke Mahe
+ * @fileoverview
+ * The library creates and manages per-zoom-level clusters for large amounts of
+ * markers.
+ */
+
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+/**
+ * A Marker Clusterer that clusters markers.
+ *
+ * @param {google.maps.Map} map The Google map to attach to.
+ * @param {Array.<google.maps.Marker>=} opt_markers Optional markers to add to
+ *   the cluster.
+ * @param {Object=} opt_options support the following options:
+ *     'gridSize': (number) The grid size of a cluster in pixels.
+ *     'maxZoom': (number) The maximum zoom level that a marker can be part of a
+ *                cluster.
+ *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
+ *                    cluster is to zoom into it.
+ *     'imagePath': (string) The base URL where the images representing
+ *                  clusters will be found. The full URL will be:
+ *                  {imagePath}[1-5].{imageExtension}
+ *                  Default: '../images/m'.
+ *     'imageExtension': (string) The suffix for images URL representing
+ *                       clusters will be found. See _imagePath_ for details.
+ *                       Default: 'png'.
+ *     'averageCenter': (boolean) Whether the center of each cluster should be
+ *                      the average of all markers in the cluster.
+ *     'minimumClusterSize': (number) The minimum number of markers to be in a
+ *                           cluster before the markers are hidden and a count
+ *                           is shown.
+ *     'styles': (object) An object that has style properties:
+ *       'url': (string) The image url.
+ *       'height': (number) The image height.
+ *       'width': (number) The image width.
+ *       'anchor': (Array) The anchor position of the label text.
+ *       'textColor': (string) The text color.
+ *       'textSize': (number) The text size.
+ *       'backgroundPosition': (string) The position of the backgound x, y.
+ * @constructor
+ * @extends google.maps.OverlayView
+ */
+function MarkerClusterer(map, opt_markers, opt_options) {
+  // MarkerClusterer implements google.maps.OverlayView interface. We use the
+  // extend function to extend MarkerClusterer with google.maps.OverlayView
+  // because it might not always be available when the code is defined so we
+  // look for it at the last possible moment. If it doesn't exist now then
+  // there is no point going ahead :)
+  this.extend(MarkerClusterer, google.maps.OverlayView);
+  this.map_ = map;
+
+  /**
+   * @type {Array.<google.maps.Marker>}
+   * @private
+   */
+  this.markers_ = [];
+
+  /**
+   *  @type {Array.<Cluster>}
+   */
+  this.clusters_ = [];
+
+  this.sizes = [53, 56, 66, 78, 90];
+
+  /**
+   * @private
+   */
+  this.styles_ = [];
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.ready_ = false;
+
+  var options = opt_options || {};
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.gridSize_ = options['gridSize'] || 60;
+
+  /**
+   * @private
+   */
+  this.minClusterSize_ = options['minimumClusterSize'] || 2;
+
+
+  /**
+   * @type {?number}
+   * @private
+   */
+  this.maxZoom_ = options['maxZoom'] || null;
+
+  this.styles_ = options['styles'] || [];
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.imagePath_ = options['imagePath'] ||
+      this.MARKER_CLUSTER_IMAGE_PATH_;
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.imageExtension_ = options['imageExtension'] ||
+      this.MARKER_CLUSTER_IMAGE_EXTENSION_;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.zoomOnClick_ = true;
+
+  if (options['zoomOnClick'] != undefined) {
+    this.zoomOnClick_ = options['zoomOnClick'];
+  }
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.averageCenter_ = false;
+
+  if (options['averageCenter'] != undefined) {
+    this.averageCenter_ = options['averageCenter'];
+  }
+
+  this.setupStyles_();
+
+  this.setMap(map);
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.prevZoom_ = this.map_.getZoom();
+
+  // Add the map event listeners
+  var that = this;
+  google.maps.event.addListener(this.map_, 'zoom_changed', function() {
+    // Determines map type and prevent illegal zoom levels
+    var zoom = that.map_.getZoom();
+    var minZoom = that.map_.minZoom || 0;
+    var maxZoom = Math.min(that.map_.maxZoom || 100,
+                         that.map_.mapTypes[that.map_.getMapTypeId()].maxZoom);
+    zoom = Math.min(Math.max(zoom,minZoom),maxZoom);
+
+    if (that.prevZoom_ != zoom) {
+      that.prevZoom_ = zoom;
+      that.resetViewport();
+    }
+  });
+
+  google.maps.event.addListener(this.map_, 'idle', function() {
+    that.redraw();
+  });
+
+  // Finally, add the markers
+  if (opt_markers && (opt_markers.length || Object.keys(opt_markers).length)) {
+    this.addMarkers(opt_markers, false);
+  }
+}
+
+
+/**
+ * The marker cluster image path.
+ *
+ * @type {string}
+ * @private
+ */
+MarkerClusterer.prototype.MARKER_CLUSTER_IMAGE_PATH_ = '../images/m';
+
+
+/**
+ * The marker cluster image path.
+ *
+ * @type {string}
+ * @private
+ */
+MarkerClusterer.prototype.MARKER_CLUSTER_IMAGE_EXTENSION_ = 'png';
+
+
+/**
+ * Extends a objects prototype by anothers.
+ *
+ * @param {Object} obj1 The object to be extended.
+ * @param {Object} obj2 The object to extend with.
+ * @return {Object} The new extended object.
+ * @ignore
+ */
+MarkerClusterer.prototype.extend = function(obj1, obj2) {
+  return (function(object) {
+    for (var property in object.prototype) {
+      this.prototype[property] = object.prototype[property];
+    }
+    return this;
+  }).apply(obj1, [obj2]);
+};
+
+
+/**
+ * Implementaion of the interface method.
+ * @ignore
+ */
+MarkerClusterer.prototype.onAdd = function() {
+  this.setReady_(true);
+};
+
+/**
+ * Implementaion of the interface method.
+ * @ignore
+ */
+MarkerClusterer.prototype.draw = function() {};
+
+/**
+ * Sets up the styles object.
+ *
+ * @private
+ */
+MarkerClusterer.prototype.setupStyles_ = function() {
+  if (this.styles_.length) {
+    return;
+  }
+
+  for (var i = 0, size; size = this.sizes[i]; i++) {
+    this.styles_.push({
+      url: this.imagePath_ + (i + 1) + '.' + this.imageExtension_,
+      height: size,
+      width: size
+    });
+  }
+};
+
+/**
+ *  Fit the map to the bounds of the markers in the clusterer.
+ */
+MarkerClusterer.prototype.fitMapToMarkers = function() {
+  var markers = this.getMarkers();
+  var bounds = new google.maps.LatLngBounds();
+  for (var i = 0, marker; marker = markers[i]; i++) {
+    bounds.extend(marker.getPosition());
+  }
+
+  this.map_.fitBounds(bounds);
+};
+
+
+/**
+ *  Sets the styles.
+ *
+ *  @param {Object} styles The style to set.
+ */
+MarkerClusterer.prototype.setStyles = function(styles) {
+  this.styles_ = styles;
+};
+
+
+/**
+ *  Gets the styles.
+ *
+ *  @return {Object} The styles object.
+ */
+MarkerClusterer.prototype.getStyles = function() {
+  return this.styles_;
+};
+
+
+/**
+ * Whether zoom on click is set.
+ *
+ * @return {boolean} True if zoomOnClick_ is set.
+ */
+MarkerClusterer.prototype.isZoomOnClick = function() {
+  return this.zoomOnClick_;
+};
+
+/**
+ * Whether average center is set.
+ *
+ * @return {boolean} True if averageCenter_ is set.
+ */
+MarkerClusterer.prototype.isAverageCenter = function() {
+  return this.averageCenter_;
+};
+
+
+/**
+ *  Returns the array of markers in the clusterer.
+ *
+ *  @return {Array.<google.maps.Marker>} The markers.
+ */
+MarkerClusterer.prototype.getMarkers = function() {
+  return this.markers_;
+};
+
+
+/**
+ *  Returns the number of markers in the clusterer
+ *
+ *  @return {Number} The number of markers.
+ */
+MarkerClusterer.prototype.getTotalMarkers = function() {
+  return this.markers_.length;
+};
+
+
+/**
+ *  Sets the max zoom for the clusterer.
+ *
+ *  @param {number} maxZoom The max zoom level.
+ */
+MarkerClusterer.prototype.setMaxZoom = function(maxZoom) {
+  this.maxZoom_ = maxZoom;
+};
+
+
+/**
+ *  Gets the max zoom for the clusterer.
+ *
+ *  @return {number} The max zoom level.
+ */
+MarkerClusterer.prototype.getMaxZoom = function() {
+  return this.maxZoom_;
+};
+
+
+/**
+ *  The function for calculating the cluster icon image.
+ *
+ *  @param {Array.<google.maps.Marker>} markers The markers in the clusterer.
+ *  @param {number} numStyles The number of styles available.
+ *  @return {Object} A object properties: 'text' (string) and 'index' (number).
+ *  @private
+ */
+MarkerClusterer.prototype.calculator_ = function(markers, numStyles) {
+  var index = 0;
+  var count = markers.length;
+  var dv = count;
+  while (dv !== 0) {
+    dv = parseInt(dv / 10, 10);
+    index++;
+  }
+
+  index = Math.min(index, numStyles);
+  return {
+    text: count,
+    index: index
+  };
+};
+
+
+/**
+ * Set the calculator function.
+ *
+ * @param {function(Array, number)} calculator The function to set as the
+ *     calculator. The function should return a object properties:
+ *     'text' (string) and 'index' (number).
+ *
+ */
+MarkerClusterer.prototype.setCalculator = function(calculator) {
+  this.calculator_ = calculator;
+};
+
+
+/**
+ * Get the calculator function.
+ *
+ * @return {function(Array, number)} the calculator function.
+ */
+MarkerClusterer.prototype.getCalculator = function() {
+  return this.calculator_;
+};
+
+
+/**
+ * Add an array of markers to the clusterer.
+ *
+ * @param {Array.<google.maps.Marker>} markers The markers to add.
+ * @param {boolean=} opt_nodraw Whether to redraw the clusters.
+ */
+MarkerClusterer.prototype.addMarkers = function(markers, opt_nodraw) {
+  if (markers.length) {
+    for (var i = 0, marker; marker = markers[i]; i++) {
+      this.pushMarkerTo_(marker);
+    }
+  } else if (Object.keys(markers).length) {
+    for (var marker in markers) {
+      this.pushMarkerTo_(markers[marker]);
+    }
+  }
+  if (!opt_nodraw) {
+    this.redraw();
+  }
+};
+
+
+/**
+ * Pushes a marker to the clusterer.
+ *
+ * @param {google.maps.Marker} marker The marker to add.
+ * @private
+ */
+MarkerClusterer.prototype.pushMarkerTo_ = function(marker) {
+  marker.isAdded = false;
+  if (marker['draggable']) {
+    // If the marker is draggable add a listener so we update the clusters on
+    // the drag end.
+    var that = this;
+    google.maps.event.addListener(marker, 'dragend', function() {
+      marker.isAdded = false;
+      that.repaint();
+    });
+  }
+  this.markers_.push(marker);
+};
+
+
+/**
+ * Adds a marker to the clusterer and redraws if needed.
+ *
+ * @param {google.maps.Marker} marker The marker to add.
+ * @param {boolean=} opt_nodraw Whether to redraw the clusters.
+ */
+MarkerClusterer.prototype.addMarker = function(marker, opt_nodraw) {
+  this.pushMarkerTo_(marker);
+  if (!opt_nodraw) {
+    this.redraw();
+  }
+};
+
+
+/**
+ * Removes a marker and returns true if removed, false if not
+ *
+ * @param {google.maps.Marker} marker The marker to remove
+ * @return {boolean} Whether the marker was removed or not
+ * @private
+ */
+MarkerClusterer.prototype.removeMarker_ = function(marker) {
+  var index = -1;
+  if (this.markers_.indexOf) {
+    index = this.markers_.indexOf(marker);
+  } else {
+    for (var i = 0, m; m = this.markers_[i]; i++) {
+      if (m == marker) {
+        index = i;
+        break;
+      }
+    }
+  }
+
+  if (index == -1) {
+    // Marker is not in our list of markers.
+    return false;
+  }
+
+  marker.setMap(null);
+
+  this.markers_.splice(index, 1);
+
+  return true;
+};
+
+
+/**
+ * Remove a marker from the cluster.
+ *
+ * @param {google.maps.Marker} marker The marker to remove.
+ * @param {boolean=} opt_nodraw Optional boolean to force no redraw.
+ * @return {boolean} True if the marker was removed.
+ */
+MarkerClusterer.prototype.removeMarker = function(marker, opt_nodraw) {
+  var removed = this.removeMarker_(marker);
+
+  if (!opt_nodraw && removed) {
+    this.resetViewport();
+    this.redraw();
+    return true;
+  } else {
+   return false;
+  }
+};
+
+
+/**
+ * Removes an array of markers from the cluster.
+ *
+ * @param {Array.<google.maps.Marker>} markers The markers to remove.
+ * @param {boolean=} opt_nodraw Optional boolean to force no redraw.
+ */
+MarkerClusterer.prototype.removeMarkers = function(markers, opt_nodraw) {
+  // create a local copy of markers if required
+  // (removeMarker_ modifies the getMarkers() array in place)
+  var markersCopy = markers === this.getMarkers() ? markers.slice() : markers;
+  var removed = false;
+
+  for (var i = 0, marker; marker = markersCopy[i]; i++) {
+    var r = this.removeMarker_(marker);
+    removed = removed || r;
+  }
+
+  if (!opt_nodraw && removed) {
+    this.resetViewport();
+    this.redraw();
+    return true;
+  }
+};
+
+
+/**
+ * Sets the clusterer's ready state.
+ *
+ * @param {boolean} ready The state.
+ * @private
+ */
+MarkerClusterer.prototype.setReady_ = function(ready) {
+  if (!this.ready_) {
+    this.ready_ = ready;
+    this.createClusters_();
+  }
+};
+
+
+/**
+ * Returns the number of clusters in the clusterer.
+ *
+ * @return {number} The number of clusters.
+ */
+MarkerClusterer.prototype.getTotalClusters = function() {
+  return this.clusters_.length;
+};
+
+
+/**
+ * Returns the google map that the clusterer is associated with.
+ *
+ * @return {google.maps.Map} The map.
+ */
+MarkerClusterer.prototype.getMap = function() {
+  return this.map_;
+};
+
+
+/**
+ * Sets the google map that the clusterer is associated with.
+ *
+ * @param {google.maps.Map} map The map.
+ */
+MarkerClusterer.prototype.setMap = function(map) {
+  this.map_ = map;
+};
+
+
+/**
+ * Returns the size of the grid.
+ *
+ * @return {number} The grid size.
+ */
+MarkerClusterer.prototype.getGridSize = function() {
+  return this.gridSize_;
+};
+
+
+/**
+ * Sets the size of the grid.
+ *
+ * @param {number} size The grid size.
+ */
+MarkerClusterer.prototype.setGridSize = function(size) {
+  this.gridSize_ = size;
+};
+
+
+/**
+ * Returns the min cluster size.
+ *
+ * @return {number} The grid size.
+ */
+MarkerClusterer.prototype.getMinClusterSize = function() {
+  return this.minClusterSize_;
+};
+
+/**
+ * Sets the min cluster size.
+ *
+ * @param {number} size The grid size.
+ */
+MarkerClusterer.prototype.setMinClusterSize = function(size) {
+  this.minClusterSize_ = size;
+};
+
+
+/**
+ * Extends a bounds object by the grid size.
+ *
+ * @param {google.maps.LatLngBounds} bounds The bounds to extend.
+ * @return {google.maps.LatLngBounds} The extended bounds.
+ */
+MarkerClusterer.prototype.getExtendedBounds = function(bounds) {
+  var projection = this.getProjection();
+
+  // Turn the bounds into latlng.
+  var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),
+      bounds.getNorthEast().lng());
+  var bl = new google.maps.LatLng(bounds.getSouthWest().lat(),
+      bounds.getSouthWest().lng());
+
+  // Convert the points to pixels and the extend out by the grid size.
+  var trPix = projection.fromLatLngToDivPixel(tr);
+  trPix.x += this.gridSize_;
+  trPix.y -= this.gridSize_;
+
+  var blPix = projection.fromLatLngToDivPixel(bl);
+  blPix.x -= this.gridSize_;
+  blPix.y += this.gridSize_;
+
+  // Convert the pixel points back to LatLng
+  var ne = projection.fromDivPixelToLatLng(trPix);
+  var sw = projection.fromDivPixelToLatLng(blPix);
+
+  // Extend the bounds to contain the new bounds.
+  bounds.extend(ne);
+  bounds.extend(sw);
+
+  return bounds;
+};
+
+
+/**
+ * Determins if a marker is contained in a bounds.
+ *
+ * @param {google.maps.Marker} marker The marker to check.
+ * @param {google.maps.LatLngBounds} bounds The bounds to check against.
+ * @return {boolean} True if the marker is in the bounds.
+ * @private
+ */
+MarkerClusterer.prototype.isMarkerInBounds_ = function(marker, bounds) {
+  return bounds.contains(marker.getPosition());
+};
+
+
+/**
+ * Clears all clusters and markers from the clusterer.
+ */
+MarkerClusterer.prototype.clearMarkers = function() {
+  this.resetViewport(true);
+
+  // Set the markers a empty array.
+  this.markers_ = [];
+};
+
+
+/**
+ * Clears all existing clusters and recreates them.
+ * @param {boolean} opt_hide To also hide the marker.
+ */
+MarkerClusterer.prototype.resetViewport = function(opt_hide) {
+  // Remove all the clusters
+  for (var i = 0, cluster; cluster = this.clusters_[i]; i++) {
+    cluster.remove();
+  }
+
+  // Reset the markers to not be added and to be invisible.
+  for (var i = 0, marker; marker = this.markers_[i]; i++) {
+    marker.isAdded = false;
+    if (opt_hide) {
+      marker.setMap(null);
+    }
+  }
+
+  this.clusters_ = [];
+};
+
+/**
+ *
+ */
+MarkerClusterer.prototype.repaint = function() {
+  var oldClusters = this.clusters_.slice();
+  this.clusters_.length = 0;
+  this.resetViewport();
+  this.redraw();
+
+  // Remove the old clusters.
+  // Do it in a timeout so the other clusters have been drawn first.
+  window.setTimeout(function() {
+    for (var i = 0, cluster; cluster = oldClusters[i]; i++) {
+      cluster.remove();
+    }
+  }, 0);
+};
+
+
+/**
+ * Redraws the clusters.
+ */
+MarkerClusterer.prototype.redraw = function() {
+  this.createClusters_();
+};
+
+
+/**
+ * Calculates the distance between two latlng locations in km.
+ * @see http://www.movable-type.co.uk/scripts/latlong.html
+ *
+ * @param {google.maps.LatLng} p1 The first lat lng point.
+ * @param {google.maps.LatLng} p2 The second lat lng point.
+ * @return {number} The distance between the two points in km.
+ * @private
+*/
+MarkerClusterer.prototype.distanceBetweenPoints_ = function(p1, p2) {
+  if (!p1 || !p2) {
+    return 0;
+  }
+
+  var R = 6371; // Radius of the Earth in km
+  var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
+  var dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(p1.lat() * Math.PI / 180) * Math.cos(p2.lat() * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d;
+};
+
+
+/**
+ * Add a marker to a cluster, or creates a new cluster.
+ *
+ * @param {google.maps.Marker} marker The marker to add.
+ * @private
+ */
+MarkerClusterer.prototype.addToClosestCluster_ = function(marker) {
+  var distance = 40000; // Some large number
+  var clusterToAddTo = null;
+  var pos = marker.getPosition();
+  for (var i = 0, cluster; cluster = this.clusters_[i]; i++) {
+    var center = cluster.getCenter();
+    if (center) {
+      var d = this.distanceBetweenPoints_(center, marker.getPosition());
+      if (d < distance) {
+        distance = d;
+        clusterToAddTo = cluster;
+      }
+    }
+  }
+
+  if (clusterToAddTo && clusterToAddTo.isMarkerInClusterBounds(marker)) {
+    clusterToAddTo.addMarker(marker);
+  } else {
+    var cluster = new Cluster(this);
+    cluster.addMarker(marker);
+    this.clusters_.push(cluster);
+  }
+};
+
+
+/**
+ * Creates the clusters.
+ *
+ * @private
+ */
+MarkerClusterer.prototype.createClusters_ = function() {
+  if (!this.ready_) {
+    return;
+  }
+
+  // Get our current map view bounds.
+  // Create a new bounds object so we don't affect the map.
+  var mapBounds = new google.maps.LatLngBounds(this.map_.getBounds().getSouthWest(),
+      this.map_.getBounds().getNorthEast());
+  var bounds = this.getExtendedBounds(mapBounds);
+
+  for (var i = 0, marker; marker = this.markers_[i]; i++) {
+    if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
+      this.addToClosestCluster_(marker);
+    }
+  }
+};
+
+
+/**
+ * A cluster that contains markers.
+ *
+ * @param {MarkerClusterer} markerClusterer The markerclusterer that this
+ *     cluster is associated with.
+ * @constructor
+ * @ignore
+ */
+function Cluster(markerClusterer) {
+  this.markerClusterer_ = markerClusterer;
+  this.map_ = markerClusterer.getMap();
+  this.gridSize_ = markerClusterer.getGridSize();
+  this.minClusterSize_ = markerClusterer.getMinClusterSize();
+  this.averageCenter_ = markerClusterer.isAverageCenter();
+  this.center_ = null;
+  this.markers_ = [];
+  this.bounds_ = null;
+  this.clusterIcon_ = new ClusterIcon(this, markerClusterer.getStyles(),
+      markerClusterer.getGridSize());
+}
+
+/**
+ * Determins if a marker is already added to the cluster.
+ *
+ * @param {google.maps.Marker} marker The marker to check.
+ * @return {boolean} True if the marker is already added.
+ */
+Cluster.prototype.isMarkerAlreadyAdded = function(marker) {
+  if (this.markers_.indexOf) {
+    return this.markers_.indexOf(marker) != -1;
+  } else {
+    for (var i = 0, m; m = this.markers_[i]; i++) {
+      if (m == marker) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+
+/**
+ * Add a marker the cluster.
+ *
+ * @param {google.maps.Marker} marker The marker to add.
+ * @return {boolean} True if the marker was added.
+ */
+Cluster.prototype.addMarker = function(marker) {
+  if (this.isMarkerAlreadyAdded(marker)) {
+    return false;
+  }
+
+  if (!this.center_) {
+    this.center_ = marker.getPosition();
+    this.calculateBounds_();
+  } else {
+    if (this.averageCenter_) {
+      var l = this.markers_.length + 1;
+      var lat = (this.center_.lat() * (l-1) + marker.getPosition().lat()) / l;
+      var lng = (this.center_.lng() * (l-1) + marker.getPosition().lng()) / l;
+      this.center_ = new google.maps.LatLng(lat, lng);
+      this.calculateBounds_();
+    }
+  }
+
+  marker.isAdded = true;
+  this.markers_.push(marker);
+
+  var len = this.markers_.length;
+  if (len < this.minClusterSize_ && marker.getMap() != this.map_) {
+    // Min cluster size not reached so show the marker.
+    marker.setMap(this.map_);
+  }
+
+  if (len == this.minClusterSize_) {
+    // Hide the markers that were showing.
+    for (var i = 0; i < len; i++) {
+      this.markers_[i].setMap(null);
+    }
+  }
+
+  if (len >= this.minClusterSize_) {
+    marker.setMap(null);
+  }
+
+  this.updateIcon();
+  return true;
+};
+
+
+/**
+ * Returns the marker clusterer that the cluster is associated with.
+ *
+ * @return {MarkerClusterer} The associated marker clusterer.
+ */
+Cluster.prototype.getMarkerClusterer = function() {
+  return this.markerClusterer_;
+};
+
+
+/**
+ * Returns the bounds of the cluster.
+ *
+ * @return {google.maps.LatLngBounds} the cluster bounds.
+ */
+Cluster.prototype.getBounds = function() {
+  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
+  var markers = this.getMarkers();
+  for (var i = 0, marker; marker = markers[i]; i++) {
+    bounds.extend(marker.getPosition());
+  }
+  return bounds;
+};
+
+
+/**
+ * Removes the cluster
+ */
+Cluster.prototype.remove = function() {
+  this.clusterIcon_.remove();
+  this.markers_.length = 0;
+  delete this.markers_;
+};
+
+
+/**
+ * Returns the number of markers in the cluster.
+ *
+ * @return {number} The number of markers in the cluster.
+ */
+Cluster.prototype.getSize = function() {
+  return this.markers_.length;
+};
+
+
+/**
+ * Returns a list of the markers in the cluster.
+ *
+ * @return {Array.<google.maps.Marker>} The markers in the cluster.
+ */
+Cluster.prototype.getMarkers = function() {
+  return this.markers_;
+};
+
+
+/**
+ * Returns the center of the cluster.
+ *
+ * @return {google.maps.LatLng} The cluster center.
+ */
+Cluster.prototype.getCenter = function() {
+  return this.center_;
+};
+
+
+/**
+ * Calculated the extended bounds of the cluster with the grid.
+ *
+ * @private
+ */
+Cluster.prototype.calculateBounds_ = function() {
+  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
+  this.bounds_ = this.markerClusterer_.getExtendedBounds(bounds);
+};
+
+
+/**
+ * Determines if a marker lies in the clusters bounds.
+ *
+ * @param {google.maps.Marker} marker The marker to check.
+ * @return {boolean} True if the marker lies in the bounds.
+ */
+Cluster.prototype.isMarkerInClusterBounds = function(marker) {
+  return this.bounds_.contains(marker.getPosition());
+};
+
+
+/**
+ * Returns the map that the cluster is associated with.
+ *
+ * @return {google.maps.Map} The map.
+ */
+Cluster.prototype.getMap = function() {
+  return this.map_;
+};
+
+
+/**
+ * Updates the cluster icon
+ */
+Cluster.prototype.updateIcon = function() {
+  var zoom = this.map_.getZoom();
+  var mz = this.markerClusterer_.getMaxZoom();
+
+  if (mz && zoom > mz) {
+    // The zoom is greater than our max zoom so show all the markers in cluster.
+    for (var i = 0, marker; marker = this.markers_[i]; i++) {
+      marker.setMap(this.map_);
+    }
+    return;
+  }
+
+  if (this.markers_.length < this.minClusterSize_) {
+    // Min cluster size not yet reached.
+    this.clusterIcon_.hide();
+    return;
+  }
+
+  var numStyles = this.markerClusterer_.getStyles().length;
+  var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
+  this.clusterIcon_.setCenter(this.center_);
+  this.clusterIcon_.setSums(sums);
+  this.clusterIcon_.show();
+};
+
+
+/**
+ * A cluster icon
+ *
+ * @param {Cluster} cluster The cluster to be associated with.
+ * @param {Object} styles An object that has style properties:
+ *     'url': (string) The image url.
+ *     'height': (number) The image height.
+ *     'width': (number) The image width.
+ *     'anchor': (Array) The anchor position of the label text.
+ *     'textColor': (string) The text color.
+ *     'textSize': (number) The text size.
+ *     'backgroundPosition: (string) The background postition x, y.
+ * @param {number=} opt_padding Optional padding to apply to the cluster icon.
+ * @constructor
+ * @extends google.maps.OverlayView
+ * @ignore
+ */
+function ClusterIcon(cluster, styles, opt_padding) {
+  cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
+
+  this.styles_ = styles;
+  this.padding_ = opt_padding || 0;
+  this.cluster_ = cluster;
+  this.center_ = null;
+  this.map_ = cluster.getMap();
+  this.div_ = null;
+  this.sums_ = null;
+  this.visible_ = false;
+
+  this.setMap(this.map_);
+}
+
+
+/**
+ * Triggers the clusterclick event and zoom's if the option is set.
+ */
+ClusterIcon.prototype.triggerClusterClick = function() {
+  var markerClusterer = this.cluster_.getMarkerClusterer();
+
+  // Trigger the clusterclick event.
+  google.maps.event.trigger(markerClusterer.map_, 'clusterclick', this.cluster_);
+
+  if (markerClusterer.isZoomOnClick()) {
+    // Zoom into the cluster.
+    this.map_.fitBounds(this.cluster_.getBounds());
+  }
+};
+
+
+/**
+ * Adding the cluster icon to the dom.
+ * @ignore
+ */
+ClusterIcon.prototype.onAdd = function() {
+  this.div_ = document.createElement('DIV');
+  if (this.visible_) {
+    var pos = this.getPosFromLatLng_(this.center_);
+    this.div_.style.cssText = this.createCss(pos);
+    this.div_.innerHTML = this.sums_.text;
+  }
+
+  var panes = this.getPanes();
+  panes.overlayMouseTarget.appendChild(this.div_);
+
+  var that = this;
+  google.maps.event.addDomListener(this.div_, 'click', function() {
+    that.triggerClusterClick();
+  });
+};
+
+
+/**
+ * Returns the position to place the div dending on the latlng.
+ *
+ * @param {google.maps.LatLng} latlng The position in latlng.
+ * @return {google.maps.Point} The position in pixels.
+ * @private
+ */
+ClusterIcon.prototype.getPosFromLatLng_ = function(latlng) {
+  var pos = this.getProjection().fromLatLngToDivPixel(latlng);
+  pos.x -= parseInt(this.width_ / 2, 10);
+  pos.y -= parseInt(this.height_ / 2, 10);
+  return pos;
+};
+
+
+/**
+ * Draw the icon.
+ * @ignore
+ */
+ClusterIcon.prototype.draw = function() {
+  if (this.visible_) {
+    var pos = this.getPosFromLatLng_(this.center_);
+    this.div_.style.top = pos.y + 'px';
+    this.div_.style.left = pos.x + 'px';
+    this.div_.style.zIndex = google.maps.Marker.MAX_ZINDEX + 1;
+  }
+};
+
+
+/**
+ * Hide the icon.
+ */
+ClusterIcon.prototype.hide = function() {
+  if (this.div_) {
+    this.div_.style.display = 'none';
+  }
+  this.visible_ = false;
+};
+
+
+/**
+ * Position and show the icon.
+ */
+ClusterIcon.prototype.show = function() {
+  if (this.div_) {
+    var pos = this.getPosFromLatLng_(this.center_);
+    this.div_.style.cssText = this.createCss(pos);
+    this.div_.style.display = '';
+  }
+  this.visible_ = true;
+};
+
+
+/**
+ * Remove the icon from the map
+ */
+ClusterIcon.prototype.remove = function() {
+  this.setMap(null);
+};
+
+
+/**
+ * Implementation of the onRemove interface.
+ * @ignore
+ */
+ClusterIcon.prototype.onRemove = function() {
+  if (this.div_ && this.div_.parentNode) {
+    this.hide();
+    this.div_.parentNode.removeChild(this.div_);
+    this.div_ = null;
+  }
+};
+
+
+/**
+ * Set the sums of the icon.
+ *
+ * @param {Object} sums The sums containing:
+ *   'text': (string) The text to display in the icon.
+ *   'index': (number) The style index of the icon.
+ */
+ClusterIcon.prototype.setSums = function(sums) {
+  this.sums_ = sums;
+  this.text_ = sums.text;
+  this.index_ = sums.index;
+  if (this.div_) {
+    this.div_.innerHTML = sums.text;
+  }
+
+  this.useStyle();
+};
+
+
+/**
+ * Sets the icon to the the styles.
+ */
+ClusterIcon.prototype.useStyle = function() {
+  var index = Math.max(0, this.sums_.index - 1);
+  index = Math.min(this.styles_.length - 1, index);
+  var style = this.styles_[index];
+  this.url_ = style['url'];
+  this.height_ = style['height'];
+  this.width_ = style['width'];
+  this.textColor_ = style['textColor'];
+  this.anchor_ = style['anchor'];
+  this.textSize_ = style['textSize'];
+  this.backgroundPosition_ = style['backgroundPosition'];
+};
+
+
+/**
+ * Sets the center of the icon.
+ *
+ * @param {google.maps.LatLng} center The latlng to set as the center.
+ */
+ClusterIcon.prototype.setCenter = function(center) {
+  this.center_ = center;
+};
+
+
+/**
+ * Create the css text based on the position of the icon.
+ *
+ * @param {google.maps.Point} pos The position.
+ * @return {string} The css style text.
+ */
+ClusterIcon.prototype.createCss = function(pos) {
+  var style = [];
+  style.push('background-image:url(' + this.url_ + ');');
+  var backgroundPosition = this.backgroundPosition_ ? this.backgroundPosition_ : '0 0';
+  style.push('background-position:' + backgroundPosition + ';');
+
+  if (typeof this.anchor_ === 'object') {
+    if (typeof this.anchor_[0] === 'number' && this.anchor_[0] > 0 &&
+        this.anchor_[0] < this.height_) {
+      style.push('height:' + (this.height_ - this.anchor_[0]) +
+          'px; padding-top:' + this.anchor_[0] + 'px;');
+    } else {
+      style.push('height:' + this.height_ + 'px; line-height:' + this.height_ +
+          'px;');
+    }
+    if (typeof this.anchor_[1] === 'number' && this.anchor_[1] > 0 &&
+        this.anchor_[1] < this.width_) {
+      style.push('width:' + (this.width_ - this.anchor_[1]) +
+          'px; padding-left:' + this.anchor_[1] + 'px;');
+    } else {
+      style.push('width:' + this.width_ + 'px; text-align:center;');
+    }
+  } else {
+    style.push('height:' + this.height_ + 'px; line-height:' +
+        this.height_ + 'px; width:' + this.width_ + 'px; text-align:center;');
+  }
+
+  var txtColor = this.textColor_ ? this.textColor_ : 'black';
+  var txtSize = this.textSize_ ? this.textSize_ : 11;
+
+  style.push('cursor:pointer; top:' + pos.y + 'px; left:' +
+      pos.x + 'px; color:' + txtColor + '; position:absolute; font-size:' +
+      txtSize + 'px; font-family:Arial,sans-serif; font-weight:bold');
+  return style.join('');
+};
+
+
+// Export Symbols for Closure
+// If you are not going to compile with closure then you can remove the
+// code below.
+var window = window || {};
+window['MarkerClusterer'] = MarkerClusterer;
+MarkerClusterer.prototype['addMarker'] = MarkerClusterer.prototype.addMarker;
+MarkerClusterer.prototype['addMarkers'] = MarkerClusterer.prototype.addMarkers;
+MarkerClusterer.prototype['clearMarkers'] =
+    MarkerClusterer.prototype.clearMarkers;
+MarkerClusterer.prototype['fitMapToMarkers'] =
+    MarkerClusterer.prototype.fitMapToMarkers;
+MarkerClusterer.prototype['getCalculator'] =
+    MarkerClusterer.prototype.getCalculator;
+MarkerClusterer.prototype['getGridSize'] =
+    MarkerClusterer.prototype.getGridSize;
+MarkerClusterer.prototype['getExtendedBounds'] =
+    MarkerClusterer.prototype.getExtendedBounds;
+MarkerClusterer.prototype['getMap'] = MarkerClusterer.prototype.getMap;
+MarkerClusterer.prototype['getMarkers'] = MarkerClusterer.prototype.getMarkers;
+MarkerClusterer.prototype['getMaxZoom'] = MarkerClusterer.prototype.getMaxZoom;
+MarkerClusterer.prototype['getStyles'] = MarkerClusterer.prototype.getStyles;
+MarkerClusterer.prototype['getTotalClusters'] =
+    MarkerClusterer.prototype.getTotalClusters;
+MarkerClusterer.prototype['getTotalMarkers'] =
+    MarkerClusterer.prototype.getTotalMarkers;
+MarkerClusterer.prototype['redraw'] = MarkerClusterer.prototype.redraw;
+MarkerClusterer.prototype['removeMarker'] =
+    MarkerClusterer.prototype.removeMarker;
+MarkerClusterer.prototype['removeMarkers'] =
+    MarkerClusterer.prototype.removeMarkers;
+MarkerClusterer.prototype['resetViewport'] =
+    MarkerClusterer.prototype.resetViewport;
+MarkerClusterer.prototype['repaint'] =
+    MarkerClusterer.prototype.repaint;
+MarkerClusterer.prototype['setCalculator'] =
+    MarkerClusterer.prototype.setCalculator;
+MarkerClusterer.prototype['setGridSize'] =
+    MarkerClusterer.prototype.setGridSize;
+MarkerClusterer.prototype['setMaxZoom'] =
+    MarkerClusterer.prototype.setMaxZoom;
+MarkerClusterer.prototype['onAdd'] = MarkerClusterer.prototype.onAdd;
+MarkerClusterer.prototype['draw'] = MarkerClusterer.prototype.draw;
+
+Cluster.prototype['getCenter'] = Cluster.prototype.getCenter;
+Cluster.prototype['getSize'] = Cluster.prototype.getSize;
+Cluster.prototype['getMarkers'] = Cluster.prototype.getMarkers;
+
+ClusterIcon.prototype['onAdd'] = ClusterIcon.prototype.onAdd;
+ClusterIcon.prototype['draw'] = ClusterIcon.prototype.draw;
+ClusterIcon.prototype['onRemove'] = ClusterIcon.prototype.onRemove;
+
+Object.keys = Object.keys || function(o) {
+    var result = [];
+    for(var name in o) {
+        if (o.hasOwnProperty(name))
+          result.push(name);
+    }
+    return result;
+};
+
+if (true) {
+  module.exports = MarkerClusterer;
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -2407,9 +3738,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     layout: {
@@ -2585,9 +3913,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    Gmap: _views_Map__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
   props: {
     fixed: {
       "default": false
@@ -3294,6 +4619,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _views_Map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/Map */ "./resources/js/views/Map.vue");
 //
 //
 //
@@ -3317,11 +4643,86 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    if (window.innerWidth > 1023) {
-      Event.$emit('toggle-map-drawer');
+  components: {
+    Gmap: _views_Map__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      drawerHeight: 200,
+      drawerWidth: 400,
+      minDrawerHeight: 64
+    };
+  },
+  methods: {
+    setResizeEvents: function setResizeEvents() {
+      var el = this.$refs.drawer.$el; // let drawerGrip = this.$refs.grip
+
+      var that = this;
+      var content = this.$refs.content.$el;
+      var touchPosition;
+      var intHeight = this.drawerHeight;
+
+      function resize(event) {
+        var swipeUp = touchPosition > event.touches[0].clientY + 1;
+        var swipeDown = touchPosition < event.touches[0].clientY + 1;
+        var height;
+
+        if (swipeUp) {
+          if (el.offsetHeight < document.body.scrollHeight) {
+            content.scrollTop = 0;
+            height = intHeight + (touchPosition - event.touches[0].clientY);
+          }
+        }
+
+        if (swipeDown && content.scrollTop === 0 && el.offsetHeight > that.minDrawerHeight) {
+          height = intHeight + (touchPosition - event.touches[0].clientY);
+        }
+
+        el.style.height = height + 'px';
+      }
+
+      el.addEventListener('touchstart', function (event) {
+        touchPosition = event.touches[0].clientY;
+        el.style.transition = 'initial';
+        document.addEventListener("touchmove", resize, false);
+      });
+      document.addEventListener('touchend', function () {
+        el.style.transition = '';
+        that.drawerHeight = el.style.height;
+        intHeight = el.offsetHeight;
+        document.removeEventListener("touchmove", resize, false);
+      });
+    },
+    setDrawerSize: function setDrawerSize() {
+      if (window.innerWidth > 640) {
+        this.drawerHeight = window.innerHeight - 24;
+        this.drawerWidth = 400;
+      } else {
+        this.drawerHeight = window.innerHeight / 2.2;
+        this.drawerWidth = window.innerWidth;
+      }
     }
+  },
+  mounted: function mounted() {
+    this.setResizeEvents();
+    this.setDrawerSize();
   }
 });
 
@@ -3934,10 +5335,19 @@ __webpack_require__.r(__webpack_exports__);
     acceptOffer: function acceptOffer() {
       var _this = this;
 
-      this.$store.dispatch('acceptOffer', this.offer.id).then(function () {
+      this.$store.dispatch('acceptOffer', this.offer.id).then(function (response) {
         flash(_this.$i18n.t('tender.place_order_message'));
 
         _this.close();
+
+        _this.$router.push({
+          name: 'order',
+          params: {
+            order: response.id
+          }
+        });
+      })["catch"](function (errors) {
+        return console.log(errors);
       });
     },
     close: function close() {
@@ -4263,6 +5673,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utilities_gmaps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utilities/gmaps */ "./resources/js/utilities/gmaps.js");
 /* harmony import */ var _utilities_RouteBoxer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utilities/RouteBoxer */ "./resources/js/utilities/RouteBoxer.js");
+/* harmony import */ var _google_markerclusterer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @google/markerclusterer */ "./node_modules/@google/markerclusterer/src/markerclusterer.js");
+/* harmony import */ var _google_markerclusterer__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_google_markerclusterer__WEBPACK_IMPORTED_MODULE_3__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4274,6 +5686,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4281,12 +5694,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       origin: null,
       destination: null,
       route: [],
-      map: null
+      map: null,
+      markerCluster: null
     };
   },
   computed: {
     locations: function locations() {
-      return this.$store.state.locations;
+      return this.$store.getters.locations;
     }
   },
   methods: {
@@ -4320,6 +5734,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   disableDefaultUI: true
                 });
                 this.directionsDisplay.setMap(null);
+                this.markerCluster = new _google_markerclusterer__WEBPACK_IMPORTED_MODULE_3___default.a(this.map, this.markers, {
+                  imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+                });
                 Event.$on('zoom-map', function () {
                   setTimeout(function () {
                     _this.zoomToMarkers();
@@ -4352,20 +5769,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 //     map.fitBounds(results[0].geometry.viewport);
                 // });
 
-                _context.next = 18;
+                _context.next = 19;
                 break;
 
-              case 15:
-                _context.prev = 15;
+              case 16:
+                _context.prev = 16;
                 _context.t0 = _context["catch"](0);
                 console.error(_context.t0);
 
-              case 18:
+              case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 15]]);
+        }, _callee, this, [[0, 16]]);
       }));
 
       function mountMap() {
@@ -4426,9 +5843,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 2:
+                // Add updated Markers to Cluster
+                this.markerCluster.addMarkers(this.markers);
                 this.zoomToMarkers();
 
-              case 3:
+              case 4:
               case "end":
                 return _context2.stop();
             }
@@ -4545,6 +5964,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return marker.setMap(null);
       });
       this.markers = [];
+      this.markerCluster.clearMarkers();
     }
   },
   mounted: function mounted() {
@@ -6212,6 +7632,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Get Place from Google Maps and set local address veriables
     setAddress: function setAddress(place) {
+      console.log(place);
       var address = place.address_components;
       var location = place.geometry.location;
       this.address = address[1].long_name + ' ' + address[0].long_name;
@@ -6767,7 +8188,9 @@ __webpack_require__.r(__webpack_exports__);
         loading: null,
         latency: null,
         lat: null,
-        lng: null
+        lng: null,
+        city: null,
+        country: null
       },
       errors: [],
       loading: false
@@ -6825,6 +8248,18 @@ __webpack_require__.r(__webpack_exports__);
         this.form.address = address.place.formatted_address;
         this.form.lat = address.place.geometry.location.lat();
         this.form.lng = address.place.geometry.location.lng();
+        var city = address.place.address_components.find(function (component) {
+          return component.types.find(function (type) {
+            return type === 'locality';
+          });
+        });
+        var country = address.place.address_components.find(function (component) {
+          return component.types.find(function (type) {
+            return type === 'country';
+          });
+        });
+        this.form.city = city.long_name;
+        this.form.country = country.long_name;
       }
     },
     updateEarliestDate: function updateEarliestDate(value) {
@@ -7079,6 +8514,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -7151,8 +8599,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     fetchData: function fetchData() {
       this.$store.dispatch('fetchTender', "/api".concat(this.$route.path)).then(function (response) {
-        Event.$emit('updateMarkers', response.data.locations);
-        Event.$emit('zoom-map');
+        Event.$emit('updateMarkers', response.locations);
       });
     }
   },
@@ -7214,6 +8661,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['tender'],
   data: function data() {
@@ -7227,13 +8702,20 @@ __webpack_require__.r(__webpack_exports__);
       this.tender.freights.forEach(function (freight) {
         weight = weight + freight.weight;
       });
-      return weight + ' kg';
-    },
-    latestDelivery: function latestDelivery() {
-      return this.deliveryLocation.latest_date;
+      return weight;
     },
     price: function price() {
       return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price;
+    },
+    delivery: function delivery() {
+      return this.tender.locations.find(function (location) {
+        return location.type === 'delivery';
+      });
+    },
+    pickup: function pickup() {
+      return this.tender.locations.find(function (location) {
+        return location.type === 'pickup';
+      });
     }
   }
 });
@@ -7541,44 +9023,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['tender'],
-  data: function data() {
-    return {
-      cardHeaderSmall: false
-    };
-  },
   computed: {
     company: function company() {
       return this.tender.user.company;
@@ -7589,13 +9035,11 @@ __webpack_require__.r(__webpack_exports__);
     ownsTender: function ownsTender() {
       return this.$store.getters.ownsTender;
     },
+    loggedIn: function loggedIn() {
+      return this.$store.getters.loggedIn;
+    },
     price: function price() {
       return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price;
-    }
-  },
-  methods: {
-    styleCardHeader: function styleCardHeader() {
-      this.cardHeaderSmall = this.$refs.cardHeader.clientWidth < 640 ? true : false;
     }
   }
 });
@@ -7612,6 +9056,28 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../tenders/TenderCard */ "./resources/js/views/tenders/TenderCard.vue");
+/* harmony import */ var vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-perfect-scrollbar */ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.umd.js");
+/* harmony import */ var vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css */ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css");
+/* harmony import */ var vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7665,12 +9131,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    TenderCard: _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__["default"]
+    TenderCard: _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__["default"],
+    PerfectScrollbar: vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1__["PerfectScrollbar"]
   },
   data: function data() {
     return {
+      loading: false,
       origin: null,
       destination: null,
       range: 'Umweg'
@@ -7678,23 +9148,32 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     tenders: function tenders() {
-      return this.$store.getters.tenderList;
+      return this.$store.state.tenders;
     },
     locations: function locations() {
-      return this.$store.state.locations;
+      return this.$store.getters.locations;
+    },
+    page: function page() {
+      return this.$store.state.page;
+    },
+    noData: function noData() {
+      return this.$store.getters.noTenders;
     }
   },
   methods: {
-    // fetchTenders(bounds = null){  
-    //     console.log('fetch tenders')                 
-    //     this.$store
-    //         .dispatch('fetchTenders', bounds)
-    //         .then(() => {
-    //             setTimeout(()=>{
-    //                 Event.$emit('updateMarkers', this.locations)
-    //             }, 1000)                        
-    //         })       
-    // },
+    fetchTenders: function fetchTenders() {
+      var _this = this;
+
+      this.loading = true;
+      this.$store.dispatch('fetchTenders', {
+        page: this.page
+      }).then(function (response) {
+        _this.loading = false;
+        setTimeout(function () {
+          Event.$emit('updateMarkers', _this.locations);
+        }, 500);
+      });
+    },
     triggerRouteBoxer: function triggerRouteBoxer() {
       Event.$emit('boxRoute', this.range);
       this.setRouteFilter();
@@ -7706,10 +9185,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    var _this = this;
+    var _this2 = this;
 
+    // this.resetPagintion()
     setTimeout(function () {
-      Event.$emit('updateMarkers', _this.locations);
+      Event.$emit('updateMarkers', _this2.locations);
     }, 500); // this.setRouteFilter();
     // setTimeout(() => {
     //     Event.$emit('setAutocomplete')
@@ -7765,12 +9245,10 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     TenderCard: _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  data: function data() {
-    return {
-      tenders: null
-    };
-  },
   computed: {
+    tenders: function tenders() {
+      return this.$store.state.usersTenders;
+    },
     active: function active() {
       if (this.tenders) {
         return this.tenders.filter(function (tender) {
@@ -7795,13 +9273,6 @@ __webpack_require__.r(__webpack_exports__);
     filtered: function filtered() {
       return this[this.$route.hash.substring(1)];
     }
-  },
-  created: function created() {
-    var _this = this;
-
-    setTimeout(function () {
-      _this.tenders = _this.$store.state.tenders;
-    }, 200);
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     if (!to.hash) {
@@ -8252,6 +9723,25 @@ exports.push([module.i, ".iti-flag.be{\n  width:18px\n}\n\n.iti-flag.ch{\n  widt
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css":
+/*!*************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css ***!
+  \*************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "/*\n * Container style\n */\n\n.ps {\n  overflow: hidden !important;\n  overflow-anchor: none;\n  -ms-overflow-style: none;\n  touch-action: auto;\n  -ms-touch-action: auto;\n}\n\n/*\n * Scrollbar rail styles\n */\n\n.ps__rail-x {\n  display: none;\n  opacity: 0;\n  transition: background-color .2s linear, opacity .2s linear;\n  -webkit-transition: background-color .2s linear, opacity .2s linear;\n  height: 15px;\n  /* there must be 'bottom' or 'top' for ps__rail-x */\n  bottom: 0px;\n  /* please don't change 'position' */\n  position: absolute;\n}\n\n.ps__rail-y {\n  display: none;\n  opacity: 0;\n  transition: background-color .2s linear, opacity .2s linear;\n  -webkit-transition: background-color .2s linear, opacity .2s linear;\n  width: 15px;\n  /* there must be 'right' or 'left' for ps__rail-y */\n  right: 0;\n  /* please don't change 'position' */\n  position: absolute;\n}\n\n.ps--active-x > .ps__rail-x,\n.ps--active-y > .ps__rail-y {\n  display: block;\n  background-color: transparent;\n}\n\n.ps:hover > .ps__rail-x,\n.ps:hover > .ps__rail-y,\n.ps--focus > .ps__rail-x,\n.ps--focus > .ps__rail-y,\n.ps--scrolling-x > .ps__rail-x,\n.ps--scrolling-y > .ps__rail-y {\n  opacity: 0.6;\n}\n\n.ps .ps__rail-x:hover,\n.ps .ps__rail-y:hover,\n.ps .ps__rail-x:focus,\n.ps .ps__rail-y:focus,\n.ps .ps__rail-x.ps--clicking,\n.ps .ps__rail-y.ps--clicking {\n  background-color: #eee;\n  opacity: 0.9;\n}\n\n/*\n * Scrollbar thumb styles\n */\n\n.ps__thumb-x {\n  background-color: #aaa;\n  border-radius: 6px;\n  transition: background-color .2s linear, height .2s ease-in-out;\n  -webkit-transition: background-color .2s linear, height .2s ease-in-out;\n  height: 6px;\n  /* there must be 'bottom' for ps__thumb-x */\n  bottom: 2px;\n  /* please don't change 'position' */\n  position: absolute;\n}\n\n.ps__thumb-y {\n  background-color: #aaa;\n  border-radius: 6px;\n  transition: background-color .2s linear, width .2s ease-in-out;\n  -webkit-transition: background-color .2s linear, width .2s ease-in-out;\n  width: 6px;\n  /* there must be 'right' for ps__thumb-y */\n  right: 2px;\n  /* please don't change 'position' */\n  position: absolute;\n}\n\n.ps__rail-x:hover > .ps__thumb-x,\n.ps__rail-x:focus > .ps__thumb-x,\n.ps__rail-x.ps--clicking .ps__thumb-x {\n  background-color: #999;\n  height: 11px;\n}\n\n.ps__rail-y:hover > .ps__thumb-y,\n.ps__rail-y:focus > .ps__thumb-y,\n.ps__rail-y.ps--clicking .ps__thumb-y {\n  background-color: #999;\n  width: 11px;\n}\n\n/* MS supports */\n\n@supports (-ms-overflow-style: none) {\n  .ps {\n    overflow: auto !important;\n  }\n}\n\n@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {\n  .ps {\n    overflow: auto !important;\n  }\n}\n\n.ps {\n  position: relative;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-spinner/src/BounceLoader.vue?vue&type=style&index=0&lang=css&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-spinner/src/BounceLoader.vue?vue&type=style&index=0&lang=css& ***!
@@ -8404,6 +9894,25 @@ exports.push([module.i, ".li-map-toggle-button{\n  padding: 1.7rem;\n}\n.li-map-
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".li-mapped-sidebar{\n  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), \n                4px 0 6px -2px rgba(0, 0, 0, 0.05);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=style&index=0&lang=css&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/CreateTender.vue?vue&type=style&index=0&lang=css& ***!
@@ -8417,6 +9926,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, ".li-create-tender-modal .v--modal{\n  overflow: visible !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Map.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Map.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "a[href^=\"http://maps.google.com/maps\"]{\n  display:none !important\n}\na[href^=\"https://maps.google.com/maps\"]{\n  display:none !important\n}\n.gmnoprint a, .gmnoprint span, .gm-style-cc {\n  display:none;\n}\n.gmnoprint div {\n  background:none !important;\n}\n\n", ""]);
 
 // exports
 
@@ -52050,6 +53578,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Mapped.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=style&index=0&lang=css&":
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/CreateTender.vue?vue&type=style&index=0&lang=css& ***!
@@ -52059,6 +53617,36 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateTender.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/CreateTender.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Map.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Map.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Map.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Map.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -55664,25 +57252,6 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                    +49 (0) 7161 9661841\n                "
-                        )
-                      ]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "p",
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "text-gray-700 hover:text-teal-500 mb-2",
-                        attrs: { to: "/" }
-                      },
-                      [
-                        _vm._v(
                           "\n                    info@linoffery.com\n                "
                         )
                       ]
@@ -55925,7 +57494,7 @@ var render = function() {
                     expression: "fixed"
                   }
                 ],
-                staticClass: "absolute top-0 left-0 px-10 py-3 z-20",
+                staticClass: "absolute top-0 left-0 px-5 md:px-10 py-3 z-20",
                 attrs: { to: "/" }
               },
               [
@@ -56022,7 +57591,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "nav",
-    { staticClass: "w-full px-3 py-3 z-10 md:px-10", class: _vm.classes },
+    { staticClass: "w-full px-5 py-3 z-10 md:px-10", class: _vm.classes },
     [
       _c("div", { staticClass: "flex items-center justify-between" }, [
         _c("div", { staticClass: "flex" }, [
@@ -56857,26 +58426,35 @@ var render = function() {
     "div",
     { staticClass: "flex flex-col min-h-screen w-full" },
     [
-      _c("navbar"),
+      _c("navbar", { attrs: { layout: "map" } }),
       _vm._v(" "),
-      _c("div", { staticClass: "flex-1 bg-gray-300" }, [
-        _c("div", { staticClass: "w-full mx-auto" }, [
-          _c("div", { staticClass: "flex px-3 py-5 md:px-12" }, [
-            _c("div", { staticClass: "hidden w-1/2 lg:block" }),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-full lg:w-1/2 lg:pl-10" },
-              [_vm._t("default")],
-              2
-            )
-          ])
-        ])
-      ]),
+      _c("gmap"),
       _vm._v(" "),
-      _c("app-footer"),
+      _c(
+        "card",
+        {
+          ref: "drawer",
+          style: {
+            height: _vm.drawerHeight + "px",
+            width: _vm.drawerWidth + "px"
+          },
+          attrs: {
+            classes:
+              "li-mapped-sidebar fixed bottom-0 shadow-lg overflow-hidden z-20 md:mb-3 md:ml-3"
+          }
+        },
+        [
+          _c(
+            "perfect-scrollbar",
+            { ref: "content", staticClass: "h-full" },
+            [_vm._t("default")],
+            2
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("map-drawer", { attrs: { fixed: true } })
+      _c("app-footer", { attrs: { layout: "map" } })
     ],
     1
   )
@@ -59678,7 +61256,7 @@ var render = function() {
     "div",
     {
       staticClass:
-        "flex items-center justify-between cursor-pointer py-3 px-3 md:px-5 hover:bg-gray-100",
+        "flex items-center justify-between cursor-pointer border-b py-3 px-3 md:px-5 hover:bg-gray-200",
       on: {
         click: function($event) {
           return _vm.$modal.show("offer-view", _vm.offer)
@@ -59723,7 +61301,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "flex flex-col" }, [
         _c("p", {
-          staticClass: "text-3xl text-teal-500 -my-2",
+          staticClass: "text-2xl font-light  -my-2",
           domProps: { textContent: _vm._s("€ " + _vm.offer.price) }
         })
       ])
@@ -60458,7 +62036,7 @@ var render = function() {
                   expression: "!filtered && !showOffers"
                 }
               ],
-              staticClass: "px-5 md:px-10 text-lg font-light text-gray-500"
+              staticClass: "px-5 md:px-10 text-gray-500"
             },
             [
               _c("i", { staticClass: "icon ion-md-beer mr-2" }),
@@ -60480,8 +62058,7 @@ var render = function() {
                         expression: "!offers.length && showOffers"
                       }
                     ],
-                    staticClass:
-                      "px-5 md:px-10 text-lg font-light text-gray-500"
+                    staticClass: "px-5 md:px-10 text-gray-500"
                   },
                   [
                     _c("i", { staticClass: "icon ion-md-beer mr-2" }),
@@ -62301,205 +63878,106 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.tender
-    ? _c(
-        "div",
-        [
-          _vm.hasOffers && !_vm.tender.completed_at
-            ? _c(
-                "card",
-                { staticClass: "mb-5", attrs: { classes: "py-5" } },
-                [
-                  _c("div", { staticClass: "pl-5 mb-2" }, [
-                    _c("span", { staticClass: "font-bold mb-3" }, [
-                      _vm._v(_vm._s(_vm.$t("tender.offers")))
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.tender.offers, function(offer, index) {
-                    return _c("offer-card", {
-                      key: index,
-                      attrs: { offer: offer }
-                    })
+    ? _c("div", [
+        _vm.hasOffers && !_vm.tender.completed_at
+          ? _c(
+              "div",
+              { staticClass: "bg-gray-100 mb-5 pt-3" },
+              [
+                _c("div", { staticClass: "pl-5 pb-3 border-b" }, [
+                  _c("span", { staticClass: "font-bold mb-3" }, [
+                    _vm._v(_vm._s(_vm.$t("tender.offers")))
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.tender.offers, function(offer, index) {
+                  return _c("offer-card", {
+                    key: index,
+                    attrs: { offer: offer }
                   })
-                ],
-                2
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "card",
-            { attrs: { classes: "py-5" } },
-            [
-              _vm.tender.completed_at
-                ? _c(
-                    "p",
-                    {
-                      staticClass:
-                        "uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 text-right"
-                    },
-                    [
-                      _c("i", { staticClass: "icon ion-md-checkmark mr-2" }),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("Abgeshlossen")])
-                    ]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.draft
-                ? _c(
-                    "p",
-                    {
-                      staticClass:
-                        "uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 text-right"
-                    },
-                    [
-                      _c("i", { staticClass: "icon ion-md-create mr-2" }),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(_vm.$t("utilities.draft")))])
-                    ]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              !_vm.editTender
-                ? _c("tender-info", {
-                    attrs: { tender: _vm.tender },
-                    on: {
-                      edit: function($event) {
-                        _vm.editTender = !_vm.editTender
-                      }
+                })
+              ],
+              2
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "div",
+          { attrs: { classes: "py-5" } },
+          [
+            _vm.tender.completed_at
+              ? _c(
+                  "p",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 text-right"
+                  },
+                  [
+                    _c("i", { staticClass: "icon ion-md-checkmark mr-2" }),
+                    _vm._v(" "),
+                    _c("span", [_vm._v("Abgeshlossen")])
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.draft
+              ? _c(
+                  "p",
+                  {
+                    staticClass:
+                      "uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 text-right"
+                  },
+                  [
+                    _c("i", { staticClass: "icon ion-md-create mr-2" }),
+                    _vm._v(" "),
+                    _c("span", [_vm._v(_vm._s(_vm.$t("utilities.draft")))])
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.editTender
+              ? _c("tender-info", {
+                  attrs: { tender: _vm.tender },
+                  on: {
+                    edit: function($event) {
+                      _vm.editTender = !_vm.editTender
                     }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editTender && _vm.draft
-                ? _c(
-                    "div",
-                    { staticClass: "px-5 py-5" },
-                    [
-                      _c("tender-form", {
-                        attrs: { tender: _vm.tender, edit: true },
-                        on: {
-                          cancel: function($event) {
-                            _vm.editTender = false
-                          }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.editTender && _vm.draft
+              ? _c(
+                  "div",
+                  { staticClass: "px-5 py-5" },
+                  [
+                    _c("tender-form", {
+                      attrs: { tender: _vm.tender, edit: true },
+                      on: {
+                        cancel: function($event) {
+                          _vm.editTender = false
                         }
-                      })
-                    ],
-                    1
-                  )
-                : _vm._e(),
-              _vm._v(" "),
+                      }
+                    })
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "bg-gray-100 p-5" }, [
               _c(
                 "div",
-                { staticClass: "block bg-gray-100 py-5 px-5 md:flex md:px-8" },
-                [
-                  _c(
-                    "div",
-                    { staticClass: "w-full pb-5 md:w-1/2 md:pb-0 md:mr-2" },
-                    [
-                      _c("div", { staticClass: "flex items-center mb-2" }, [
-                        _c(
-                          "p",
-                          { staticClass: "uppercase text-sm text-gray-500" },
-                          [_vm._v(_vm._s(_vm.$t("tender.pickup_details")))]
-                        ),
-                        _vm._v(" "),
-                        _vm.draft
-                          ? _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
-                                on: {
-                                  click: function($event) {
-                                    _vm.editPickup = !_vm.editPickup
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "icon ion-md-create" })]
-                            )
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      !_vm.pickup || (_vm.editPickup && _vm.draft)
-                        ? _c("location-form", {
-                            attrs: { value: _vm.pickup, name: "pickup" },
-                            on: {
-                              close: function($event) {
-                                _vm.editPickup = false
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.pickup && !_vm.editPickup
-                        ? _c("location-info", {
-                            attrs: { location: _vm.pickup }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "w-full md:w-1/2 md:ml-2" },
-                    [
-                      _c("div", { staticClass: "flex items-center mb-2" }, [
-                        _c(
-                          "p",
-                          { staticClass: "uppercase text-sm text-gray-500" },
-                          [_vm._v(_vm._s(_vm.$t("tender.delivery_details")))]
-                        ),
-                        _vm._v(" "),
-                        _vm.draft
-                          ? _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
-                                on: {
-                                  click: function($event) {
-                                    _vm.editDelivery = !_vm.editDelivery
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "icon ion-md-create" })]
-                            )
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      !_vm.delivery || (_vm.editDelivery && _vm.draft)
-                        ? _c("location-form", {
-                            attrs: { value: _vm.delivery, name: "delivery" },
-                            on: {
-                              close: function($event) {
-                                _vm.editDelivery = false
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.delivery && !_vm.editDelivery
-                        ? _c("location-info", {
-                            attrs: { location: _vm.delivery }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "px-5 py-5 md:px-10" },
+                { staticClass: "w-full pb-5 " },
                 [
                   _c("div", { staticClass: "flex items-center mb-2" }, [
+                    _c("i", {
+                      staticClass: "icon ion-md-log-in text-gray-500 mr-2"
+                    }),
+                    _vm._v(" "),
                     _c(
                       "p",
                       { staticClass: "uppercase text-sm text-gray-500" },
-                      [_vm._v(_vm._s(_vm.$t("tender.freight_details")))]
+                      [_vm._v(_vm._s(_vm.$t("tender.pickup_details")))]
                     ),
                     _vm._v(" "),
                     _vm.draft
@@ -62510,7 +63988,7 @@ var render = function() {
                               "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
                             on: {
                               click: function($event) {
-                                _vm.editFreights = !_vm.editFreights
+                                _vm.editPickup = !_vm.editPickup
                               }
                             }
                           },
@@ -62519,123 +63997,242 @@ var render = function() {
                       : _vm._e()
                   ]),
                   _vm._v(" "),
-                  !_vm.hasFreights || (_vm.editFreights && _vm.draft)
-                    ? _c("freights-form", {
-                        attrs: { values: _vm.tender.freights },
+                  !_vm.pickup || (_vm.editPickup && _vm.draft)
+                    ? _c("location-form", {
+                        attrs: { value: _vm.pickup, name: "pickup" },
                         on: {
                           close: function($event) {
-                            _vm.editFreights = false
+                            _vm.editPickup = false
                           }
                         }
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.hasFreights && !_vm.editFreights
-                    ? _c("freight-info", {
-                        attrs: { freights: _vm.tender.freights }
-                      })
+                  _vm.pickup && !_vm.editPickup
+                    ? _c("location-info", { attrs: { location: _vm.pickup } })
                     : _vm._e()
                 ],
                 1
               ),
               _vm._v(" "),
-              !_vm.draft && !_vm.ownsTender && _vm.loggedIn
-                ? _c(
-                    "div",
-                    { staticClass: "flex justify-end py-5 px-5 md:px-10" },
-                    [
-                      _c("button", { staticClass: "btn btn-outlined mr-2" }, [
-                        _c("i", {
-                          staticClass: "icon ion-md-bookmark text-grey-500 mr-2"
-                        }),
-                        _vm._v(" "),
-                        _c("span", [
-                          _vm._v(_vm._s(_vm.$t("utilities.bookmark")) + " ")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
+              _c(
+                "div",
+                { staticClass: "w-full" },
+                [
+                  _c("div", { staticClass: "flex items-center mb-2" }, [
+                    _c("i", {
+                      staticClass: "icon ion-md-log-out text-gray-500 mr-3"
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "p",
+                      { staticClass: "uppercase text-sm text-gray-500" },
+                      [_vm._v(_vm._s(_vm.$t("tender.delivery_details")))]
+                    ),
+                    _vm._v(" "),
+                    _vm.draft
+                      ? _c(
+                          "button",
+                          {
+                            staticClass:
+                              "py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
+                            on: {
+                              click: function($event) {
+                                _vm.editDelivery = !_vm.editDelivery
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "icon ion-md-create" })]
+                        )
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  !_vm.delivery || (_vm.editDelivery && _vm.draft)
+                    ? _c("location-form", {
+                        attrs: { value: _vm.delivery, name: "delivery" },
+                        on: {
+                          close: function($event) {
+                            _vm.editDelivery = false
+                          }
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.delivery && !_vm.editDelivery
+                    ? _c("location-info", { attrs: { location: _vm.delivery } })
+                    : _vm._e()
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "p-5" },
+              [
+                _c("div", { staticClass: "flex items-center mb-2" }, [
+                  _c("p", { staticClass: "uppercase text-sm text-gray-500" }, [
+                    _vm._v(_vm._s(_vm.$t("tender.freight_details")))
+                  ]),
+                  _vm._v(" "),
+                  _vm.draft
+                    ? _c(
                         "button",
                         {
-                          staticClass: "btn btn-teal",
+                          staticClass:
+                            "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
                           on: {
                             click: function($event) {
-                              return _vm.$modal.show("make-offer")
+                              _vm.editFreights = !_vm.editFreights
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.$t("tender.make_offer")) +
-                              "\n            "
-                          )
-                        ]
+                        [_c("i", { staticClass: "icon ion-md-create" })]
+                      )
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                !_vm.hasFreights || (_vm.editFreights && _vm.draft)
+                  ? _c("freights-form", {
+                      attrs: { values: _vm.tender.freights },
+                      on: {
+                        close: function($event) {
+                          _vm.editFreights = false
+                        }
+                      }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.hasFreights && !_vm.editFreights
+                  ? _c("freight-info", {
+                      attrs: { freights: _vm.tender.freights }
+                    })
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "w-full flex items-center p-5" }, [
+              _c("img", {
+                staticClass: "w-12 h-12 rounded-full shadow-md",
+                attrs: { src: _vm.tender.user.company.avatar, alt: "" }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "ml-3" }, [
+                _c("p", {
+                  staticClass: "font-bold leading-none",
+                  domProps: {
+                    textContent: _vm._s(_vm.tender.user.company.name)
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "text-xs text-gray-600" }, [
+                  _vm._v("20 Liferungen |")
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "text-xs text-gray-600" }, [
+                  _vm._v("10 Aussreibungen")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: " -my-1" },
+                  [
+                    _vm._l(5, function(index) {
+                      return _c("i", {
+                        key: index,
+                        staticClass:
+                          "icon ion-md-star text-base text-orange-500 leading-none mr-1"
+                      })
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "font-bold" }, [_vm._v("4.8")])
+                  ],
+                  2
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            !_vm.ownsTender && _vm.loggedIn
+              ? _c("div", { staticClass: "py-5 px-5" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "w-full btn btn-teal",
+                      on: {
+                        click: function($event) {
+                          return _vm.$modal.show("make-offer")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(_vm.$t("tender.make_offer")) +
+                          "\n            "
                       )
                     ]
                   )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.draft && _vm.dataComplete && _vm.ownsTender
-                ? _c("div", { staticClass: "py-3 px-5 md:px-10" }, [
-                    _c(
-                      "div",
-                      { staticClass: "flex bg-yellow-200 p-5 rounded-lg mb-3" },
-                      [
-                        _c("i", {
-                          staticClass:
-                            "icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "text-sm" },
-                          [
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.$t("tender.publish_info")))
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "router-link",
-                              {
-                                staticClass:
-                                  "text-teal-500 hover:text-teal-700",
-                                attrs: { to: "/terms" }
-                              },
-                              [
-                                _vm._v(
-                                  _vm._s(_vm.$t("tender.publish_info_terms"))
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flex justify-end" }, [
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.draft && _vm.dataComplete && _vm.ownsTender
+              ? _c("div", { staticClass: "py-3 px-5" }, [
+                  _c(
+                    "div",
+                    { staticClass: "flex bg-yellow-200 p-5 rounded-lg mb-3" },
+                    [
+                      _c("i", {
+                        staticClass:
+                          "icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"
+                      }),
+                      _vm._v(" "),
                       _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-teal",
-                          on: { click: _vm.publishTender }
-                        },
+                        "div",
+                        { staticClass: "text-sm" },
                         [
                           _c("span", [
-                            _vm._v(_vm._s(_vm.$t("utilities.publish")) + " ")
-                          ])
-                        ]
+                            _vm._v(_vm._s(_vm.$t("tender.publish_info")))
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "text-teal-500 hover:text-teal-700",
+                              attrs: { to: "/terms" }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$t("tender.publish_info_terms"))
+                              )
+                            ]
+                          )
+                        ],
+                        1
                       )
-                    ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flex justify-end" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-teal",
+                        on: { click: _vm.publishTender }
+                      },
+                      [
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.$t("utilities.publish")) + " ")
+                        ])
+                      ]
+                    )
                   ])
-                : _vm._e()
-            ],
-            1
-          )
-        ],
-        1
-      )
+                ])
+              : _vm._e()
+          ],
+          1
+        )
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -62662,7 +64259,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "section",
-    { staticClass: "py-3 px-3 hover:bg-gray-100 md:px-8 md:py-5 " },
+    { staticClass: "border-b py-3 px-5 hover:bg-gray-100 md:py-5 " },
     [
       _c(
         "router-link",
@@ -62671,97 +64268,161 @@ var render = function() {
           attrs: { to: { name: "tender", params: { tender: _vm.tender.id } } }
         },
         [
-          _c("div", { staticClass: "flex items-center" }, [
-            _c("img", {
-              staticClass: "rounded-lg shadow-lg w-16 h-16 md:w-20 md:h-20 ",
-              attrs: {
-                src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-                alt: _vm.tender.user.name
-              }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "pl-3 overflow-hidden md:pl-8" }, [
-              _c("div", [
-                _c("div", {}, [
+          _c("div", { staticClass: "flex" }, [
+            _c("div", { staticClass: "flex-1 overflow-hidden" }, [
+              _c("div", { staticClass: "flex mb-1" }, [
+                _c("i", {
+                  staticClass: "icon ion-md-log-in text-xl text-red-400 mr-3"
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "leading-tight" }, [
                   _c("span", {
-                    staticClass: "text-xl font-light leading-none md:text-2xl ",
-                    domProps: { textContent: _vm._s("€ " + _vm.price) }
+                    staticClass: "font-semibold",
+                    domProps: { textContent: _vm._s(_vm.pickup.city) }
                   }),
                   _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.tender.offersCount,
-                          expression: "tender.offersCount"
-                        }
-                      ],
-                      staticClass: "text-xs font-bold text-gray-500 mx-1"
-                    },
-                    [_vm._v(_vm._s(_vm.tender.offersCount))]
-                  ),
+                  _c("span", {
+                    staticClass: "text-sm text-gray-500",
+                    domProps: { textContent: _vm._s(_vm.pickup.country) }
+                  }),
                   _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.tender.offersCount,
-                          expression: "tender.offersCount"
-                        }
-                      ],
-                      staticClass: "text-xs text-gray-500"
-                    },
-                    [_vm._v(_vm._s(_vm.$t("tender.offers")))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      staticClass:
-                        "text-sm text-red-400 font-bold md:text-base ml-2"
-                    },
-                    [
-                      _c("i", { staticClass: "icon ion-md-flash text-sm" }),
-                      _vm._v(" "),
-                      _c("span", {
-                        domProps: {
-                          textContent: _vm._s(_vm.tender.immediate_price + " €")
-                        }
-                      })
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", {
-                  staticClass: "truncate font-bold md:text-lg",
-                  domProps: { textContent: _vm._s(_vm.tender.title) }
-                })
+                  _c("p", { staticClass: "text-sm text-gray-700" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("moment")(
+                          new Date(_vm.pickup.latest_date),
+                          "DD.MM.YYYY"
+                        )
+                      )
+                    )
+                  ])
+                ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "flex items-center" }, [
-                _c("span", {
-                  staticClass: "rounded-full p-1 mr-1",
-                  style: { background: _vm.category.color }
+              _c("div", { staticClass: "flex" }, [
+                _c("i", {
+                  staticClass: "icon ion-md-log-out text-xl text-green-400 mr-3"
                 }),
                 _vm._v(" "),
-                _c("span", {
-                  staticClass:
-                    "text-sm uppercase tracking-tight font-bold mr-2",
-                  style: { color: _vm.category.color },
-                  domProps: { textContent: _vm._s(_vm.category.name) }
-                }),
-                _vm._v(" "),
-                _c("span", {
-                  staticClass: "text-sm ml-1 text-gray-500 ",
-                  domProps: { textContent: _vm._s(_vm.weight) }
-                })
+                _c("div", { staticClass: "leading-tight" }, [
+                  _c("span", {
+                    staticClass: "font-semibold",
+                    domProps: { textContent: _vm._s(_vm.delivery.city) }
+                  }),
+                  _vm._v(" "),
+                  _c("span", {
+                    staticClass: "text-sm text-gray-500",
+                    domProps: { textContent: _vm._s(_vm.delivery.country) }
+                  }),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "text-sm text-gray-700" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("moment")(
+                          new Date(_vm.delivery.latest_date),
+                          "DD.MM.YYYY"
+                        )
+                      )
+                    )
+                  ])
+                ])
               ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex flex-col items-end ml-3" }, [
+              _c("span", {
+                staticClass: "text-2xl font-light leading-none ",
+                domProps: { textContent: _vm._s("€ " + _vm.price) }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "leading-none" }, [
+                _c(
+                  "span",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.tender.offersCount,
+                        expression: "tender.offersCount"
+                      }
+                    ],
+                    staticClass: "text-xs font-bold text-gray-500"
+                  },
+                  [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.tender.offersCount) +
+                        "\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.tender.offersCount,
+                        expression: "tender.offersCount"
+                      }
+                    ],
+                    staticClass: "text-xs text-gray-500"
+                  },
+                  [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.$t("tender.offers")) +
+                        "\n                    "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                { staticClass: "text-sm font-bold mt-1 md:text-base" },
+                [
+                  _c("i", { staticClass: "icon ion-md-flash text-sm" }),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: {
+                      textContent: _vm._s("€ " + _vm.tender.immediate_price)
+                    }
+                  })
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c("div", { staticClass: "flex items-center justify-between" }, [
+              _c("div", [
+                _c("i", {
+                  staticClass: "icon ion-md-download text-lg text-gray-500 mr-3"
+                }),
+                _vm._v(" "),
+                _c("span", {
+                  staticClass: "font-bold",
+                  domProps: { textContent: _vm._s(_vm.weight) }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "text-sm text-gray-500" }, [
+                  _vm._v("kg")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("span", {
+                staticClass:
+                  "text-xs uppercase tracking-tight font-semibold border rounded-full px-2",
+                style: {
+                  color: _vm.category.color,
+                  borderColor: _vm.category.color
+                },
+                domProps: { textContent: _vm._s(_vm.category.name) }
+              })
             ])
           ])
         ]
@@ -63059,211 +64720,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "resize",
-            rawName: "v-resize",
-            value: _vm.styleCardHeader,
-            expression: "styleCardHeader"
-          }
-        ],
-        ref: "cardHeader",
-        staticClass: "block px-5",
-        class: _vm.cardHeaderSmall ? "" : "lg:flex"
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass:
-              "w-full p-0 bg-black overflow-hidden shadow-md rounded-lg",
-            class: _vm.cardHeaderSmall ? "" : "lg:w-3/5"
+  return _c("div", { staticClass: "p-5" }, [
+    _c("div", [
+      _c("div", { staticClass: "flex items-center mb-1" }, [
+        _c("span", {
+          staticClass:
+            "text-sm uppercase tracking-tight border rounded-full font-bold mr-2 px-2",
+          style: {
+            color: _vm.tender.category.color,
+            borderColor: _vm.tender.category.color
           },
-          [_vm._m(0)]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "flex flex-col justify-between md:px-5",
-            class: _vm.cardHeaderSmall ? "" : "lg:w-2/5 "
-          },
-          [
-            _c("div", { staticClass: "py-5" }, [
-              _c("div", { staticClass: "flex items-center" }, [
-                _c("div", { staticClass: "flex flex-col items-center mr-3 " }, [
-                  _c("p", { staticClass: "text-xs text-gray-500 uppercase " }, [
-                    _vm._v(_vm._s(_vm.$t("tender.curr_offer")))
-                  ]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "text-4xl text-teal-500 leading-none",
-                    domProps: { textContent: _vm._s("€ " + _vm.price) }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "p",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.tender.offersCount,
-                          expression: "tender.offersCount"
-                        }
-                      ],
-                      staticClass: "leading-none"
-                    },
-                    [
-                      _c("span", { staticClass: "text-sm text-gray-500" }, [
-                        _vm._v(_vm._s(_vm.tender.offersCount))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "text-sm text-gray-500" }, [
-                        _vm._v(_vm._s(_vm.$t("tender.offers")))
-                      ])
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                !_vm.ownsTender
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-teal",
-                        on: {
-                          click: function($event) {
-                            return _vm.$modal.show("make-offer")
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm.$t("tender.m_offer")) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _vm.tender.immediate_price
-                ? _c("div", { staticClass: "flex-none mt-5" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white",
-                        on: {
-                          click: function($event) {
-                            return _vm.$modal.show("take-it-now", _vm.tender)
-                          }
-                        }
-                      },
-                      [
-                        _vm._m(1),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "text-lg mr-2",
-                          domProps: {
-                            textContent: _vm._s(
-                              "€ " + _vm.tender.immediate_price
-                            )
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "uppercase text-sm" }, [
-                          _vm._v(_vm._s(_vm.$t("tender.take_it")))
-                        ])
-                      ]
-                    )
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "w-full flex items-center py-5" }, [
-              _c("img", {
-                staticClass: "w-12 h-12 rounded-full shadow-md",
-                attrs: { src: _vm.company.avatar, alt: "" }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "ml-3" }, [
-                _c("p", {
-                  staticClass: "font-bold leading-none",
-                  domProps: { textContent: _vm._s(_vm.company.name) }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "text-xs text-gray-600" }, [
-                  _vm._v("20 Liferungen |")
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "text-xs text-gray-600" }, [
-                  _vm._v("10 Aussreibungen")
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: " -my-1" },
-                  [
-                    _vm._l(5, function(index) {
-                      return _c("i", {
-                        key: index,
-                        staticClass:
-                          "icon ion-md-star text-base text-orange-500 leading-none mr-1"
-                      })
-                    }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "font-bold" }, [_vm._v("4.8")])
-                  ],
-                  2
-                )
-              ])
-            ])
-          ]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "px-5 my-5 md:px-10" }, [
-      _c("div", [
-        _c("span", [
-          !_vm.tender.published_at
-            ? _c(
-                "button",
-                {
-                  staticClass:
-                    "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit("edit")
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "icon ion-md-create" })]
-              )
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("span", {
-          staticClass: "text-2xl font-bold leading-none",
-          domProps: { textContent: _vm._s(_vm.tender.title) }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex items-center py-3" }, [
-        _c("span", {
-          staticClass: "rounded-full p-1 mr-1",
-          style: { background: _vm.tender.category.color }
-        }),
-        _vm._v(" "),
-        _c("span", {
-          staticClass: "text-sm uppercase tracking-tight font-bold mr-2",
-          style: { color: _vm.tender.category.color },
           domProps: { textContent: _vm._s(_vm.tender.category.name) }
         }),
         _vm._v(" "),
@@ -63271,53 +64737,131 @@ var render = function() {
           _vm._v(_vm._s(_vm.$t("tender.valid_until")))
         ]),
         _vm._v(" "),
-        _c("span", { staticClass: "font-bold" }, [
+        _c("span", { staticClass: "font-semibold" }, [
           _vm._v(
             " " + _vm._s(_vm._f("moment")(_vm.tender.valid_date, "DD.MM.YYYY"))
           )
         ])
       ]),
       _vm._v(" "),
-      _c("p", {
-        staticClass: "text-sm",
-        domProps: { textContent: _vm._s(_vm.tender.description) }
+      _c("span", [
+        !_vm.tender.published_at
+          ? _c(
+              "button",
+              {
+                staticClass:
+                  "py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none",
+                on: {
+                  click: function($event) {
+                    return _vm.$emit("edit")
+                  }
+                }
+              },
+              [_c("i", { staticClass: "icon ion-md-create" })]
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("span", {
+        staticClass: "text-2xl font-bold leading-none",
+        domProps: { textContent: _vm._s(_vm.tender.title) }
       })
-    ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "pt-8 pb-3 px-3" }, [
+      _c("div", { staticClass: "flex mb-3" }, [
+        _c("div", { staticClass: "flex flex-col items-center mr-5 " }, [
+          _c("p", {
+            staticClass: "text-3xl text-teal-500 tracking-tight leading-none",
+            domProps: { textContent: _vm._s("€ " + _vm.price) }
+          }),
+          _vm._v(" "),
+          _c(
+            "p",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.tender.offersCount,
+                  expression: "tender.offersCount"
+                }
+              ],
+              staticClass: "text-xs text-gray-500 leading-none"
+            },
+            [
+              _c("span", { staticClass: "font-semibold " }, [
+                _vm._v(_vm._s(_vm.tender.offersCount))
+              ]),
+              _vm._v(" "),
+              _c("span", {}, [_vm._v(_vm._s(_vm.$t("tender.offers")))])
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex-1" }, [
+          !_vm.ownsTender && _vm.loggedIn
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-teal w-full mb-2",
+                  on: {
+                    click: function($event) {
+                      return _vm.$modal.show("make-offer")
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("tender.make_offer")) +
+                      "\n                    "
+                  )
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.tender.immediate_price
+            ? _c(
+                "button",
+                {
+                  staticClass:
+                    " w-full text-red-500 font-bold  hover:text-red-700 focus:outline-none",
+                  on: {
+                    click: function($event) {
+                      return _vm.$modal.show("take-it-now", _vm.tender)
+                    }
+                  }
+                },
+                [
+                  _c("span", {
+                    staticClass: "text-lg mr-2 ",
+                    domProps: {
+                      textContent: _vm._s("€ " + _vm.tender.immediate_price)
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("i", { staticClass: "icon ion-md-flash" }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { staticClass: "uppercase tracking-tight text-sm" },
+                    [_vm._v(_vm._s(_vm.$t("tender.take_it")))]
+                  )
+                ]
+              )
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("p", {
+      staticClass: "text-sm",
+      domProps: { textContent: _vm._s(_vm.tender.description) }
+    })
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "relative block w-full h-0 aspect-ratio-4/3 overflow-hidden"
-      },
-      [
-        _c("img", {
-          staticClass:
-            "absolute block -max-w-full max-h-full m-auto top-0 bottom-0 right-0 left-0",
-          attrs: {
-            src:
-              "https://lino-live-c730a062982044519ff2ab77c50c1-6ae113a.divio-media.net/filer_public_thumbnails/filer_public/66/cf/66cfdf1a-fac7-4e3e-83fc-5e430b41843f/artikelheader.jpg__0x750_q90_subsampling-2.jpg",
-            alt: ""
-          }
-        })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", [
-      _c("i", { staticClass: "icon ion-md-flash text-sm mr-3" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -63342,18 +64886,67 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("action-bar"),
+      _vm._l(_vm.tenders, function(tender, index) {
+        return _c("tender-card", { key: index, attrs: { tender: tender } })
+      }),
       _vm._v(" "),
       _c(
-        "card",
-        { attrs: { classes: "py-5 px-0" } },
-        _vm._l(_vm.tenders, function(tender, index) {
-          return _c("tender-card", { key: index, attrs: { tender: tender } })
-        }),
+        "div",
+        { staticClass: "flex justify-center py-5" },
+        [
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.loading && !_vm.noData,
+                  expression: "!loading && !noData"
+                }
+              ],
+              staticClass: "btn btn-outlined",
+              on: { click: _vm.fetchTenders }
+            },
+            [
+              _vm._v(
+                "\n               " +
+                  _vm._s(_vm.$t("utilities.more_results")) +
+                  "\n            "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "p",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.noData,
+                  expression: "noData"
+                }
+              ],
+              staticClass: "text-gray-500"
+            },
+            [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.$t("utilities.no_more_results")) +
+                  "\n            "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("loading-spinner", {
+            attrs: { loading: _vm.loading, size: "48px", position: "unset" }
+          })
+        ],
         1
       )
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []
@@ -63441,8 +65034,7 @@ var render = function() {
                         expression: "!filtered.length "
                       }
                     ],
-                    staticClass:
-                      "px-5 md:px-10 text-lg font-light text-gray-500"
+                    staticClass: "px-5 md:px-10 text-gray-500"
                   },
                   [
                     _c("i", { staticClass: "icon ion-md-beer mr-2" }),
@@ -83106,6 +84698,1450 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../css-loader??ref--6-1!../../postcss-loader/src??ref--6-2!./vue2-perfect-scrollbar.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.umd.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.umd.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global, factory) {
+   true ? factory(exports) :
+  undefined;
+}(this, (function (exports) { 'use strict';
+
+  /*!
+   * perfect-scrollbar v1.4.0
+   * (c) 2018 Hyunje Jun
+   * @license MIT
+   */
+  function get(element) {
+    return getComputedStyle(element);
+  }
+
+  function set(element, obj) {
+    for (var key in obj) {
+      var val = obj[key];
+      if (typeof val === 'number') {
+        val = val + "px";
+      }
+      element.style[key] = val;
+    }
+    return element;
+  }
+
+  function div(className) {
+    var div = document.createElement('div');
+    div.className = className;
+    return div;
+  }
+
+  var elMatches =
+    typeof Element !== 'undefined' &&
+    (Element.prototype.matches ||
+      Element.prototype.webkitMatchesSelector ||
+      Element.prototype.mozMatchesSelector ||
+      Element.prototype.msMatchesSelector);
+
+  function matches(element, query) {
+    if (!elMatches) {
+      throw new Error('No element matching method supported');
+    }
+
+    return elMatches.call(element, query);
+  }
+
+  function remove(element) {
+    if (element.remove) {
+      element.remove();
+    } else {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+    }
+  }
+
+  function queryChildren(element, selector) {
+    return Array.prototype.filter.call(element.children, function (child) { return matches(child, selector); }
+    );
+  }
+
+  var cls = {
+    main: 'ps',
+    element: {
+      thumb: function (x) { return ("ps__thumb-" + x); },
+      rail: function (x) { return ("ps__rail-" + x); },
+      consuming: 'ps__child--consume',
+    },
+    state: {
+      focus: 'ps--focus',
+      clicking: 'ps--clicking',
+      active: function (x) { return ("ps--active-" + x); },
+      scrolling: function (x) { return ("ps--scrolling-" + x); },
+    },
+  };
+
+  /*
+   * Helper methods
+   */
+  var scrollingClassTimeout = { x: null, y: null };
+
+  function addScrollingClass(i, x) {
+    var classList = i.element.classList;
+    var className = cls.state.scrolling(x);
+
+    if (classList.contains(className)) {
+      clearTimeout(scrollingClassTimeout[x]);
+    } else {
+      classList.add(className);
+    }
+  }
+
+  function removeScrollingClass(i, x) {
+    scrollingClassTimeout[x] = setTimeout(
+      function () { return i.isAlive && i.element.classList.remove(cls.state.scrolling(x)); },
+      i.settings.scrollingThreshold
+    );
+  }
+
+  function setScrollingClassInstantly(i, x) {
+    addScrollingClass(i, x);
+    removeScrollingClass(i, x);
+  }
+
+  var EventElement = function EventElement(element) {
+    this.element = element;
+    this.handlers = {};
+  };
+
+  var prototypeAccessors = { isEmpty: { configurable: true } };
+
+  EventElement.prototype.bind = function bind (eventName, handler) {
+    if (typeof this.handlers[eventName] === 'undefined') {
+      this.handlers[eventName] = [];
+    }
+    this.handlers[eventName].push(handler);
+    this.element.addEventListener(eventName, handler, false);
+  };
+
+  EventElement.prototype.unbind = function unbind (eventName, target) {
+      var this$1 = this;
+
+    this.handlers[eventName] = this.handlers[eventName].filter(function (handler) {
+      if (target && handler !== target) {
+        return true;
+      }
+      this$1.element.removeEventListener(eventName, handler, false);
+      return false;
+    });
+  };
+
+  EventElement.prototype.unbindAll = function unbindAll () {
+      var this$1 = this;
+
+    for (var name in this$1.handlers) {
+      this$1.unbind(name);
+    }
+  };
+
+  prototypeAccessors.isEmpty.get = function () {
+      var this$1 = this;
+
+    return Object.keys(this.handlers).every(
+      function (key) { return this$1.handlers[key].length === 0; }
+    );
+  };
+
+  Object.defineProperties( EventElement.prototype, prototypeAccessors );
+
+  var EventManager = function EventManager() {
+    this.eventElements = [];
+  };
+
+  EventManager.prototype.eventElement = function eventElement (element) {
+    var ee = this.eventElements.filter(function (ee) { return ee.element === element; })[0];
+    if (!ee) {
+      ee = new EventElement(element);
+      this.eventElements.push(ee);
+    }
+    return ee;
+  };
+
+  EventManager.prototype.bind = function bind (element, eventName, handler) {
+    this.eventElement(element).bind(eventName, handler);
+  };
+
+  EventManager.prototype.unbind = function unbind (element, eventName, handler) {
+    var ee = this.eventElement(element);
+    ee.unbind(eventName, handler);
+
+    if (ee.isEmpty) {
+      // remove
+      this.eventElements.splice(this.eventElements.indexOf(ee), 1);
+    }
+  };
+
+  EventManager.prototype.unbindAll = function unbindAll () {
+    this.eventElements.forEach(function (e) { return e.unbindAll(); });
+    this.eventElements = [];
+  };
+
+  EventManager.prototype.once = function once (element, eventName, handler) {
+    var ee = this.eventElement(element);
+    var onceHandler = function (evt) {
+      ee.unbind(eventName, onceHandler);
+      handler(evt);
+    };
+    ee.bind(eventName, onceHandler);
+  };
+
+  function createEvent(name) {
+    if (typeof window.CustomEvent === 'function') {
+      return new CustomEvent(name);
+    } else {
+      var evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent(name, false, false, undefined);
+      return evt;
+    }
+  }
+
+  var processScrollDiff = function(
+    i,
+    axis,
+    diff,
+    useScrollingClass,
+    forceFireReachEvent
+  ) {
+    if ( useScrollingClass === void 0 ) { useScrollingClass = true; }
+    if ( forceFireReachEvent === void 0 ) { forceFireReachEvent = false; }
+
+    var fields;
+    if (axis === 'top') {
+      fields = [
+        'contentHeight',
+        'containerHeight',
+        'scrollTop',
+        'y',
+        'up',
+        'down' ];
+    } else if (axis === 'left') {
+      fields = [
+        'contentWidth',
+        'containerWidth',
+        'scrollLeft',
+        'x',
+        'left',
+        'right' ];
+    } else {
+      throw new Error('A proper axis should be provided');
+    }
+
+    processScrollDiff$1(i, diff, fields, useScrollingClass, forceFireReachEvent);
+  };
+
+  function processScrollDiff$1(
+    i,
+    diff,
+    ref,
+    useScrollingClass,
+    forceFireReachEvent
+  ) {
+    var contentHeight = ref[0];
+    var containerHeight = ref[1];
+    var scrollTop = ref[2];
+    var y = ref[3];
+    var up = ref[4];
+    var down = ref[5];
+    if ( useScrollingClass === void 0 ) { useScrollingClass = true; }
+    if ( forceFireReachEvent === void 0 ) { forceFireReachEvent = false; }
+
+    var element = i.element;
+
+    // reset reach
+    i.reach[y] = null;
+
+    // 1 for subpixel rounding
+    if (element[scrollTop] < 1) {
+      i.reach[y] = 'start';
+    }
+
+    // 1 for subpixel rounding
+    if (element[scrollTop] > i[contentHeight] - i[containerHeight] - 1) {
+      i.reach[y] = 'end';
+    }
+
+    if (diff) {
+      element.dispatchEvent(createEvent(("ps-scroll-" + y)));
+
+      if (diff < 0) {
+        element.dispatchEvent(createEvent(("ps-scroll-" + up)));
+      } else if (diff > 0) {
+        element.dispatchEvent(createEvent(("ps-scroll-" + down)));
+      }
+
+      if (useScrollingClass) {
+        setScrollingClassInstantly(i, y);
+      }
+    }
+
+    if (i.reach[y] && (diff || forceFireReachEvent)) {
+      element.dispatchEvent(createEvent(("ps-" + y + "-reach-" + (i.reach[y]))));
+    }
+  }
+
+  function toInt(x) {
+    return parseInt(x, 10) || 0;
+  }
+
+  function isEditable(el) {
+    return (
+      matches(el, 'input,[contenteditable]') ||
+      matches(el, 'select,[contenteditable]') ||
+      matches(el, 'textarea,[contenteditable]') ||
+      matches(el, 'button,[contenteditable]')
+    );
+  }
+
+  function outerWidth(element) {
+    var styles = get(element);
+    return (
+      toInt(styles.width) +
+      toInt(styles.paddingLeft) +
+      toInt(styles.paddingRight) +
+      toInt(styles.borderLeftWidth) +
+      toInt(styles.borderRightWidth)
+    );
+  }
+
+  var env = {
+    isWebKit:
+      typeof document !== 'undefined' &&
+      'WebkitAppearance' in document.documentElement.style,
+    supportsTouch:
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window ||
+        (window.DocumentTouch && document instanceof window.DocumentTouch)),
+    supportsIePointer:
+      typeof navigator !== 'undefined' && navigator.msMaxTouchPoints,
+    isChrome:
+      typeof navigator !== 'undefined' &&
+      /Chrome/i.test(navigator && navigator.userAgent),
+  };
+
+  var updateGeometry = function(i) {
+    var element = i.element;
+    var roundedScrollTop = Math.floor(element.scrollTop);
+
+    i.containerWidth = element.clientWidth;
+    i.containerHeight = element.clientHeight;
+    i.contentWidth = element.scrollWidth;
+    i.contentHeight = element.scrollHeight;
+
+    if (!element.contains(i.scrollbarXRail)) {
+      // clean up and append
+      queryChildren(element, cls.element.rail('x')).forEach(function (el) { return remove(el); }
+      );
+      element.appendChild(i.scrollbarXRail);
+    }
+    if (!element.contains(i.scrollbarYRail)) {
+      // clean up and append
+      queryChildren(element, cls.element.rail('y')).forEach(function (el) { return remove(el); }
+      );
+      element.appendChild(i.scrollbarYRail);
+    }
+
+    if (
+      !i.settings.suppressScrollX &&
+      i.containerWidth + i.settings.scrollXMarginOffset < i.contentWidth
+    ) {
+      i.scrollbarXActive = true;
+      i.railXWidth = i.containerWidth - i.railXMarginWidth;
+      i.railXRatio = i.containerWidth / i.railXWidth;
+      i.scrollbarXWidth = getThumbSize(
+        i,
+        toInt(i.railXWidth * i.containerWidth / i.contentWidth)
+      );
+      i.scrollbarXLeft = toInt(
+        (i.negativeScrollAdjustment + element.scrollLeft) *
+          (i.railXWidth - i.scrollbarXWidth) /
+          (i.contentWidth - i.containerWidth)
+      );
+    } else {
+      i.scrollbarXActive = false;
+    }
+
+    if (
+      !i.settings.suppressScrollY &&
+      i.containerHeight + i.settings.scrollYMarginOffset < i.contentHeight
+    ) {
+      i.scrollbarYActive = true;
+      i.railYHeight = i.containerHeight - i.railYMarginHeight;
+      i.railYRatio = i.containerHeight / i.railYHeight;
+      i.scrollbarYHeight = getThumbSize(
+        i,
+        toInt(i.railYHeight * i.containerHeight / i.contentHeight)
+      );
+      i.scrollbarYTop = toInt(
+        roundedScrollTop *
+          (i.railYHeight - i.scrollbarYHeight) /
+          (i.contentHeight - i.containerHeight)
+      );
+    } else {
+      i.scrollbarYActive = false;
+    }
+
+    if (i.scrollbarXLeft >= i.railXWidth - i.scrollbarXWidth) {
+      i.scrollbarXLeft = i.railXWidth - i.scrollbarXWidth;
+    }
+    if (i.scrollbarYTop >= i.railYHeight - i.scrollbarYHeight) {
+      i.scrollbarYTop = i.railYHeight - i.scrollbarYHeight;
+    }
+
+    updateCss(element, i);
+
+    if (i.scrollbarXActive) {
+      element.classList.add(cls.state.active('x'));
+    } else {
+      element.classList.remove(cls.state.active('x'));
+      i.scrollbarXWidth = 0;
+      i.scrollbarXLeft = 0;
+      element.scrollLeft = 0;
+    }
+    if (i.scrollbarYActive) {
+      element.classList.add(cls.state.active('y'));
+    } else {
+      element.classList.remove(cls.state.active('y'));
+      i.scrollbarYHeight = 0;
+      i.scrollbarYTop = 0;
+      element.scrollTop = 0;
+    }
+  };
+
+  function getThumbSize(i, thumbSize) {
+    if (i.settings.minScrollbarLength) {
+      thumbSize = Math.max(thumbSize, i.settings.minScrollbarLength);
+    }
+    if (i.settings.maxScrollbarLength) {
+      thumbSize = Math.min(thumbSize, i.settings.maxScrollbarLength);
+    }
+    return thumbSize;
+  }
+
+  function updateCss(element, i) {
+    var xRailOffset = { width: i.railXWidth };
+    var roundedScrollTop = Math.floor(element.scrollTop);
+
+    if (i.isRtl) {
+      xRailOffset.left =
+        i.negativeScrollAdjustment +
+        element.scrollLeft +
+        i.containerWidth -
+        i.contentWidth;
+    } else {
+      xRailOffset.left = element.scrollLeft;
+    }
+    if (i.isScrollbarXUsingBottom) {
+      xRailOffset.bottom = i.scrollbarXBottom - roundedScrollTop;
+    } else {
+      xRailOffset.top = i.scrollbarXTop + roundedScrollTop;
+    }
+    set(i.scrollbarXRail, xRailOffset);
+
+    var yRailOffset = { top: roundedScrollTop, height: i.railYHeight };
+    if (i.isScrollbarYUsingRight) {
+      if (i.isRtl) {
+        yRailOffset.right =
+          i.contentWidth -
+          (i.negativeScrollAdjustment + element.scrollLeft) -
+          i.scrollbarYRight -
+          i.scrollbarYOuterWidth;
+      } else {
+        yRailOffset.right = i.scrollbarYRight - element.scrollLeft;
+      }
+    } else {
+      if (i.isRtl) {
+        yRailOffset.left =
+          i.negativeScrollAdjustment +
+          element.scrollLeft +
+          i.containerWidth * 2 -
+          i.contentWidth -
+          i.scrollbarYLeft -
+          i.scrollbarYOuterWidth;
+      } else {
+        yRailOffset.left = i.scrollbarYLeft + element.scrollLeft;
+      }
+    }
+    set(i.scrollbarYRail, yRailOffset);
+
+    set(i.scrollbarX, {
+      left: i.scrollbarXLeft,
+      width: i.scrollbarXWidth - i.railBorderXWidth,
+    });
+    set(i.scrollbarY, {
+      top: i.scrollbarYTop,
+      height: i.scrollbarYHeight - i.railBorderYWidth,
+    });
+  }
+
+  var clickRail = function(i) {
+    i.event.bind(i.scrollbarY, 'mousedown', function (e) { return e.stopPropagation(); });
+    i.event.bind(i.scrollbarYRail, 'mousedown', function (e) {
+      var positionTop =
+        e.pageY -
+        window.pageYOffset -
+        i.scrollbarYRail.getBoundingClientRect().top;
+      var direction = positionTop > i.scrollbarYTop ? 1 : -1;
+
+      i.element.scrollTop += direction * i.containerHeight;
+      updateGeometry(i);
+
+      e.stopPropagation();
+    });
+
+    i.event.bind(i.scrollbarX, 'mousedown', function (e) { return e.stopPropagation(); });
+    i.event.bind(i.scrollbarXRail, 'mousedown', function (e) {
+      var positionLeft =
+        e.pageX -
+        window.pageXOffset -
+        i.scrollbarXRail.getBoundingClientRect().left;
+      var direction = positionLeft > i.scrollbarXLeft ? 1 : -1;
+
+      i.element.scrollLeft += direction * i.containerWidth;
+      updateGeometry(i);
+
+      e.stopPropagation();
+    });
+  };
+
+  var dragThumb = function(i) {
+    bindMouseScrollHandler(i, [
+      'containerWidth',
+      'contentWidth',
+      'pageX',
+      'railXWidth',
+      'scrollbarX',
+      'scrollbarXWidth',
+      'scrollLeft',
+      'x',
+      'scrollbarXRail' ]);
+    bindMouseScrollHandler(i, [
+      'containerHeight',
+      'contentHeight',
+      'pageY',
+      'railYHeight',
+      'scrollbarY',
+      'scrollbarYHeight',
+      'scrollTop',
+      'y',
+      'scrollbarYRail' ]);
+  };
+
+  function bindMouseScrollHandler(
+    i,
+    ref
+  ) {
+    var containerHeight = ref[0];
+    var contentHeight = ref[1];
+    var pageY = ref[2];
+    var railYHeight = ref[3];
+    var scrollbarY = ref[4];
+    var scrollbarYHeight = ref[5];
+    var scrollTop = ref[6];
+    var y = ref[7];
+    var scrollbarYRail = ref[8];
+
+    var element = i.element;
+
+    var startingScrollTop = null;
+    var startingMousePageY = null;
+    var scrollBy = null;
+
+    function mouseMoveHandler(e) {
+      element[scrollTop] =
+        startingScrollTop + scrollBy * (e[pageY] - startingMousePageY);
+      addScrollingClass(i, y);
+      updateGeometry(i);
+
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    function mouseUpHandler() {
+      removeScrollingClass(i, y);
+      i[scrollbarYRail].classList.remove(cls.state.clicking);
+      i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+    }
+
+    i.event.bind(i[scrollbarY], 'mousedown', function (e) {
+      startingScrollTop = element[scrollTop];
+      startingMousePageY = e[pageY];
+      scrollBy =
+        (i[contentHeight] - i[containerHeight]) /
+        (i[railYHeight] - i[scrollbarYHeight]);
+
+      i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+      i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
+
+      i[scrollbarYRail].classList.add(cls.state.clicking);
+
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  }
+
+  var keyboard = function(i) {
+    var element = i.element;
+
+    var elementHovered = function () { return matches(element, ':hover'); };
+    var scrollbarFocused = function () { return matches(i.scrollbarX, ':focus') || matches(i.scrollbarY, ':focus'); };
+
+    function shouldPreventDefault(deltaX, deltaY) {
+      var scrollTop = Math.floor(element.scrollTop);
+      if (deltaX === 0) {
+        if (!i.scrollbarYActive) {
+          return false;
+        }
+        if (
+          (scrollTop === 0 && deltaY > 0) ||
+          (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)
+        ) {
+          return !i.settings.wheelPropagation;
+        }
+      }
+
+      var scrollLeft = element.scrollLeft;
+      if (deltaY === 0) {
+        if (!i.scrollbarXActive) {
+          return false;
+        }
+        if (
+          (scrollLeft === 0 && deltaX < 0) ||
+          (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)
+        ) {
+          return !i.settings.wheelPropagation;
+        }
+      }
+      return true;
+    }
+
+    i.event.bind(i.ownerDocument, 'keydown', function (e) {
+      if (
+        (e.isDefaultPrevented && e.isDefaultPrevented()) ||
+        e.defaultPrevented
+      ) {
+        return;
+      }
+
+      if (!elementHovered() && !scrollbarFocused()) {
+        return;
+      }
+
+      var activeElement = document.activeElement
+        ? document.activeElement
+        : i.ownerDocument.activeElement;
+      if (activeElement) {
+        if (activeElement.tagName === 'IFRAME') {
+          activeElement = activeElement.contentDocument.activeElement;
+        } else {
+          // go deeper if element is a webcomponent
+          while (activeElement.shadowRoot) {
+            activeElement = activeElement.shadowRoot.activeElement;
+          }
+        }
+        if (isEditable(activeElement)) {
+          return;
+        }
+      }
+
+      var deltaX = 0;
+      var deltaY = 0;
+
+      switch (e.which) {
+        case 37: // left
+          if (e.metaKey) {
+            deltaX = -i.contentWidth;
+          } else if (e.altKey) {
+            deltaX = -i.containerWidth;
+          } else {
+            deltaX = -30;
+          }
+          break;
+        case 38: // up
+          if (e.metaKey) {
+            deltaY = i.contentHeight;
+          } else if (e.altKey) {
+            deltaY = i.containerHeight;
+          } else {
+            deltaY = 30;
+          }
+          break;
+        case 39: // right
+          if (e.metaKey) {
+            deltaX = i.contentWidth;
+          } else if (e.altKey) {
+            deltaX = i.containerWidth;
+          } else {
+            deltaX = 30;
+          }
+          break;
+        case 40: // down
+          if (e.metaKey) {
+            deltaY = -i.contentHeight;
+          } else if (e.altKey) {
+            deltaY = -i.containerHeight;
+          } else {
+            deltaY = -30;
+          }
+          break;
+        case 32: // space bar
+          if (e.shiftKey) {
+            deltaY = i.containerHeight;
+          } else {
+            deltaY = -i.containerHeight;
+          }
+          break;
+        case 33: // page up
+          deltaY = i.containerHeight;
+          break;
+        case 34: // page down
+          deltaY = -i.containerHeight;
+          break;
+        case 36: // home
+          deltaY = i.contentHeight;
+          break;
+        case 35: // end
+          deltaY = -i.contentHeight;
+          break;
+        default:
+          return;
+      }
+
+      if (i.settings.suppressScrollX && deltaX !== 0) {
+        return;
+      }
+      if (i.settings.suppressScrollY && deltaY !== 0) {
+        return;
+      }
+
+      element.scrollTop -= deltaY;
+      element.scrollLeft += deltaX;
+      updateGeometry(i);
+
+      if (shouldPreventDefault(deltaX, deltaY)) {
+        e.preventDefault();
+      }
+    });
+  };
+
+  var wheel = function(i) {
+    var element = i.element;
+
+    function shouldPreventDefault(deltaX, deltaY) {
+      var roundedScrollTop = Math.floor(element.scrollTop);
+      var isTop = element.scrollTop === 0;
+      var isBottom =
+        roundedScrollTop + element.offsetHeight === element.scrollHeight;
+      var isLeft = element.scrollLeft === 0;
+      var isRight =
+        element.scrollLeft + element.offsetWidth === element.scrollWidth;
+
+      var hitsBound;
+
+      // pick axis with primary direction
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        hitsBound = isTop || isBottom;
+      } else {
+        hitsBound = isLeft || isRight;
+      }
+
+      return hitsBound ? !i.settings.wheelPropagation : true;
+    }
+
+    function getDeltaFromEvent(e) {
+      var deltaX = e.deltaX;
+      var deltaY = -1 * e.deltaY;
+
+      if (typeof deltaX === 'undefined' || typeof deltaY === 'undefined') {
+        // OS X Safari
+        deltaX = -1 * e.wheelDeltaX / 6;
+        deltaY = e.wheelDeltaY / 6;
+      }
+
+      if (e.deltaMode && e.deltaMode === 1) {
+        // Firefox in deltaMode 1: Line scrolling
+        deltaX *= 10;
+        deltaY *= 10;
+      }
+
+      if (deltaX !== deltaX && deltaY !== deltaY /* NaN checks */) {
+        // IE in some mouse drivers
+        deltaX = 0;
+        deltaY = e.wheelDelta;
+      }
+
+      if (e.shiftKey) {
+        // reverse axis with shift key
+        return [-deltaY, -deltaX];
+      }
+      return [deltaX, deltaY];
+    }
+
+    function shouldBeConsumedByChild(target, deltaX, deltaY) {
+      // FIXME: this is a workaround for <select> issue in FF and IE #571
+      if (!env.isWebKit && element.querySelector('select:focus')) {
+        return true;
+      }
+
+      if (!element.contains(target)) {
+        return false;
+      }
+
+      var cursor = target;
+
+      while (cursor && cursor !== element) {
+        if (cursor.classList.contains(cls.element.consuming)) {
+          return true;
+        }
+
+        var style = get(cursor);
+        var overflow = [style.overflow, style.overflowX, style.overflowY].join(
+          ''
+        );
+
+        // if scrollable
+        if (overflow.match(/(scroll|auto)/)) {
+          var maxScrollTop = cursor.scrollHeight - cursor.clientHeight;
+          if (maxScrollTop > 0) {
+            if (
+              !(cursor.scrollTop === 0 && deltaY > 0) &&
+              !(cursor.scrollTop === maxScrollTop && deltaY < 0)
+            ) {
+              return true;
+            }
+          }
+          var maxScrollLeft = cursor.scrollWidth - cursor.clientWidth;
+          if (maxScrollLeft > 0) {
+            if (
+              !(cursor.scrollLeft === 0 && deltaX < 0) &&
+              !(cursor.scrollLeft === maxScrollLeft && deltaX > 0)
+            ) {
+              return true;
+            }
+          }
+        }
+
+        cursor = cursor.parentNode;
+      }
+
+      return false;
+    }
+
+    function mousewheelHandler(e) {
+      var ref = getDeltaFromEvent(e);
+      var deltaX = ref[0];
+      var deltaY = ref[1];
+
+      if (shouldBeConsumedByChild(e.target, deltaX, deltaY)) {
+        return;
+      }
+
+      var shouldPrevent = false;
+      if (!i.settings.useBothWheelAxes) {
+        // deltaX will only be used for horizontal scrolling and deltaY will
+        // only be used for vertical scrolling - this is the default
+        element.scrollTop -= deltaY * i.settings.wheelSpeed;
+        element.scrollLeft += deltaX * i.settings.wheelSpeed;
+      } else if (i.scrollbarYActive && !i.scrollbarXActive) {
+        // only vertical scrollbar is active and useBothWheelAxes option is
+        // active, so let's scroll vertical bar using both mouse wheel axes
+        if (deltaY) {
+          element.scrollTop -= deltaY * i.settings.wheelSpeed;
+        } else {
+          element.scrollTop += deltaX * i.settings.wheelSpeed;
+        }
+        shouldPrevent = true;
+      } else if (i.scrollbarXActive && !i.scrollbarYActive) {
+        // useBothWheelAxes and only horizontal bar is active, so use both
+        // wheel axes for horizontal bar
+        if (deltaX) {
+          element.scrollLeft += deltaX * i.settings.wheelSpeed;
+        } else {
+          element.scrollLeft -= deltaY * i.settings.wheelSpeed;
+        }
+        shouldPrevent = true;
+      }
+
+      updateGeometry(i);
+
+      shouldPrevent = shouldPrevent || shouldPreventDefault(deltaX, deltaY);
+      if (shouldPrevent && !e.ctrlKey) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }
+
+    if (typeof window.onwheel !== 'undefined') {
+      i.event.bind(element, 'wheel', mousewheelHandler);
+    } else if (typeof window.onmousewheel !== 'undefined') {
+      i.event.bind(element, 'mousewheel', mousewheelHandler);
+    }
+  };
+
+  var touch = function(i) {
+    if (!env.supportsTouch && !env.supportsIePointer) {
+      return;
+    }
+
+    var element = i.element;
+
+    function shouldPrevent(deltaX, deltaY) {
+      var scrollTop = Math.floor(element.scrollTop);
+      var scrollLeft = element.scrollLeft;
+      var magnitudeX = Math.abs(deltaX);
+      var magnitudeY = Math.abs(deltaY);
+
+      if (magnitudeY > magnitudeX) {
+        // user is perhaps trying to swipe up/down the page
+
+        if (
+          (deltaY < 0 && scrollTop === i.contentHeight - i.containerHeight) ||
+          (deltaY > 0 && scrollTop === 0)
+        ) {
+          // set prevent for mobile Chrome refresh
+          return window.scrollY === 0 && deltaY > 0 && env.isChrome;
+        }
+      } else if (magnitudeX > magnitudeY) {
+        // user is perhaps trying to swipe left/right across the page
+
+        if (
+          (deltaX < 0 && scrollLeft === i.contentWidth - i.containerWidth) ||
+          (deltaX > 0 && scrollLeft === 0)
+        ) {
+          return true;
+        }
+      }
+
+      return true;
+    }
+
+    function applyTouchMove(differenceX, differenceY) {
+      element.scrollTop -= differenceY;
+      element.scrollLeft -= differenceX;
+
+      updateGeometry(i);
+    }
+
+    var startOffset = {};
+    var startTime = 0;
+    var speed = {};
+    var easingLoop = null;
+
+    function getTouch(e) {
+      if (e.targetTouches) {
+        return e.targetTouches[0];
+      } else {
+        // Maybe IE pointer
+        return e;
+      }
+    }
+
+    function shouldHandle(e) {
+      if (e.pointerType && e.pointerType === 'pen' && e.buttons === 0) {
+        return false;
+      }
+      if (e.targetTouches && e.targetTouches.length === 1) {
+        return true;
+      }
+      if (
+        e.pointerType &&
+        e.pointerType !== 'mouse' &&
+        e.pointerType !== e.MSPOINTER_TYPE_MOUSE
+      ) {
+        return true;
+      }
+      return false;
+    }
+
+    function touchStart(e) {
+      if (!shouldHandle(e)) {
+        return;
+      }
+
+      var touch = getTouch(e);
+
+      startOffset.pageX = touch.pageX;
+      startOffset.pageY = touch.pageY;
+
+      startTime = new Date().getTime();
+
+      if (easingLoop !== null) {
+        clearInterval(easingLoop);
+      }
+    }
+
+    function shouldBeConsumedByChild(target, deltaX, deltaY) {
+      if (!element.contains(target)) {
+        return false;
+      }
+
+      var cursor = target;
+
+      while (cursor && cursor !== element) {
+        if (cursor.classList.contains(cls.element.consuming)) {
+          return true;
+        }
+
+        var style = get(cursor);
+        var overflow = [style.overflow, style.overflowX, style.overflowY].join(
+          ''
+        );
+
+        // if scrollable
+        if (overflow.match(/(scroll|auto)/)) {
+          var maxScrollTop = cursor.scrollHeight - cursor.clientHeight;
+          if (maxScrollTop > 0) {
+            if (
+              !(cursor.scrollTop === 0 && deltaY > 0) &&
+              !(cursor.scrollTop === maxScrollTop && deltaY < 0)
+            ) {
+              return true;
+            }
+          }
+          var maxScrollLeft = cursor.scrollLeft - cursor.clientWidth;
+          if (maxScrollLeft > 0) {
+            if (
+              !(cursor.scrollLeft === 0 && deltaX < 0) &&
+              !(cursor.scrollLeft === maxScrollLeft && deltaX > 0)
+            ) {
+              return true;
+            }
+          }
+        }
+
+        cursor = cursor.parentNode;
+      }
+
+      return false;
+    }
+
+    function touchMove(e) {
+      if (shouldHandle(e)) {
+        var touch = getTouch(e);
+
+        var currentOffset = { pageX: touch.pageX, pageY: touch.pageY };
+
+        var differenceX = currentOffset.pageX - startOffset.pageX;
+        var differenceY = currentOffset.pageY - startOffset.pageY;
+
+        if (shouldBeConsumedByChild(e.target, differenceX, differenceY)) {
+          return;
+        }
+
+        applyTouchMove(differenceX, differenceY);
+        startOffset = currentOffset;
+
+        var currentTime = new Date().getTime();
+
+        var timeGap = currentTime - startTime;
+        if (timeGap > 0) {
+          speed.x = differenceX / timeGap;
+          speed.y = differenceY / timeGap;
+          startTime = currentTime;
+        }
+
+        if (shouldPrevent(differenceX, differenceY)) {
+          e.preventDefault();
+        }
+      }
+    }
+    function touchEnd() {
+      if (i.settings.swipeEasing) {
+        clearInterval(easingLoop);
+        easingLoop = setInterval(function() {
+          if (i.isInitialized) {
+            clearInterval(easingLoop);
+            return;
+          }
+
+          if (!speed.x && !speed.y) {
+            clearInterval(easingLoop);
+            return;
+          }
+
+          if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
+            clearInterval(easingLoop);
+            return;
+          }
+
+          applyTouchMove(speed.x * 30, speed.y * 30);
+
+          speed.x *= 0.8;
+          speed.y *= 0.8;
+        }, 10);
+      }
+    }
+
+    if (env.supportsTouch) {
+      i.event.bind(element, 'touchstart', touchStart);
+      i.event.bind(element, 'touchmove', touchMove);
+      i.event.bind(element, 'touchend', touchEnd);
+    } else if (env.supportsIePointer) {
+      if (window.PointerEvent) {
+        i.event.bind(element, 'pointerdown', touchStart);
+        i.event.bind(element, 'pointermove', touchMove);
+        i.event.bind(element, 'pointerup', touchEnd);
+      } else if (window.MSPointerEvent) {
+        i.event.bind(element, 'MSPointerDown', touchStart);
+        i.event.bind(element, 'MSPointerMove', touchMove);
+        i.event.bind(element, 'MSPointerUp', touchEnd);
+      }
+    }
+  };
+
+  var defaultSettings = function () { return ({
+    handlers: ['click-rail', 'drag-thumb', 'keyboard', 'wheel', 'touch'],
+    maxScrollbarLength: null,
+    minScrollbarLength: null,
+    scrollingThreshold: 1000,
+    scrollXMarginOffset: 0,
+    scrollYMarginOffset: 0,
+    suppressScrollX: false,
+    suppressScrollY: false,
+    swipeEasing: true,
+    useBothWheelAxes: false,
+    wheelPropagation: true,
+    wheelSpeed: 1,
+  }); };
+
+  var handlers = {
+    'click-rail': clickRail,
+    'drag-thumb': dragThumb,
+    keyboard: keyboard,
+    wheel: wheel,
+    touch: touch,
+  };
+
+  var PerfectScrollbar = function PerfectScrollbar(element, userSettings) {
+    var this$1 = this;
+    if ( userSettings === void 0 ) { userSettings = {}; }
+
+    if (typeof element === 'string') {
+      element = document.querySelector(element);
+    }
+
+    if (!element || !element.nodeName) {
+      throw new Error('no element is specified to initialize PerfectScrollbar');
+    }
+
+    this.element = element;
+
+    element.classList.add(cls.main);
+
+    this.settings = defaultSettings();
+    for (var key in userSettings) {
+      this$1.settings[key] = userSettings[key];
+    }
+
+    this.containerWidth = null;
+    this.containerHeight = null;
+    this.contentWidth = null;
+    this.contentHeight = null;
+
+    var focus = function () { return element.classList.add(cls.state.focus); };
+    var blur = function () { return element.classList.remove(cls.state.focus); };
+
+    this.isRtl = get(element).direction === 'rtl';
+    this.isNegativeScroll = (function () {
+      var originalScrollLeft = element.scrollLeft;
+      var result = null;
+      element.scrollLeft = -1;
+      result = element.scrollLeft < 0;
+      element.scrollLeft = originalScrollLeft;
+      return result;
+    })();
+    this.negativeScrollAdjustment = this.isNegativeScroll
+      ? element.scrollWidth - element.clientWidth
+      : 0;
+    this.event = new EventManager();
+    this.ownerDocument = element.ownerDocument || document;
+
+    this.scrollbarXRail = div(cls.element.rail('x'));
+    element.appendChild(this.scrollbarXRail);
+    this.scrollbarX = div(cls.element.thumb('x'));
+    this.scrollbarXRail.appendChild(this.scrollbarX);
+    this.scrollbarX.setAttribute('tabindex', 0);
+    this.event.bind(this.scrollbarX, 'focus', focus);
+    this.event.bind(this.scrollbarX, 'blur', blur);
+    this.scrollbarXActive = null;
+    this.scrollbarXWidth = null;
+    this.scrollbarXLeft = null;
+    var railXStyle = get(this.scrollbarXRail);
+    this.scrollbarXBottom = parseInt(railXStyle.bottom, 10);
+    if (isNaN(this.scrollbarXBottom)) {
+      this.isScrollbarXUsingBottom = false;
+      this.scrollbarXTop = toInt(railXStyle.top);
+    } else {
+      this.isScrollbarXUsingBottom = true;
+    }
+    this.railBorderXWidth =
+      toInt(railXStyle.borderLeftWidth) + toInt(railXStyle.borderRightWidth);
+    // Set rail to display:block to calculate margins
+    set(this.scrollbarXRail, { display: 'block' });
+    this.railXMarginWidth =
+      toInt(railXStyle.marginLeft) + toInt(railXStyle.marginRight);
+    set(this.scrollbarXRail, { display: '' });
+    this.railXWidth = null;
+    this.railXRatio = null;
+
+    this.scrollbarYRail = div(cls.element.rail('y'));
+    element.appendChild(this.scrollbarYRail);
+    this.scrollbarY = div(cls.element.thumb('y'));
+    this.scrollbarYRail.appendChild(this.scrollbarY);
+    this.scrollbarY.setAttribute('tabindex', 0);
+    this.event.bind(this.scrollbarY, 'focus', focus);
+    this.event.bind(this.scrollbarY, 'blur', blur);
+    this.scrollbarYActive = null;
+    this.scrollbarYHeight = null;
+    this.scrollbarYTop = null;
+    var railYStyle = get(this.scrollbarYRail);
+    this.scrollbarYRight = parseInt(railYStyle.right, 10);
+    if (isNaN(this.scrollbarYRight)) {
+      this.isScrollbarYUsingRight = false;
+      this.scrollbarYLeft = toInt(railYStyle.left);
+    } else {
+      this.isScrollbarYUsingRight = true;
+    }
+    this.scrollbarYOuterWidth = this.isRtl ? outerWidth(this.scrollbarY) : null;
+    this.railBorderYWidth =
+      toInt(railYStyle.borderTopWidth) + toInt(railYStyle.borderBottomWidth);
+    set(this.scrollbarYRail, { display: 'block' });
+    this.railYMarginHeight =
+      toInt(railYStyle.marginTop) + toInt(railYStyle.marginBottom);
+    set(this.scrollbarYRail, { display: '' });
+    this.railYHeight = null;
+    this.railYRatio = null;
+
+    this.reach = {
+      x:
+        element.scrollLeft <= 0
+          ? 'start'
+          : element.scrollLeft >= this.contentWidth - this.containerWidth
+            ? 'end'
+            : null,
+      y:
+        element.scrollTop <= 0
+          ? 'start'
+          : element.scrollTop >= this.contentHeight - this.containerHeight
+            ? 'end'
+            : null,
+    };
+
+    this.isAlive = true;
+
+    this.settings.handlers.forEach(function (handlerName) { return handlers[handlerName](this$1); });
+
+    this.lastScrollTop = Math.floor(element.scrollTop); // for onScroll only
+    this.lastScrollLeft = element.scrollLeft; // for onScroll only
+    this.event.bind(this.element, 'scroll', function (e) { return this$1.onScroll(e); });
+    updateGeometry(this);
+  };
+
+  PerfectScrollbar.prototype.update = function update () {
+    if (!this.isAlive) {
+      return;
+    }
+
+    // Recalcuate negative scrollLeft adjustment
+    this.negativeScrollAdjustment = this.isNegativeScroll
+      ? this.element.scrollWidth - this.element.clientWidth
+      : 0;
+
+    // Recalculate rail margins
+    set(this.scrollbarXRail, { display: 'block' });
+    set(this.scrollbarYRail, { display: 'block' });
+    this.railXMarginWidth =
+      toInt(get(this.scrollbarXRail).marginLeft) +
+      toInt(get(this.scrollbarXRail).marginRight);
+    this.railYMarginHeight =
+      toInt(get(this.scrollbarYRail).marginTop) +
+      toInt(get(this.scrollbarYRail).marginBottom);
+
+    // Hide scrollbars not to affect scrollWidth and scrollHeight
+    set(this.scrollbarXRail, { display: 'none' });
+    set(this.scrollbarYRail, { display: 'none' });
+
+    updateGeometry(this);
+
+    processScrollDiff(this, 'top', 0, false, true);
+    processScrollDiff(this, 'left', 0, false, true);
+
+    set(this.scrollbarXRail, { display: '' });
+    set(this.scrollbarYRail, { display: '' });
+  };
+
+  PerfectScrollbar.prototype.onScroll = function onScroll (e) {
+    if (!this.isAlive) {
+      return;
+    }
+
+    updateGeometry(this);
+    processScrollDiff(this, 'top', this.element.scrollTop - this.lastScrollTop);
+    processScrollDiff(
+      this,
+      'left',
+      this.element.scrollLeft - this.lastScrollLeft
+    );
+
+    this.lastScrollTop = Math.floor(this.element.scrollTop);
+    this.lastScrollLeft = this.element.scrollLeft;
+  };
+
+  PerfectScrollbar.prototype.destroy = function destroy () {
+    if (!this.isAlive) {
+      return;
+    }
+
+    this.event.unbindAll();
+    remove(this.scrollbarX);
+    remove(this.scrollbarY);
+    remove(this.scrollbarXRail);
+    remove(this.scrollbarYRail);
+    this.removePsClasses();
+
+    // unset elements
+    this.element = null;
+    this.scrollbarX = null;
+    this.scrollbarY = null;
+    this.scrollbarXRail = null;
+    this.scrollbarYRail = null;
+
+    this.isAlive = false;
+  };
+
+  PerfectScrollbar.prototype.removePsClasses = function removePsClasses () {
+    this.element.className = this.element.className
+      .split(' ')
+      .filter(function (name) { return !name.match(/^ps([-_].+|)$/); })
+      .join(' ');
+  };
+
+  var PerfectScrollbar$1 = {
+    name: 'PerfectScrollbar',
+    props: {
+      options: {
+        type: Object,
+        required: false,
+        default: function () {}
+      },
+      tag: {
+        type: String,
+        required: false,
+        default: 'div'
+      }
+    },
+    data: function data () {
+      return {
+        ps: null
+      }
+    },
+    mounted: function mounted () {
+      if (!(this.ps && this.$isServer)) {
+        this.ps = new PerfectScrollbar(this.$refs.container, this.options);
+      }
+    },
+    updated: function updated () {
+      this.update();
+    },
+    beforeDestroy: function beforeDestroy () {
+      this.destroy();
+    },
+    methods: {
+      update: function update () {
+        if (this.ps) {
+          this.ps.update();
+        }
+      },
+      destroy: function destroy () {
+        if (this.ps) {
+          this.ps.destroy();
+          this.ps = null;
+        }
+      }
+    },
+    render: function render (h) {
+      return h(this.tag,
+        {
+          ref: 'container',
+          on: this.$listeners
+        },
+        this.$slots.default)
+    }
+  };
+
+  function install (Vue, settings) {
+    if (settings) {
+      if (settings.name && typeof settings.name === 'string') {
+        PerfectScrollbar$1.name = settings.name;
+      }
+
+      if (settings.options && typeof settings.options === 'object') {
+        PerfectScrollbar$1.props.options.default = function () {
+          return settings.options
+        };
+      }
+
+      if (settings.tag && typeof settings.tag === 'string') {
+        PerfectScrollbar$1.props.tag.default = settings.tag;
+      }
+    }
+
+    Vue.component(
+      PerfectScrollbar$1.name,
+      PerfectScrollbar$1
+    );
+  }
+
+  exports.install = install;
+  exports.PerfectScrollbar = PerfectScrollbar$1;
+  exports.default = install;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+
+/***/ }),
+
 /***/ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js":
 /*!********************************************************************!*\
   !*** ./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js ***!
@@ -86672,10 +89708,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment_timezone__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var vue_resize_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-resize-directive */ "./node_modules/vue-resize-directive/dist/Vueresize.js");
 /* harmony import */ var vue_resize_directive__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_resize_directive__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
-/* harmony import */ var _layouts_App__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./layouts/App */ "./resources/js/layouts/App.vue");
-/* harmony import */ var _utilities_i18n__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utilities/i18n */ "./resources/js/utilities/i18n.js");
+/* harmony import */ var vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue2-perfect-scrollbar */ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.umd.js");
+/* harmony import */ var vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css */ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css");
+/* harmony import */ var vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
+/* harmony import */ var _layouts_App__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./layouts/App */ "./resources/js/layouts/App.vue");
+/* harmony import */ var _utilities_i18n__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utilities/i18n */ "./resources/js/utilities/i18n.js");
+
+
 
 
 
@@ -86692,6 +89734,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_cookies__WEBPACK_IMPORTED_MOD
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_moment__WEBPACK_IMPORTED_MODULE_3___default.a, {
   moment: moment_timezone__WEBPACK_IMPORTED_MODULE_4___default.a
 });
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_6___default.a);
 window.Event = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 
 window.flash = function (message) {
@@ -86708,7 +89751,7 @@ if (token) {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('app', _layouts_App__WEBPACK_IMPORTED_MODULE_8__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('app', _layouts_App__WEBPACK_IMPORTED_MODULE_10__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('action-bar', __webpack_require__(/*! ./components/ActionBar.vue */ "./resources/js/components/ActionBar.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('app-footer', __webpack_require__(/*! ./components/Footer.vue */ "./resources/js/components/Footer.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('avatar', __webpack_require__(/*! ./components/Avatar.vue */ "./resources/js/components/Avatar.vue")["default"]);
@@ -86729,9 +89772,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('textarea-input', __webpack
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.directive('resize', vue_resize_directive__WEBPACK_IMPORTED_MODULE_5___default.a);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
-  router: _routes__WEBPACK_IMPORTED_MODULE_6__["router"],
-  store: _store__WEBPACK_IMPORTED_MODULE_7__["store"],
-  i18n: _utilities_i18n__WEBPACK_IMPORTED_MODULE_9__["default"]
+  router: _routes__WEBPACK_IMPORTED_MODULE_8__["router"],
+  store: _store__WEBPACK_IMPORTED_MODULE_9__["store"],
+  i18n: _utilities_i18n__WEBPACK_IMPORTED_MODULE_11__["default"]
 });
 
 /***/ }),
@@ -88618,7 +91661,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Mapped_vue_vue_type_template_id_b01eb3d2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Mapped.vue?vue&type=template&id=b01eb3d2& */ "./resources/js/layouts/Mapped.vue?vue&type=template&id=b01eb3d2&");
 /* harmony import */ var _Mapped_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Mapped.vue?vue&type=script&lang=js& */ "./resources/js/layouts/Mapped.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Mapped.vue?vue&type=style&index=0&lang=css& */ "./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -88626,7 +91671,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Mapped_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Mapped_vue_vue_type_template_id_b01eb3d2___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Mapped_vue_vue_type_template_id_b01eb3d2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -88655,6 +91700,22 @@ component.options.__file = "resources/js/layouts/Mapped.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Mapped.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Mapped.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Mapped.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Mapped.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Mapped_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -88694,7 +91755,7 @@ module.exports = {"login":"Anmelden","signup":"Registireren","logout":"Abmelden"
 /*! exports provided: terms, privacy, legals, about, services, find_fright, create_tender, learn_more, consignor, carrier, settings, default */
 /***/ (function(module) {
 
-module.exports = {"terms":"AGB","privacy":"Datenschutzbestimmungen","legals":"Impressum","about":"Über uns","services":"Unsere Leistungen","find_fright":"Fracht finden","create_tender":"Ausschrebung erstellen","learn_more":"mehr erfahren","consignor":"Versender","carrier":"Spedition","settings":"Enstellungen"};
+module.exports = {"terms":"AGB","privacy":"Datenschutzbestimmungen","legals":"Impressum","about":"Über uns","services":"Unsere Leistungen","find_fright":"Fracht finden","create_tender":"Neue Ausschrebung","learn_more":"mehr erfahren","consignor":"Versender","carrier":"Spedition","settings":"Enstellungen"};
 
 /***/ }),
 
@@ -88724,10 +91785,10 @@ module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","of
 /*!************************************************!*\
   !*** ./resources/js/locales/de/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf","drafts":"Entwürfe","price":"Preis","active":"Aktiv","completed":"Abgeschlossen","contact_person":"Ansprechpartner"};
+module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf","drafts":"Entwürfe","price":"Preis","active":"Aktiv","completed":"Abgeschlossen","contact_person":"Ansprechpartner","more_results":"Weitere Ergebnisse","no_more_results":"Keine weiteren Ergebnisse."};
 
 /***/ }),
 
@@ -88749,7 +91810,7 @@ module.exports = {"login":"Login","signup":"Signup","logout":"Logout","email":"E
 /*! exports provided: terms, privacy, legals, about, services, find_fright, create_tender, learn_more, consignor, carrier, settings, default */
 /***/ (function(module) {
 
-module.exports = {"terms":"Terms of use","privacy":"Privacy policy","legals":"Legal disclosure","about":"about","services":"our services","find_fright":"Find fright","create_tender":"Create tender","learn_more":"learn more","consignor":"Consignor","carrier":"Carrier","settings":"Settings"};
+module.exports = {"terms":"Terms of use","privacy":"Privacy policy","legals":"Legal disclosure","about":"about","services":"our services","find_fright":"Find load","create_tender":"Create tender","learn_more":"learn more","consignor":"Shipper","carrier":"Carrier","settings":"Settings"};
 
 /***/ }),
 
@@ -88771,7 +91832,7 @@ module.exports = {"settings":"settings","account":"Account","company":"Company",
 /*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Consignor","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Delivery details","freight_details":"Freight details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the freight ...","add_freight":"Add Freight","store_freight_message":"Your freight details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available."};
+module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available."};
 
 /***/ }),
 
@@ -88779,10 +91840,10 @@ module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered
 /*!************************************************!*\
   !*** ./resources/js/locales/en/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft","drafts":"Drafts","price":"Price","active":"Active","completed":"Completed","contact_person":"Contact"};
+module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft","drafts":"Drafts","price":"Price","active":"Active","completed":"Completed","contact_person":"Contact","more_results":"More Results","no_more_results":"No more results."};
 
 /***/ }),
 
@@ -89923,15 +92984,17 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     token: localStorage.getItem('access_token') || null,
     user: null,
     tender: null,
-    tenders: null,
-    locations: [],
+    tenders: [],
+    usersTenders: null,
     categories: null,
     offers: null,
     orders: null,
     order: null,
-    origin: null,
-    destination: null,
-    range: 'Umweg'
+    page: null,
+    lastPage: null // origin:null,
+    // destination:null,
+    // range: 'Umweg'
+
   },
   getters: {
     loggedIn: function loggedIn(state) {
@@ -89946,9 +93009,6 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     company: function company(state) {
       return state.user ? state.user.company : '';
     },
-    tenderList: function tenderList(state) {
-      return state.tenders ? state.tenders.data : null;
-    },
     tenderId: function tenderId(state) {
       return state.tender ? state.tender.id : null;
     },
@@ -89958,6 +93018,24 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       }
 
       return false;
+    },
+    locations: function locations(state) {
+      var locations = [];
+
+      if (state.tenders) {
+        state.tenders.map(function (tender) {
+          if (tender.locations.length > 0) {
+            tender.locations.forEach(function (location) {
+              locations.push(location);
+            });
+          }
+        });
+      }
+
+      return locations;
+    },
+    noTenders: function noTenders(state) {
+      return state.page > state.lastPage;
     }
   },
   mutations: {
@@ -89974,20 +93052,21 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       state.categories = categories;
     },
     retrieveTenders: function retrieveTenders(state, tenders) {
-      state.tenders = tenders;
+      if (tenders.current_page === 1) {
+        state.tenders = tenders.data;
+        state.page = 2;
+      } else {
+        state.tenders = state.tenders.concat(tenders.data);
+        state.page++;
+      }
+
+      state.lastPage = tenders.last_page;
+    },
+    retrieveUsersTenders: function retrieveUsersTenders(state, tender) {
+      state.usersTenders = tender;
     },
     retrieveTender: function retrieveTender(state, tender) {
       state.tender = tender;
-    },
-    retrieveLocations: function retrieveLocations(state, tenders) {
-      state.locations = [];
-      tenders.data.map(function (tender) {
-        if (tender.locations.length > 0) {
-          tender.locations.forEach(function (location) {
-            state.locations.push(location);
-          });
-        }
-      });
     },
     retrieveOrigin: function retrieveOrigin(state, origin) {
       state.origin = origin;
@@ -90136,16 +93215,13 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     },
     // Tenders endpoints START
     fetchTenders: function fetchTenders(context) {
-      var route = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var endpoint = data ? '/api/tenders?page=' + data.page : '/api/tenders';
       return new Promise(function (resolve, reject) {
-        axios.get('/api/tenders', {
-          params: {
-            route: route
-          }
-        }).then(function (response) {
-          context.commit('retrieveTenders', response.data);
-          context.commit('retrieveLocations', response.data);
-          resolve(response);
+        axios.get(endpoint).then(function (response) {
+          context.commit('retrieveTenders', response.data); // context.commit('retrieveLocations', response.data)
+
+          resolve(response.data);
         })["catch"](function (errors) {
           return reject(errors.response);
         });
@@ -90156,8 +93232,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
         axios.get('/api/dashboard/tenders').then(function (response) {
-          context.commit('retrieveTenders', response.data); // context.commit('retrieveLocations', response.data)
-
+          context.commit('retrieveUsersTenders', response.data);
           resolve(response);
         })["catch"](function (errors) {
           return reject(errors.response);
@@ -90169,7 +93244,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       return new Promise(function (resolve, reject) {
         axios.get(path).then(function (response) {
           context.commit('retrieveTender', response.data);
-          resolve(response);
+          resolve(response.data);
         })["catch"](function (errors) {
           return reject(errors.response);
         });
@@ -90275,7 +93350,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
       return new Promise(function (resolve, reject) {
         axios.patch('/api/offers/' + offerId + '/update').then(function (response) {
-          resolve(response);
+          resolve(response.data);
         })["catch"](function (errors) {
           return reject(errors.response.data.errors);
         });
@@ -91168,7 +94243,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Map_vue_vue_type_template_id_185be00d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Map.vue?vue&type=template&id=185be00d& */ "./resources/js/views/Map.vue?vue&type=template&id=185be00d&");
 /* harmony import */ var _Map_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Map.vue?vue&type=script&lang=js& */ "./resources/js/views/Map.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Map.vue?vue&type=style&index=0&lang=css& */ "./resources/js/views/Map.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -91176,7 +94253,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Map_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Map_vue_vue_type_template_id_185be00d___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Map_vue_vue_type_template_id_185be00d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -91205,6 +94282,22 @@ component.options.__file = "resources/js/views/Map.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Map.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Map.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/Map.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************!*\
+  !*** ./resources/js/views/Map.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Map.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Map.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Map_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 

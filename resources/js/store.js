@@ -10,16 +10,19 @@ export let store = new Vuex.Store({
         user: null,          
 
         tender: null,
-        tenders: null,        
-        locations: [],
+        tenders: [], 
+        usersTenders: null, 
         categories:null,
         offers: null,
         orders: null,
-        order:null,
+        order:null, 
 
-        origin:null,
-        destination:null,
-        range: 'Umweg'
+        page: null,
+        lastPage: null
+
+        // origin:null,
+        // destination:null,
+        // range: 'Umweg'
     },
 
     getters:{
@@ -37,11 +40,7 @@ export let store = new Vuex.Store({
 
         company(state){
             return  state.user ? state.user.company : ''
-        },
-
-        tenderList(state){            
-            return state.tenders ? state.tenders.data : null
-        },
+        },       
 
         tenderId(state){
             return state.tender ? state.tender.id : null
@@ -52,6 +51,26 @@ export let store = new Vuex.Store({
                 return state.tender.user_id === state.user.id
             }
             return false
+        },
+
+        locations(state){
+            let locations = []
+
+            if(state.tenders){
+                state.tenders.map(tender => {  
+                    if(tender.locations.length > 0){
+                        tender.locations.forEach( location => {
+                            locations.push(location)
+                        }); 
+                    }              
+                })
+            }
+
+            return locations
+        },
+
+        noTenders(state){
+            return state.page > state.lastPage
         }
     },
 
@@ -72,24 +91,24 @@ export let store = new Vuex.Store({
             state.categories = categories
         },
 
-        retrieveTenders(state, tenders){
-            state.tenders = tenders
+        retrieveTenders(state, tenders){            
+            if(tenders.current_page === 1){
+                state.tenders = tenders.data  
+                state.page = 2                         
+            }else {
+                state.tenders = state.tenders.concat(tenders.data)
+                state.page ++
+            } 
+            state.lastPage = tenders.last_page             
+        },
+
+        retrieveUsersTenders(state, tender){
+            state.usersTenders = tender
         },
 
         retrieveTender(state, tender){
             state.tender = tender
-        },
-
-        retrieveLocations(state, tenders){ 
-            state.locations = []                       
-            tenders.data.map(tender => {  
-                if(tender.locations.length > 0){
-                    tender.locations.forEach( location => {
-                        state.locations.push(location)
-                    }); 
-                }              
-            })
-        },      
+        },  
         
         retrieveOrigin(state, origin){
             state.origin = origin
@@ -294,16 +313,17 @@ export let store = new Vuex.Store({
             })           
         },
 
-
         // Tenders endpoints START
-        fetchTenders(context, route = null){
+        fetchTenders(context, data = null){
+            let endpoint = data ? '/api/tenders?page='+ data.page : '/api/tenders'
+
             return new Promise((resolve, reject)=>{
                 axios
-                    .get('/api/tenders', { params:{route:route} })
+                    .get(endpoint)
                     .then(response =>{                       
                         context.commit('retrieveTenders', response.data)
-                        context.commit('retrieveLocations', response.data)
-                        resolve(response)
+                        // context.commit('retrieveLocations', response.data)
+                        resolve(response.data)
                     })
                     .catch(errors => reject(errors.response))
             })           
@@ -317,8 +337,7 @@ export let store = new Vuex.Store({
                 axios
                     .get('/api/dashboard/tenders')
                     .then(response =>{                       
-                        context.commit('retrieveTenders', response.data)
-                        // context.commit('retrieveLocations', response.data)
+                        context.commit('retrieveUsersTenders', response.data)                        
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response))
@@ -333,7 +352,7 @@ export let store = new Vuex.Store({
                     .get(path)
                     .then(response =>{                       
                         context.commit('retrieveTender', response.data)
-                        resolve(response)
+                        resolve(response.data)
                     })
                     .catch(errors => reject(errors.response))
             })           
@@ -469,7 +488,7 @@ export let store = new Vuex.Store({
                 axios
                     .patch('/api/offers/'+ offerId +'/update')
                     .then(response =>{
-                        resolve(response)
+                        resolve(response.data)
                     })
                     .catch(errors => reject(errors.response.data.errors))
             })           

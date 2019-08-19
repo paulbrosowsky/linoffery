@@ -19,5 +19,7 @@
     "price": "Price",
     "active": "Active",
     "completed": "Completed",
-    "contact_person": "Contact"
+    "contact_person": "Contact",
+    "more_results": "More Results",
+    "no_more_results": "No more results."
 }

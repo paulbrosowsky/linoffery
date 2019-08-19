@@ -60,10 +60,7 @@
                     <p class="text-gray-500 text-sm uppercase mb-2">kontakt</p>
                     <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
                         Formular
-                    </router-link></p>
-                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
-                        +49 (0) 7161 9661841
-                    </router-link></p>
+                    </router-link></p>                    
                     <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
                         info@linoffery.com
                     </router-link></p>         

@@ -4,6 +4,8 @@ import VueCookies from "vue-cookies"
 import VueMoment from "vue-moment"
 import moment from 'moment-timezone'
 import VueResize from "vue-resize-directive"
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
  
 import {router} from './routes'
 import {store} from './store'
@@ -17,6 +19,7 @@ Vue.use(VueCookies)
 Vue.use(VueMoment, {
     moment,
 })
+Vue.use(PerfectScrollbar)
 
 window.Event = new Vue()
 

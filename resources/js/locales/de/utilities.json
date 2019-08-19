@@ -19,5 +19,7 @@
     "price": "Preis",
     "active": "Aktiv",
     "completed": "Abgeschlossen",
-    "contact_person": "Ansprechpartner"    
+    "contact_person": "Ansprechpartner",
+    "more_results": "Weitere Ergebnisse",
+    "no_more_results": "Keine weiteren Ergebnisse."  
 }

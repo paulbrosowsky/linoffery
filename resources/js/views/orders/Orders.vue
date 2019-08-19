@@ -25,13 +25,13 @@
             >
             </offer-dashboard-card>
 
-            <p class="px-5 md:px-10 text-lg font-light text-gray-500" v-show="!filtered && !showOffers">
+            <p class="px-5 md:px-10 text-gray-500" v-show="!filtered && !showOffers">
                 <i class="icon ion-md-beer mr-2"></i>
                 <span>{{$t('tender.no_orders_info')}}</span>
             </p>
 
             <div v-if="offers">
-                <p class="px-5 md:px-10 text-lg font-light text-gray-500" v-show="!offers.length && showOffers">
+                <p class="px-5 md:px-10 text-gray-500" v-show="!offers.length && showOffers">
                     <i class="icon ion-md-beer mr-2"></i>
                     <span>{{$t('tender.no_offers_info')}}</span> 
                 </p>

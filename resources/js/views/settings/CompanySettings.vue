@@ -211,7 +211,7 @@
 
             // Get Place from Google Maps and set local address veriables
             setAddress(place){
-                
+                console.log(place)
                 let address = place.address_components
                 let location = place.geometry.location
 
@@ -219,9 +219,10 @@
                 this.postcode = address[7].long_name 
                 this.city = address[2].long_name 
                 this.country = address[6].long_name 
-
+                               
                 this.lat = location.lat()
                 this.lng = location.lng()
+                                
             }           
             
         },

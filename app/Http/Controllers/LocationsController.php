@@ -21,7 +21,7 @@ class LocationsController extends Controller
         $request->validate([
             'tender_id' => 'required|exists:tenders,id',
             'type' => ['required', Rule::in(['pickup', 'delivery'])],
-            'address' => 'required|string',
+            'address' => 'required|string',            
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'latest_date' => 'required|date',
@@ -32,6 +32,8 @@ class LocationsController extends Controller
             'tender_id' => $request->tender_id,
             'type' => $request->type,
             'address'=> $request->address,
+            'city' => $request->city,
+            'country' => $request->country,
             'lat' => $request->lat,
             'lng' => $request->lng,
             'latest_date' => $request->latest_date,
@@ -64,6 +66,8 @@ class LocationsController extends Controller
         
         $location->update([          
             'address'=> $request->address,
+            'city' => $request->city,
+            'country' => $request->country,
             'lat' => $request->lat,
             'lng' => $request->lng,
             'latest_date' => $request->latest_date,

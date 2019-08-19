@@ -18,7 +18,7 @@
                 :tender="tender"                
             ></tender-card>
             <div v-if="filtered">
-                <p class="px-5 md:px-10 text-lg font-light text-gray-500" v-show="!filtered.length ">
+                <p class="px-5 md:px-10 text-gray-500" v-show="!filtered.length ">
                     <i class="icon ion-md-beer mr-2"></i>
                     <span>{{$t('tender.no_tenders_info')}}</span> 
                 </p>
@@ -31,15 +31,13 @@
     import TenderCard from '../tenders/TenderCard'  
 
     export default {
-        components:{TenderCard}, 
+        components:{TenderCard},         
 
-        data(){
-            return{
-                tenders:null,                
-            }
-        },
-
-        computed:{           
+        computed:{   
+            
+            tenders(){
+                return this.$store.state.usersTenders
+            },
 
             active(){
                 if(this.tenders){
@@ -68,13 +66,7 @@
             filtered(){
                 return this[this.$route.hash.substring(1)]
             }
-        },      
-
-        created(){
-            setTimeout(() => {
-                this.tenders = this.$store.state.tenders
-            }, 200);                  
-        },     
+        },  
         
         beforeRouteEnter(to, from, next){            
            if(!to.hash){

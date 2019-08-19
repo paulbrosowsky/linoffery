@@ -83,10 +83,12 @@
             acceptOffer(){
                 this.$store
                     .dispatch('acceptOffer', this.offer.id)
-                    .then(()=>{
-                        flash(this.$i18n.t('tender.place_order_message'))
+                    .then(response =>{
+                        flash(this.$i18n.t('tender.place_order_message'))                    
                         this.close()
+                        this.$router.push({name:'order', params:{ order: response.id }})
                     })
+                    .catch(errors => console.log(errors))
             },
 
             close(){

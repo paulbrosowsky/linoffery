@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Offer;
 use App\Order;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,6 +54,18 @@ class AcceptOfferTest extends PassportTestCase
         $this->assertEquals($this->tender->id, $order->tender_id);
         $this->assertEquals($this->offer->id, $order->offer_id);
         $this->assertEquals($this->user->id, $order->tenderer_id);
+    }
+
+    /** @test */
+    function all_offers_exept_accepted_will_be_deleted()
+    {
+        create('App\Offer', ['tender_id' => $this->tender->id], 3);  
+        $this->assertCount(4, Offer::all());
+
+        $this->signIn($this->user);
+        $this->acceptOffer();
+
+        $this->assertCount(1, Offer::all());
     }
 
     public function acceptOffer()

@@ -1,18 +1,18 @@
 <template>
     <div v-if="tender">
-        <card :classes="'py-5'" class="mb-5" v-if="hasOffers && !tender.completed_at">            
-            <div class="pl-5 mb-2">                 
+        <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !tender.completed_at">            
+            <div class="pl-5 pb-3 border-b">                 
                 <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
             </div>
             
-            <offer-card 
+            <offer-card                 
                 :offer="offer"                 
                 v-for="(offer, index) in tender.offers" 
                 :key="index"
             ></offer-card>
-        </card>
+        </div>
 
-        <card :classes="'py-5'">  
+        <div :classes="'py-5'">  
              
             <p 
                 class="uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 text-right"  
@@ -41,10 +41,11 @@
             </div>
             
 
-            <div class="block bg-gray-100 py-5 px-5 md:flex md:px-8">
+            <div class="bg-gray-100 p-5">
                 
-                <div class="w-full pb-5 md:w-1/2 md:pb-0 md:mr-2" >                 
+                <div class="w-full pb-5 " >                 
                     <div class="flex items-center mb-2">
+                        <i class="icon ion-md-log-in text-gray-500 mr-2"></i>  
                         <p class="uppercase text-sm text-gray-500">{{$t('tender.pickup_details')}}</p>
                         <button 
                             class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
@@ -65,8 +66,9 @@
                     <location-info :location="pickup" v-if="pickup && !editPickup"></location-info> 
                 </div>
 
-                <div class="w-full md:w-1/2 md:ml-2" > 
+                <div class="w-full" > 
                     <div class="flex items-center mb-2">
+                        <i class="icon ion-md-log-out text-gray-500 mr-3"></i>                           
                         <p class="uppercase text-sm text-gray-500">{{$t('tender.delivery_details')}}</p>
                         <button 
                             class="py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
@@ -89,7 +91,7 @@
             </div>
             
 
-            <div class="px-5 py-5 md:px-10">
+            <div class="p-5">
                 <div class="flex items-center mb-2">
                     <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>
                     <button 
@@ -110,17 +112,28 @@
                 <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
             </div>
 
-            <div class="flex justify-end py-5 px-5 md:px-10" v-if="!draft && !ownsTender && loggedIn" >            
-                <button class="btn btn-outlined mr-2">
-                    <i class="icon ion-md-bookmark text-grey-500 mr-2"></i>   
-                    <span>{{$t('utilities.bookmark')}} </span> 
-                </button>
-                <button class="btn btn-teal" @click="$modal.show('make-offer')">
+             <div class="w-full flex items-center p-5">
+                    <img class="w-12 h-12 rounded-full shadow-md" :src="tender.user.company.avatar" alt="">
+
+                    <div class="ml-3">
+                        <p class="font-bold leading-none" v-text="tender.user.company.name"></p>
+                        <span class="text-xs text-gray-600">20 Liferungen |</span>
+                        <span class="text-xs text-gray-600">10 Aussreibungen</span>
+                        <div class=" -my-1">
+                            <i class="icon ion-md-star text-base text-orange-500 leading-none mr-1" v-for="index in 5" :key="index"></i>
+                            <span class="font-bold">4.8</span>
+                        </div>  
+                    </div>
+                    
+                </div>
+
+            <div class="py-5 px-5" v-if="!ownsTender && loggedIn" > 
+                <button class="w-full btn btn-teal" @click="$modal.show('make-offer')">
                     {{$t('tender.make_offer')}}
                 </button>                                      
             </div>  
 
-            <div class="py-3 px-5 md:px-10" v-if="draft && dataComplete && ownsTender">
+            <div class="py-3 px-5" v-if="draft && dataComplete && ownsTender">
                     <div class="flex bg-yellow-200 p-5 rounded-lg mb-3">
                         <i class="icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"></i>  
                         <div class="text-sm">
@@ -135,7 +148,7 @@
                 </div>
                 </div>             
         
-        </card>
+        </div>
     </div>
 </template>
 <script>
@@ -223,9 +236,8 @@
             fetchData(){
                 this.$store
                     .dispatch('fetchTender', `/api${this.$route.path}`) 
-                    .then(response => {
-                        Event.$emit('updateMarkers', response.data.locations)
-                        Event.$emit('zoom-map')
+                    .then(response => {                        
+                        Event.$emit('updateMarkers', response.locations)                       
                     })               
             },           
             

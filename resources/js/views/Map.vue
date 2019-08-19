@@ -4,6 +4,7 @@
 <script>
     import gmapsInit from '../utilities/gmaps';
     import RouteBoxer from '../utilities/RouteBoxer';
+    import MarkerClusterer from '@google/markerclusterer';
 
     export default {      
         
@@ -14,13 +15,14 @@
                 destination: null,
                 route: [],                
                               
-                map: null ,                            
+                map: null ,
+                markerCluster: null           
             }
         },  
         
         computed:{
             locations(){
-               return this.$store.state.locations
+               return this.$store.getters.locations
             }
         },
 
@@ -38,8 +40,11 @@
                         disableDefaultUI: true
                     });
 
-                    this.directionsDisplay.setMap(null)  
+                    this.directionsDisplay.setMap(null)                     
 
+                    this.markerCluster = new MarkerClusterer(this.map, this.markers, {
+                        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                    });  
                     
                     Event.$on('zoom-map',()=>{
                         setTimeout(() => {
@@ -47,7 +52,7 @@
                         }, 500);                        
                     })                    
 
-                    Event.$on('updateMarkers',value => {
+                    Event.$on('updateMarkers',value => {                       
                         this.resetAllMarkers()                                               
                         this.updateMarkers(value)                                          
                     }) 
@@ -69,9 +74,7 @@
 
                     Event.$on('boxRoute', value => {                
                         this.boxRoute(value)
-                    })
-                    
-                   
+                    })                     
                    
                     
                     // geocoder.geocode({ address: 'Stuttgart' }, (results, status) => {
@@ -113,12 +116,16 @@
                 }               
             },
 
-            async updateMarkers(locations){ 
+            async updateMarkers(locations){                
+
                 await locations.map(location =>{                    
                     let position = { lat:location.lat, lng:location.lng }                    
                     this.addMarker(position, location)                                                     
-                }) 
-
+                })
+                
+                // Add updated Markers to Cluster
+                this.markerCluster.addMarkers(this.markers)
+                
                 this.zoomToMarkers()                               
             },  
 
@@ -223,7 +230,8 @@
             
             resetAllMarkers(){                
                 this.markers.map(marker => marker.setMap(null))
-                this.markers = []
+                this.markers = [] 
+                this.markerCluster.clearMarkers()             
             },            
         },
         
@@ -232,6 +240,19 @@
         },        
     }
 </script>
+
+<style>
+a[href^="http://maps.google.com/maps"]{display:none !important}
+a[href^="https://maps.google.com/maps"]{display:none !important}
+
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+    display:none;
+}
+.gmnoprint div {
+    background:none !important;
+}
+
+</style>
 
 
 

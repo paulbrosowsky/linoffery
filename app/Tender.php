@@ -95,6 +95,19 @@ class Tender extends Model
     public function complete()
     {
         $this->update(['completed_at' => Carbon::now()]);
+        $this->removeUnacceptedOffers();
+    }
+    
+    /**
+     * Delete all unaccepted offers
+     */
+    protected function removeUnacceptedOffers()
+    {   
+        $this->offers
+            ->where('accepted_at', NULL)
+            ->each(function($offer){
+                $offer->delete();
+            });        
     }
 
     /**

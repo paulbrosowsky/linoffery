@@ -76,6 +76,8 @@
                     latency:null,
                     lat:null, 
                     lng:null, 
+                    city: null,
+                    country: null
                 },
 
                 errors: [],
@@ -140,6 +142,21 @@
                     this.form.address = address.place.formatted_address
                     this.form.lat = address.place.geometry.location.lat()
                     this.form.lng = address.place.geometry.location.lng()
+
+                    let city = address.place.address_components.find((component) =>{   
+                        return  component.types.find((type) => {
+                            return type ===  'locality'   
+                        })
+                    })
+
+                    let country = address.place.address_components.find((component) =>{   
+                        return  component.types.find((type) => {
+                            return type ===  'country'   
+                        })
+                    })
+
+                    this.form.city = city.long_name
+                    this.form.country = country.long_name                   
                 }
             },
 

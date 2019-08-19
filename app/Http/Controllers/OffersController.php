@@ -103,7 +103,7 @@ class OffersController extends Controller
      */   
     protected function acceptOffer($offer)
     {        
-        $offer->accept();
+        $offer->accept();        
         $offer->tender->complete();             
 
         $order= Order::create([
@@ -111,7 +111,7 @@ class OffersController extends Controller
             'offer_id' => $offer->id,
             'carrier_id' => $offer->user_id,
             'tenderer_id' => $offer->tender->user_id
-        ]);
+        ]);       
             
         return $order;
     }

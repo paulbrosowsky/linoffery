@@ -17,7 +17,9 @@ class CreateLocationsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('tender_id');
             $table->string('type');
-            $table->string('address');          
+            $table->string('address');  
+            $table->string('city')->nullable(); 
+            $table->string('country')->nullable();              
             $table->float('lat');
             $table->float('lng');
             $table->unsignedSmallInteger('latency')->nullable();

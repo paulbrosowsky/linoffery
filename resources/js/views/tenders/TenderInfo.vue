@@ -1,13 +1,12 @@
 <template>
-    <div>
+    
         <div 
-            class="block px-5"
-            :class="cardHeaderSmall ? '' : 'lg:flex'" 
-            ref="cardHeader" 
-            v-resize="styleCardHeader"
+            class="p-5"  
         >
+
             
-            <div 
+            
+            <!-- <div 
                 class="w-full p-0 bg-black overflow-hidden shadow-md rounded-lg"
                 :class="cardHeaderSmall ? '' : 'lg:w-3/5'" 
             >
@@ -17,63 +16,21 @@
                         alt=""
                     >              
                 </div>
-            </div> 
+            </div>  -->
 
-            <div 
-                class="flex flex-col justify-between md:px-5"
-                :class="cardHeaderSmall ? '' : 'lg:w-2/5 '" 
-            >
-                <div class="py-5">
-                    <div class="flex items-center">
-               
-                        <div class="flex flex-col items-center mr-3 ">
-                            <p class="text-xs text-gray-500 uppercase ">{{$t('tender.curr_offer')}}</p>
-                            <p class="text-4xl text-teal-500 leading-none" v-text="'€ '+ price"></p> 
-                            <p class="leading-none" v-show="tender.offersCount">
-                                <span class="text-sm text-gray-500">{{tender.offersCount}}</span> 
-                                <span class="text-sm text-gray-500">{{$t('tender.offers')}}</span>  
-                            </p>                                         
-                        </div>
-                    
-                        <button class="btn btn-teal" @click="$modal.show('make-offer')" v-if="!ownsTender">
-                            {{$t('tender.m_offer')}}
-                        </button>                    
-                    </div> 
-                    
-                    <div class="flex-none mt-5" v-if="tender.immediate_price">
-                        <button 
-                            class="flex items-center text-red-500 font-bold border border-red-500 rounded-full pr-8 pl-5 py-1 focus:outline-none hover:bg-red-500 hover:text-white"
-                            @click="$modal.show('take-it-now', tender)"
-                        >
-                            <span><i class="icon ion-md-flash text-sm mr-3"></i></span>
-                            <span class="text-lg mr-2" v-text="'€ '+ tender.immediate_price"></span>
-                            <span class="uppercase text-sm">{{$t('tender.take_it')}}</span>    
-                        </button>
-                    </div>  
+           
+            <div>              
+                <div class="flex items-center mb-1">                                
+                    <!-- <span class="rounded-full p-1 mr-1" :style="{background: tender.category.color}"></span>                                  -->
+                    <span 
+                        class="text-sm uppercase tracking-tight border rounded-full font-bold mr-2 px-2"
+                        v-text="tender.category.name"
+                        :style="{color: tender.category.color, borderColor: tender.category.color}"
+                    ></span> 
+                    <span class="text-gray-500 text-sm mr-1">{{$t('tender.valid_until')}}</span>
+                    <span class="font-semibold"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>                                
+                </div> 
 
-                </div>
-               
-
-                <div class="w-full flex items-center py-5">
-                    <img class="w-12 h-12 rounded-full shadow-md" :src="company.avatar" alt="">
-
-                    <div class="ml-3">
-                        <p class="font-bold leading-none" v-text="company.name"></p>
-                        <span class="text-xs text-gray-600">20 Liferungen |</span>
-                        <span class="text-xs text-gray-600">10 Aussreibungen</span>
-                        <div class=" -my-1">
-                            <i class="icon ion-md-star text-base text-orange-500 leading-none mr-1" v-for="index in 5" :key="index"></i>
-                            <span class="font-bold">4.8</span>
-                        </div>  
-                    </div>
-                    
-                </div>
-            </div>           
-        </div>
-
-        <div class="px-5 my-5 md:px-10">
-            
-            <div>
                 <span>
                     <button 
                         class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
@@ -86,36 +43,42 @@
                 
                 <span class="text-2xl font-bold leading-none" v-text="tender.title"></span>
             </div>
-            
+                <div class="pt-8 pb-3 px-3">
+                    <div class="flex mb-3">               
+                        <div class="flex flex-col items-center mr-5 ">
+                            <!-- <p class="text-xs text-gray-500 uppercase ">{{$t('tender.curr_offer')}}</p> -->
+                            <p class="text-3xl text-teal-500 tracking-tight leading-none" v-text="'€ '+ price"></p> 
+                            <p class="text-xs text-gray-500 leading-none" v-show="tender.offersCount">
+                                <span class="font-semibold ">{{tender.offersCount}}</span> 
+                                <span class="">{{$t('tender.offers')}}</span>  
+                            </p>                                  
+                        </div>
 
-            
-                <div class="flex items-center py-3">                                
-                    <span class="rounded-full p-1 mr-1" :style="{background: tender.category.color}"></span>                                 
-                    <span 
-                        class="text-sm uppercase tracking-tight font-bold mr-2"
-                        v-text="tender.category.name"
-                        :style="{color: tender.category.color}"
-                    ></span> 
-                    <span class="text-gray-500 text-sm mr-1">{{$t('tender.valid_until')}}</span>
-                    <span class="font-bold"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>                                
-                </div> 
-            
+                        <div class="flex-1">
+                            <button class="btn btn-teal w-full mb-2" @click="$modal.show('make-offer')" v-if="!ownsTender && loggedIn">
+                                {{$t('tender.make_offer')}}
+                            </button> 
+                            <button 
+                                class=" w-full text-red-500 font-bold  hover:text-red-700 focus:outline-none"
+                                @click="$modal.show('take-it-now', tender)"                                    
+                                v-if="tender.immediate_price"
+                            >                               
+                                <span class="text-lg mr-2 " v-text="'€ '+ tender.immediate_price"></span>
+                                <i class="icon ion-md-flash"></i>
+                                <span class="uppercase tracking-tight text-sm">{{$t('tender.take_it')}}</span>    
+                            </button>                             
+                        </div>                                   
+                    </div>          
+                </div>               
 
-            <p class="text-sm" v-text="tender.description"> </p> 
+               <p class="text-sm" v-text="tender.description"> </p>                    
+        </div>       
 
-        </div> 
-
-    </div>
+   
 </template>
 <script>
     export default {
-        props: ['tender'],
-
-        data(){
-            return{ 
-                cardHeaderSmall: false,                
-            }
-        },
+        props: ['tender'],        
 
         computed:{
             company(){
@@ -130,16 +93,14 @@
                 return this.$store.getters.ownsTender
             },
 
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            },
+
             price(){
                 return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price
             }
-        },
-
-        methods:{
-            styleCardHeader(){
-                this.cardHeaderSmall = this.$refs.cardHeader.clientWidth < 640 ? true : false
-            }
-        }
+        },        
         
     }
 </script>
