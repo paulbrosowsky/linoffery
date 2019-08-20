@@ -1,45 +1,31 @@
 <template>
-    <div>
-        <h1 class="text-gray-700 font-light leading-none text-2xl ml-2 mb-5">
-            {{$t('tender.my_orders')}}          
-        </h1> 
+    <card classes="px-0 py-5">
+        <order-card 
+            v-for="(order, index) in filtered" 
+            :key="index" 
+            :order="order" 
+            v-show="filtered"
+        ></order-card>
+        <offer-dashboard-card 
+            v-for="(offer, index) in offers" 
+            :key="index+100" 
+            :offer="offer" 
+            v-show="showOffers"
+        ></offer-dashboard-card>
 
-        <tabs class="ml-2 ">
-            <tab :name="$i18n.t('utilities.active')" hash="#active"></tab>            
-            <tab :name="$i18n.t('utilities.completed')" hash="#completed"></tab>
-            <tab :name="$i18n.t('tender.active_offers')" hash="#active-offers"></tab>
-        </tabs> 
+        <p class="px-5 md:px-10 text-gray-500" v-show="!filtered && !showOffers">
+            <i class="icon ion-md-beer mr-2"></i>
+            <span>{{$t('tender.no_orders_info')}}</span>
+        </p>
 
-        <card classes="px-0 py-5">
-            <order-card 
-                v-for="(order, index) in filtered" 
-                :key="index" 
-                :order="order"
-                v-show="filtered"
-            ></order-card>
-            <offer-dashboard-card
-                v-for="(offer, index) in offers" 
-                :key="index+100" 
-                :offer="offer"
-                v-show="showOffers"
-            >
-            </offer-dashboard-card>
-
-            <p class="px-5 md:px-10 text-gray-500" v-show="!filtered && !showOffers">
+        <div v-if="offers">
+            <p class="px-5 md:px-10 text-gray-500" v-show="!offers.length && showOffers">
                 <i class="icon ion-md-beer mr-2"></i>
-                <span>{{$t('tender.no_orders_info')}}</span>
+                <span>{{$t('tender.no_offers_info')}}</span>
             </p>
+        </div>
 
-            <div v-if="offers">
-                <p class="px-5 md:px-10 text-gray-500" v-show="!offers.length && showOffers">
-                    <i class="icon ion-md-beer mr-2"></i>
-                    <span>{{$t('tender.no_offers_info')}}</span> 
-                </p>
-            </div>
-            
-        </card>
-
-    </div>    
+    </card>
 </template>
 <script>
     import OfferDashboardCard from '../offers/OfferDashboardCard'
@@ -58,7 +44,7 @@
             },
 
             offers(){
-                return this.$store.state.offers
+                return this.$store.state.offers ? this.$store.state.offers : [] 
             },
 
             active(){
@@ -66,15 +52,19 @@
                     return this.orders.filter((order)=>{
                         return order.completed_at === null
                     })
-                }                
+                }else{
+                    return []
+                }               
             },
 
-            competed(){
+            completed(){
                 if(this.orders){
                     return this.orders.filter((order)=>{
                         return order.completed_at != null
                     })             
-                }         
+                }else{
+                    return []
+                }             
             },
 
             filtered(){

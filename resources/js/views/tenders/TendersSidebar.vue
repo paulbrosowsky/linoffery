@@ -1,22 +1,23 @@
 <template>
-    <card classes="py-5 px-0">
-        <tender-card v-for="(tender, index) in filtered" :key="index" :tender="tender"></tender-card>
-        <div v-if="filtered">
-            <p class="px-5 md:px-10 text-gray-500" v-show="!filtered.length ">
-                <i class="icon ion-md-beer mr-2"></i>
-                <span>{{$t('tender.no_tenders_info')}}</span>
-            </p>
-        </div>
-    </card>
+    <div>
+        <h1 class="text-gray-700 font-light leading-none text-2xl lg:-ml-2">
+            {{$t('tender.my_tenders')}}
+        </h1>
+        <button class="btn btn-teal shadow-md my-5 lg:w-full lg:-ml-2" @click="$modal.show('create-tender')">
+            <span><i class="icon ion-md-add mr-2"></i></span>
+            <span>{{$t('tender.new_tender')}}</span>
+        </button>
+        <tabs>
+            <tab :name="$i18n.t('utilities.active')" hash="#active" :count="active.length"></tab>
+            <tab :name="$i18n.t('utilities.drafts')" hash="#drafts" :count="drafts.length"></tab>
+            <tab :name="$i18n.t('utilities.completed')" hash="#completed" :count="completed.length"></tab>
+        </tabs>
+
+    </div>
+    
 </template>
-<script>    
-    import TenderCard from '../tenders/TenderCard' 
-
+<script>
     export default {
-        components:{
-            TenderCard
-        }, 
-
         computed:{   
             
             tenders(){
@@ -51,19 +52,8 @@
                 }else{
                     return []
                 }          
-            },
-
-            filtered(){
-                return this[this.$route.hash.substring(1)]
-            }
-        },         
+            },           
+        },        
         
-        beforeRouteEnter(to, from, next){            
-           if(!to.hash){
-               next({name: 'dashboard_tenders', hash: '#active'})
-           }else{
-               next()
-           }
-        }
     }
 </script>

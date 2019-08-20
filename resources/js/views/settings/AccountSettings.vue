@@ -1,8 +1,5 @@
 <template>
-    <div> 
-        <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2">
-            {{ $t('settings.account_settings')}}               
-        </h1>  
+    <div v-if="user">         
         <card class="relative">
             <template v-slot:title>{{ $t('settings.update_account')}}</template>
             

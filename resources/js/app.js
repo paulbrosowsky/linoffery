@@ -52,6 +52,7 @@ Vue.component('navbar', require('./components/Navbar.vue').default);
 Vue.component('password-input', require('./components/PasswordInput.vue').default);
 Vue.component('loading-spinner', require('./components/Spinner.vue').default);
 Vue.component('select-input', require('./components/SelectInput.vue').default);
+Vue.component('sidebar-nav', require('./components/SidebarNav.vue').default);
 Vue.component('tab', require('./components/Tab.vue').default);
 Vue.component('tabs', require('./components/Tabs.vue').default);
 Vue.component('textarea-input', require('./components/TextareaInput.vue').default);

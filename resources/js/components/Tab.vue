@@ -7,7 +7,8 @@
     export default {
         props:{
             name:'',
-            hash:''            
+            hash:'',
+            count:{default:null}        
         },  
         
         data(){

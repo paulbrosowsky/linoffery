@@ -12,18 +12,18 @@
             ></offer-card>
         </div>
 
-        <div :classes="'py-5'">  
+        <div class="py-5">  
              
             <p 
-                class="uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 text-right"  
+                class="uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 "  
                 v-if="tender.completed_at"               
             >
                 <i class="icon ion-md-checkmark mr-2"></i>  
-                <span>Abgeshlossen</span> 
+                <span>{{$t('utilities.completed')}}</span> 
             </p>
 
             <p 
-                class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 text-right" 
+                class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 " 
                 v-if="draft"
             >
                 <i class="icon ion-md-create mr-2"></i>  

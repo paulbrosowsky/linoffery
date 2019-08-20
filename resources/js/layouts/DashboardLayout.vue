@@ -5,20 +5,20 @@
             <div class="flex flex-col min-h-screen w-full md:ml-20">
                 <navbar></navbar>                
                     <div class="flex-1 bg-gray-300">
-                        <div class="w-full mx-auto" :style="maxWidth">  
-                            <div class="flex px-3 py-5 md:px-12">   
-                                <div class="hidden w-1/2 lg:block" v-if="mapOpened"></div>
-                                <div class="w-full" :class="mapOpened ? 'lg:w-1/2' : 'xl:mr-10'">
-                                    <notifications></notifications>
-                                    <slot></slot> 
-                                </div> 
-
-                                <div class="hidden w-1/3 min-h-screen xl:block" v-show="!mapOpened">
-                                    <card class="h-full"></card>
+                        <div class="w-full mx-auto px-3 py-5 md:px-20" :style="maxWidth"> 
+                            <div class="lg:flex">
+                                <div class="lg:w-1/4" v-if="this.$slots.sidebar"> 
+                                    <sidebar-nav>   
+                                        <slot name="sidebar"></slot>
+                                    </sidebar-nav>
                                 </div>
-
-                            </div> 
-                                                
+                                <div class="flex-1 lg:ml-10">
+                                    <notifications></notifications>
+                                    <slot></slot>  
+                                </div>
+                            </div>
+                            
+                                
                         </div>
                     </div>                 
                 
@@ -27,7 +27,7 @@
             
         </div> 
 
-        <map-drawer @changed="toggleMapOpened"></map-drawer>       
+        <!-- <map-drawer @changed="toggleMapOpened"></map-drawer>        -->
 
     </div>    
 
@@ -62,23 +62,8 @@
 
             buttonIcon(){
                 return this.mapOpened ? 'ion-md-arrow-back' : 'ion-md-map'
-            },
-
-            hiddenDesktop(){
-                return this.mapOpened ? 'lg:hidden' : ''
-            }
+            },          
         },
-
-        methods:{
-            toggleMapDrawer(){
-                Event.$emit('toggle-map-drawer')
-            },
-
-            toggleMapOpened(opened){
-                this.mapOpened = opened
-            }          
-        }
-    
         
     }
 </script>

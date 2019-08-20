@@ -1,10 +1,7 @@
 <template>
-    <div class="" v-if="company"> 
-        <h1 class="text-gray-700 font-light text-2xl mb-5 ml-2" >
-            {{$t('settings.company_settings')}}              
-        </h1>         
+    <div class="" v-if="user">                 
         <card class="w-1/2 relative">
-            <template v-slot:title>{{$t('settings.update_company')}}</template>             
+            <template v-slot:title>{{$t('settings.update_company')}}</template>           
             
             <div class="xl:flex">
                 <div class="w-full flex flex-col items-center px-8 xl:w-1/3">
@@ -153,17 +150,17 @@
 <script>
     export default {
 
-        props:['company'],
+        props:['user'],
 
         data(){
-            return{
-                name: this.company.name,                
-                vat: this.company.vat,
-                website: this.company.website,
-                address: this.company.address,
-                postcode:this.company.postcode,
-                city: this.company.city,
-                country: this.company.country,
+            return{                
+                name: this.user.company.name,                
+                vat: this.user.company.vat,
+                website: this.user.company.website,
+                address: this.user.company.address,
+                postcode:this.user.company.postcode,
+                city: this.user.company.city,
+                country: this.user.company.country,
                 lat: null,
                 lng: null,                
 
@@ -175,7 +172,7 @@
 
         computed:{
             image(){
-                return this.logoPreview ? this.logoPreview : this.company.avatar
+                return this.logoPreview ? this.logoPreview : this.user.company.avatar
             }
         },
 

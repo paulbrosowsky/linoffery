@@ -1,10 +1,8 @@
 <template>
     
         <div 
-            class="p-5"  
-        >
-
-            
+            class="px-5 pb-5"  
+        >            
             
             <!-- <div 
                 class="w-full p-0 bg-black overflow-hidden shadow-md rounded-lg"

@@ -38,23 +38,23 @@
             <i class="icon ion-md-settings text-2xl"></i> 
         </router-link>
 
-        <button 
+        <!-- <button 
             class="absolute top-0 right-0 z-30 bg-teal-500 rounded-full shadow-md hidden mx-5 my-3 px-3 py-1 hover:bg-teal-700 focus:outline-none lg:block "
             @click="toggleMapDrawer"
         >
             <i class="icon ion-md-map text-white text-xl top-0"></i>
-        </button>
+        </button> -->
 
     </div>    
 </template>
 <script>
     export default {
 
-        methods:{
-            toggleMapDrawer(){
-                Event.$emit('toggle-map-drawer')
-            },
-        }
+        // methods:{
+        //     toggleMapDrawer(){
+        //         Event.$emit('toggle-map-drawer')
+        //     },
+        // }
         
     }
 </script>

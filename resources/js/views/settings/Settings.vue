@@ -1,21 +1,7 @@
 <template>
-    <div v-if="user">
-        <tabs>
-            <tab :name="$t('settings.account')" hash="#account">
-                <account-settings :user="user"></account-settings>
-            </tab>
-            <tab :name="$t('settings.company')" hash="#company">
-                <company-settings :company="user.company"></company-settings>
-            </tab>
-            <tab :name="$t('settings.payment')" hash="#payment">
-                <payment-settings></payment-settings>
-            </tab>
-
-            <tab :name="$t('settings.notifications')" hash="#notification">
-                <notification-settings></notification-settings>
-            </tab>                      
-        </tabs>
-    </div>
+    <div>  
+        <component :is="settings" :user="user"></component>
+    </div>    
 </template>
 <script>
     import AccountSettings from '../settings/AccountSettings'
@@ -34,22 +20,19 @@
         computed:{
             user(){
                 return this.$store.state.user
-            }
+            },
+
+            settings(){
+                return this.$route.hash.substring(1)+ '-settings' 
+            },
         }, 
-
-        methods:{
-            setInitialActiveTab() {
-                if(!this.$route.hash){
-                    this.$router.push({
-                            name:'settings', 
-                            hash: '#account'
-                    }) 
-                }
-            }
-        },
-
-        mounted(){
-            this.setInitialActiveTab()
+        
+        beforeRouteEnter(to, from, next){            
+           if(!to.hash){
+               next({name: 'settings', hash: '#account'})
+           }else{
+               next()
+           }
         }
 
     }

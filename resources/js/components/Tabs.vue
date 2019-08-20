@@ -1,21 +1,36 @@
 <template>
     <section>
-        <div class="w-full">                      
-            <div class="flex items-center mb-2 md:justify-start md:-ml-3"> 
-                <div 
+        <div class="w-full" >                      
+            <div class="flex items-center mb-2 md:justify-start md:-ml-3 lg:flex-col lg:items-start"> 
+                <div                     
+                    class="lg:w-full"
                     v-for="(tab, index) in tabsList" 
-                    :key="index" 
+                    :key="index"
                 > 
-                
-                    <button
-                        class="text-gray-500 text-sm tracking-tight cursor-pointer px-2 pb-2 md:text-base md:px-3 focus:outline-none" 
-                        :class="{ 'text-teal-500 font-bold' : tab.isActive }"
-                        role-tab
-                        :aria-selected="tab.isActive"
-                        v-text="tab.name" 
-                        @click="setActiveTab(tab)"
-                    ></button>
 
+                    <div 
+                        class="lg:flex  lg:justify-between lg:items-center mb-1 lg:p-2 lg:hover:bg-gray-100 rounded-lg cursor-pointer"
+                        :class="{ 'lg:bg-gray-100 lg:rounded-lg' : tab.isActive }"
+                         @click="setActiveTab(tab)"
+                    >
+                        
+                        <button
+                            class="text-gray-500 text-sm tracking-tight cursor-pointer px-2 md:text-base focus:outline-none" 
+                            :class="{ 'text-teal-500 font-bold' : tab.isActive }"
+                            role-tab
+                            :aria-selected="tab.isActive"
+                            v-text="tab.name" 
+                           
+                        ></button>
+
+                        <p 
+                            class="hidden text-sm text-white px-2 rounded-full bg-gray-500 font-bold lg:block"
+                            :class="{ 'bg-teal-500' : tab.isActive }"                            
+                            v-text="tab.count"
+                        ></p>
+
+                    </div>
+                    
                 </div>                  
 
                 <div v-if="dropdownTabs"> 
@@ -55,7 +70,10 @@
 
 </template>
 <script>
-    export default {  
+    export default {   
+        
+        props:['route'],
+
         data(){
            return{
                tabs:[],
@@ -83,14 +101,14 @@
         methods:{
             setActiveTab(tab){
                 this.$router.push({
-                        name: this.$route.name, 
+                        name: this.route ? this.route : this.$route.name, 
                         hash: tab.hash
                 }) 
             },
         },       
 
-        created(){            
-            this.tabs = this.$children 
+        mounted(){            
+            this.tabs = this.$children            
         },
        
     }

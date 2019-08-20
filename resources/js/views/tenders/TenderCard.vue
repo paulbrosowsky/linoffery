@@ -43,7 +43,7 @@
                             {{$t('tender.offers')}}
                         </span>
                     </div>
-                    <span class="text-sm font-bold mt-1 md:text-base">
+                    <span class="text-sm font-bold mt-1 md:text-base" v-show="tender.immediate_price">
                         <i class="icon ion-md-flash text-sm"></i>
                         <span v-text=" '€ '+tender.immediate_price "></span>
                     </span>

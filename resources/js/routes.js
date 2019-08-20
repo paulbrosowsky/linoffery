@@ -11,12 +11,15 @@ import Login from './views/auth/Login'
 import Logout from './views/auth/Logout'
 import Order from './views/orders/Order'
 import Orders from './views/orders/Orders'
+import OrdersSidebar from './views/orders/OrdersSidebar'
 import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
+import SettingsSidebar from './views/settings/SettingsSidebar'
 import Tender from './views/tenders/Tender'
 import TendersDashboard from './views/tenders/TendersDashboard'
 import Tenders from './views/tenders/Tenders'
+import TendersSidebar from './views/tenders/TendersSidebar'
 import Terms from './views/Terms'
 import Welcome from './views/Welcome'
 
@@ -55,7 +58,10 @@ let routes = [
     {
         name:'dashboard_tenders',
         path:'/dashboard/tenders',        
-        component: TendersDashboard,
+        components:{
+            default:TendersDashboard, 
+            sidebar: TendersSidebar         
+        },
         meta:{
             layout: 'dashboard',          
             requiresAuth: true
@@ -73,7 +79,10 @@ let routes = [
     {
         name:'settings',
         path:'/settings',
-        component: Settings,
+        components:{
+            default: Settings, 
+            sidebar: SettingsSidebar         
+        },        
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
@@ -158,7 +167,10 @@ let routes = [
     {
         name:'orders',
         path:'/orders',
-        component: Orders,
+        components:{
+            default: Orders, 
+            sidebar: OrdersSidebar         
+        },
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
@@ -177,7 +189,10 @@ let routes = [
     {
         name:'order',
         path:'/orders/:order',
-        component: Order,
+        components:{
+            default:Order,
+            sidebar: OrdersSidebar   
+        },
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
