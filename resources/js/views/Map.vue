@@ -10,10 +10,9 @@
         
         data(){
             return{                
-                markers:[],
-                origin: null,
-                destination: null,
-                route: [],                
+                markers:[],                
+                route: [], 
+                routeLocations: null,               
                               
                 map: null ,
                 markerCluster: null           
@@ -57,34 +56,21 @@
                         this.updateMarkers(value)                                          
                     }) 
 
-                    Event.$on('displayRoute', value => { 
-                        this.origin = value.origin
-                        this.destination = value.destination 
-                        this.resetMarkers()                                                             
-                        this.displayRoute()                        
+                    Event.$on('displayRoute', value => {
+                        this.resetAllMarkers()
+                        this.displayRoute(value.origin, value.destination)
                     }) 
-
-                    Event.$on('fetchAddress',(element) =>{                                       
-                        this.fetchAddress(element)
-                    }),
                     
-                    Event.$on('setAutocomplete',() =>{                
-                        this.setAutocomplete()
-                    }),
+                    // Fetch Address with Places API
+                    //  Triggered in: RouteFilters, LocationsForm, CompanySettings  
+                    Event.$on('fetchAddress',(element) =>{   
+                        this.fetchAddress(element)
+                    }),  
 
                     Event.$on('boxRoute', value => {                
                         this.boxRoute(value)
-                    })                     
-                   
-                    
-                    // geocoder.geocode({ address: 'Stuttgart' }, (results, status) => {
-                    //     if (status !== 'OK' || !results[0]) {
-                    //         throw new Error(status);
-                    //     }
-
-                    //     map.setCenter(results[0].geometry.location);
-                    //     map.fitBounds(results[0].geometry.viewport);
-                    // });
+                    })  
+                  
                 } catch (error) {
                     console.error(error);
                 }                
@@ -105,16 +91,18 @@
                 this.markers.push(marker) 
             },
 
-            geocodePosition(address){
-                if(this.geocoder){
-                    this.geocoder.geocode({ address:address   }, (results, status) => {
-                        if (status !== 'OK' || !results[0]) {
-                            throw new Error(status);
-                        }
-                        this.addMarker(results[0].geometry.location)                       
-                    });
-                }               
-            },
+            // geocodePosition(address){
+            //     if(this.geocoder){
+            //         this.geocoder.geocode({ address:address   }, (results, status) => {
+            //             if (status !== 'OK' || !results[0]) {
+            //                 throw new Error(status);
+            //             }
+            //             this.addMarker(results[0].geometry.location)   
+            //              map.setCenter(results[0].geometry.location);
+            //              map.fitBounds(results[0].geometry.viewport);                    
+            //         });
+            //     }               
+            // },
 
             async updateMarkers(locations){                
 
@@ -142,7 +130,7 @@
             },
             
             fetchAddress(input){  
-                // this.resetAllMarkers()              
+                            
                 let addressAutocomplete = new google.maps.places.Autocomplete(input) 
 
                 addressAutocomplete.addListener('place_changed', ()=>{
@@ -161,30 +149,8 @@
                 })
             },
             
-            setAutocomplete(){
-                let originInput = document.getElementById('search-origin') 
-                let destinationInput = document.getElementById('search-destination')                     
-                let originAutocomplete = new google.maps.places.Autocomplete(originInput)                    
-                let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput)
-
-                originAutocomplete.addListener('place_changed', ()=>{
-                    let place = originAutocomplete.getPlace()
-                    this.$store.commit('retrieveOrigin', place.formatted_address)                 
-                    this.origin = place.geometry.location                    
-                    this.displayRoute() 
-                })
-
-                destinationAutocomplete.addListener('place_changed', ()=>{
-                    let place = destinationAutocomplete.getPlace()  
-                    this.$store.commit('retrieveDestination', place.formatted_address)                   
-                    this.destination = place.geometry.location
-                    this.displayRoute()
-                })
-
-            },            
-
-            displayRoute(){                
-                if(!this.origin || !this.destination){
+            displayRoute(origin, destination){                
+                if(!origin || !destination){
                     return 
                 }
                     this.directionsDisplay.setMap(this.map)
@@ -192,29 +158,44 @@
                     let that = this
 
                     this.directionsService.route({
-                        origin: this.origin,
-                        destination: this.destination,
+                        origin: origin,
+                        destination: destination,
                         travelMode: 'DRIVING'
                     }, function(response, status) {                        
                         if (status === 'OK') {                            
                             that.directionsDisplay.setDirections(response)                            
-                            that.route = response.routes[0].overview_path                             
+                            that.route = response.routes[0].overview_path
+
+                            that.routeLocations = {
+                                start: {
+                                    lat: response.routes[0].legs[0].start_location.lat(),
+                                    lng: response.routes[0].legs[0].start_location.lng()
+                                },
+                                end: {
+                                    lat: response.routes[0].legs[0].end_location.lat(),
+                                    lng: response.routes[0].legs[0].end_location.lng()
+                                } 
+                            }
                             
-                            console.log(response.routes[0])
+                            that.boxRoute()
                         } else {
                             window.alert('Directions request failed due to ' + status);
                         }
                     });               
             } ,
 
-            boxRoute(range){      
-                if(this.route.length === 0 || !range){
+            boxRoute(range = 10){      
+                if(this.route.length === 0){
                     return
                 } 
-                this.$store.commit('retrieveFilterRange', range)  
+                // this.$store.commit('retrieveFilterRange', range)  
                 let routeBoxer = RouteBoxer()
                 let bounds = routeBoxer.box(this.route, range)
-                Event.$emit('filterCargosByTheRoute', bounds)                
+                Event.$emit('filterTendersByRoute', {
+                    bounds: bounds,
+                    locations: this.routeLocations
+                }) 
+                this.resetAllMarkers()               
             },
 
             resetMarker(type){
@@ -242,16 +223,17 @@
 </script>
 
 <style>
-a[href^="http://maps.google.com/maps"]{display:none !important}
-a[href^="https://maps.google.com/maps"]{display:none !important}
 
-.gmnoprint a, .gmnoprint span, .gm-style-cc {
-    display:none;
-}
-.gmnoprint div {
-    background:none !important;
-}
+    /* Hide Google Logo and Terms */
+    a[href^="http://maps.google.com/maps"]{display:none !important}
+    a[href^="https://maps.google.com/maps"]{display:none !important}
 
+    .gmnoprint a, .gmnoprint span, .gm-style-cc {
+        display:none;
+    }
+    .gmnoprint div {
+        background:none !important;
+    }
 </style>
 
 

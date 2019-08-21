@@ -236,7 +236,7 @@
             fetchData(){
                 this.$store
                     .dispatch('fetchTender', `/api${this.$route.path}`) 
-                    .then(response => {                        
+                    .then(response => {                                              
                         Event.$emit('updateMarkers', response.locations)                       
                     })               
             },           
@@ -244,7 +244,7 @@
         },
 
         mounted(){            
-            this.fetchData()             
+            this.fetchData()                        
         }
     }
 </script>

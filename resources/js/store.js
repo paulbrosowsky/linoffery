@@ -18,11 +18,7 @@ export let store = new Vuex.Store({
         order:null, 
 
         page: null,
-        lastPage: null
-
-        // origin:null,
-        // destination:null,
-        // range: 'Umweg'
+        lastPage: null       
     },
 
     getters:{
@@ -108,25 +104,7 @@ export let store = new Vuex.Store({
 
         retrieveTender(state, tender){
             state.tender = tender
-        },  
-        
-        retrieveOrigin(state, origin){
-            state.origin = origin
-        },
-
-        retrieveDestination(state, destination){
-            state.destination = destination
-        },
-
-        retrieveFilterRange(state, range){
-            state.range = range
-        },
-
-        resetFilters(state){
-            state.origin = null,
-            state.destination = null,
-            state.range = 'Umweg'
-        },
+        }, 
 
         retrieveOffers(state, offers){
             state.offers = offers
@@ -139,6 +117,10 @@ export let store = new Vuex.Store({
         retrieveOrder(state, order){
             state.order = order
         },
+
+        resetPage(state){
+            state.page = null
+        }
     },
 
     actions:{
@@ -314,12 +296,12 @@ export let store = new Vuex.Store({
         },
 
         // Tenders endpoints START
-        fetchTenders(context, data = null){
-            let endpoint = data ? '/api/tenders?page='+ data.page : '/api/tenders'
-
+        fetchTenders(context, filters = null){
+            let endpoint = '/api/tenders?page='+ context.state.page
+            
             return new Promise((resolve, reject)=>{
                 axios
-                    .get(endpoint)
+                    .get(endpoint, filters)
                     .then(response =>{                       
                         context.commit('retrieveTenders', response.data)
                         // context.commit('retrieveLocations', response.data)

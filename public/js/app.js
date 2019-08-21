@@ -4665,22 +4665,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_Map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/Map */ "./resources/js/views/Map.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var _views_tenders_filters_TendersFilters__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../views/tenders/filters/TendersFilters */ "./resources/js/views/tenders/filters/TendersFilters.vue");
 //
 //
 //
@@ -4704,9 +4689,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Gmap: _views_Map__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Gmap: _views_Map__WEBPACK_IMPORTED_MODULE_0__["default"],
+    TendersFilters: _views_tenders_filters_TendersFilters__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -4716,38 +4703,49 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    setResizeEvents: function setResizeEvents() {
-      var el = this.$refs.drawer.$el; // let drawerGrip = this.$refs.grip
+    setResizeDrawer: function setResizeDrawer() {
+      //Content Drawer ref
+      var el = this.$refs.drawer.$el; // Scrollable Content ref
 
-      var that = this;
       var content = this.$refs.content.$el;
-      var touchPosition;
       var intHeight = this.drawerHeight;
+      var touchPosition;
+      var that = this;
 
       function resize(event) {
+        // Detect Swiping Up or Down on Touch 
         var swipeUp = touchPosition > event.touches[0].clientY + 1;
         var swipeDown = touchPosition < event.touches[0].clientY + 1;
         var height;
 
         if (swipeUp) {
+          // If Drawer not completely opened, it's height can be changed by scrolling
           if (el.offsetHeight < document.body.scrollHeight) {
-            content.scrollTop = 0;
+            // Prevent scrolling of inner content
+            content.scrollTop = 0; //Change Drawer Height opon swiping up
+
             height = intHeight + (touchPosition - event.touches[0].clientY);
+            Event.$emit('drawerOpened');
           }
-        }
+        } // If Drawer completely opened, the height of dawer can ba changed by swiping down
+
 
         if (swipeDown && content.scrollTop === 0 && el.offsetHeight > that.minDrawerHeight) {
+          //Change Drawer Height opon swiping down
           height = intHeight + (touchPosition - event.touches[0].clientY);
-        }
+        } // Set height by styling Drawer
+
 
         el.style.height = height + 'px';
-      }
+      } // Initialize Resize Drawer by Touch Start 
+
 
       el.addEventListener('touchstart', function (event) {
         touchPosition = event.touches[0].clientY;
         el.style.transition = 'initial';
         document.addEventListener("touchmove", resize, false);
-      });
+      }); // Set Darawer height by Touch End
+
       document.addEventListener('touchend', function () {
         el.style.transition = '';
         that.drawerHeight = el.style.height;
@@ -4757,16 +4755,50 @@ __webpack_require__.r(__webpack_exports__);
     },
     setDrawerSize: function setDrawerSize() {
       if (window.innerWidth > 640) {
+        // On Tablet and Desktop: Height = Full Window Heigh, Width = 400px
         this.drawerHeight = window.innerHeight - 24;
         this.drawerWidth = 400;
       } else {
+        // On Mobile Height = Half of the Display, Width = Full Width
         this.drawerHeight = window.innerHeight / 2.2;
         this.drawerWidth = window.innerWidth;
       }
+    },
+    filterNavResize: function filterNavResize() {
+      var filterNav = this.$refs.filterNav.$el;
+      var content = this.$refs.content.$el; // Ajust padding on top of Drawer Inner Content by Toggle an Filter Nab 
+
+      content.style.paddingTop = filterNav.offsetHeight + 'px'; // Make filters Visible if Drawer is Closed
+
+      this.minDrawerHeight = filterNav.offsetHeight;
+    },
+    openDrawer: function openDrawer() {
+      this.drawerHeight = window.innerHeight; // Listener in TendersFilters              
+
+      Event.$emit('drawerOpened');
+    },
+    closeDrawer: function closeDrawer() {
+      this.drawerHeight = this.minDrawerHeight; // Listener in TendersFilters   
+
+      Event.$emit('drawerClosed');
     }
   },
   mounted: function mounted() {
-    this.setResizeEvents();
+    var _this = this;
+
+    // Content Drawer handling on Mobile View
+    if (window.innerWidth < 640) {
+      this.setResizeDrawer(); // Triggered in TendersFilters
+
+      Event.$on('drawerDown', function () {
+        return _this.closeDrawer();
+      }); // Triggered in TendersFilters
+
+      Event.$on('drawerUp', function () {
+        return _this.openDrawer();
+      });
+    }
+
     this.setDrawerSize();
   }
 });
@@ -5736,9 +5768,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       markers: [],
-      origin: null,
-      destination: null,
       route: [],
+      routeLocations: null,
       map: null,
       markerCluster: null
     };
@@ -5793,27 +5824,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.updateMarkers(value);
                 });
                 Event.$on('displayRoute', function (value) {
-                  _this.origin = value.origin;
-                  _this.destination = value.destination;
+                  _this.resetAllMarkers();
 
-                  _this.resetMarkers();
+                  _this.displayRoute(value.origin, value.destination);
+                }); // Fetch Address with Places API
+                //  Triggered in: RouteFilters, LocationsForm, CompanySettings  
 
-                  _this.displayRoute();
-                });
                 Event.$on('fetchAddress', function (element) {
                   _this.fetchAddress(element);
-                }), Event.$on('setAutocomplete', function () {
-                  _this.setAutocomplete();
                 }), Event.$on('boxRoute', function (value) {
                   _this.boxRoute(value);
-                }); // geocoder.geocode({ address: 'Stuttgart' }, (results, status) => {
-                //     if (status !== 'OK' || !results[0]) {
-                //         throw new Error(status);
-                //     }
-                //     map.setCenter(results[0].geometry.location);
-                //     map.fitBounds(results[0].geometry.viewport);
-                // });
-
+                });
                 _context.next = 19;
                 break;
 
@@ -5852,26 +5873,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
       this.markers.push(marker);
     },
-    geocodePosition: function geocodePosition(address) {
-      var _this3 = this;
-
-      if (this.geocoder) {
-        this.geocoder.geocode({
-          address: address
-        }, function (results, status) {
-          if (status !== 'OK' || !results[0]) {
-            throw new Error(status);
-          }
-
-          _this3.addMarker(results[0].geometry.location);
-        });
-      }
-    },
+    // geocodePosition(address){
+    //     if(this.geocoder){
+    //         this.geocoder.geocode({ address:address   }, (results, status) => {
+    //             if (status !== 'OK' || !results[0]) {
+    //                 throw new Error(status);
+    //             }
+    //             this.addMarker(results[0].geometry.location)   
+    //              map.setCenter(results[0].geometry.location);
+    //              map.fitBounds(results[0].geometry.viewport);                    
+    //         });
+    //     }               
+    // },
     updateMarkers: function () {
       var _updateMarkers = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(locations) {
-        var _this4 = this;
+        var _this3 = this;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
@@ -5884,7 +5902,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     lng: location.lng
                   };
 
-                  _this4.addMarker(position, location);
+                  _this3.addMarker(position, location);
                 });
 
               case 2:
@@ -5916,20 +5934,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     fetchAddress: function fetchAddress(input) {
-      var _this5 = this;
+      var _this4 = this;
 
-      // this.resetAllMarkers()              
       var addressAutocomplete = new google.maps.places.Autocomplete(input);
       addressAutocomplete.addListener('place_changed', function () {
-        _this5.resetMarker(input.id);
+        _this4.resetMarker(input.id);
 
         var place = addressAutocomplete.getPlace(); //Add Marker with place location and input id as location type
 
-        _this5.addMarker(place.geometry.location, {
+        _this4.addMarker(place.geometry.location, {
           type: input.id
         });
 
-        _this5.zoomToMarkers();
+        _this4.zoomToMarkers();
 
         Event.$emit('setAddress', {
           type: input.id,
@@ -5937,62 +5954,52 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       });
     },
-    setAutocomplete: function setAutocomplete() {
-      var _this6 = this;
-
-      var originInput = document.getElementById('search-origin');
-      var destinationInput = document.getElementById('search-destination');
-      var originAutocomplete = new google.maps.places.Autocomplete(originInput);
-      var destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
-      originAutocomplete.addListener('place_changed', function () {
-        var place = originAutocomplete.getPlace();
-
-        _this6.$store.commit('retrieveOrigin', place.formatted_address);
-
-        _this6.origin = place.geometry.location;
-
-        _this6.displayRoute();
-      });
-      destinationAutocomplete.addListener('place_changed', function () {
-        var place = destinationAutocomplete.getPlace();
-
-        _this6.$store.commit('retrieveDestination', place.formatted_address);
-
-        _this6.destination = place.geometry.location;
-
-        _this6.displayRoute();
-      });
-    },
-    displayRoute: function displayRoute() {
-      if (!this.origin || !this.destination) {
+    displayRoute: function displayRoute(origin, destination) {
+      if (!origin || !destination) {
         return;
       }
 
       this.directionsDisplay.setMap(this.map);
       var that = this;
       this.directionsService.route({
-        origin: this.origin,
-        destination: this.destination,
+        origin: origin,
+        destination: destination,
         travelMode: 'DRIVING'
       }, function (response, status) {
         if (status === 'OK') {
           that.directionsDisplay.setDirections(response);
           that.route = response.routes[0].overview_path;
-          console.log(response.routes[0]);
+          that.routeLocations = {
+            start: {
+              lat: response.routes[0].legs[0].start_location.lat(),
+              lng: response.routes[0].legs[0].start_location.lng()
+            },
+            end: {
+              lat: response.routes[0].legs[0].end_location.lat(),
+              lng: response.routes[0].legs[0].end_location.lng()
+            }
+          };
+          that.boxRoute();
         } else {
           window.alert('Directions request failed due to ' + status);
         }
       });
     },
-    boxRoute: function boxRoute(range) {
-      if (this.route.length === 0 || !range) {
-        return;
-      }
+    boxRoute: function boxRoute() {
+      var range = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
 
-      this.$store.commit('retrieveFilterRange', range);
+      if (this.route.length === 0) {
+        return;
+      } // this.$store.commit('retrieveFilterRange', range)  
+
+
       var routeBoxer = Object(_utilities_RouteBoxer__WEBPACK_IMPORTED_MODULE_2__["default"])();
       var bounds = routeBoxer.box(this.route, range);
-      Event.$emit('filterCargosByTheRoute', bounds);
+      Event.$emit('filterTendersByRoute', {
+        bounds: bounds,
+        locations: this.routeLocations
+      });
+      this.resetAllMarkers();
     },
     resetMarker: function resetMarker(type) {
       var index = this.markers.findIndex(function (marker) {
@@ -9148,10 +9155,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../tenders/TenderCard */ "./resources/js/views/tenders/TenderCard.vue");
-/* harmony import */ var vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-perfect-scrollbar */ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.umd.js");
-/* harmony import */ var vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css */ "./node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css");
-/* harmony import */ var vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue2_perfect_scrollbar_dist_vue2_perfect_scrollbar_css__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -9180,62 +9183,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    TenderCard: _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__["default"],
-    PerfectScrollbar: vue2_perfect_scrollbar__WEBPACK_IMPORTED_MODULE_1__["PerfectScrollbar"]
+    TenderCard: _tenders_TenderCard__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
-      loading: false,
-      origin: null,
-      destination: null,
-      range: 'Umweg'
+      loading: false
     };
   },
   computed: {
@@ -9256,38 +9211,39 @@ __webpack_require__.r(__webpack_exports__);
     fetchTenders: function fetchTenders() {
       var _this = this;
 
+      var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       this.loading = true;
-      this.$store.dispatch('fetchTenders', {
-        page: this.page
-      }).then(function (response) {
+      var params = null;
+
+      if (filters) {
+        this.$store.commit('resetPage');
+        params = {
+          params: {
+            route: {
+              bounds: filters.bounds,
+              locations: filters.locations
+            }
+          }
+        };
+      }
+
+      this.$store.dispatch('fetchTenders', params).then(function (response) {
         _this.loading = false;
         setTimeout(function () {
           Event.$emit('updateMarkers', _this.locations);
         }, 500);
       });
-    },
-    triggerRouteBoxer: function triggerRouteBoxer() {
-      Event.$emit('boxRoute', this.range);
-      this.setRouteFilter();
-    },
-    setRouteFilter: function setRouteFilter() {
-      this.origin = this.$store.state.origin;
-      this.destination = this.$store.state.destination;
-      this.range = this.$store.state.range;
     }
   },
   created: function created() {
     var _this2 = this;
 
-    // this.resetPagintion()
     setTimeout(function () {
       Event.$emit('updateMarkers', _this2.locations);
-    }, 500); // this.setRouteFilter();
-    // setTimeout(() => {
-    //     Event.$emit('setAutocomplete')
-    //     Event.$emit('updateMarkers', this.locations) 
-    // },2000); 
-    // Event.$on('filterCargosByTheRoute', bounds => this.fetchCargos(bounds))
+    }, 500);
+    Event.$on('filterTendersByRoute', function (value) {
+      return _this2.fetchTenders(value);
+    });
   }
 });
 
@@ -9427,6 +9383,265 @@ __webpack_require__.r(__webpack_exports__);
         return [];
       }
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    removeFilter: function removeFilter() {}
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      origin: null,
+      destination: null,
+      range: this.$i18n.t('utilities.detour')
+    };
+  },
+  methods: {
+    setLocation: function setLocation(location) {
+      this[location.type] = location.place.geometry.location; // Trigger Google DiractionService to Display the Route on the Map
+      // Listener in Map.vue  
+
+      Event.$emit('displayRoute', {
+        origin: this.origin,
+        destination: this.destination
+      });
+    },
+    triggerRouteBoxer: function triggerRouteBoxer() {
+      // Trigger google Map RouteBoxer Utility to Create Route Bounds for Searching Tenders 
+      // Listener in Map.vue               
+      Event.$emit('boxRoute', this.range);
+    },
+    removeFilter: function removeFilter() {}
+  },
+  created: function created() {
+    var _this = this;
+
+    setTimeout(function () {
+      // Trigger Origin and  Destination Inputs with Google Places
+      //  Listener 'fetch Address' in Map.vue                          
+      Event.$emit('fetchAddress', document.getElementById('origin'));
+      Event.$emit('fetchAddress', document.getElementById('destination'));
+    }, 500);
+    Event.$on('setAddress', function (value) {
+      _this.setLocation(value);
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _filters_LocationFilter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../filters/LocationFilter */ "./resources/js/views/tenders/filters/LocationFilter.vue");
+/* harmony import */ var _filters_RouteFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../filters/RouteFilter */ "./resources/js/views/tenders/filters/RouteFilter.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    LocationFilter: _filters_LocationFilter__WEBPACK_IMPORTED_MODULE_0__["default"],
+    RouteFilter: _filters_RouteFilter__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      show: false,
+      filter: null,
+      drawerOpened: true
+    };
+  },
+  methods: {
+    showFilter: function showFilter(type) {
+      var _this = this;
+
+      this.filter = type + '-filter';
+      this.show = !this.show;
+      setTimeout(function () {
+        _this.closeDrawer();
+      }, 200);
+    },
+    openDrawer: function openDrawer() {
+      // Listener in Mapped 
+      Event.$emit('drawerUp');
+    },
+    closeDrawer: function closeDrawer() {
+      // Listener in Mapped 
+      Event.$emit('drawerDown');
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    // Triggered in Mapped
+    Event.$on('drawerOpened', function () {
+      return _this2.drawerOpened = true;
+    });
+    Event.$on('drawerClosed', function () {
+      return _this2.drawerOpened = false;
+    });
   }
 });
 
@@ -10050,7 +10265,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".li-mapped-sidebar{\n  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), \n                4px 0 6px -2px rgba(0, 0, 0, 0.05);\n}\n", ""]);
+exports.push([module.i, ".li-mapped-sidebar{\n  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), \n                4px 0 6px -2px rgba(0, 0, 0, 0.05);\n}\n\n", ""]);
 
 // exports
 
@@ -10088,7 +10303,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "a[href^=\"http://maps.google.com/maps\"]{\n  display:none !important\n}\na[href^=\"https://maps.google.com/maps\"]{\n  display:none !important\n}\n.gmnoprint a, .gmnoprint span, .gm-style-cc {\n  display:none;\n}\n.gmnoprint div {\n  background:none !important;\n}\n\n", ""]);
+exports.push([module.i, "/* Hide Google Logo and Terms */\na[href^=\"http://maps.google.com/maps\"]{\n  display:none !important\n}\na[href^=\"https://maps.google.com/maps\"]{\n  display:none !important\n}\n.gmnoprint a, .gmnoprint span, .gm-style-cc {\n  display:none;\n}\n.gmnoprint div {\n  background:none !important;\n}\n", ""]);
 
 // exports
 
@@ -58611,10 +58826,22 @@ var render = function() {
           },
           attrs: {
             classes:
-              "li-mapped-sidebar fixed bottom-0 shadow-lg overflow-hidden z-20 md:mb-3 md:ml-3"
+              "li-mapped-sidebar fixed bottom-0 shadow-lg overflow-hidden z-20 md:mb-3 md:ml-3 md:h-full"
           }
         },
         [
+          _c("tenders-filters", {
+            directives: [
+              {
+                name: "resize",
+                rawName: "v-resize",
+                value: _vm.filterNavResize,
+                expression: "filterNavResize"
+              }
+            ],
+            ref: "filterNav"
+          }),
+          _vm._v(" "),
           _c(
             "perfect-scrollbar",
             { ref: "content", staticClass: "h-full" },
@@ -65128,7 +65355,11 @@ var render = function() {
                 }
               ],
               staticClass: "btn btn-outlined",
-              on: { click: _vm.fetchTenders }
+              on: {
+                click: function($event) {
+                  return _vm.fetchTenders()
+                }
+              }
             },
             [
               _vm._v(
@@ -65317,6 +65548,460 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", [_c("i", { staticClass: "icon ion-md-add mr-2" })])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "bg-gray-700 px-5 pb-5" }, [
+    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
+      _c("p", { staticClass: "text-white" }, [
+        _vm._v("Finde die Fracht in deiner Umgebung")
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "focus:outline-none", on: { click: _vm.removeFilter } },
+        [
+          _c("i", {
+            staticClass: "icon ion-md-refresh text-xl text-white px-3"
+          })
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "relative flex items-center relative" }, [
+      _c("i", {
+        staticClass: " absolute icon ion-md-expand text-xl text-gray-500 px-3"
+      }),
+      _vm._v(" "),
+      _c(
+        "select",
+        { staticClass: "input pl-10", on: { change: _vm.triggerRouteBoxer } },
+        [
+          _c(
+            "option",
+            {
+              staticClass: "text-grey-500",
+              attrs: { disabled: "", selected: "" }
+            },
+            [_vm._v("Umkreis")]
+          ),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "10" } }, [_vm._v("10 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "20" } }, [_vm._v("20 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "30" } }, [_vm._v("30 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "40" } }, [_vm._v("40 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "50" } }, [_vm._v("50 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "50" } }, [_vm._v("100 km")])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700"
+        },
+        [
+          _c(
+            "svg",
+            {
+              staticClass: "fill-current h-5 w-5",
+              attrs: {
+                xmlns: "http://www.w3.org/2000/svg",
+                viewBox: "0 0 20 20"
+              }
+            },
+            [
+              _c("path", {
+                attrs: {
+                  d:
+                    "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                }
+              })
+            ]
+          )
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "relative flex items-center mb-2" }, [
+      _c("i", {
+        staticClass: "absolute icon ion-md-pin text-xl text-gray-500 px-3"
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "input pl-10",
+        attrs: { type: "text", placeholder: "Stadort wählen", id: "address" }
+      }),
+      _vm._v(" "),
+      _c("button", [
+        _c("i", {
+          staticClass: "absolute icon ion-md-pin text-xl text-gray-500 px-3"
+        })
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=template&id=2bcbe44e&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=template&id=2bcbe44e& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("nav", { staticClass: "bg-gray-700 px-5 pb-5" }, [
+    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
+      _c("p", { staticClass: "text-white" }, [
+        _vm._v(_vm._s(_vm.$t("tender.find_load_on_route")))
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "focus:outline-none", on: { click: _vm.removeFilter } },
+        [
+          _c("i", {
+            staticClass: "icon ion-md-refresh text-xl text-white px-3"
+          })
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "relative flex items-center mb-2" }, [
+      _c("i", {
+        staticClass:
+          "absolute icon ion-md-radio-button-off  text-xl text-gray-500 px-3"
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "input pl-10",
+        attrs: {
+          type: "text",
+          placeholder: _vm.$t("utilities.origin"),
+          id: "origin"
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "relative flex items-center mb-2" }, [
+      _c("i", {
+        staticClass: "absolute icon ion-md-pin text-xl text-gray-500 px-3"
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "input pl-10",
+        attrs: {
+          type: "text",
+          placeholder: _vm.$t("utilities.destination"),
+          id: "destination"
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "relative flex items-center relative" }, [
+      _c("i", {
+        staticClass: " absolute icon ion-md-expand text-xl text-gray-500 px-3"
+      }),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.range,
+              expression: "range"
+            }
+          ],
+          staticClass: "input pl-10",
+          on: {
+            change: [
+              function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.range = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              },
+              _vm.triggerRouteBoxer
+            ]
+          }
+        },
+        [
+          _c(
+            "option",
+            { staticClass: "text-grey-500", attrs: { disabled: "" } },
+            [_vm._v(_vm._s(_vm.$t("utilities.detour")))]
+          ),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "10" } }, [_vm._v("+ 10 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "20" } }, [_vm._v("+ 20 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "30" } }, [_vm._v("+ 30 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "40" } }, [_vm._v("+ 40 km")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "50" } }, [_vm._v("+ 50 km")])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700"
+        },
+        [
+          _c(
+            "svg",
+            {
+              staticClass: "fill-current h-5 w-5",
+              attrs: {
+                xmlns: "http://www.w3.org/2000/svg",
+                viewBox: "0 0 20 20"
+              }
+            },
+            [
+              _c("path", {
+                attrs: {
+                  d:
+                    "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                }
+              })
+            ]
+          )
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=template&id=2456f83f&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=template&id=2456f83f& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "absolute bg-gray-700 shadow-md z-30 w-full" },
+    [
+      _c(
+        "nav",
+        { staticClass: " flex justify-between px-5 py-3 md:justify-end " },
+        [
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.drawerOpened,
+                  expression: "drawerOpened"
+                }
+              ],
+              staticClass:
+                "text-xl text-gray-500 hover:text-white focus:outline-none md:hidden",
+              on: { click: _vm.closeDrawer }
+            },
+            [_c("i", { staticClass: "icon ion-md-arrow-down " })]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.drawerOpened,
+                  expression: "!drawerOpened"
+                }
+              ],
+              staticClass:
+                "text-xl text-gray-500 hover:text-white focus:outline-none md:hidden",
+              on: { click: _vm.openDrawer }
+            },
+            [_c("i", { staticClass: "icon ion-md-arrow-up " })]
+          ),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "text-xl text-gray-500 px-3 hover:text-white focus:outline-none",
+                on: {
+                  click: function($event) {
+                    return _vm.showFilter("route")
+                  }
+                }
+              },
+              [_c("i", { staticClass: "icon ion-md-git-branch " })]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "text-xl text-gray-500 px-3 hover:text-white focus:outline-none",
+                on: {
+                  click: function($event) {
+                    return _vm.showFilter("location")
+                  }
+                }
+              },
+              [_c("i", { staticClass: "icon ion-md-locate " })]
+            ),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3)
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(_vm.filter, {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show,
+            expression: "show"
+          }
+        ],
+        tag: "component"
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass:
+          "text-xl text-gray-500 px-3 hover:text-white focus:outline-none"
+      },
+      [_c("i", { staticClass: "icon ion-md-pricetag" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass:
+          "text-xl text-gray-500 px-3 hover:text-white focus:outline-none"
+      },
+      [_c("i", { staticClass: "icon ion-logo-euro" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass:
+          "text-xl text-gray-500 px-3 hover:text-white focus:outline-none"
+      },
+      [_c("i", { staticClass: "icon ion-md-calendar" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass:
+          "text-xl text-gray-500 pl-3 hover:text-white focus:outline-none"
+      },
+      [_c("i", { staticClass: "icon ion-md-download" })]
+    )
   }
 ]
 render._withStripped = true
@@ -92109,10 +92794,10 @@ module.exports = {"settings":"Einstellungen","account":"Benutzerkonto","company"
 /*!*********************************************!*\
   !*** ./resources/js/locales/de/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden."};
+module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke."};
 
 /***/ }),
 
@@ -92120,10 +92805,10 @@ module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","of
 /*!************************************************!*\
   !*** ./resources/js/locales/de/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, origin, destination, detour, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf","drafts":"Entwürfe","price":"Preis","active":"Aktiv","completed":"Abgeschlossen","contact_person":"Ansprechpartner","more_results":"Weitere Ergebnisse","no_more_results":"Keine weiteren Ergebnisse."};
+module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf","drafts":"Entwürfe","price":"Preis","active":"Aktiv","completed":"Abgeschlossen","contact_person":"Ansprechpartner","more_results":"Weitere Ergebnisse","no_more_results":"Keine weiteren Ergebnisse.","origin":"Statpunkt","destination":"Reiseziel","detour":"Umweg"};
 
 /***/ }),
 
@@ -92164,10 +92849,10 @@ module.exports = {"settings":"Settings","account":"Account","company":"Company",
 /*!*********************************************!*\
   !*** ./resources/js/locales/en/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available."};
+module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route."};
 
 /***/ }),
 
@@ -92175,10 +92860,10 @@ module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered
 /*!************************************************!*\
   !*** ./resources/js/locales/en/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, origin, destination, detour, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft","drafts":"Drafts","price":"Price","active":"Active","completed":"Completed","contact_person":"Contact","more_results":"More Results","no_more_results":"No more results."};
+module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft","drafts":"Drafts","price":"Price","active":"Active","completed":"Completed","contact_person":"Contact","more_results":"More Results","no_more_results":"No more results.","origin":"Origin","destination":"Destination","detour":"Detour"};
 
 /***/ }),
 
@@ -93344,10 +94029,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     orders: null,
     order: null,
     page: null,
-    lastPage: null // origin:null,
-    // destination:null,
-    // range: 'Umweg'
-
+    lastPage: null
   },
   getters: {
     loggedIn: function loggedIn(state) {
@@ -93421,18 +94103,6 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     retrieveTender: function retrieveTender(state, tender) {
       state.tender = tender;
     },
-    retrieveOrigin: function retrieveOrigin(state, origin) {
-      state.origin = origin;
-    },
-    retrieveDestination: function retrieveDestination(state, destination) {
-      state.destination = destination;
-    },
-    retrieveFilterRange: function retrieveFilterRange(state, range) {
-      state.range = range;
-    },
-    resetFilters: function resetFilters(state) {
-      state.origin = null, state.destination = null, state.range = 'Umweg';
-    },
     retrieveOffers: function retrieveOffers(state, offers) {
       state.offers = offers;
     },
@@ -93441,6 +94111,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     },
     retrieveOrder: function retrieveOrder(state, order) {
       state.order = order;
+    },
+    resetPage: function resetPage(state) {
+      state.page = null;
     }
   },
   actions: {
@@ -93568,10 +94241,10 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     },
     // Tenders endpoints START
     fetchTenders: function fetchTenders(context) {
-      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var endpoint = data ? '/api/tenders?page=' + data.page : '/api/tenders';
+      var filters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var endpoint = '/api/tenders?page=' + context.state.page;
       return new Promise(function (resolve, reject) {
-        axios.get(endpoint).then(function (response) {
+        axios.get(endpoint, filters).then(function (response) {
           context.commit('retrieveTenders', response.data); // context.commit('retrieveLocations', response.data)
 
           resolve(response.data);
@@ -96962,6 +97635,213 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersSidebar_vue_vue_type_template_id_461f2f8c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersSidebar_vue_vue_type_template_id_461f2f8c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/LocationFilter.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/LocationFilter.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LocationFilter.vue?vue&type=template&id=074bf070& */ "./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070&");
+/* harmony import */ var _LocationFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LocationFilter.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LocationFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/LocationFilter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./LocationFilter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./LocationFilter.vue?vue&type=template&id=074bf070& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/RouteFilter.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/RouteFilter.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RouteFilter_vue_vue_type_template_id_2bcbe44e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RouteFilter.vue?vue&type=template&id=2bcbe44e& */ "./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=template&id=2bcbe44e&");
+/* harmony import */ var _RouteFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RouteFilter.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RouteFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RouteFilter_vue_vue_type_template_id_2bcbe44e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RouteFilter_vue_vue_type_template_id_2bcbe44e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/RouteFilter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RouteFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./RouteFilter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RouteFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=template&id=2bcbe44e&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=template&id=2bcbe44e& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RouteFilter_vue_vue_type_template_id_2bcbe44e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./RouteFilter.vue?vue&type=template&id=2bcbe44e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=template&id=2bcbe44e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RouteFilter_vue_vue_type_template_id_2bcbe44e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RouteFilter_vue_vue_type_template_id_2bcbe44e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/TendersFilters.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/TendersFilters.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TendersFilters.vue?vue&type=template&id=2456f83f& */ "./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=template&id=2456f83f&");
+/* harmony import */ var _TendersFilters_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TendersFilters.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TendersFilters_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/TendersFilters.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./TendersFilters.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=template&id=2456f83f&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=template&id=2456f83f& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./TendersFilters.vue?vue&type=template&id=2456f83f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/TendersFilters.vue?vue&type=template&id=2456f83f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

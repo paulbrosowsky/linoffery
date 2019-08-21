@@ -21,5 +21,8 @@
     "completed": "Abgeschlossen",
     "contact_person": "Ansprechpartner",
     "more_results": "Weitere Ergebnisse",
-    "no_more_results": "Keine weiteren Ergebnisse."  
+    "no_more_results": "Keine weiteren Ergebnisse.",
+    "origin": "Statpunkt",
+    "destination": "Reiseziel",
+    "detour": "Umweg" 
 }

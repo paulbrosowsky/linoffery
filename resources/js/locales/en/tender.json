@@ -68,5 +68,6 @@
     "take_now_message": "Congratulation! You have accepted the instant order.",
     "no_tenders_info": "Currently no tenders available.",
     "no_orders_info": "Currently no orders available.",
-    "no_offers_info": "Currently no offers available."
+    "no_offers_info": "Currently no offers available.",
+    "find_load_on_route": "Find the load on your route."
 }

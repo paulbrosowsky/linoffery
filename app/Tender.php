@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Filters\TenderFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -114,9 +115,23 @@ class Tender extends Model
      *  Check if Tender still Active
      * 
      * @return boolean
-     */
+    */
     public function getIsActiveAttribute()
     {
         return isset($this->published_at) && !isset($this->completed_at) ;
     }
+
+    /**
+     * Apply all relevant Tender filters.
+     *
+     * @param  Builder       $query
+     * @param  TenderFilters $filters
+     * @return Builder
+    */
+    public function scopeFilter($query, TenderFilters $filters)
+    {        
+        return $filters->apply($query);
+    }
+
+
 }

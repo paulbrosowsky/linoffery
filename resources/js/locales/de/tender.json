@@ -68,5 +68,6 @@
     "take_now_message": "Glückwunsch! Sie haben den Sofort-Auftrag angenommen.",
     "no_tenders_info": "Momentan keine Ausschreibungen vorhanden.",
     "no_orders_info": "Momentan keine Aufträge vorhanden.",
-    "no_offers_info": "Momentan keine Angebote vorhanden."
+    "no_offers_info": "Momentan keine Angebote vorhanden.",
+    "find_load_on_route": "Finden Sie die Fracht auf Ihrer Strecke."
 }
