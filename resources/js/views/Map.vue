@@ -49,12 +49,17 @@
                         setTimeout(() => {
                             this.zoomToMarkers()
                         }, 500);                        
-                    })                    
+                    })                                        
 
                     Event.$on('updateMarkers',value => {                       
                         this.resetAllMarkers()                                               
                         this.updateMarkers(value)                                          
                     }) 
+
+                    //Trigger in locationFilter
+                    Event.$on('removeMarkers',() => {                       
+                        this.resetAllMarkers()                  
+                    })
 
                     Event.$on('displayRoute', value => {
                         this.resetAllMarkers()
@@ -62,8 +67,8 @@
                     }) 
                     
                     // Fetch Address with Places API
-                    //  Triggered in: RouteFilters, LocationsForm, CompanySettings  
-                    Event.$on('fetchAddress',(element) =>{   
+                    //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings
+                    Event.$on('fetchAddress',(element) =>{                                                
                         this.fetchAddress(element)
                     }),  
 
@@ -105,8 +110,8 @@
             // },
 
             async updateMarkers(locations){                
-
-                await locations.map(location =>{                    
+                
+                await locations.map(location =>{
                     let position = { lat:location.lat, lng:location.lng }                    
                     this.addMarker(position, location)                                                     
                 })
@@ -133,7 +138,7 @@
                             
                 let addressAutocomplete = new google.maps.places.Autocomplete(input) 
 
-                addressAutocomplete.addListener('place_changed', ()=>{
+                addressAutocomplete.addListener('place_changed', ()=>{                    
                     this.resetMarker(input.id)
                     let place = addressAutocomplete.getPlace()                      
 
@@ -188,14 +193,15 @@
                 if(this.route.length === 0){
                     return
                 } 
-                // this.$store.commit('retrieveFilterRange', range)  
+                
                 let routeBoxer = RouteBoxer()
                 let bounds = routeBoxer.box(this.route, range)
-                Event.$emit('filterTendersByRoute', {
+                // Listener in RouteFilter
+                Event.$emit('filterByRoute', {
                     bounds: bounds,
                     locations: this.routeLocations
                 }) 
-                this.resetAllMarkers()               
+                // this.resetAllMarkers()               
             },
 
             resetMarker(type){

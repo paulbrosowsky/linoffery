@@ -24,5 +24,7 @@
     "no_more_results": "Keine weiteren Ergebnisse.",
     "origin": "Statpunkt",
     "destination": "Reiseziel",
-    "detour": "Umweg" 
+    "detour": "Umweg",
+    "location": "Standort",
+    "range": "Umkreis" 
 }

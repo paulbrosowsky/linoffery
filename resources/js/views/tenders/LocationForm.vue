@@ -132,8 +132,7 @@
                         this.loading = false
                         this.errors = errors
                     })
-            },
-          
+            },          
             
             // Set Address on Event at ./view/Map.vue getAddress()
             setAddress(address){ 

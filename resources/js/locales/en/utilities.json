@@ -24,5 +24,7 @@
     "no_more_results": "No more results.",
     "origin": "Origin",
     "destination": "Destination",
-    "detour": "Detour"
+    "detour": "Detour",
+    "location": "Location",
+    "range": "Range" 
 }

@@ -109,5 +109,59 @@ class ViewTendersTest extends PassportTestCase
 
         $this->assertContains($tender->title, $response['title']);             
     }
+
+    /** @test */
+    function users_can_filter_tenders_by_the_route()
+    {   
+        create('App\Tender', [], 4);
+        $tender = create('App\Tender');
+        create('App\Location', [
+            'tender_id' => $tender->id,
+            'type' => 'pickup',
+            'lat' =>  42,
+            'lng' => 2
+        ]);
+        create('App\Location', [
+            'tender_id' => $tender->id,
+            'type' => 'delivery',
+            'lat' =>  43,
+            'lng' => 3
+        ]);
+
+        $route = [
+            "bounds" =>[["south"=>40, "north"=>44, "west"=>1, "east"=> 4]],
+            "locations"=>[
+                "start"=>["lat"=>41, "lng"=>2],
+                "end"=>["lat"=>46, "lng"=>3],
+            ]          
+        ];
+
+        $response = $this->getJson('api/tenders?route='.json_encode($route))->json();               
+        
+        $this->assertCount(5, Tender::all());
+        $this->assertCount(1, $response['data']);       
+        $this->assertEquals($tender->title, $response['data'][0]['title']);
+    }
+
+    /** @test */
+    function users_can_filter_tenders_near_by()
+    {   
+        create('App\Tender', [], 4);
+        $tender = create('App\Tender');
+        $pickup = create('App\Location', [
+            'tender_id' => $tender->id,
+            'type' => 'pickup',
+            'lat' =>  42,
+            'lng' => 2
+        ]);       
+
+        $location = ["south"=>40, "north"=>44, "west"=>1, "east"=> 4];
+
+        $response = $this->getJson('api/tenders?location='.json_encode($location))->json();               
+        
+        $this->assertCount(5, Tender::all());
+        $this->assertCount(1, $response['data']);       
+        $this->assertEquals($tender->title, $response['data'][0]['title']);
+    }
     
 }

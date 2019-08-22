@@ -67,6 +67,16 @@
                 // Listener in Map.vue               
                 Event.$emit('boxRoute', this.range)                
             }, 
+
+            triggerFilter(values){
+                this.$store.commit('retrieveFilters', {
+                    route:{
+                        bounds: values.bounds,
+                        locations: values.locations
+                    }
+                })
+                this.$emit('changed')
+            },
             
             removeFilter(){}            
         },
@@ -79,9 +89,13 @@
                 Event.$emit('fetchAddress', document.getElementById('destination'))  
             }, 500)
 
+            // Trigger in Map fatchAddress
             Event.$on('setAddress', (value)=>{
                 this.setLocation(value)
             }) 
+
+            // Trigger in  Map @boxRoute
+            Event.$on('filterByRoute', values => this.triggerFilter(values))
         }
         
     }

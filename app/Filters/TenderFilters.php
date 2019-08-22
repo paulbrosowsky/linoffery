@@ -10,7 +10,7 @@ class TenderFilters extends Filters
     /**
      * Registered Filters
     */
-    protected $filters = ['route'];
+    protected $filters = ['route', 'location'];
 
 
     /**
@@ -20,7 +20,7 @@ class TenderFilters extends Filters
      * @return Collection 
      */
     protected function route($route)
-    {
+    {        
         $routeFilter = json_decode($route);
 
         $tenders = $this->findTenders($routeFilter->bounds);
@@ -28,6 +28,31 @@ class TenderFilters extends Filters
         $results = $this->filterByDirection($tenders, $routeFilter->locations);
          
         return  $this->builder = $results;
+    }
+
+    /**
+     * Filter Tenders near by user location
+     * 
+     * @param string
+     * @return Collection
+     */
+    protected function location($location)
+    {
+        $bounds = json_decode($location);
+        
+        // Find pickup locations in the given bounds
+        $locations = Location::where('type', 'pickup')
+                        ->whereBetween('lat', [$bounds->south, $bounds->north])
+                        ->whereBetween('lng', [$bounds->west, $bounds->east])                        
+                        ->get();
+                        
+        $tenders = collect();
+        // Push all tenders of found to results
+        foreach($locations as $pickup){
+            $tenders = $tenders->push($pickup->tender);
+        }
+
+        return $this->builder = $tenders;
     }
 
     /**
@@ -43,7 +68,8 @@ class TenderFilters extends Filters
         foreach ($bounds as $area){
             // Find Location between the route borders
             $location = Location::whereBetween('lat', [$area->south, $area->north])
-                        ->whereBetween('lng', [$area->west, $area->east])->get();                
+                        ->whereBetween('lng', [$area->west, $area->east])
+                        ->get();                
             $locations = $locations->merge($location);
         } 
 
@@ -70,18 +96,20 @@ class TenderFilters extends Filters
      */
     protected function filterByDirection($tenders, $locations)
     {
+        
         // Find absolute Difference on Lat and Lng between Route Origin and Destination 
         $lngDifference = abs(abs($locations->end->lng) - abs($locations->start->lng)); 
         $latDifference = abs(abs($locations->end->lat) - abs($locations->start->lat)); 
         // Determin if Route Directions are positiv or negativ
         $lngRouteDirection = $this->sign($locations->end->lng - $locations->start->lng);
         $latRouteDirection = $this->sign($locations->end->lat - $locations->start->lat);
-
+        
         $results = collect(); 
-
+        
         foreach($tenders as $result){                
             $start = $result->locations->where('type', '=', 'pickup')->first();
             $end =  $result->locations->where('type', '=','delivery')->first();
+            
             // Determin if Tender Location's Directions are positiv or negativ
             $latDirection = $this->sign($end->lat - $start->lat);
             $lngDirection = $this->sign($end->lng - $start->lng);

@@ -64,7 +64,7 @@
                             id="address"
                             type="text" 
                             :placeholder="$t('settings.location')"
-                            @keyup="errors= []"  
+                            @keyup="errors= []"                            
                         >
                     </div> 
 
@@ -207,21 +207,49 @@
             },
 
             // Get Place from Google Maps and set local address veriables
-            setAddress(place){
-                console.log(place)
-                let address = place.address_components
-                let location = place.geometry.location
+            setAddress(value){                
+                let address = value.place.address_components
+                let location = value.place.geometry.location
 
-                this.address = address[1].long_name +' '+ address[0].long_name 
-                this.postcode = address[7].long_name 
-                this.city = address[2].long_name 
-                this.country = address[6].long_name 
+                let street = address.find((component) =>{   
+                    return  component.types.find((type) => {
+                        return type ===  'route' 
+                    })
+                })
+
+                let street_number = address.find((component) =>{   
+                    return  component.types.find((type) => {
+                        return type ===  'street_number'  
+                    })
+                })
+
+                let postcode = address.find((component) =>{   
+                    return  component.types.find((type) => {
+                        return type ===  'postal_code'   
+                    })
+                })
+
+                let city = address.find((component) =>{   
+                    return  component.types.find((type) => {
+                        return type ===  'locality'   
+                    })
+                })
+
+                let country = address.find((component) =>{   
+                    return  component.types.find((type) => {
+                        return type ===  'country'  
+                    })
+                })
+
+                this.address = street.long_name +' '+ street_number.long_name
+                this.postcode = postcode.long_name
+                this.city = city.long_name
+                this.country = country.long_name
                                
                 this.lat = location.lat()
                 this.lng = location.lng()
                                 
-            }           
-            
+            }, 
         },
 
         created(){
@@ -229,7 +257,7 @@
                 // Initialize location field as Google Map autocomplete form
                 // reference mountMap() in ./views/Map.vue
                 Event.$emit('fetchAddress', document.getElementById('address'))
-            },1000); 
+            },500); 
             
             // On Event from Google Maps set address fields in the form
             // reference getAddress() on ./views/Map.vue

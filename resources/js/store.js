@@ -18,7 +18,8 @@ export let store = new Vuex.Store({
         order:null, 
 
         page: null,
-        lastPage: null       
+        lastPage: null,
+        filters:{}      
     },
 
     getters:{
@@ -120,6 +121,10 @@ export let store = new Vuex.Store({
 
         resetPage(state){
             state.page = null
+        },
+
+        retrieveFilters(state, filters){
+            state.filters = Object.assign(state.filters, filters)
         }
     },
 

@@ -35,7 +35,7 @@
         
         data(){
             return{ 
-                loading: false,  
+                loading: false, 
             }
         },
 
@@ -54,25 +54,23 @@
 
             noData(){
                 return this.$store.getters.noTenders
+            },
+
+            filters(){
+                return this.$store.state.filters
             }
         },   
 
         methods:{  
-            fetchTenders(filters = null){  
-                this.loading = true
+            fetchTenders(){  
+                this.loading = true                
                 let params = null
 
-                if(filters){
+                if(!_.isEmpty(this.filters)){                    
                     this.$store.commit('resetPage')
-                    params = {
-                        params:{
-                            route:{
-                                bounds: filters.bounds,
-                                locations: filters.locations
-                            }                            
-                        }
-                    }
+                    params = { params: this.filters}
                 }
+               
                 this.$store
                     .dispatch('fetchTenders', params )
                     .then(response => {
@@ -81,16 +79,22 @@
                             Event.$emit('updateMarkers', this.locations)
                         }, 500)                        
                     })       
-            },  
+            },            
+           
         },
         
         created(){            
             setTimeout(()=>{                
                 Event.$emit('updateMarkers', this.locations)
-            }, 500)           
-           
+            }, 500)  
             
-            Event.$on('filterTendersByRoute', value => this.fetchTenders(value))
+            // Trigger in TendersFilters @filterTenders
+            Event.$on('fetchTenders', ()=> this.fetchTenders())
+           
+            // // Trigger in Maps @boxRoute
+            // Event.$on('filterByRoute', value => this.fetchTenders(value))
+            // // Trigger in LocationFilter @triggerFilter
+            // Event.$on('filterByLocation', value => this.fetchTenders(value))
         },
 
            

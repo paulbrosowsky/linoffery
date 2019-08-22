@@ -4699,7 +4699,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       drawerHeight: 200,
       drawerWidth: 400,
-      minDrawerHeight: 64
+      minDrawerHeight: 54
     };
   },
   methods: {
@@ -4708,7 +4708,6 @@ __webpack_require__.r(__webpack_exports__);
       var el = this.$refs.drawer.$el; // Scrollable Content ref
 
       var content = this.$refs.content.$el;
-      var intHeight = this.drawerHeight;
       var touchPosition;
       var that = this;
 
@@ -4720,11 +4719,11 @@ __webpack_require__.r(__webpack_exports__);
 
         if (swipeUp) {
           // If Drawer not completely opened, it's height can be changed by scrolling
-          if (el.offsetHeight < document.body.scrollHeight) {
+          if (el.offsetHeight < window.innerHeight) {
             // Prevent scrolling of inner content
             content.scrollTop = 0; //Change Drawer Height opon swiping up
 
-            height = intHeight + (touchPosition - event.touches[0].clientY);
+            height = that.drawerHeight + (touchPosition - event.touches[0].clientY);
             Event.$emit('drawerOpened');
           }
         } // If Drawer completely opened, the height of dawer can ba changed by swiping down
@@ -4732,7 +4731,7 @@ __webpack_require__.r(__webpack_exports__);
 
         if (swipeDown && content.scrollTop === 0 && el.offsetHeight > that.minDrawerHeight) {
           //Change Drawer Height opon swiping down
-          height = intHeight + (touchPosition - event.touches[0].clientY);
+          height = that.drawerHeight + (touchPosition - event.touches[0].clientY);
         } // Set height by styling Drawer
 
 
@@ -4748,8 +4747,13 @@ __webpack_require__.r(__webpack_exports__);
 
       document.addEventListener('touchend', function () {
         el.style.transition = '';
-        that.drawerHeight = el.style.height;
-        intHeight = el.offsetHeight;
+
+        if (el.offsetHeight < that.minDrawerHeight) {
+          that.drawerHeight = that.minDrawerHeight;
+        } else {
+          that.drawerHeight = el.offsetHeight;
+        }
+
         document.removeEventListener("touchmove", resize, false);
       });
     },
@@ -4796,6 +4800,10 @@ __webpack_require__.r(__webpack_exports__);
 
       Event.$on('drawerUp', function () {
         return _this.openDrawer();
+      }); // Triggered in Tender
+
+      Event.$on('setDrawerSize', function () {
+        return _this.setDrawerSize();
       });
     }
 
@@ -5822,33 +5830,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.resetAllMarkers();
 
                   _this.updateMarkers(value);
+                }); //Trigger in locationFilter
+
+                Event.$on('removeMarkers', function () {
+                  _this.resetAllMarkers();
                 });
                 Event.$on('displayRoute', function (value) {
                   _this.resetAllMarkers();
 
                   _this.displayRoute(value.origin, value.destination);
                 }); // Fetch Address with Places API
-                //  Triggered in: RouteFilters, LocationsForm, CompanySettings  
+                //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings
 
                 Event.$on('fetchAddress', function (element) {
                   _this.fetchAddress(element);
                 }), Event.$on('boxRoute', function (value) {
                   _this.boxRoute(value);
                 });
-                _context.next = 19;
+                _context.next = 20;
                 break;
 
-              case 16:
-                _context.prev = 16;
+              case 17:
+                _context.prev = 17;
                 _context.t0 = _context["catch"](0);
                 console.error(_context.t0);
 
-              case 19:
+              case 20:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 16]]);
+        }, _callee, this, [[0, 17]]);
       }));
 
       function mountMap() {
@@ -5990,16 +6002,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (this.route.length === 0) {
         return;
-      } // this.$store.commit('retrieveFilterRange', range)  
-
+      }
 
       var routeBoxer = Object(_utilities_RouteBoxer__WEBPACK_IMPORTED_MODULE_2__["default"])();
-      var bounds = routeBoxer.box(this.route, range);
-      Event.$emit('filterTendersByRoute', {
+      var bounds = routeBoxer.box(this.route, range); // Listener in RouteFilter
+
+      Event.$emit('filterByRoute', {
         bounds: bounds,
         locations: this.routeLocations
-      });
-      this.resetAllMarkers();
+      }); // this.resetAllMarkers()               
     },
     resetMarker: function resetMarker(type) {
       var index = this.markers.findIndex(function (marker) {
@@ -7720,14 +7731,38 @@ __webpack_require__.r(__webpack_exports__);
       this.logoPreview = value;
     },
     // Get Place from Google Maps and set local address veriables
-    setAddress: function setAddress(place) {
-      console.log(place);
-      var address = place.address_components;
-      var location = place.geometry.location;
-      this.address = address[1].long_name + ' ' + address[0].long_name;
-      this.postcode = address[7].long_name;
-      this.city = address[2].long_name;
-      this.country = address[6].long_name;
+    setAddress: function setAddress(value) {
+      var address = value.place.address_components;
+      var location = value.place.geometry.location;
+      var street = address.find(function (component) {
+        return component.types.find(function (type) {
+          return type === 'route';
+        });
+      });
+      var street_number = address.find(function (component) {
+        return component.types.find(function (type) {
+          return type === 'street_number';
+        });
+      });
+      var postcode = address.find(function (component) {
+        return component.types.find(function (type) {
+          return type === 'postal_code';
+        });
+      });
+      var city = address.find(function (component) {
+        return component.types.find(function (type) {
+          return type === 'locality';
+        });
+      });
+      var country = address.find(function (component) {
+        return component.types.find(function (type) {
+          return type === 'country';
+        });
+      });
+      this.address = street.long_name + ' ' + street_number.long_name;
+      this.postcode = postcode.long_name;
+      this.city = city.long_name;
+      this.country = country.long_name;
       this.lat = location.lat();
       this.lng = location.lng();
     }
@@ -7739,7 +7774,7 @@ __webpack_require__.r(__webpack_exports__);
       // Initialize location field as Google Map autocomplete form
       // reference mountMap() in ./views/Map.vue
       Event.$emit('fetchAddress', document.getElementById('address'));
-    }, 1000); // On Event from Google Maps set address fields in the form
+    }, 500); // On Event from Google Maps set address fields in the form
     // reference getAddress() on ./views/Map.vue
 
     Event.$on('setAddress', function (place) {
@@ -7801,25 +7836,30 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _settings_AccountSettings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../settings/AccountSettings */ "./resources/js/views/settings/AccountSettings.vue");
-/* harmony import */ var _settings_CompanySettings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../settings/CompanySettings */ "./resources/js/views/settings/CompanySettings.vue");
-/* harmony import */ var _settings_NotificationSettings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../settings/NotificationSettings */ "./resources/js/views/settings/NotificationSettings.vue");
-/* harmony import */ var _settings_PaymentSettings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../settings/PaymentSettings */ "./resources/js/views/settings/PaymentSettings.vue");
+/* harmony import */ var _Map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Map */ "./resources/js/views/Map.vue");
+/* harmony import */ var _settings_AccountSettings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../settings/AccountSettings */ "./resources/js/views/settings/AccountSettings.vue");
+/* harmony import */ var _settings_CompanySettings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../settings/CompanySettings */ "./resources/js/views/settings/CompanySettings.vue");
+/* harmony import */ var _settings_NotificationSettings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../settings/NotificationSettings */ "./resources/js/views/settings/NotificationSettings.vue");
+/* harmony import */ var _settings_PaymentSettings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../settings/PaymentSettings */ "./resources/js/views/settings/PaymentSettings.vue");
 //
 //
 //
 //
 //
+//
+//
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    AccountSettings: _settings_AccountSettings__WEBPACK_IMPORTED_MODULE_0__["default"],
-    CompanySettings: _settings_CompanySettings__WEBPACK_IMPORTED_MODULE_1__["default"],
-    NotificationSettings: _settings_NotificationSettings__WEBPACK_IMPORTED_MODULE_2__["default"],
-    PaymentSettings: _settings_PaymentSettings__WEBPACK_IMPORTED_MODULE_3__["default"]
+    Gmap: _Map__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AccountSettings: _settings_AccountSettings__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CompanySettings: _settings_CompanySettings__WEBPACK_IMPORTED_MODULE_2__["default"],
+    NotificationSettings: _settings_NotificationSettings__WEBPACK_IMPORTED_MODULE_3__["default"],
+    PaymentSettings: _settings_PaymentSettings__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   computed: {
     user: function user() {
@@ -8705,7 +8745,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.fetchData();
+    this.fetchData(); // Listener in Mapped
+
+    Event.$emit('setDrawerSize');
   }
 });
 
@@ -9205,25 +9247,22 @@ __webpack_require__.r(__webpack_exports__);
     },
     noData: function noData() {
       return this.$store.getters.noTenders;
+    },
+    filters: function filters() {
+      return this.$store.state.filters;
     }
   },
   methods: {
     fetchTenders: function fetchTenders() {
       var _this = this;
 
-      var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       this.loading = true;
       var params = null;
 
-      if (filters) {
+      if (!_.isEmpty(this.filters)) {
         this.$store.commit('resetPage');
         params = {
-          params: {
-            route: {
-              bounds: filters.bounds,
-              locations: filters.locations
-            }
-          }
+          params: this.filters
         };
       }
 
@@ -9240,10 +9279,14 @@ __webpack_require__.r(__webpack_exports__);
 
     setTimeout(function () {
       Event.$emit('updateMarkers', _this2.locations);
-    }, 500);
-    Event.$on('filterTendersByRoute', function (value) {
-      return _this2.fetchTenders(value);
-    });
+    }, 500); // Trigger in TendersFilters @filterTenders
+
+    Event.$on('fetchTenders', function () {
+      return _this2.fetchTenders();
+    }); // // Trigger in Maps @boxRoute
+    // Event.$on('filterByRoute', value => this.fetchTenders(value))
+    // // Trigger in LocationFilter @triggerFilter
+    // Event.$on('filterByLocation', value => this.fetchTenders(value))
   }
 });
 
@@ -9397,6 +9440,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
 //
 //
 //
@@ -9435,8 +9490,87 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      range: this.$i18n.t('utilities.range'),
+      location: null
+    };
+  },
   methods: {
-    removeFilter: function removeFilter() {}
+    removeFilter: function removeFilter() {},
+    fetchGeolocation: function fetchGeolocation() {
+      var _this = this;
+
+      // Fetch HTML5 Browser geolocation
+      navigator.geolocation.getCurrentPosition(function (position) {
+        _this.location = [{
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          type: 'address'
+        }]; // Listener in Maps @initMap
+
+        Event.$emit('updateMarkers', _this.location);
+      });
+    },
+    triggerFilter: function () {
+      var _triggerFilter = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var bounds;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return {
+                  east: this.location[0].lng + this.range / 71.5,
+                  west: this.location[0].lng - this.range / 71.5,
+                  north: this.location[0].lat + this.range / 113.5,
+                  south: this.location[0].lat - this.range / 113.5 // Retrieve filters variable in store
+
+                };
+
+              case 2:
+                bounds = _context.sent;
+                this.$store.commit('retrieveFilters', {
+                  location: bounds
+                });
+                this.$emit('changed');
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function triggerFilter() {
+        return _triggerFilter.apply(this, arguments);
+      }
+
+      return triggerFilter;
+    }(),
+    setLocation: function setLocation(value) {
+      // Set location for Map Autocomplete            
+      this.location = [{
+        lat: value.place.geometry.location.lat(),
+        lng: value.place.geometry.location.lng()
+      }];
+    }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    setTimeout(function () {
+      // Trigger Origin and  Destination Inputs with Google Places
+      //  Listener '@fetchAddress' in Map.vue                          
+      Event.$emit('fetchAddress', document.getElementById('address'));
+    }, 500); // Trigger in Map @fetchAddress
+
+    Event.$on('setAddress', function (value) {
+      return _this2.setLocation(value);
+    });
   }
 });
 
@@ -9515,6 +9649,15 @@ __webpack_require__.r(__webpack_exports__);
       // Listener in Map.vue               
       Event.$emit('boxRoute', this.range);
     },
+    triggerFilter: function triggerFilter(values) {
+      this.$store.commit('retrieveFilters', {
+        route: {
+          bounds: values.bounds,
+          locations: values.locations
+        }
+      });
+      this.$emit('changed');
+    },
     removeFilter: function removeFilter() {}
   },
   created: function created() {
@@ -9525,9 +9668,14 @@ __webpack_require__.r(__webpack_exports__);
       //  Listener 'fetch Address' in Map.vue                          
       Event.$emit('fetchAddress', document.getElementById('origin'));
       Event.$emit('fetchAddress', document.getElementById('destination'));
-    }, 500);
+    }, 500); // Trigger in Map fatchAddress
+
     Event.$on('setAddress', function (value) {
       _this.setLocation(value);
+    }); // Trigger in  Map @boxRoute
+
+    Event.$on('filterByRoute', function (values) {
+      return _this.triggerFilter(values);
     });
   }
 });
@@ -9599,6 +9747,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -9608,8 +9757,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      show: false,
+      show: true,
       filter: null,
+      filters: {},
       drawerOpened: true
     };
   },
@@ -9617,8 +9767,8 @@ __webpack_require__.r(__webpack_exports__);
     showFilter: function showFilter(type) {
       var _this = this;
 
-      this.filter = type + '-filter';
-      this.show = !this.show;
+      this.filter = type + '-filter'; // this.show = !this.show 
+
       setTimeout(function () {
         _this.closeDrawer();
       }, 200);
@@ -9630,6 +9780,10 @@ __webpack_require__.r(__webpack_exports__);
     closeDrawer: function closeDrawer() {
       // Listener in Mapped 
       Event.$emit('drawerDown');
+    },
+    filterTenders: function filterTenders() {
+      // Listener in Tenders @mounted
+      Event.$emit('fetchTenders');
     }
   },
   mounted: function mounted() {
@@ -63525,7 +63679,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    [_c(_vm.settings, { tag: "component", attrs: { user: _vm.user } })],
+    [
+      _c(_vm.settings, { tag: "component", attrs: { user: _vm.user } }),
+      _vm._v(" "),
+      _c("gmap", { staticClass: "hidden" })
+    ],
     1
   )
 }
@@ -65574,7 +65732,7 @@ var render = function() {
   return _c("div", { staticClass: "bg-gray-700 px-5 pb-5" }, [
     _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
       _c("p", { staticClass: "text-white" }, [
-        _vm._v("Finde die Fracht in deiner Umgebung")
+        _vm._v(_vm._s(_vm.$t("tender.find_load_near_by")))
       ]),
       _vm._v(" "),
       _c(
@@ -65588,7 +65746,34 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _vm._m(0),
+    _c("div", { staticClass: "relative flex items-center mb-2" }, [
+      _c("i", {
+        staticClass: "absolute icon ion-md-pin text-xl text-gray-500 px-3"
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "input pl-10",
+        attrs: {
+          type: "text",
+          placeholder: _vm.$t("utilities.location"),
+          id: "address"
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "absolute right-0 text-gray-500 pr-3 hover:text-gray-700 focus:outline-none",
+          on: {
+            click: function($event) {
+              return _vm.fetchGeolocation()
+            }
+          }
+        },
+        [_c("i", { staticClass: " icon ion-md-locate text-xl " })]
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "relative flex items-center relative" }, [
       _c("i", {
@@ -65597,7 +65782,35 @@ var render = function() {
       _vm._v(" "),
       _c(
         "select",
-        { staticClass: "input pl-10", on: { change: _vm.triggerRouteBoxer } },
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.range,
+              expression: "range"
+            }
+          ],
+          staticClass: "input pl-10",
+          on: {
+            change: [
+              function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.range = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              },
+              _vm.triggerFilter
+            ]
+          }
+        },
         [
           _c(
             "option",
@@ -65605,20 +65818,20 @@ var render = function() {
               staticClass: "text-grey-500",
               attrs: { disabled: "", selected: "" }
             },
-            [_vm._v("Umkreis")]
+            [_vm._v(_vm._s(_vm.$t("utilities.range")))]
           ),
           _vm._v(" "),
-          _c("option", { attrs: { value: "10" } }, [_vm._v("10 km")]),
+          _c("option", { domProps: { value: 10 } }, [_vm._v("10 km")]),
           _vm._v(" "),
-          _c("option", { attrs: { value: "20" } }, [_vm._v("20 km")]),
+          _c("option", { domProps: { value: 20 } }, [_vm._v("20 km")]),
           _vm._v(" "),
-          _c("option", { attrs: { value: "30" } }, [_vm._v("30 km")]),
+          _c("option", { domProps: { value: 50 } }, [_vm._v("50 km")]),
           _vm._v(" "),
-          _c("option", { attrs: { value: "40" } }, [_vm._v("40 km")]),
+          _c("option", { domProps: { value: 100 } }, [_vm._v("100 km")]),
           _vm._v(" "),
-          _c("option", { attrs: { value: "50" } }, [_vm._v("50 km")]),
+          _c("option", { domProps: { value: 150 } }, [_vm._v("150 km")]),
           _vm._v(" "),
-          _c("option", { attrs: { value: "50" } }, [_vm._v("100 km")])
+          _c("option", { domProps: { value: 200 } }, [_vm._v("200 km")])
         ]
       ),
       _vm._v(" "),
@@ -65652,29 +65865,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "relative flex items-center mb-2" }, [
-      _c("i", {
-        staticClass: "absolute icon ion-md-pin text-xl text-gray-500 px-3"
-      }),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "input pl-10",
-        attrs: { type: "text", placeholder: "Stadort wählen", id: "address" }
-      }),
-      _vm._v(" "),
-      _c("button", [
-        _c("i", {
-          staticClass: "absolute icon ion-md-pin text-xl text-gray-500 px-3"
-        })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -65935,7 +66126,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c(_vm.filter, {
+      _c("route-filter", {
         directives: [
           {
             name: "show",
@@ -65944,7 +66135,7 @@ var render = function() {
             expression: "show"
           }
         ],
-        tag: "component"
+        on: { changed: _vm.filterTenders }
       })
     ],
     1
@@ -92794,10 +92985,10 @@ module.exports = {"settings":"Einstellungen","account":"Benutzerkonto","company"
 /*!*********************************************!*\
   !*** ./resources/js/locales/de/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke."};
+module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke.","find_load_near_by":"Finden Sie die Fracht in Ihrer Nähe."};
 
 /***/ }),
 
@@ -92805,10 +92996,10 @@ module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","of
 /*!************************************************!*\
   !*** ./resources/js/locales/de/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, origin, destination, detour, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, origin, destination, detour, location, range, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf","drafts":"Entwürfe","price":"Preis","active":"Aktiv","completed":"Abgeschlossen","contact_person":"Ansprechpartner","more_results":"Weitere Ergebnisse","no_more_results":"Keine weiteren Ergebnisse.","origin":"Statpunkt","destination":"Reiseziel","detour":"Umweg"};
+module.exports = {"cancel":"Abbrechen","update":"Aktualisieren","change":"Ändern","upload":"Hochladen","send":"Senden","bookmark":"Merken","yes":"Ja","no":"Nein","hours":"Stunden","title":"Bezeichnung","save":"Speichern","delete":"Löschen","save_draft":"Entwurf speichern","address":"Adresse","publish":"Veröffentlichen","draft":"Entwurf","drafts":"Entwürfe","price":"Preis","active":"Aktiv","completed":"Abgeschlossen","contact_person":"Ansprechpartner","more_results":"Weitere Ergebnisse","no_more_results":"Keine weiteren Ergebnisse.","origin":"Statpunkt","destination":"Reiseziel","detour":"Umweg","location":"Standort","range":"Umkreis"};
 
 /***/ }),
 
@@ -92849,10 +93040,10 @@ module.exports = {"settings":"Settings","account":"Account","company":"Company",
 /*!*********************************************!*\
   !*** ./resources/js/locales/en/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route."};
+module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route.","find_load_near_by":"Find the load near by."};
 
 /***/ }),
 
@@ -92860,10 +93051,10 @@ module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered
 /*!************************************************!*\
   !*** ./resources/js/locales/en/utilities.json ***!
   \************************************************/
-/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, origin, destination, detour, default */
+/*! exports provided: cancel, update, change, upload, send, bookmark, yes, no, hours, title, save, delete, save_draft, address, publish, draft, drafts, price, active, completed, contact_person, more_results, no_more_results, origin, destination, detour, location, range, default */
 /***/ (function(module) {
 
-module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft","drafts":"Drafts","price":"Price","active":"Active","completed":"Completed","contact_person":"Contact","more_results":"More Results","no_more_results":"No more results.","origin":"Origin","destination":"Destination","detour":"Detour"};
+module.exports = {"cancel":"Cancel","update":"Update","change":"Change","upload":"Upload","send":"Send","bookmark":"Bookmark","yes":"Yes","no":"No","hours":"Hours","title":"Title","save":"Save","delete":"Delete","save_draft":"Save in drafts","address":"Address","publish":"Publish","draft":"Draft","drafts":"Drafts","price":"Price","active":"Active","completed":"Completed","contact_person":"Contact","more_results":"More Results","no_more_results":"No more results.","origin":"Origin","destination":"Destination","detour":"Detour","location":"Location","range":"Range"};
 
 /***/ }),
 
@@ -94029,7 +94220,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     orders: null,
     order: null,
     page: null,
-    lastPage: null
+    lastPage: null,
+    filters: {}
   },
   getters: {
     loggedIn: function loggedIn(state) {
@@ -94114,6 +94306,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     },
     resetPage: function resetPage(state) {
       state.page = null;
+    },
+    retrieveFilters: function retrieveFilters(state, filters) {
+      state.filters = Object.assign(state.filters, filters);
     }
   },
   actions: {

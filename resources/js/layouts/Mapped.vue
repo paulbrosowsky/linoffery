@@ -34,7 +34,7 @@
             return{
                 drawerHeight: 200, 
                 drawerWidth: 400,
-                minDrawerHeight: 64              
+                minDrawerHeight: 54              
             }
         },
 
@@ -44,8 +44,7 @@
                 //Content Drawer ref
                 let el = this.$refs.drawer.$el
                 // Scrollable Content ref
-                let content = this.$refs.content.$el 
-                let intHeight = this.drawerHeight 
+                let content = this.$refs.content.$el                
                 let touchPosition  
                 let that = this  
                 
@@ -57,11 +56,11 @@
 
                     if(swipeUp){
                         // If Drawer not completely opened, it's height can be changed by scrolling
-                        if(el.offsetHeight  < document.body.scrollHeight){
+                        if(el.offsetHeight  < window.innerHeight){
                             // Prevent scrolling of inner content
                             content.scrollTop = 0 
                             //Change Drawer Height opon swiping up
-                            height= intHeight + (touchPosition - event.touches[0].clientY)
+                            height= that.drawerHeight + (touchPosition - event.touches[0].clientY)
                             Event.$emit('drawerOpened')
                         }
                     } 
@@ -69,7 +68,7 @@
                    // If Drawer completely opened, the height of dawer can ba changed by swiping down
                     if(swipeDown &&  content.scrollTop === 0 && el.offsetHeight > that.minDrawerHeight){
                         //Change Drawer Height opon swiping down
-                        height= intHeight + (touchPosition - event.touches[0].clientY)
+                        height= that.drawerHeight + (touchPosition - event.touches[0].clientY)
                     }
                    // Set height by styling Drawer
                     el.style.height = height +'px' 
@@ -85,13 +84,16 @@
 
                 // Set Darawer height by Touch End
                 document.addEventListener('touchend', ()=>{ 
-                    el.style.transition ='';
-                    that.drawerHeight = el.style.height
-                    intHeight = el.offsetHeight
+                    el.style.transition ='';                    
+                    if(el.offsetHeight < that.minDrawerHeight){
+                        that.drawerHeight = that.minDrawerHeight
+                    }else{
+                        that.drawerHeight = el.offsetHeight
+                    }
+                    
                     document.removeEventListener("touchmove", resize, false)
                 })                  
             },
-
             
             setDrawerSize(){             
                 if(window.innerWidth > 640){
@@ -104,7 +106,6 @@
                     this.drawerWidth = window.innerWidth
                 }                 
             },
-
 
             filterNavResize(){                
                 let filterNav = this.$refs.filterNav.$el
@@ -137,6 +138,8 @@
                 Event.$on('drawerDown', () => this.closeDrawer())
                 // Triggered in TendersFilters
                 Event.$on('drawerUp', () => this.openDrawer()) 
+                // Triggered in Tender
+                Event.$on('setDrawerSize', () => this.setDrawerSize())
             }            
             this.setDrawerSize()          
         }        

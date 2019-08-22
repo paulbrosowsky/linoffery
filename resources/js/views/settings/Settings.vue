@@ -1,9 +1,13 @@
 <template>
     <div>  
         <component :is="settings" :user="user"></component>
-    </div>    
+        <gmap class="hidden"></gmap> 
+    </div> 
+    
 </template>
 <script>
+    import Gmap from '../Map'
+
     import AccountSettings from '../settings/AccountSettings'
     import CompanySettings from '../settings/CompanySettings'
     import NotificationSettings from '../settings/NotificationSettings'
@@ -11,6 +15,7 @@
 
     export default {
         components: {
+            Gmap,
             AccountSettings,
             CompanySettings,
             NotificationSettings,
@@ -25,7 +30,7 @@
             settings(){
                 return this.$route.hash.substring(1)+ '-settings' 
             },
-        }, 
+        },
         
         beforeRouteEnter(to, from, next){            
            if(!to.hash){

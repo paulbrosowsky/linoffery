@@ -244,7 +244,9 @@
         },
 
         mounted(){            
-            this.fetchData()                        
+            this.fetchData() 
+            // Listener in Mapped
+            Event.$emit('setDrawerSize')                       
         }
     }
 </script>

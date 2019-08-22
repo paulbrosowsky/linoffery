@@ -46,8 +46,9 @@
             </div>
            
         </nav>
-        <component :is="filter" v-show="show"></component>
-        <!-- <route-filter v-show="show"></route-filter> -->
+        <!-- <component :is="filter" v-show="show"></component> -->
+        <route-filter v-show="show" @changed="filterTenders"></route-filter>
+        <!-- <location-filter @changed="filterTenders"></location-filter> -->
     </div>
  
     
@@ -55,6 +56,7 @@
 <script>
     import LocationFilter from '../filters/LocationFilter'
     import RouteFilter from '../filters/RouteFilter'
+
     export default {
         components:{
             LocationFilter,
@@ -63,8 +65,9 @@
 
         data(){
             return{               
-                show:false,
+                show:true,
                 filter: null,
+                filters: {},
 
                 drawerOpened: true,                
             }
@@ -73,11 +76,10 @@
         methods:{
             showFilter(type){
                 this.filter = type + '-filter'                
-                this.show = !this.show 
+                // this.show = !this.show 
                 setTimeout(() => {
                     this.closeDrawer() 
                 },200);  
-                         
             },  
             
             openDrawer(){
@@ -88,6 +90,11 @@
             closeDrawer(){
                  // Listener in Mapped 
                 Event.$emit('drawerDown')
+            },
+            
+            filterTenders(){                 
+                // Listener in Tenders @mounted
+                Event.$emit('fetchTenders')
             }
         },
         
