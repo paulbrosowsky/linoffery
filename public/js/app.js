@@ -8847,7 +8847,7 @@ __webpack_require__.r(__webpack_exports__);
       return weight;
     },
     price: function price() {
-      return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price;
+      return this.tender.lowest_offer ? this.tender.lowest_offer : this.tender.max_price;
     },
     delivery: function delivery() {
       return this.tender.locations.find(function (location) {
@@ -9179,7 +9179,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.$store.getters.loggedIn;
     },
     price: function price() {
-      return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price;
+      return this.tender.lowest_offer ? this.tender.lowest_offer : this.tender.max_price;
     }
   }
 });
@@ -9463,7 +9463,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -9689,10 +9688,104 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      price: {
+        min: null,
+        max: null
+      }
+    };
+  },
+  methods: {
+    updateFilter: function updateFilter() {
+      this.$store.commit('retrieveFilters', {
+        price: this.price
+      });
+    },
+    triggerFilter: function () {
+      var _triggerFilter = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!(typeof this.price.min === 'number' && typeof this.price.max === 'number')) {
+                  _context.next = 4;
+                  break;
+                }
+
+                _context.next = 3;
+                return this.updateFilter();
+
+              case 3:
+                this.$emit('changed');
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function triggerFilter() {
+        return _triggerFilter.apply(this, arguments);
+      }
+
+      return triggerFilter;
+    }()
+  }
+});
 
 /***/ }),
 
@@ -65926,7 +66019,6 @@ var render = function() {
       _vm._v(" "),
       _vm.list
         ? _c("select-input", {
-            staticClass: "mb-2",
             attrs: {
               value: _vm.categories,
               options: _vm.list,
@@ -66153,9 +66245,104 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", { staticClass: "px-5 pb-5" }, [
+    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
+      _c("p", { staticClass: "text-white" }, [
+        _vm._v(_vm._s(_vm.$t("tender.find_load_by_price")))
+      ]),
+      _vm._v(" "),
+      _vm._m(0)
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "flex" }, [
+      _c("div", { staticClass: "w-1/2 mr-1" }, [
+        _c("div", { staticClass: "relative flex items-center" }, [
+          _c("i", {
+            staticClass:
+              "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
+          }),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model.number",
+                value: _vm.price.min,
+                expression: "price.min",
+                modifiers: { number: true }
+              }
+            ],
+            staticClass: "input pl-10",
+            attrs: { type: "number", placeholder: _vm.$t("tender.min_price") },
+            domProps: { value: _vm.price.min },
+            on: {
+              blur: [
+                _vm.triggerFilter,
+                function($event) {
+                  return _vm.$forceUpdate()
+                }
+              ],
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.price, "min", _vm._n($event.target.value))
+              }
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "w-1/2 ml-1" }, [
+        _c("div", { staticClass: "relative flex items-center" }, [
+          _c("i", {
+            staticClass:
+              "absolute icon ion-logo-euro text-xl text-gray-500 px-3"
+          }),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model.number",
+                value: _vm.price.max,
+                expression: "price.max",
+                modifiers: { number: true }
+              }
+            ],
+            staticClass: "input pl-10",
+            attrs: { type: "number", placeholder: _vm.$t("tender.max_price") },
+            domProps: { value: _vm.price.max },
+            on: {
+              blur: [
+                _vm.triggerFilter,
+                function($event) {
+                  return _vm.$forceUpdate()
+                }
+              ],
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.price, "max", _vm._n($event.target.value))
+              }
+            }
+          })
+        ])
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("button", { staticClass: "focus:outline-none" }, [
+      _c("i", { staticClass: "icon ion-md-refresh text-xl text-white px-3" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -93350,10 +93537,10 @@ module.exports = {"settings":"Einstellungen","account":"Benutzerkonto","company"
 /*!*********************************************!*\
   !*** ./resources/js/locales/de/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, find_load_by_category, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, min_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, find_load_by_category, find_load_by_price, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke.","find_load_near_by":"Finden Sie die Fracht in Ihrer Nähe.","find_load_by_category":"Finden Sie die Fracht nach Kategorie."};
+module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","min_price":"min. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke.","find_load_near_by":"Finden Sie die Fracht in Ihrer Nähe.","find_load_by_category":"Finden Sie die passende Kategorie.","find_load_by_price":"Finden Sie den passenden Preis."};
 
 /***/ }),
 
@@ -93405,10 +93592,10 @@ module.exports = {"settings":"Settings","account":"Account","company":"Company",
 /*!*********************************************!*\
   !*** ./resources/js/locales/en/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, find_load_by_category, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, min_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, find_load_by_category, find_load_by_price, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route.","find_load_near_by":"Find the load near by.","find_load_by_category":"Find the load by category."};
+module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","min_price":"min. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route.","find_load_near_by":"Find the load near by.","find_load_by_category":"Find the load by category.","find_load_by_price":"Find the load by price."};
 
 /***/ }),
 

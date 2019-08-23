@@ -10,7 +10,7 @@ class TenderFilters extends Filters
     /**
      * Registered Filters
     */
-    protected $filters = ['route', 'location', 'category'];
+    protected $filters = ['route', 'location', 'category', 'price'];
 
 
     /**
@@ -68,6 +68,20 @@ class TenderFilters extends Filters
     }
 
     /**
+     * Filter Tenders by price range
+     * 
+     * @param string $values
+     * @return Builder
+     */
+    protected function price($values)
+    {
+        $range = json_decode($values);
+
+        return $this->builder->whereBetween('max_price', [$range->min, $range->max])
+                            ->orWhereBetween('lowest_offer', [$range->min, $range->max]);
+    }
+
+    /**
      *  Find Tenders in given Route Bounds
      * 
      * @param array $bounds     
@@ -81,7 +95,8 @@ class TenderFilters extends Filters
             // Find Location between the route borders
             $location = Location::whereBetween('lat', [$area->south, $area->north])
                         ->whereBetween('lng', [$area->west, $area->east])
-                        ->get();                
+                        ->get();   
+
             $locations = $locations->merge($location);
         } 
 

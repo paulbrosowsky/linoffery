@@ -12,7 +12,7 @@ class Tender extends Model
 
     protected $with = [ 'user', 'locations', 'freights', 'category'];
 
-    protected $appends = ['lowestOffer', 'offersCount', 'isActive'];
+    protected $appends = ['offersCount', 'isActive'];
 
     /**
      * A Tender belong to user
@@ -73,12 +73,13 @@ class Tender extends Model
     }
 
     /**
-    *  Get Lowest Offers Pricew
-    * @return nummeric
+    *  Update lowest offer in DB    
     */
-    public function getLowestOfferAttribute()
-    {
-        return $this->offers()->min('price');
+    public function updateLowestOffer()
+    {  
+        $price = $this->offers()->min('price');
+        
+        $this->update(['lowest_offer' => $price]);       
     }
 
     /**

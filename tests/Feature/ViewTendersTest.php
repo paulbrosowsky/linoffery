@@ -176,5 +176,26 @@ class ViewTendersTest extends PassportTestCase
         $this->assertCount(5, Tender::all());
         $this->assertCount(2, $response['data']); 
     }
+
+    /** @test */
+    function users_can_filter_tenders_by_price()
+    {
+        create('App\Tender', [], 3);
+        $tenderWithOffer = create('App\Tender');
+        create('App\Offer', [
+            'tender_id' => $tenderWithOffer->id,
+            'price' => 120
+        ]);
+        $tenderMaxPrice = create('App\Tender', ['max_price' => 150]);
+
+        $priceRange = [ 'min'=>100, 'max'=>150];
+
+        $response = $this->getJson('api/tenders?price='.json_encode($priceRange))->json();
+
+        $this->assertCount(5, Tender::all());
+        $this->assertCount(2, $response['data']); 
+        $this->assertContains($tenderWithOffer->title, $response['data'][1]);
+        $this->assertContains($tenderMaxPrice->title, $response['data'][0]);        
+    }
     
 }

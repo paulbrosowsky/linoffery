@@ -43,6 +43,7 @@
     "category": "Category",
     "more_tender_info": "Tell us more about your tender ...",
     "max_price": "max. Price",
+    "min_price": "min. Price",
     "max_price_info": "All offers above this price will be automatically rejected.",
     "immediate_price": "now Price",
     "immediate_price_info": "At this price, you would immediately place your order.",
@@ -71,5 +72,6 @@
     "no_offers_info": "Currently no offers available.",
     "find_load_on_route": "Find the load on your route.",
     "find_load_near_by": "Find the load near by.",
-    "find_load_by_category": "Find the load by category."
+    "find_load_by_category": "Find the load by category.",
+    "find_load_by_price": "Find the load by price."
 }

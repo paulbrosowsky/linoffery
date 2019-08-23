@@ -86,7 +86,7 @@
             },                   
 
             price(){
-                return this.tender.lowestOffer ? this.tender.lowestOffer : this.tender.max_price
+                return this.tender.lowest_offer ? this.tender.lowest_offer : this.tender.max_price
             },
 
             delivery(){

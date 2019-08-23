@@ -7,8 +7,7 @@
             </button>
         </div>
 
-        <select-input 
-            class="mb-2"
+        <select-input
             :value="categories" 
             :options="list" 
             v-if="list" 

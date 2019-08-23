@@ -46,7 +46,7 @@ class TenderTest extends PassportTestCase
     function it_knows_the_lowest_offer()
     {
         $tender = create('App\Tender');
-        create('App\Offer', [
+        $offer = create('App\Offer', [
             'tender_id' => $tender->id,
             'price' => 100
         ]);
@@ -54,8 +54,11 @@ class TenderTest extends PassportTestCase
             'tender_id' => $tender->id,
             'price' => 200
         ]);
+        
+        $this->assertEquals(100, $tender->fresh()->lowest_offer);
 
-        $this->assertEquals(100, $tender->lowestOffer );
+        $offer->delete();
+        $this->assertEquals(200, $tender->fresh()->lowest_offer);
     }
     
 }

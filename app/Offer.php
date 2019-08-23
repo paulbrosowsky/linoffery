@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
-{
+{  
     protected $guarded = [];
 
     protected $with = ['user']; 
@@ -19,6 +19,19 @@ class Offer extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::created(function($offer){
+            $offer->tender->updateLowestOffer();            
+        });  
+
+        static::deleted(function($offer){
+            $offer->tender->updateLowestOffer();            
+        });  
     }
 
     /**
