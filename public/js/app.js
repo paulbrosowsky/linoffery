@@ -3396,19 +3396,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({// methods:{
-  //     toggleMapDrawer(){
-  //         Event.$emit('toggle-map-drawer')
-  //     },
-  // }
-});
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -3452,12 +3440,20 @@ __webpack_require__.r(__webpack_exports__);
       "default": false
     },
     highlighted: Object,
-    disabledDates: null
+    disabledDates: null,
+    reset: {
+      "default": false
+    }
   },
   data: function data() {
     return {
       date: this.value
     };
+  },
+  watch: {
+    reset: function reset() {
+      this.reset ? this.date = null : '';
+    }
   },
   computed: {
     // Switch calender position from left to the right
@@ -3512,8 +3508,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['errors', 'from', 'to', 'left'],
+  props: ['errors', 'from', 'to', 'left', 'reset'],
   data: function data() {
     return {
       range: {
@@ -3521,6 +3519,14 @@ __webpack_require__.r(__webpack_exports__);
         to: null
       }
     };
+  },
+  watch: {
+    reset: function reset() {
+      if (this.reset) {
+        this.range.from = null;
+        this.range.to = null;
+      }
+    }
   },
   methods: {
     updateFrom: function updateFrom(value) {
@@ -3866,90 +3872,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MapDrawer.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _views_Map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/Map */ "./resources/js/views/Map.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: {
-    fixed: {
-      "default": false
-    }
-  },
-  data: function data() {
-    return {
-      show: false
-    };
-  },
-  computed: {
-    buttonIcon: function buttonIcon() {
-      return this.show ? 'ion-md-arrow-back' : 'ion-md-map';
-    }
-  },
-  methods: {
-    showDrawer: function showDrawer() {
-      this.show = !this.show;
-      this.$emit('changed', this.show);
-      Event.$emit('zoom-map');
-    }
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    Event.$on('toggle-map-drawer', function () {
-      _this.showDrawer();
-    });
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Navbar.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Navbar.vue?vue&type=script&lang=js& ***!
@@ -4167,11 +4089,16 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['value', 'options', 'placeholder', 'multiple'],
+  props: ['value', 'options', 'placeholder', 'multiple', 'reset'],
   data: function data() {
     return {
       selected: this.value
     };
+  },
+  watch: {
+    reset: function reset() {
+      this.reset ? this.selected = null : '';
+    }
   }
 });
 
@@ -4559,8 +4486,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_DashboardNav__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/DashboardNav */ "./resources/js/components/DashboardNav.vue");
 /* harmony import */ var _notifications_Notifications__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../notifications/Notifications */ "./resources/js/notifications/Notifications.vue");
-//
-//
 //
 //
 //
@@ -5846,6 +5771,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.resetAllMarkers();
 
                   _this.displayRoute(value.origin, value.destination);
+                }); //Trigger in RouteFilter
+
+                Event.$on('removeRoute', function () {
+                  _this.directionsDisplay.setMap(null);
                 }); // Fetch Address with Places API
                 //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings
 
@@ -5854,20 +5783,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }), Event.$on('boxRoute', function (value) {
                   _this.boxRoute(value);
                 });
-                _context.next = 20;
+                _context.next = 21;
                 break;
 
-              case 17:
-                _context.prev = 17;
+              case 18:
+                _context.prev = 18;
                 _context.t0 = _context["catch"](0);
                 console.error(_context.t0);
 
-              case 20:
+              case 21:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 17]]);
+        }, _callee, this, [[0, 18]]);
       }));
 
       function mountMap() {
@@ -9464,10 +9393,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      categories: null
+      categories: null,
+      reset: false
     };
   },
   computed: {
@@ -9477,12 +9414,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     updateFilter: function updateFilter(value) {
+      this.reset = false;
       this.categories = value;
       var categoryIds = [];
       this.categories.map(function (category) {
         return categoryIds.push(category.id);
       });
-      this.$store.commit('retrieveFilters', {
+      this.$store.commit('addFilters', {
         category: categoryIds.length > 0 ? JSON.stringify(categoryIds) : ''
       });
     },
@@ -9513,7 +9451,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return triggerFilter;
-    }()
+    }(),
+    removeFilter: function removeFilter() {
+      this.categories = null;
+      this.reset = true;
+      this.$store.commit('removeFilters', 'category');
+      this.$emit('changed');
+    }
   }
 });
 
@@ -9555,27 +9499,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       date: {
         from: null,
         to: null
-      }
+      },
+      reset: false
     };
   },
   methods: {
     updateFrom: function updateFrom(value) {
       this.date.from = value;
+      this.reset = false;
       this.triggerFilter();
     },
     updateTo: function updateTo(value) {
       this.date.to = value;
+      this.reset = false;
       this.triggerFilter();
     },
     updateFilter: function updateFilter() {
       if (this.date.from && this.date.to) {
-        this.$store.commit('retrieveFilters', {
+        this.$store.commit('addFilters', {
           date: this.date
         });
       }
@@ -9607,7 +9561,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return triggerFilter;
-    }()
+    }(),
+    removeFilter: function removeFilter() {
+      this.date.from = null;
+      this.date.to = null;
+      this.reset = true;
+      this.$store.commit('removeFilters', 'date');
+      this.$emit('changed');
+    }
   }
 });
 
@@ -9626,10 +9587,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -9678,7 +9647,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       location: null
     };
   },
-  methods: {
+  methods: _defineProperty({
     removeFilter: function removeFilter() {},
     fetchGeolocation: function fetchGeolocation() {
       var _this = this;
@@ -9714,7 +9683,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 2:
                 bounds = _context.sent;
-                this.$store.commit('retrieveFilters', {
+                this.$store.commit('addFilters', {
                   location: bounds
                 });
                 this.$emit('changed');
@@ -9740,7 +9709,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         lng: value.place.geometry.location.lng()
       }];
     }
-  },
+  }, "removeFilter", function removeFilter() {
+    this.location = null;
+    this.range = this.$i18n.t('utilities.range');
+    this.$store.commit('removeFilters', 'location');
+    this.$emit('changed');
+  }),
   created: function created() {
     var _this2 = this;
 
@@ -9815,6 +9789,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -9826,7 +9806,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     updateFilter: function updateFilter() {
-      this.$store.commit('retrieveFilters', {
+      this.$store.commit('addFilters', {
         price: this.price
       });
     },
@@ -9862,7 +9842,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return triggerFilter;
-    }()
+    }(),
+    removeFilter: function removeFilter() {
+      this.price.min = null;
+      this.price.max = null;
+      this.$store.commit('removeFilters', 'price');
+      this.$emit('changed');
+    }
   }
 });
 
@@ -9877,6 +9863,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -9942,7 +9934,7 @@ __webpack_require__.r(__webpack_exports__);
       Event.$emit('boxRoute', this.range);
     },
     triggerFilter: function triggerFilter(values) {
-      this.$store.commit('retrieveFilters', {
+      this.$store.commit('addFilters', {
         route: {
           bounds: values.bounds,
           locations: values.locations
@@ -9950,7 +9942,13 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.$emit('changed');
     },
-    removeFilter: function removeFilter() {}
+    removeFilter: function removeFilter() {
+      this.origin = null, this.destination = null, this.range = this.$i18n.t('utilities.detour');
+      this.$store.commit('removeFilters', 'route'); //Listener in Map
+
+      Event.$emit('removeRoute');
+      this.$emit('changed');
+    }
   },
   created: function created() {
     var _this = this;
@@ -10060,6 +10058,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -10080,9 +10084,13 @@ __webpack_require__.r(__webpack_exports__);
       tabs: [],
       show: null,
       filter: null,
-      filters: {},
       drawerOpened: true
     };
+  },
+  computed: {
+    filters: function filters() {
+      return this.$store.state.filterKeys;
+    }
   },
   methods: {
     showFilter: function showFilter(type) {
@@ -10116,13 +10124,16 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.commit('resetPagination'); // Listener in Tenders @mounted
 
       Event.$emit('fetchTenders');
+    },
+    active: function active(filter) {
+      return this.filters.includes(filter);
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
-    this.tabs = this.$refs.tenderFilters.children; // Triggered in Mapped
-
+    // this.tabs = this.$refs.tenderFilters.children
+    // Triggered in Mapped
     Event.$on('drawerOpened', function () {
       return _this2.drawerOpened = true;
     });
@@ -10191,6 +10202,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -10202,7 +10219,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     updateFilter: function updateFilter() {
-      this.$store.commit('retrieveFilters', {
+      this.$store.commit('addFilters', {
         weight: this.weight
       });
     },
@@ -10238,7 +10255,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return triggerFilter;
-    }()
+    }(),
+    removeFilter: function removeFilter() {
+      this.weight.min = null;
+      this.weight.max = null;
+      this.$store.commit('removeFilters', 'weight');
+      this.$emit('changed');
+    }
   }
 });
 
@@ -10603,25 +10626,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss&":
-/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss& ***!
-  \*********************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".li-map-drawer {\n  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), 4px 0 6px -2px rgba(0, 0, 0, 0.05);\n}\n.toggle-drawer-enter-active, .toggle-drawer-leave-active {\n  transition: all 0.3s ease;\n}\n.toggle-drawer-enter, .toggle-drawer-leave-to {\n  width: 0;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/DefaultModal.vue?vue&type=style&index=0&lang=scss&":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/DefaultModal.vue?vue&type=style&index=0&lang=scss& ***!
@@ -10862,7 +10866,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".li-mapped-sidebar{\n  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), \n                4px 0 6px -2px rgba(0, 0, 0, 0.05);\n}\n\n", ""]);
+exports.push([module.i, ".li-mapped-sidebar{\n  box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), \n                4px 0 6px -2px rgba(0, 0, 0, 0.05);\n}\n@media (max-width: 640px) {\n.li-mapped-sidebar{\n    box-shadow: 0 -5px 10px -3px rgba(0, 0, 0, 0.1), \n                0 -4px 6px -2px rgba(0, 0, 0, 0.05);\n}\n} \n\n", ""]);
 
 // exports
 
@@ -54204,36 +54208,6 @@ try {
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss&":
-/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss& ***!
-  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./MapDrawer.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss&");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modals/DefaultModal.vue?vue&type=style&index=0&lang=scss&":
 /*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modals/DefaultModal.vue?vue&type=style&index=0&lang=scss& ***!
@@ -57715,15 +57689,15 @@ var render = function() {
     "div",
     {
       staticClass:
-        "li-dashboard-nav flex  items-center justify-center fixed w-full bottom-0 md:top-0 md:left-0 md:flex-col md:min-h-screen md:w-20 bg-white z-20 px-5"
+        "li-dashboard-nav flex items-center justify-center fixed w-full bottom-0 bg-gray-700 z-20 px-5 md:top-0 md:left-0 md:flex-col md:min-h-screen md:w-20 md:rounded-none"
     },
     [
       _c(
         "router-link",
         {
-          staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
+          staticClass: "text-gray-500 py-3 px-5 hover:text-white",
           attrs: {
-            "active-class": "text-teal-500",
+            "active-class": "text-teal-400",
             to: { name: "dashboard" },
             exact: ""
           }
@@ -57734,9 +57708,9 @@ var render = function() {
       _c(
         "router-link",
         {
-          staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
+          staticClass: "text-gray-500 py-3 px-5 hover:text-white",
           attrs: {
-            "active-class": "text-teal-500",
+            "active-class": "text-teal-400",
             to: { name: "dashboard_tenders" }
           }
         },
@@ -57746,8 +57720,8 @@ var render = function() {
       _c(
         "router-link",
         {
-          staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
-          attrs: { "active-class": "text-teal-500", to: { name: "orders" } }
+          staticClass: "text-gray-500 py-3 px-5 hover:text-white",
+          attrs: { "active-class": "text-teal-400", to: { name: "orders" } }
         },
         [_c("i", { staticClass: "icon ion-md-list-box text-2xl" })]
       ),
@@ -57755,8 +57729,8 @@ var render = function() {
       _c(
         "router-link",
         {
-          staticClass: "text-gray-400 py-3 px-5 hover:text-teal-500",
-          attrs: { "active-class": "text-teal-500", to: { name: "settings" } }
+          staticClass: "text-gray-500 py-3 px-5 hover:text-white",
+          attrs: { "active-class": "text-teal-400", to: { name: "settings" } }
         },
         [_c("i", { staticClass: "icon ion-md-settings text-2xl" })]
       )
@@ -57853,7 +57827,8 @@ var render = function() {
           value: _vm.from,
           placeholder: _vm.$t("tender.earliest_date"),
           highlighted: _vm.range,
-          left: _vm.left
+          left: _vm.left,
+          reset: _vm.reset
         },
         on: { changed: _vm.updateFrom }
       }),
@@ -57864,7 +57839,8 @@ var render = function() {
           placeholder: _vm.$t("tender.latest_date"),
           "disabled-dates": _vm.range.from,
           highlighted: _vm.range,
-          left: _vm.left
+          left: _vm.left,
+          reset: _vm.reset
         },
         on: { changed: _vm.updateTo }
       })
@@ -58374,132 +58350,6 @@ var render = function() {
         )
       : _vm._e()
   ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=template&id=59fd4112&":
-/*!************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MapDrawer.vue?vue&type=template&id=59fd4112& ***!
-  \************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("transition", { attrs: { name: "toggle-drawer" } }, [
-        _c(
-          "section",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.show,
-                expression: "show"
-              }
-            ],
-            staticClass:
-              "li-map-drawer w-full fixed min-h-screen z-10 bg-white top-0 bottom-0 lg:w-1/2 ",
-            class: _vm.fixed ? "" : "md:pl-20"
-          },
-          [
-            _c(
-              "router-link",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.fixed,
-                    expression: "fixed"
-                  }
-                ],
-                staticClass: "absolute top-0 left-0 px-5 md:px-10 py-3 z-20",
-                attrs: { to: "/" }
-              },
-              [
-                _c(
-                  "div",
-                  {
-                    staticClass: "flex items-center flex-1 text-gray-700 mr-6"
-                  },
-                  [
-                    _c("span", { staticClass: "font-light text-2xl" }, [
-                      _vm._v("lin")
-                    ]),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "text-2xl text-teal-500" }, [
-                      _vm._v("o")
-                    ]),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "font-light text-2xl" }, [
-                      _vm._v("ffery")
-                    ])
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("gmap"),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.fixed,
-                    expression: "!fixed"
-                  }
-                ],
-                staticClass:
-                  "absolute top-0 right-0 z-20 bg-teal-500 rounded-full shadow-md hidden mx-5 my-3 px-3 py-1 hover:bg-teal-700 focus:outline-none lg:block ",
-                on: { click: _vm.showDrawer }
-              },
-              [
-                _c("i", {
-                  staticClass: "icon ion-md-arrow-back text-white text-xl top-0"
-                })
-              ]
-            )
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "li-map-toggle-button fixed bottom-0 right-0 rounded-full bg-teal-500 shadow-lg z-40 px-5 py-5 mx-5 md:m-8 hover:bg-teal-700 focus:outline-none lg:hidden",
-          class: _vm.fixed ? "my-5" : " my-20",
-          on: { click: _vm.showDrawer }
-        },
-        [
-          _c("i", {
-            staticClass: "absolute icon text-white text-2xl top-0",
-            class: _vm.buttonIcon
-          })
-        ]
-      )
-    ],
-    1
-  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -66195,17 +66045,43 @@ var render = function() {
     "div",
     { staticClass: "px-5 pb-5" },
     [
-      _c(
-        "div",
-        { staticClass: " flex items-center justify-between mb-2 ml-2" },
-        [
-          _c("p", { staticClass: "text-white" }, [
-            _vm._v(_vm._s(_vm.$t("tender.find_load_by_category")))
-          ]),
+      _c("div", { staticClass: " flex items-center justify-between mb-2 " }, [
+        _c("div", { staticClass: "flex items-center " }, [
+          _c(
+            "button",
+            {
+              staticClass: "focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.$emit("close")
+                }
+              }
+            },
+            [
+              _c("i", {
+                staticClass: "icon ion-md-arrow-up text-lg text-white pr-3"
+              })
+            ]
+          ),
           _vm._v(" "),
-          _vm._m(0)
-        ]
-      ),
+          _c("p", { staticClass: "text-white text-sm" }, [
+            _vm._v(_vm._s(_vm.$t("tender.find_load_by_category")))
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "focus:outline-none",
+            on: { click: _vm.removeFilter }
+          },
+          [
+            _c("i", {
+              staticClass: "icon ion-md-close text-lg text-white px-3"
+            })
+          ]
+        )
+      ]),
       _vm._v(" "),
       _vm.list
         ? _c("select-input", {
@@ -66213,7 +66089,8 @@ var render = function() {
               value: _vm.categories,
               options: _vm.list,
               placeholder: _vm.$t("tender.category"),
-              multiple: true
+              multiple: true,
+              reset: _vm.reset
             },
             on: { changed: _vm.triggerFilter }
           })
@@ -66222,16 +66099,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "focus:outline-none" }, [
-      _c("i", { staticClass: "icon ion-md-refresh text-xl text-white px-3" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -66257,36 +66125,58 @@ var render = function() {
     "div",
     { staticClass: "px-5 pb-5" },
     [
-      _c(
-        "div",
-        { staticClass: " flex items-center justify-between mb-2 ml-2" },
-        [
-          _c("p", { staticClass: "text-white" }, [
-            _vm._v(_vm._s(_vm.$t("tender.find_load_by_date")))
-          ]),
+      _c("div", { staticClass: " flex items-center justify-between mb-2 " }, [
+        _c("div", { staticClass: "flex items-center " }, [
+          _c(
+            "button",
+            {
+              staticClass: "focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.$emit("close")
+                }
+              }
+            },
+            [
+              _c("i", {
+                staticClass: "icon ion-md-arrow-up text-lg text-white pr-3"
+              })
+            ]
+          ),
           _vm._v(" "),
-          _vm._m(0)
-        ]
-      ),
+          _c("p", { staticClass: "text-white text-sm" }, [
+            _vm._v(_vm._s(_vm.$t("tender.find_load_by_date")))
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "focus:outline-none",
+            on: { click: _vm.removeFilter }
+          },
+          [
+            _c("i", {
+              staticClass: "icon ion-md-close text-lg text-white px-3"
+            })
+          ]
+        )
+      ]),
       _vm._v(" "),
       _c("date-range", {
-        attrs: { from: _vm.date.from, to: _vm.date.to, left: true },
+        attrs: {
+          from: _vm.date.from,
+          to: _vm.date.to,
+          left: true,
+          reset: _vm.reset
+        },
         on: { inputFrom: _vm.updateFrom, inputTo: _vm.updateTo }
       })
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "focus:outline-none" }, [
-      _c("i", { staticClass: "icon ion-md-refresh text-xl text-white px-3" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -66309,19 +66199,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "px-5 pb-5" }, [
-    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
-      _c("p", { staticClass: "text-white" }, [
-        _vm._v(_vm._s(_vm.$t("tender.find_load_near_by")))
+    _c("div", { staticClass: " flex items-center justify-between mb-2 " }, [
+      _c("div", { staticClass: "flex items-center " }, [
+        _c(
+          "button",
+          {
+            staticClass: "focus:outline-none",
+            on: {
+              click: function($event) {
+                return _vm.$emit("close")
+              }
+            }
+          },
+          [
+            _c("i", {
+              staticClass: "icon ion-md-arrow-up text-lg text-white pr-3"
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("p", { staticClass: "text-white text-sm" }, [
+          _vm._v(_vm._s(_vm.$t("tender.find_load_near_by")))
+        ])
       ]),
       _vm._v(" "),
       _c(
         "button",
         { staticClass: "focus:outline-none", on: { click: _vm.removeFilter } },
-        [
-          _c("i", {
-            staticClass: "icon ion-md-refresh text-xl text-white px-3"
-          })
-        ]
+        [_c("i", { staticClass: "icon ion-md-close text-lg text-white px-3" })]
       )
     ]),
     _vm._v(" "),
@@ -66467,12 +66372,35 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "px-5 pb-5" }, [
-    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
-      _c("p", { staticClass: "text-white" }, [
-        _vm._v(_vm._s(_vm.$t("tender.find_load_by_price")))
+    _c("div", { staticClass: " flex items-center justify-between mb-2 " }, [
+      _c("div", { staticClass: "flex items-center " }, [
+        _c(
+          "button",
+          {
+            staticClass: "focus:outline-none",
+            on: {
+              click: function($event) {
+                return _vm.$emit("close")
+              }
+            }
+          },
+          [
+            _c("i", {
+              staticClass: "icon ion-md-arrow-up text-lg text-white pr-3"
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("p", { staticClass: "text-white text-sm" }, [
+          _vm._v(_vm._s(_vm.$t("tender.find_load_by_price")))
+        ])
       ]),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "button",
+        { staticClass: "focus:outline-none", on: { click: _vm.removeFilter } },
+        [_c("i", { staticClass: "icon ion-md-close text-lg text-white px-3" })]
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "flex" }, [
@@ -66554,16 +66482,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "focus:outline-none" }, [
-      _c("i", { staticClass: "icon ion-md-refresh text-xl text-white px-3" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -66586,19 +66505,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("nav", { staticClass: "bg-gray-700 px-5 pb-5" }, [
-    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
-      _c("p", { staticClass: "text-white" }, [
-        _vm._v(_vm._s(_vm.$t("tender.find_load_on_route")))
+    _c("div", { staticClass: " flex items-center justify-between mb-2 " }, [
+      _c("div", { staticClass: "flex items-center " }, [
+        _c(
+          "button",
+          {
+            staticClass: "focus:outline-none",
+            on: {
+              click: function($event) {
+                return _vm.$emit("close")
+              }
+            }
+          },
+          [
+            _c("i", {
+              staticClass: "icon ion-md-arrow-up text-lg text-white pr-3"
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("p", { staticClass: "text-white text-sm" }, [
+          _vm._v(_vm._s(_vm.$t("tender.find_load_on_route")))
+        ])
       ]),
       _vm._v(" "),
       _c(
         "button",
         { staticClass: "focus:outline-none", on: { click: _vm.removeFilter } },
-        [
-          _c("i", {
-            staticClass: "icon ion-md-refresh text-xl text-white px-3"
-          })
-        ]
+        [_c("i", { staticClass: "icon ion-md-close text-lg text-white px-3" })]
       )
     ]),
     _vm._v(" "),
@@ -66757,10 +66691,10 @@ var render = function() {
               }
             ],
             staticClass:
-              "text-xl text-gray-500 hover:text-white  focus:outline-none md:hidden",
+              "text-xl text-gray-500 hover:text-white focus:outline-none md:hidden",
             on: { click: _vm.closeDrawer }
           },
-          [_c("i", { staticClass: "icon ion-md-arrow-down " })]
+          [_c("i", { staticClass: "icon ion-md-map " })]
         ),
         _vm._v(" "),
         _c(
@@ -66775,10 +66709,10 @@ var render = function() {
               }
             ],
             staticClass:
-              "text-xl text-gray-500 hover:text-white  focus:outline-none md:hidden",
+              "text-xl text-gray-500 hover:text-white focus:outline-none md:hidden",
             on: { click: _vm.openDrawer }
           },
-          [_c("i", { staticClass: "icon ion-md-arrow-up " })]
+          [_c("i", { staticClass: "icon ion-md-list " })]
         ),
         _vm._v(" "),
         _c("div", { ref: "tenderFilters" }, [
@@ -66786,7 +66720,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+                "text-lg text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              class: _vm.active("route") ? "text-teal-400" : "",
               on: {
                 click: function($event) {
                   return _vm.showFilter("route")
@@ -66800,7 +66735,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+                "text-lg text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              class: _vm.active("location") ? "text-teal-400" : "",
               on: {
                 click: function($event) {
                   return _vm.showFilter("location")
@@ -66814,7 +66750,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+                "text-lg text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              class: _vm.active("category") ? "text-teal-400" : "",
               on: {
                 click: function($event) {
                   return _vm.showFilter("category")
@@ -66828,7 +66765,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+                "text-lg text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              class: _vm.active("price") ? "text-teal-400" : "",
               on: {
                 click: function($event) {
                   return _vm.showFilter("price")
@@ -66842,7 +66780,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+                "text-lg text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              class: _vm.active("date") ? "text-teal-400" : "",
               on: {
                 click: function($event) {
                   return _vm.showFilter("date")
@@ -66856,7 +66795,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "text-xl text-gray-500 pl-3 py-4 hover:text-white  focus:outline-none",
+                "text-lg text-gray-500 pl-3 py-4 hover:text-white  focus:outline-none",
+              class: _vm.active("weight") ? "text-teal-400" : "",
               on: {
                 click: function($event) {
                   return _vm.showFilter("weight")
@@ -66877,7 +66817,12 @@ var render = function() {
             expression: "show == 'route'"
           }
         ],
-        on: { changed: _vm.filterTenders }
+        on: {
+          changed: _vm.filterTenders,
+          close: function($event) {
+            _vm.show = null
+          }
+        }
       }),
       _vm._v(" "),
       _c("location-filter", {
@@ -66889,7 +66834,12 @@ var render = function() {
             expression: "show == 'location'"
           }
         ],
-        on: { changed: _vm.filterTenders }
+        on: {
+          changed: _vm.filterTenders,
+          close: function($event) {
+            _vm.show = null
+          }
+        }
       }),
       _vm._v(" "),
       _c("category-filter", {
@@ -66901,7 +66851,12 @@ var render = function() {
             expression: "show == 'category'"
           }
         ],
-        on: { changed: _vm.filterTenders }
+        on: {
+          changed: _vm.filterTenders,
+          close: function($event) {
+            _vm.show = null
+          }
+        }
       }),
       _vm._v(" "),
       _c("date-filter", {
@@ -66913,7 +66868,12 @@ var render = function() {
             expression: "show == 'date'"
           }
         ],
-        on: { changed: _vm.filterTenders }
+        on: {
+          changed: _vm.filterTenders,
+          close: function($event) {
+            _vm.show = null
+          }
+        }
       }),
       _vm._v(" "),
       _c("price-filter", {
@@ -66925,7 +66885,12 @@ var render = function() {
             expression: "show == 'price'"
           }
         ],
-        on: { changed: _vm.filterTenders }
+        on: {
+          changed: _vm.filterTenders,
+          close: function($event) {
+            _vm.show = null
+          }
+        }
       }),
       _vm._v(" "),
       _c("weight-filter", {
@@ -66937,7 +66902,12 @@ var render = function() {
             expression: "show == 'weight'"
           }
         ],
-        on: { changed: _vm.filterTenders }
+        on: {
+          changed: _vm.filterTenders,
+          close: function($event) {
+            _vm.show = null
+          }
+        }
       })
     ],
     1
@@ -66966,12 +66936,35 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "px-5 pb-5" }, [
-    _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
-      _c("p", { staticClass: "text-white" }, [
-        _vm._v(_vm._s(_vm.$t("tender.find_load_by_weight")))
+    _c("div", { staticClass: " flex items-center justify-between mb-2 " }, [
+      _c("div", { staticClass: "flex items-center " }, [
+        _c(
+          "button",
+          {
+            staticClass: "focus:outline-none",
+            on: {
+              click: function($event) {
+                return _vm.$emit("close")
+              }
+            }
+          },
+          [
+            _c("i", {
+              staticClass: "icon ion-md-arrow-up text-lg text-white pr-3"
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("p", { staticClass: "text-white text-sm" }, [
+          _vm._v(_vm._s(_vm.$t("tender.find_load_by_weight")))
+        ])
       ]),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "button",
+        { staticClass: "focus:outline-none", on: { click: _vm.removeFilter } },
+        [_c("i", { staticClass: "icon ion-md-close text-lg text-white px-3" })]
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "flex" }, [
@@ -67053,16 +67046,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "focus:outline-none" }, [
-      _c("i", { staticClass: "icon ion-md-refresh text-xl text-white px-3" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -91771,7 +91755,6 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('date-range', __webpack_req
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('default-modal', __webpack_require__(/*! ./modals/DefaultModal.vue */ "./resources/js/modals/DefaultModal.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('dropdown', __webpack_require__(/*! ./components/Dropdown.vue */ "./resources/js/components/Dropdown.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('image-upload', __webpack_require__(/*! ./components/ImageUpload.vue */ "./resources/js/components/ImageUpload.vue")["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('map-drawer', __webpack_require__(/*! ./components/MapDrawer.vue */ "./resources/js/components/MapDrawer.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('navbar', __webpack_require__(/*! ./components/Navbar.vue */ "./resources/js/components/Navbar.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('password-input', __webpack_require__(/*! ./components/PasswordInput.vue */ "./resources/js/components/PasswordInput.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('loading-spinner', __webpack_require__(/*! ./components/Spinner.vue */ "./resources/js/components/Spinner.vue")["default"]);
@@ -92685,93 +92668,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ImageUpload_vue_vue_type_template_id_e0921fbe___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ImageUpload_vue_vue_type_template_id_e0921fbe___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/MapDrawer.vue":
-/*!***********************************************!*\
-  !*** ./resources/js/components/MapDrawer.vue ***!
-  \***********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _MapDrawer_vue_vue_type_template_id_59fd4112___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MapDrawer.vue?vue&type=template&id=59fd4112& */ "./resources/js/components/MapDrawer.vue?vue&type=template&id=59fd4112&");
-/* harmony import */ var _MapDrawer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MapDrawer.vue?vue&type=script&lang=js& */ "./resources/js/components/MapDrawer.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MapDrawer.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _MapDrawer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _MapDrawer_vue_vue_type_template_id_59fd4112___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _MapDrawer_vue_vue_type_template_id_59fd4112___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/MapDrawer.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/MapDrawer.vue?vue&type=script&lang=js&":
-/*!************************************************************************!*\
-  !*** ./resources/js/components/MapDrawer.vue?vue&type=script&lang=js& ***!
-  \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./MapDrawer.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss&":
-/*!*********************************************************************************!*\
-  !*** ./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss& ***!
-  \*********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./MapDrawer.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=style&index=0&lang=scss&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/MapDrawer.vue?vue&type=template&id=59fd4112&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/MapDrawer.vue?vue&type=template&id=59fd4112& ***!
-  \******************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_template_id_59fd4112___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./MapDrawer.vue?vue&type=template&id=59fd4112& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MapDrawer.vue?vue&type=template&id=59fd4112&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_template_id_59fd4112___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MapDrawer_vue_vue_type_template_id_59fd4112___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -95091,7 +94987,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     order: null,
     page: null,
     lastPage: null,
-    filters: {}
+    filters: {},
+    filterKeys: []
   },
   getters: {
     loggedIn: function loggedIn(state) {
@@ -95177,8 +95074,16 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       state.page = null;
       state.lastPage = null;
     },
-    retrieveFilters: function retrieveFilters(state, filters) {
-      state.filters = Object.assign(state.filters, filters);
+    addFilters: function addFilters(state, filter) {
+      state.filters = Object.assign({}, state.filters, filter);
+      state.filterKeys = state.filterKeys.concat(Object.keys(filter));
+    },
+    removeFilters: function removeFilters(state, filter) {
+      delete state.filters[filter];
+
+      _.remove(state.filterKeys, function (key) {
+        return key === filter;
+      });
     }
   },
   actions: {

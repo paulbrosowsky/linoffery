@@ -1,9 +1,15 @@
 <template>
     <div class="px-5 pb-5">
-        <div class=" flex items-center justify-between mb-2 ml-2">
-            <p class="text-white">{{$t('tender.find_load_near_by')}}</p>
+        <div class=" flex items-center justify-between mb-2 ">
+            <div class="flex items-center ">
+                <button class="focus:outline-none" @click="$emit('close')">
+                    <i class="icon ion-md-arrow-up text-lg text-white pr-3"></i>
+                </button>
+                <p class="text-white text-sm">{{$t('tender.find_load_near_by')}}</p>
+            </div>
+            
             <button class="focus:outline-none" @click="removeFilter">
-                <i class="icon ion-md-refresh text-xl text-white px-3"></i>
+                <i class="icon ion-md-close text-lg text-white px-3"></i>
             </button>
         </div>
 
@@ -72,7 +78,7 @@
                     south: this.location[0].lat - (this.range/113.5)
                 }
                 // Retrieve filters variable in store
-                this.$store.commit('retrieveFilters', {location: bounds})
+                this.$store.commit('addFilters', {location: bounds})
                 this.$emit('changed')
             },   
             
@@ -82,7 +88,15 @@
                     lat: value.place.geometry.location.lat(),
                     lng: value.place.geometry.location.lng()
                 }]
-            }
+            },
+
+            removeFilter(){                
+                this.location = null
+                this.range = this.$i18n.t('utilities.range')
+                
+                this.$store.commit('removeFilters', 'location')                
+                this.$emit('changed')
+            } 
 
         },
 

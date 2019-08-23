@@ -152,5 +152,12 @@
         box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.1), 
                     4px 0 6px -2px rgba(0, 0, 0, 0.05);
     }
+
+    @media (max-width: 640px) {
+        .li-mapped-sidebar{ 
+            box-shadow: 0 -5px 10px -3px rgba(0, 0, 0, 0.1), 
+                    0 -4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    } 
    
 </style>

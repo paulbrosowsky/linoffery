@@ -25,13 +25,19 @@
     export default {
         components: { Multiselect },
 
-        props:['value', 'options', 'placeholder', 'multiple'],
+        props:['value', 'options', 'placeholder', 'multiple', 'reset'],
 
         data(){
             return{
                 selected: this.value
             }
-        },       
+        }, 
+        
+        watch:{
+            reset(){
+                this.reset ? this.selected = null : ''
+            }
+        },     
         
     }
 </script>

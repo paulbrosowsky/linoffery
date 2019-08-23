@@ -27,7 +27,8 @@
             placeholder: {default: 'Pick the Date'}, 
             left:{ default:false},
             highlighted: Object,
-            disabledDates: null
+            disabledDates: null,
+            reset: {default: false}
         },
 
         data(){
@@ -35,6 +36,13 @@
                 date: this.value
             }
         },
+
+        watch:{
+            reset(){
+                this.reset ? this.date = null : ''
+            }
+        },
+
 
         computed:{
             // Switch calender position from left to the right
@@ -53,7 +61,8 @@
             inactiveDates(){
                 return this.disabledDates ? this.disabledDates : this.$moment().subtract(1, 'days')._d
             }
-        }
+        },
+
         
     }
 </script>

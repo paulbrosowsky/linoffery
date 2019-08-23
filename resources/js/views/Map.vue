@@ -65,6 +65,11 @@
                         this.resetAllMarkers()
                         this.displayRoute(value.origin, value.destination)
                     }) 
+
+                     //Trigger in RouteFilter
+                    Event.$on('removeRoute',() => {                       
+                        this.directionsDisplay.setMap(null)                   
+                    })
                     
                     // Fetch Address with Places API
                     //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings

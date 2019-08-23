@@ -25,9 +25,7 @@
                 <app-footer></app-footer>  
             </div>            
             
-        </div> 
-
-        <!-- <map-drawer @changed="toggleMapOpened"></map-drawer>        -->
+        </div>         
 
     </div>    
 

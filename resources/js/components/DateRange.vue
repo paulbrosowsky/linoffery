@@ -7,6 +7,7 @@
             :placeholder="$t('tender.earliest_date')"             
             :highlighted="range"
             :left="left"
+            :reset ="reset"
             @changed="updateFrom"
         ></date-picker>
         <!-- <p class="text-sm text-red-500 mb-2" v-if="errors" v-text="errors.latest_date[0]"></p> -->
@@ -16,6 +17,7 @@
             :disabled-dates="range.from"
             :highlighted="range"
             :left="left"
+            :reset ="reset"
             @changed="updateTo"                      
         ></date-picker>
     </div>
@@ -24,7 +26,7 @@
     export default {
        
 
-        props:['errors', 'from', 'to', 'left'],
+        props:['errors', 'from', 'to', 'left', 'reset'],
 
         data(){
             return{
@@ -32,6 +34,15 @@
                     from:null,
                     to:null
                 }
+            }
+        },
+
+        watch:{
+            reset(){
+                if(this.reset){
+                    this.range.from = null 
+                    this.range.to = null 
+                }               
             }
         },
         

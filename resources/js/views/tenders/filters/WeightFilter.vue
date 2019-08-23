@@ -1,9 +1,15 @@
 <template>
-   <div class="px-5 pb-5">
-        <div class=" flex items-center justify-between mb-2 ml-2">
-            <p class="text-white">{{$t('tender.find_load_by_weight')}}</p>
-            <button class="focus:outline-none">
-                <i class="icon ion-md-refresh text-xl text-white px-3"></i>
+   <div class="px-5 pb-5"> 
+        <div class=" flex items-center justify-between mb-2 ">
+            <div class="flex items-center ">
+                <button class="focus:outline-none" @click="$emit('close')">
+                    <i class="icon ion-md-arrow-up text-lg text-white pr-3"></i>
+                </button>
+                <p class="text-white text-sm">{{$t('tender.find_load_by_weight')}}</p>
+            </div>
+            
+            <button class="focus:outline-none" @click="removeFilter">
+                <i class="icon ion-md-close text-lg text-white px-3"></i>
             </button>
         </div>
          
@@ -51,7 +57,7 @@
 
         methods:{
             updateFilter(){
-                this.$store.commit('retrieveFilters', {                    
+                this.$store.commit('addFilters', {                    
                     weight: this.weight
                 })
             },
@@ -60,7 +66,14 @@
                     await this.updateFilter()
                     this.$emit('changed')
                 }
-            }
+            },
+            removeFilter(){                
+                this.weight.min = null                
+                this.weight.max = null 
+
+                this.$store.commit('removeFilters', 'weight')                
+                this.$emit('changed')
+            } 
         }
         
     }

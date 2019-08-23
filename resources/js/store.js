@@ -19,7 +19,8 @@ export let store = new Vuex.Store({
 
         page: null,
         lastPage: null,
-        filters:{}      
+        filters:{} ,
+        filterKeys:[]    
     },
 
     getters:{
@@ -68,7 +69,7 @@ export let store = new Vuex.Store({
 
         noTenders(state){
             return state.page > state.lastPage
-        }
+        },   
     },
 
     mutations:{
@@ -123,8 +124,18 @@ export let store = new Vuex.Store({
             state.lastPage = null
         },
 
-        retrieveFilters(state, filters){
-            state.filters = Object.assign(state.filters, filters)
+        addFilters(state, filter){
+            state.filters = Object.assign({},state.filters, filter)
+
+            state.filterKeys = state.filterKeys.concat(Object.keys(filter))          
+        },
+
+        removeFilters(state, filter){
+            delete state.filters[filter]            
+            
+            _.remove(state.filterKeys, (key)=>{
+                return key === filter
+            })
         }
     },
 

@@ -48,7 +48,6 @@ Vue.component('date-range', require('./components/DateRange.vue').default);
 Vue.component('default-modal', require('./modals/DefaultModal.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
 Vue.component('image-upload', require('./components/ImageUpload.vue').default);
-Vue.component('map-drawer', require('./components/MapDrawer.vue').default);
 Vue.component('navbar', require('./components/Navbar.vue').default);
 Vue.component('password-input', require('./components/PasswordInput.vue').default);
 Vue.component('loading-spinner', require('./components/Spinner.vue').default);
