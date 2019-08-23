@@ -153,7 +153,7 @@ class ViewTendersTest extends PassportTestCase
             'type' => 'pickup',
             'lat' =>  42,
             'lng' => 2
-        ]);       
+        ]); 
 
         $location = ["south"=>40, "north"=>44, "west"=>1, "east"=> 4];
 
@@ -162,6 +162,19 @@ class ViewTendersTest extends PassportTestCase
         $this->assertCount(5, Tender::all());
         $this->assertCount(1, $response['data']);       
         $this->assertEquals($tender->title, $response['data'][0]['title']);
+    }
+
+    /** @test */
+    function users_cam_filter_tenders_by_category()
+    {
+        create('App\Tender', [], 5);
+
+        $categories = [2,3];
+
+        $response = $this->getJson('api/tenders?category='.json_encode($categories))->json(); 
+
+        $this->assertCount(5, Tender::all());
+        $this->assertCount(2, $response['data']); 
     }
     
 }

@@ -62,7 +62,9 @@
                     </div>
 
                     <span class="text-xs uppercase tracking-tight font-semibold border rounded-full px-2"
-                        v-text="category.name" :style="{color: category.color, borderColor: category.color}"></span>
+                        v-text="tender.category.name" 
+                        :style="{color: tender.category.color, borderColor: tender.category.color}"
+                    ></span>
                 </div>
             </div>
         </router-link>
@@ -71,13 +73,6 @@
 <script>
     export default {
         props:['tender'],
-
-        data(){
-            return{
-                category: this.tender.category,               
-            }
-        },
-        
 
         computed:{                       
 

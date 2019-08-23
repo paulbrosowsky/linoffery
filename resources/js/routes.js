@@ -148,7 +148,8 @@ let routes = [
         beforeEnter: (to, from, next) => {                       
             if(window.popStateDetected){
                 next()               
-            }else{             
+            }else{  
+                store.commit('resetPagination')           
                 store.dispatch('fetchTenders')                              
                 next()
             }                                

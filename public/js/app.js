@@ -4155,12 +4155,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['value', 'options', 'placeholder'],
+  props: ['value', 'options', 'placeholder', 'multiple'],
   data: function data() {
     return {
       selected: this.value
@@ -8832,13 +8834,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['tender'],
-  data: function data() {
-    return {
-      category: this.tender.category
-    };
-  },
   computed: {
     weight: function weight(frights) {
       var weight = null;
@@ -9260,7 +9259,6 @@ __webpack_require__.r(__webpack_exports__);
       var params = null;
 
       if (!_.isEmpty(this.filters)) {
-        this.$store.commit('resetPage');
         params = {
           params: this.filters
         };
@@ -9283,10 +9281,7 @@ __webpack_require__.r(__webpack_exports__);
 
     Event.$on('fetchTenders', function () {
       return _this2.fetchTenders();
-    }); // // Trigger in Maps @boxRoute
-    // Event.$on('filterByRoute', value => this.fetchTenders(value))
-    // // Trigger in LocationFilter @triggerFilter
-    // Event.$on('filterByLocation', value => this.fetchTenders(value))
+    });
   }
 });
 
@@ -9428,6 +9423,115 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      categories: null
+    };
+  },
+  computed: {
+    list: function list() {
+      return this.$store.state.categories;
+    }
+  },
+  methods: {
+    updateFilter: function updateFilter(value) {
+      this.categories = value;
+      var categoryIds = [];
+      this.categories.map(function (category) {
+        return categoryIds.push(category.id);
+      });
+      this.$store.commit('retrieveFilters', {
+        category: categoryIds.length > 0 ? JSON.stringify(categoryIds) : ''
+      });
+    },
+    triggerFilter: function () {
+      var _triggerFilter = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(value) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.updateFilter(value);
+
+              case 2:
+                this.$emit('changed');
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function triggerFilter(_x) {
+        return _triggerFilter.apply(this, arguments);
+      }
+
+      return triggerFilter;
+    }()
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/DateFilter.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/DateFilter.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -9576,6 +9680,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/RouteFilter.vue?vue&type=script&lang=js& ***!
@@ -9691,8 +9811,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _filters_LocationFilter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../filters/LocationFilter */ "./resources/js/views/tenders/filters/LocationFilter.vue");
-/* harmony import */ var _filters_RouteFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../filters/RouteFilter */ "./resources/js/views/tenders/filters/RouteFilter.vue");
+/* harmony import */ var _filters_CategoryFilter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../filters/CategoryFilter */ "./resources/js/views/tenders/filters/CategoryFilter.vue");
+/* harmony import */ var _filters_DateFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../filters/DateFilter */ "./resources/js/views/tenders/filters/DateFilter.vue");
+/* harmony import */ var _filters_LocationFilter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../filters/LocationFilter */ "./resources/js/views/tenders/filters/LocationFilter.vue");
+/* harmony import */ var _filters_PriceFilter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../filters/PriceFilter */ "./resources/js/views/tenders/filters/PriceFilter.vue");
+/* harmony import */ var _filters_RouteFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../filters/RouteFilter */ "./resources/js/views/tenders/filters/RouteFilter.vue");
+/* harmony import */ var _filters_WeightFilter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../filters/WeightFilter */ "./resources/js/views/tenders/filters/WeightFilter.vue");
 //
 //
 //
@@ -9748,16 +9872,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    LocationFilter: _filters_LocationFilter__WEBPACK_IMPORTED_MODULE_0__["default"],
-    RouteFilter: _filters_RouteFilter__WEBPACK_IMPORTED_MODULE_1__["default"]
+    CategoryFilter: _filters_CategoryFilter__WEBPACK_IMPORTED_MODULE_0__["default"],
+    DateFilter: _filters_DateFilter__WEBPACK_IMPORTED_MODULE_1__["default"],
+    LocationFilter: _filters_LocationFilter__WEBPACK_IMPORTED_MODULE_2__["default"],
+    PriceFilter: _filters_PriceFilter__WEBPACK_IMPORTED_MODULE_3__["default"],
+    RouteFilter: _filters_RouteFilter__WEBPACK_IMPORTED_MODULE_4__["default"],
+    WeightFilter: _filters_WeightFilter__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
-      show: true,
+      tabs: [],
+      show: null,
       filter: null,
       filters: {},
       drawerOpened: true
@@ -9767,11 +9916,21 @@ __webpack_require__.r(__webpack_exports__);
     showFilter: function showFilter(type) {
       var _this = this;
 
-      this.filter = type + '-filter'; // this.show = !this.show 
+      if (type === this.show) {
+        this.show = null;
+      } else {
+        this.show = type;
+      }
 
       setTimeout(function () {
         _this.closeDrawer();
       }, 200);
+
+      if (this.$route.name != 'tenders') {
+        this.$router.push({
+          name: 'tenders'
+        });
+      }
     },
     openDrawer: function openDrawer() {
       // Listener in Mapped 
@@ -9782,14 +9941,16 @@ __webpack_require__.r(__webpack_exports__);
       Event.$emit('drawerDown');
     },
     filterTenders: function filterTenders() {
-      // Listener in Tenders @mounted
+      this.$store.commit('resetPagination'); // Listener in Tenders @mounted
+
       Event.$emit('fetchTenders');
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
-    // Triggered in Mapped
+    this.tabs = this.$refs.tenderFilters.children; // Triggered in Mapped
+
     Event.$on('drawerOpened', function () {
       return _this2.drawerOpened = true;
     });
@@ -9798,6 +9959,22 @@ __webpack_require__.r(__webpack_exports__);
     });
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -58453,7 +58630,9 @@ var render = function() {
           label: "name",
           placeholder: _vm.placeholder,
           searchable: false,
-          "allow-empty": false
+          "allow-empty": true,
+          multiple: _vm.multiple,
+          taggable: _vm.multiple
         },
         on: {
           input: function($event) {
@@ -65025,10 +65204,10 @@ var render = function() {
                 staticClass:
                   "text-xs uppercase tracking-tight font-semibold border rounded-full px-2",
                 style: {
-                  color: _vm.category.color,
-                  borderColor: _vm.category.color
+                  color: _vm.tender.category.color,
+                  borderColor: _vm.tender.category.color
                 },
-                domProps: { textContent: _vm._s(_vm.category.name) }
+                domProps: { textContent: _vm._s(_vm.tender.category.name) }
               })
             ])
           ])
@@ -65714,6 +65893,93 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=template&id=9a94730e&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=template&id=9a94730e& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "px-5 pb-5" },
+    [
+      _c(
+        "div",
+        { staticClass: " flex items-center justify-between mb-2 ml-2" },
+        [
+          _c("p", { staticClass: "text-white" }, [
+            _vm._v(_vm._s(_vm.$t("tender.find_load_by_category")))
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
+        ]
+      ),
+      _vm._v(" "),
+      _vm.list
+        ? _c("select-input", {
+            staticClass: "mb-2",
+            attrs: {
+              value: _vm.categories,
+              options: _vm.list,
+              placeholder: _vm.$t("tender.category"),
+              multiple: true
+            },
+            on: { changed: _vm.triggerFilter }
+          })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("button", { staticClass: "focus:outline-none" }, [
+      _c("i", { staticClass: "icon ion-md-refresh text-xl text-white px-3" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/DateFilter.vue?vue&type=template&id=388c7aa9&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/DateFilter.vue?vue&type=template&id=388c7aa9& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070&":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/LocationFilter.vue?vue&type=template&id=074bf070& ***!
@@ -65729,7 +65995,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "bg-gray-700 px-5 pb-5" }, [
+  return _c("div", { staticClass: "px-5 pb-5" }, [
     _c("div", { staticClass: " flex items-center justify-between mb-2 ml-2" }, [
       _c("p", { staticClass: "text-white" }, [
         _vm._v(_vm._s(_vm.$t("tender.find_load_near_by")))
@@ -65864,6 +66130,30 @@ var render = function() {
       )
     ])
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=template&id=6cbe234e&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=template&id=6cbe234e& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -66046,93 +66336,197 @@ var render = function() {
     "div",
     { staticClass: "absolute bg-gray-700 shadow-md z-30 w-full" },
     [
-      _c(
-        "nav",
-        { staticClass: " flex justify-between px-5 py-3 md:justify-end " },
-        [
+      _c("nav", { staticClass: " flex justify-between px-5 md:justify-end " }, [
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.drawerOpened,
+                expression: "drawerOpened"
+              }
+            ],
+            staticClass:
+              "text-xl text-gray-500 hover:text-white  focus:outline-none md:hidden",
+            on: { click: _vm.closeDrawer }
+          },
+          [_c("i", { staticClass: "icon ion-md-arrow-down " })]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.drawerOpened,
+                expression: "!drawerOpened"
+              }
+            ],
+            staticClass:
+              "text-xl text-gray-500 hover:text-white  focus:outline-none md:hidden",
+            on: { click: _vm.openDrawer }
+          },
+          [_c("i", { staticClass: "icon ion-md-arrow-up " })]
+        ),
+        _vm._v(" "),
+        _c("div", { ref: "tenderFilters" }, [
           _c(
             "button",
             {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.drawerOpened,
-                  expression: "drawerOpened"
-                }
-              ],
               staticClass:
-                "text-xl text-gray-500 hover:text-white focus:outline-none md:hidden",
-              on: { click: _vm.closeDrawer }
+                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.showFilter("route")
+                }
+              }
             },
-            [_c("i", { staticClass: "icon ion-md-arrow-down " })]
+            [_c("i", { staticClass: "icon ion-md-git-branch " })]
           ),
           _vm._v(" "),
           _c(
             "button",
             {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.drawerOpened,
-                  expression: "!drawerOpened"
-                }
-              ],
               staticClass:
-                "text-xl text-gray-500 hover:text-white focus:outline-none md:hidden",
-              on: { click: _vm.openDrawer }
+                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.showFilter("location")
+                }
+              }
             },
-            [_c("i", { staticClass: "icon ion-md-arrow-up " })]
+            [_c("i", { staticClass: "icon ion-md-locate " })]
           ),
           _vm._v(" "),
-          _c("div", [
-            _c(
-              "button",
-              {
-                staticClass:
-                  "text-xl text-gray-500 px-3 hover:text-white focus:outline-none",
-                on: {
-                  click: function($event) {
-                    return _vm.showFilter("route")
-                  }
+          _c(
+            "button",
+            {
+              staticClass:
+                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.showFilter("category")
                 }
-              },
-              [_c("i", { staticClass: "icon ion-md-git-branch " })]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass:
-                  "text-xl text-gray-500 px-3 hover:text-white focus:outline-none",
-                on: {
-                  click: function($event) {
-                    return _vm.showFilter("location")
-                  }
+              }
+            },
+            [_c("i", { staticClass: "icon ion-md-pricetag" })]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.showFilter("price")
                 }
-              },
-              [_c("i", { staticClass: "icon ion-md-locate " })]
-            ),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _vm._m(2),
-            _vm._v(" "),
-            _vm._m(3)
-          ])
-        ]
-      ),
+              }
+            },
+            [_c("i", { staticClass: "icon ion-logo-euro" })]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "text-xl text-gray-500 px-3 py-4 hover:text-white  focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.showFilter("date")
+                }
+              }
+            },
+            [_c("i", { staticClass: "icon ion-md-calendar" })]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "text-xl text-gray-500 pl-3 py-4 hover:text-white  focus:outline-none",
+              on: {
+                click: function($event) {
+                  return _vm.showFilter("weight")
+                }
+              }
+            },
+            [_c("i", { staticClass: "icon ion-md-download" })]
+          )
+        ])
+      ]),
       _vm._v(" "),
       _c("route-filter", {
         directives: [
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.show,
-            expression: "show"
+            value: _vm.show == "route",
+            expression: "show == 'route'"
+          }
+        ],
+        on: { changed: _vm.filterTenders }
+      }),
+      _vm._v(" "),
+      _c("location-filter", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show == "location",
+            expression: "show == 'location'"
+          }
+        ],
+        on: { changed: _vm.filterTenders }
+      }),
+      _vm._v(" "),
+      _c("category-filter", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show == "category",
+            expression: "show == 'category'"
+          }
+        ],
+        on: { changed: _vm.filterTenders }
+      }),
+      _vm._v(" "),
+      _c("date-filter", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show == "date",
+            expression: "show == 'date'"
+          }
+        ],
+        on: { changed: _vm.filterTenders }
+      }),
+      _vm._v(" "),
+      _c("price-filter", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show == "price",
+            expression: "show == 'price'"
+          }
+        ],
+        on: { changed: _vm.filterTenders }
+      }),
+      _vm._v(" "),
+      _c("weight-filter", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show == "weight",
+            expression: "show == 'weight'"
           }
         ],
         on: { changed: _vm.filterTenders }
@@ -66141,60 +66535,31 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass:
-          "text-xl text-gray-500 px-3 hover:text-white focus:outline-none"
-      },
-      [_c("i", { staticClass: "icon ion-md-pricetag" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass:
-          "text-xl text-gray-500 px-3 hover:text-white focus:outline-none"
-      },
-      [_c("i", { staticClass: "icon ion-logo-euro" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass:
-          "text-xl text-gray-500 px-3 hover:text-white focus:outline-none"
-      },
-      [_c("i", { staticClass: "icon ion-md-calendar" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass:
-          "text-xl text-gray-500 pl-3 hover:text-white focus:outline-none"
-      },
-      [_c("i", { staticClass: "icon ion-md-download" })]
-    )
-  }
-]
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=template&id=05ba1b9a&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=template&id=05ba1b9a& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -92985,10 +93350,10 @@ module.exports = {"settings":"Einstellungen","account":"Benutzerkonto","company"
 /*!*********************************************!*\
   !*** ./resources/js/locales/de/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, find_load_by_category, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke.","find_load_near_by":"Finden Sie die Fracht in Ihrer Nähe."};
+module.exports = {"offer":"Angebot","offers":"Angebote","offerer":"Anbieter","offered_at":"Angeboten am","active_offers":"Aktive Angebote","offer_id":"Angebot ID","order":"Auftrag","my_orders":"Meine Aufträge","my_tenders":"Meine Ausschreibungen","tender_id":"Ausschreibung ID","tender_on":"Ausschreibung vom","consignor":"Absender","carrier":"Spediteur","valid_until":"gültig bis","m_offer":"mitbieten","agreed_price":"Vereinbarter Preis","curr_offer":"Akt. Angebot","make_offer":"Angebot abgeben","accept_offer":"Angebot annehmen","withdraw_offer":"Angebot zurückziehen","take_it":"Sofort zugreifen","pickup_details":"Abholdetails","delivery_details":"Lieferdetails","freight_details":"Frachtdetails","earliest_date":"früestes Termin","latest_date":"spätestes Termin","loading_driver":"Verladung durch Fahrer","latency":"Wartezeit","transport_type":"Transportart","dimentions":"Abmaße","weight":"Gewicht","weight_kg":"Gewicht kg","width_cm":"Breite cm","height_cm":"Höhe cm","length_cm":"Länge cm","new_tender":"Neue Ausschreibung","category":"Kategorie","more_tender_info":"Erzählen Sie mehr zur Ihrer Ausschreibung ...","max_price":"max. Preis","max_price_info":"Alle Angebote über diesen Preis werden automatisch abgelehnt.","immediate_price":"sofort Preis","immediate_price_info":"Zu diesem Preis würden sie Ihr Auftrag sofort vergeben.","valid_date":"gültig bis","valid_date_info":"Ihre Ausschreibung wird für alle Anbieter bis zu diesem Datum sichtbar sein.","store_tender_message":"Ihre Ausschreibung wurde unter Entwürfe abgelegt.","store_location_message":"Die Standortdetails wurden gespeichert.","more_freight_info":"Erzählen Sie mehr über die Fracht ...","add_freight":"Fracht hinzu","store_freight_message":"Die Frachtdetails wurden gespeichert.","publish_info":"Bitte beachten Sie! Nach dem Veröffentlichen können Sie Ihre Ausschreibung nicht mehr bearbieten.","publish_info_terms":"Mehr Informationen erhalten Sie aus unseren AGB.","published_message":"Ihre Auschreibung wurde veröffentlicht.","make_offer_info":"Ihr Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, können Sie ihr Angebot zurückziehen.","make_offer_message":"Ihr Angebot wurde an den Ausschreiber weitergeleitet.","accept_offer_question":"Möchten Sie wirklich das Angebot annehmen?","withdraw_offer_question":"Möchten Sie wirklich Ihr Angebot zurückziehen?","accept_offer_info":"Durch das Anklicken des (Angebot-Annehmen) Buttons bestätigen Sie das Angebot, und geben ein vebindliches Auftrag an das obengenannte Unternehmen.","withdraw_offer_message":"Ihr Angebot wurde gelöscht.","place_order_message":"Glückwunsch! Sie haben Ihr Auftrag erteilt.","take_now_info":"Durch das Anklicken des (Sofort Zugreifen) Buttons bestätigen Sie einen verbindliches Auftrag zu obengenannten Preis.","take_now_message":"Glückwunsch! Sie haben den Sofort-Auftrag angenommen.","no_tenders_info":"Momentan keine Ausschreibungen vorhanden.","no_orders_info":"Momentan keine Aufträge vorhanden.","no_offers_info":"Momentan keine Angebote vorhanden.","find_load_on_route":"Finden Sie die Fracht auf Ihrer Strecke.","find_load_near_by":"Finden Sie die Fracht in Ihrer Nähe.","find_load_by_category":"Finden Sie die Fracht nach Kategorie."};
 
 /***/ }),
 
@@ -93040,10 +93405,10 @@ module.exports = {"settings":"Settings","account":"Account","company":"Company",
 /*!*********************************************!*\
   !*** ./resources/js/locales/en/tender.json ***!
   \*********************************************/
-/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, default */
+/*! exports provided: offer, offers, offerer, offered_at, active_offers, offer_id, order, my_orders, my_tenders, tender_id, tender_on, consignor, carrier, valid_until, m_offer, agreed_price, curr_offer, make_offer, accept_offer, withdraw_offer, take_it, pickup_details, delivery_details, freight_details, earliest_date, latest_date, loading_driver, latency, transport_type, dimentions, weight, weight_kg, width_cm, height_cm, length_cm, new_tender, category, more_tender_info, max_price, max_price_info, immediate_price, immediate_price_info, valid_date, valid_date_info, store_tender_message, store_location_message, more_freight_info, add_freight, store_freight_message, publish_info, publish_info_terms, published_message, make_offer_info, make_offer_message, accept_offer_question, withdraw_offer_question, accept_offer_info, withdraw_offer_message, place_order_message, take_now_info, take_now_message, no_tenders_info, no_orders_info, no_offers_info, find_load_on_route, find_load_near_by, find_load_by_category, default */
 /***/ (function(module) {
 
-module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route.","find_load_near_by":"Find the load near by."};
+module.exports = {"offer":"Offer","offers":"Offers","offerer":"Offerer","offered_at":"Offered at","active_offers":"Active offers","offer_id":"Offer ID","order":"Order","my_orders":"My Orders","my_tenders":"My Tenders","tender_id":"Tender ID","tender_on":"Tender on","consignor":"Shipper","carrier":"Carrier","valid_until":"valid until","m_offer":"offer","agreed_price":"Agreed Price","curr_offer":"Curr. Offer","make_offer":"Make offer","accept_offer":"Accept offer","withdraw_offer":"Withdraw offer","take_it":"take it now","pickup_details":"Pick up details","delivery_details":"Drop off details","freight_details":"Load details","earliest_date":"Erliest date","latest_date":"Latest date","loading_driver":"Loading by driver","latency":"Latency","transport_type":"Transport type","dimentions":"Dimentions","weight":"Weight","weight_kg":"Weight kg","width_cm":"Width cm","height_cm":"Height cm","length_cm":"Length cm","new_tender":"New Tender","category":"Category","more_tender_info":"Tell us more about your tender ...","max_price":"max. Price","max_price_info":"All offers above this price will be automatically rejected.","immediate_price":"now Price","immediate_price_info":"At this price, you would immediately place your order.","valid_date":"valid until","valid_date_info":"Your tender will be visible to all offerors by this date","store_tender_message":"Your tender has been placed under drafts.","store_location_message":"Your location details have been saved.","more_freight_info":"Tell more about the load ...","add_freight":"Add Load","store_freight_message":"Your load details have been saved.","publish_info":"Please note! After publishing, you will not be able to update your tender.","publish_info_terms":"More information can be found in our terms of use.","published_message":"Your tender is now published.","make_offer_info":"Your offer is binding! As long as the tenderer has not accepted it, you can withdraw your offer.","make_offer_message":"Your offer has been forwarded to the tenderer.","accept_offer_question":"Do you really want to accept the offer?","withdraw_offer_question":"Do you really want to withdraw your offer?","accept_offer_info":"By clicking on the (Accept Offer) button, you confirm the offer and sibmit a binding order to the above mentioned company.","withdraw_offer_message":"Your offer has been deleted.","place_order_message":"Congratulation! You have placed your order.","take_now_info":"By clicking the (take it now) button you confirm a binding order at the above price.","take_now_message":"Congratulation! You have accepted the instant order.","no_tenders_info":"Currently no tenders available.","no_orders_info":"Currently no orders available.","no_offers_info":"Currently no offers available.","find_load_on_route":"Find the load on your route.","find_load_near_by":"Find the load near by.","find_load_by_category":"Find the load by category."};
 
 /***/ }),
 
@@ -94097,6 +94462,7 @@ var routes = [{
     if (window.popStateDetected) {
       next();
     } else {
+      _store__WEBPACK_IMPORTED_MODULE_2__["store"].commit('resetPagination');
       _store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch('fetchTenders');
       next();
     }
@@ -94281,12 +94647,11 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     retrieveTenders: function retrieveTenders(state, tenders) {
       if (tenders.current_page === 1) {
         state.tenders = tenders.data;
-        state.page = 2;
       } else {
         state.tenders = state.tenders.concat(tenders.data);
-        state.page++;
       }
 
+      state.page = tenders.current_page + 1;
       state.lastPage = tenders.last_page;
     },
     retrieveUsersTenders: function retrieveUsersTenders(state, tender) {
@@ -94304,8 +94669,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     retrieveOrder: function retrieveOrder(state, order) {
       state.order = order;
     },
-    resetPage: function resetPage(state) {
+    resetPagination: function resetPagination(state) {
       state.page = null;
+      state.lastPage = null;
     },
     retrieveFilters: function retrieveFilters(state, filters) {
       state.filters = Object.assign(state.filters, filters);
@@ -97835,6 +98201,144 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/views/tenders/filters/CategoryFilter.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/CategoryFilter.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CategoryFilter_vue_vue_type_template_id_9a94730e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CategoryFilter.vue?vue&type=template&id=9a94730e& */ "./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=template&id=9a94730e&");
+/* harmony import */ var _CategoryFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CategoryFilter.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CategoryFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CategoryFilter_vue_vue_type_template_id_9a94730e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CategoryFilter_vue_vue_type_template_id_9a94730e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/CategoryFilter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryFilter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=template&id=9a94730e&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=template&id=9a94730e& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryFilter_vue_vue_type_template_id_9a94730e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryFilter.vue?vue&type=template&id=9a94730e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/CategoryFilter.vue?vue&type=template&id=9a94730e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryFilter_vue_vue_type_template_id_9a94730e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryFilter_vue_vue_type_template_id_9a94730e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/DateFilter.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/views/tenders/filters/DateFilter.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DateFilter_vue_vue_type_template_id_388c7aa9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DateFilter.vue?vue&type=template&id=388c7aa9& */ "./resources/js/views/tenders/filters/DateFilter.vue?vue&type=template&id=388c7aa9&");
+/* harmony import */ var _DateFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DateFilter.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/DateFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DateFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DateFilter_vue_vue_type_template_id_388c7aa9___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DateFilter_vue_vue_type_template_id_388c7aa9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/DateFilter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/DateFilter.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/DateFilter.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DateFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./DateFilter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/DateFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DateFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/DateFilter.vue?vue&type=template&id=388c7aa9&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/DateFilter.vue?vue&type=template&id=388c7aa9& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateFilter_vue_vue_type_template_id_388c7aa9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./DateFilter.vue?vue&type=template&id=388c7aa9& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/DateFilter.vue?vue&type=template&id=388c7aa9&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateFilter_vue_vue_type_template_id_388c7aa9___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateFilter_vue_vue_type_template_id_388c7aa9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/views/tenders/filters/LocationFilter.vue":
 /*!***************************************************************!*\
   !*** ./resources/js/views/tenders/filters/LocationFilter.vue ***!
@@ -97899,6 +98403,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LocationFilter_vue_vue_type_template_id_074bf070___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/PriceFilter.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/PriceFilter.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PriceFilter_vue_vue_type_template_id_6cbe234e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PriceFilter.vue?vue&type=template&id=6cbe234e& */ "./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=template&id=6cbe234e&");
+/* harmony import */ var _PriceFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PriceFilter.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _PriceFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PriceFilter_vue_vue_type_template_id_6cbe234e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PriceFilter_vue_vue_type_template_id_6cbe234e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/PriceFilter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PriceFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PriceFilter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PriceFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=template&id=6cbe234e&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=template&id=6cbe234e& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PriceFilter_vue_vue_type_template_id_6cbe234e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PriceFilter.vue?vue&type=template&id=6cbe234e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/PriceFilter.vue?vue&type=template&id=6cbe234e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PriceFilter_vue_vue_type_template_id_6cbe234e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PriceFilter_vue_vue_type_template_id_6cbe234e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -98037,6 +98610,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TendersFilters_vue_vue_type_template_id_2456f83f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/WeightFilter.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/WeightFilter.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _WeightFilter_vue_vue_type_template_id_05ba1b9a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WeightFilter.vue?vue&type=template&id=05ba1b9a& */ "./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=template&id=05ba1b9a&");
+/* harmony import */ var _WeightFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WeightFilter.vue?vue&type=script&lang=js& */ "./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _WeightFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _WeightFilter_vue_vue_type_template_id_05ba1b9a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _WeightFilter_vue_vue_type_template_id_05ba1b9a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/tenders/filters/WeightFilter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./WeightFilter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightFilter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=template&id=05ba1b9a&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=template&id=05ba1b9a& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightFilter_vue_vue_type_template_id_05ba1b9a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./WeightFilter.vue?vue&type=template&id=05ba1b9a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/tenders/filters/WeightFilter.vue?vue&type=template&id=05ba1b9a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightFilter_vue_vue_type_template_id_05ba1b9a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightFilter_vue_vue_type_template_id_05ba1b9a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

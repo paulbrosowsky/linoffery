@@ -10,7 +10,7 @@ class TenderFilters extends Filters
     /**
      * Registered Filters
     */
-    protected $filters = ['route', 'location'];
+    protected $filters = ['route', 'location', 'category'];
 
 
     /**
@@ -25,9 +25,9 @@ class TenderFilters extends Filters
 
         $tenders = $this->findTenders($routeFilter->bounds);
 
-        $results = $this->filterByDirection($tenders, $routeFilter->locations);
+        $tenderIds = $this->filterByDirection($tenders, $routeFilter->locations);
          
-        return  $this->builder = $results;
+        return  $this->builder->whereIn('id', $tenderIds);
     }
 
     /**
@@ -46,13 +46,25 @@ class TenderFilters extends Filters
                         ->whereBetween('lng', [$bounds->west, $bounds->east])                        
                         ->get();
                         
-        $tenders = collect();
-        // Push all tenders of found to results
-        foreach($locations as $pickup){
-            $tenders = $tenders->push($pickup->tender);
+        $tenderIds = [];        
+        foreach($locations as $pickup){            
+            array_push($tenderIds, $pickup->tender->id);
         }
+        
+        return $this->builder->whereIn('id', $tenderIds);
+    }
 
-        return $this->builder = $tenders;
+    /**
+     *  Filter Tenders by categories
+     * 
+     * @param string $list
+     * @return Collection
+     */
+    protected function category($list)
+    {  
+        $categories = json_decode($list);
+        
+        return $this->builder->whereIn('category_id', $categories);
     }
 
     /**
@@ -104,22 +116,22 @@ class TenderFilters extends Filters
         $lngRouteDirection = $this->sign($locations->end->lng - $locations->start->lng);
         $latRouteDirection = $this->sign($locations->end->lat - $locations->start->lat);
         
-        $results = collect(); 
+        $results = []; 
         
-        foreach($tenders as $result){                
-            $start = $result->locations->where('type', '=', 'pickup')->first();
-            $end =  $result->locations->where('type', '=','delivery')->first();
+        foreach($tenders as $tender){                
+            $start = $tender->locations->where('type', '=', 'pickup')->first();
+            $end =  $tender->locations->where('type', '=','delivery')->first();
             
             // Determin if Tender Location's Directions are positiv or negativ
             $latDirection = $this->sign($end->lat - $start->lat);
             $lngDirection = $this->sign($end->lng - $start->lng);
             
             // Find Route Direction with bigger Differece and compare it with Location Direction
-            // If Directions are similar push it to Results
+            // If Directions are similar push tenders id to an array
             if($lngDifference > $latDifference){ 
-                $lngDirection == $lngRouteDirection ? $results = $results->push($result) : '';
+                $lngDirection == $lngRouteDirection ? array_push($results, $tender->id) : '';
             }else{        
-                $latDirection == $latRouteDirection ? $results = $results->push($result) : '';
+                $latDirection == $latRouteDirection ? array_push($results, $tender->id) : '';
             }                 
         }
 

@@ -70,5 +70,6 @@
     "no_orders_info": "Momentan keine Aufträge vorhanden.",
     "no_offers_info": "Momentan keine Angebote vorhanden.",
     "find_load_on_route": "Finden Sie die Fracht auf Ihrer Strecke.",
-    "find_load_near_by": "Finden Sie die Fracht in Ihrer Nähe."
+    "find_load_near_by": "Finden Sie die Fracht in Ihrer Nähe.",
+    "find_load_by_category": "Finden Sie die Fracht nach Kategorie."
 }

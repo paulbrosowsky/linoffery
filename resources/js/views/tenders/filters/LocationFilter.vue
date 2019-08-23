@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-700 px-5 pb-5">
+    <div class="px-5 pb-5">
         <div class=" flex items-center justify-between mb-2 ml-2">
             <p class="text-white">{{$t('tender.find_load_near_by')}}</p>
             <button class="focus:outline-none" @click="removeFilter">

@@ -7,7 +7,9 @@
             label="name" 
             :placeholder="placeholder"
             :searchable="false" 
-            :allow-empty="false"
+            :allow-empty="true"
+            :multiple="multiple"
+            :taggable="multiple"
             @input="$emit('changed', selected)"
         >
              <template slot="singleLabel" slot-scope="{ option }">
@@ -23,7 +25,7 @@
     export default {
         components: { Multiselect },
 
-        props:['value', 'options', 'placeholder'],
+        props:['value', 'options', 'placeholder', 'multiple'],
 
         data(){
             return{

@@ -88,14 +88,13 @@ export let store = new Vuex.Store({
             state.categories = categories
         },
 
-        retrieveTenders(state, tenders){            
+        retrieveTenders(state, tenders){
             if(tenders.current_page === 1){
-                state.tenders = tenders.data  
-                state.page = 2                         
+                state.tenders = tenders.data 
             }else {
                 state.tenders = state.tenders.concat(tenders.data)
-                state.page ++
             } 
+            state.page = tenders.current_page + 1
             state.lastPage = tenders.last_page             
         },
 
@@ -119,8 +118,9 @@ export let store = new Vuex.Store({
             state.order = order
         },
 
-        resetPage(state){
+        resetPagination(state){
             state.page = null
+            state.lastPage = null
         },
 
         retrieveFilters(state, filters){

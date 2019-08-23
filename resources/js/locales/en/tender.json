@@ -70,5 +70,6 @@
     "no_orders_info": "Currently no orders available.",
     "no_offers_info": "Currently no offers available.",
     "find_load_on_route": "Find the load on your route.",
-    "find_load_near_by": "Find the load near by."
+    "find_load_near_by": "Find the load near by.",
+    "find_load_by_category": "Find the load by category."
 }

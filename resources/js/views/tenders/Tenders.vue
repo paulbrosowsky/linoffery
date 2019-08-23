@@ -66,8 +66,7 @@
                 this.loading = true                
                 let params = null
 
-                if(!_.isEmpty(this.filters)){                    
-                    this.$store.commit('resetPage')
+                if(!_.isEmpty(this.filters)){ 
                     params = { params: this.filters}
                 }
                
@@ -90,11 +89,6 @@
             
             // Trigger in TendersFilters @filterTenders
             Event.$on('fetchTenders', ()=> this.fetchTenders())
-           
-            // // Trigger in Maps @boxRoute
-            // Event.$on('filterByRoute', value => this.fetchTenders(value))
-            // // Trigger in LocationFilter @triggerFilter
-            // Event.$on('filterByLocation', value => this.fetchTenders(value))
         },
 
            
