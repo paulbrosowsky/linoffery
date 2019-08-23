@@ -10,7 +10,7 @@ class TenderFilters extends Filters
     /**
      * Registered Filters
     */
-    protected $filters = ['route', 'location', 'category', 'price'];
+    protected $filters = ['route', 'location', 'category', 'price', 'date', 'weight'];
 
 
     /**
@@ -79,6 +79,57 @@ class TenderFilters extends Filters
 
         return $this->builder->whereBetween('max_price', [$range->min, $range->max])
                             ->orWhereBetween('lowest_offer', [$range->min, $range->max]);
+    }
+
+    /**
+     * Filter Tenders by date range
+     * 
+     * @param string $values
+     * @return Builder
+     */
+    protected function date($values)
+    {
+        $range = json_decode($values);
+
+        $from = date_create($range->from);
+        $to = date_create($range->to);           
+
+        // Find Locations in given date range
+        $locations = Location::whereBetween('latest_date', [$from, $to])
+                            ->orWhereBetween('earliest_date', [$from, $to])
+                            ->get();
+        // Group Location by tender_id and fing Tenders with 2 Locations
+        $tenders = $locations->groupBy('tender_id')                
+                        ->filter(function($group, $key){
+                            if($group->count() == 2 ){                       
+                                return $group;
+                            }
+                        })
+                        ->map(function($value, $key){
+                            return Tender::where('id', $key)->first();
+                        })
+                        ->values(); 
+
+        $tenderIds = [];
+
+        foreach($tenders as $tender){
+            array_push($tenderIds, $tender->id);
+        }
+
+        return $this->builder->whereIn('id', $tenderIds);                            
+    }
+
+    /**
+     * Filter Tenders by weight range
+     * 
+     * @param string $values
+     * @return Builder
+     */
+    protected function weight($values)
+    {
+        $range = json_decode($values);
+
+        return $this->builder->whereBetween('weight', [$range->min, $range->max]);
     }
 
     /**

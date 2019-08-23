@@ -6,8 +6,7 @@ use Faker\Generator as Faker;
 use Carbon\Carbon;
 use App\Location;
 
-$factory->define(Location::class, function($faker){
-    $date = Carbon::now();
+$factory->define(Location::class, function($faker){    
     $faker = \Faker\Factory::create('de_DE');
 
     return [
@@ -21,8 +20,8 @@ $factory->define(Location::class, function($faker){
         'lat' => $faker->latitude($min = 47, $max = 54),
         'lng' => $faker->longitude($min = 6, $max = 15),
         'latency' => $faker->randomDigit,
-        'earliest_date' => $date,
-        'latest_date' => $date->addWeeks(1), 
+        'earliest_date' => Carbon::now(),
+        'latest_date' => Carbon::now()->addWeeks(1), 
         'loading' => $faker -> boolean()
     ];
 });

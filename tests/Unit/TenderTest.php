@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Freight;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -59,6 +60,21 @@ class TenderTest extends PassportTestCase
 
         $offer->delete();
         $this->assertEquals(200, $tender->fresh()->lowest_offer);
+    }
+
+    /** @test */
+    function it_knows_its_total_weight()
+    {
+        $tender = create('App\Tender');
+        create('App\Freight', [
+            'tender_id' => $tender->id,
+            'weight' => 100
+        ], 2);        
+        
+        $this->assertEquals(200, $tender->fresh()->weight);
+
+        Freight::first()->delete();
+        $this->assertEquals(100, $tender->fresh()->weight);
     }
     
 }

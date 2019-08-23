@@ -34,6 +34,8 @@
     "transport_type":"Transport type",
     "dimentions": "Dimentions",
     "weight": "Weight",
+    "max_weight": "max. Weight",
+    "min_weight": "min. Weight",
     "weight_kg": "Weight kg",
     "width_cm": "Width cm",
     "height_cm": "Height cm",
@@ -72,6 +74,8 @@
     "no_offers_info": "Currently no offers available.",
     "find_load_on_route": "Find the load on your route.",
     "find_load_near_by": "Find the load near by.",
-    "find_load_by_category": "Find the load by category.",
-    "find_load_by_price": "Find the load by price."
+    "find_load_by_category": "Find the load by the category.",
+    "find_load_by_price": "Find the load by the price.",
+    "find_load_by_date": "Find the load by the deadline.",
+    "find_load_by_weight": "Find the load by the weight."
 }

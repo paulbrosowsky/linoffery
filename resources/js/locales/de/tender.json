@@ -34,6 +34,8 @@
     "transport_type":"Transportart",
     "dimentions": "Abmaße",
     "weight": "Gewicht",
+    "max_weight": "max. Gewicht",
+    "min_weight": "min. Gewicht",
     "weight_kg": "Gewicht kg",
     "width_cm": "Breite cm",
     "height_cm": "Höhe cm",
@@ -73,5 +75,7 @@
     "find_load_on_route": "Finden Sie die Fracht auf Ihrer Strecke.",
     "find_load_near_by": "Finden Sie die Fracht in Ihrer Nähe.",
     "find_load_by_category": "Finden Sie die passende Kategorie.",
-    "find_load_by_price": "Finden Sie den passenden Preis."
+    "find_load_by_price": "Finden Sie den passenden Preis.",
+    "find_load_by_date": "Finden Sie den passenden Termin.",
+    "find_load_by_weight": "Finden Sie die Fracht nach dem Gewicht."
 }

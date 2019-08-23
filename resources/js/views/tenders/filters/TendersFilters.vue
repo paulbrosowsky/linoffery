@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute bg-gray-700 shadow-md z-30 w-full">
+    <div class="absolute bg-gray-700 rounded-t-lg shadow-md z-30 w-full">
         <nav class=" flex justify-between px-5 md:justify-end ">
 
             <button 

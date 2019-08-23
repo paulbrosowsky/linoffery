@@ -4,7 +4,7 @@
         <gmap></gmap>            
            
             <card 
-                classes="li-mapped-sidebar fixed bottom-0 shadow-lg overflow-hidden z-20 md:mb-3 md:ml-3 md:h-full"
+                classes="li-mapped-sidebar fixed bottom-0 shadow-lg z-20 md:mb-3 md:ml-3 md:h-full"
                 ref="drawer"
                 :style="{height: drawerHeight + 'px', width: drawerWidth + 'px'}"
             >

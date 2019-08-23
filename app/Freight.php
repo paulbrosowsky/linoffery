@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Freight extends Model
 {
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::created(function($freight){
+            $freight->tender->updateWeight();            
+        });  
+
+        static::deleted(function($freight){
+            $freight->tender->updateWeight();            
+        });  
+    }
     
     /**
      *  A Freight belongs to a Tender

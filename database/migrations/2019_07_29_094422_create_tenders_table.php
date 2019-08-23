@@ -23,6 +23,7 @@ class CreateTendersTable extends Migration
             $table->unsignedInteger('immediate_price')->nullable();
             $table->unsignedInteger('max_price')->nullable();
             $table->unsignedInteger('lowest_offer')->nullable();
+            $table->unsignedInteger('weight')->nullable();
             $table->dateTime('valid_date'); 
             $table->dateTime('published_at')->nullable();   
             $table->dateTime('completed_at')->nullable();                   

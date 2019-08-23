@@ -82,6 +82,15 @@ class Tender extends Model
         $this->update(['lowest_offer' => $price]);       
     }
 
+     /**
+    *  Update weight in DB    
+    */
+    public function updateWeight()
+    {  
+        $weight = $this->freights->sum('weight');             
+        $this->update(['weight' => $weight]);       
+    }
+
     /**
     *  Get Offers Counter
     * @return nummeric

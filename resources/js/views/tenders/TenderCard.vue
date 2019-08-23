@@ -6,13 +6,13 @@
                     src="https://cdn.vuetifyjs.com/images/cards/road.jpg" :alt="tender.user.name"> -->
                
 
-                <div class="flex-1 overflow-hidden">                    
+                <div class="flex-1 overflow-hidden" v-if="pickup && delivery">                    
                         
                     <div class="flex mb-1">
                         <i class="icon ion-md-log-in text-xl text-red-400 mr-3"></i>   
                         <div class="leading-tight">
-                            <span class="font-semibold" v-text="pickup.city"></span>
-                            <span class="text-sm text-gray-500" v-text="pickup.country"></span> 
+                            <span class="font-semibold"  v-text="pickup.city"></span>
+                            <span class="text-sm text-gray-500" v-show="pickup.country" v-text="pickup.country"></span> 
                             <p class="text-sm text-gray-700">{{new Date(pickup.latest_date) | moment("DD.MM.YYYY")}}</p>
                         </div>             
                     </div>
@@ -20,8 +20,8 @@
                     <div class="flex">
                         <i class="icon ion-md-log-out text-xl text-green-400 mr-3"></i>   
                         <div class="leading-tight">
-                            <span class="font-semibold" v-text="delivery.city"></span>
-                            <span class="text-sm text-gray-500" v-text="delivery.country"></span> 
+                            <span class="font-semibold" v-show="delivery.city" v-text="delivery.city"></span>
+                            <span class="text-sm text-gray-500" v-show="delivery.city" v-text="delivery.country"></span> 
                             <p class="text-sm text-gray-700">{{new Date(delivery.latest_date) | moment("DD.MM.YYYY")}}</p>
                         </div>             
                     </div>  

@@ -197,5 +197,45 @@ class ViewTendersTest extends PassportTestCase
         $this->assertContains($tenderWithOffer->title, $response['data'][1]);
         $this->assertContains($tenderMaxPrice->title, $response['data'][0]);        
     }
+
+     /** @test */
+    function users_can_filter_tenders_by_date()
+    {
+        create('App\Tender', [], 3);
+        $tender = create('App\Tender');
+        create('App\Location', [
+            'tender_id' => $tender->id,            
+            'earliest_date' => Carbon::now(),
+            'latest_date' => Carbon::now()->addDays(2)
+        ], 2); 
+
+        $dateRange = [ 'from'=> Carbon::now(), 'to'=>Carbon::now()->addDays(3)];
+
+        $response = $this->getJson('api/tenders?date='.json_encode($dateRange))->json();
+
+        $this->assertCount(4, Tender::all());
+        $this->assertCount(1, $response['data']);         
+        $this->assertContains($tender->title, $response['data'][0]);        
+    }
+
+     /** @test */
+    function users_can_filter_tenders_by_weight()
+    {
+        create('App\Freight', [], 4);
+        $tender= create('App\Tender');
+        create('App\Freight', [
+            'tender_id' => $tender->id,
+            'weight' => 2
+        ], 2);
+               
+
+        $weightRange = [ 'min'=>2, 'max'=>5];
+
+        $response = $this->getJson('api/tenders?weight='.json_encode($weightRange))->json();
+        
+        $this->assertCount(5, Tender::all());
+        $this->assertCount(1, $response['data']); 
+        $this->assertContains($tender->title, $response['data'][0]);           
+    }
     
 }

@@ -22,6 +22,7 @@
                     @inputFrom="updateEarliestDate" 
                     @inputTo="updateLatestDate" 
                     :errors="errors"
+                    :left="true"
                 ></date-range> 
                 
                 <checkbox 
@@ -54,13 +55,9 @@
     </div>   
     
 </template>
-<script>
-    import DateRange from '../../components/DateRange'
+<script>    
 
-    export default {
-        components:{
-            DateRange
-        },
+    export default {       
 
         props:['name', 'value'],
 
