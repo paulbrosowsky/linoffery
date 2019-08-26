@@ -21,9 +21,15 @@ class NotificationTest extends PassportTestCase
     /** @test */
     function tender_owners_recieve_notification_if_new_offer_has_been_made()
     {        
-        create(DatabaseNotification::class);
+        $tender = create('App\Tender');
 
-        $this->assertCount(1, auth()->user()->unreadNotifications);
+        $tender->addOffer([
+            'user_id' => auth()->id(),
+            'tender_id' => $tender->id,
+            'price' => 100
+        ]);
+
+        $this->assertCount(1, $tender->user->unreadNotifications);
     }
 
     /** @test */

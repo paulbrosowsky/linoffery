@@ -1,29 +1,56 @@
 <template>
     <transition name="slide-out">
-        <div 
-            class="li-flash-container flex items-center fixed bg-green-500 shadow-lg rounded-lg py-2 px-5 z-50 m-auto md:m-0 md:w-auto"
-            v-show="show"
-        >
-            <i class="icon ion-md-checkmark-circle-outline text-3xl text-white pr-5 "></i> 
-            <p class="text-white" v-text="message"></p>
+        <div v-show="show">
+             <div 
+                class="li-flash-container flex items-center bg-green-500 fixed shadow-lg rounded-lg py-2 px-5 z-50 m-auto md:m-0 md:w-auto"
+                v-show="message"
+            >            
+                <i class="icon ion-md-checkmark-circle-outline text-3xl text-white pr-5 "></i> 
+                <p class="text-white" v-text="message"></p>
+            </div>
 
-        </div>
+            <div 
+                class="li-flash-container flex items-center bg-yellow-300 fixed shadow-lg rounded-lg py-2 z-50 m-auto md:m-0 md:w-auto"
+                v-if="notification"
+            > 
+                <component :is="component" :notification="{data: notification}"></component>
+            </div>
+        </div>       
+
     </transition>
     
 </template>
 <script>
-    export default {        
+    import OfferWasCreated from '../notifications/OfferWasCreated'
+
+    export default { 
+        components:{
+            offerwascreated: OfferWasCreated
+        },
 
         data(){
             return{
+                notification:null,
                 message: null,
                 show: false
             }
         },
 
+        computed:{
+            component(){               
+                let type =  this.notification.type.match(/([a-z_A-Z]*)$/g)             
+                return type[0].toLowerCase()
+            }
+        },
+
         methods:{
-            flash(message){                
-                this.message = message
+            flash(data){  
+                if (typeof data === 'string'){
+                    this.message = data
+                }else{
+                    this.notification = data  
+                }
+
                 this.show = true
 
                 this.hide();
@@ -32,13 +59,15 @@
             hide(){
                 setTimeout(()=>{
                     this.show = false
-                }, 3000)
+                    this.message = null
+                    this.notification = null 
+                }, 5000)
             }
         },
 
         created(){
-            Event.$on('flash', message => {                
-                this.flash(message)
+            Event.$on('flash', data => {                
+                this.flash(data)
             })            
         }        
     }

@@ -1,6 +1,10 @@
 import Vue from "vue"
 window._ = require('lodash');
 
+import {router} from './routes'
+import {store} from './store'
+import App from './layouts/App'
+import i18n from './utilities/i18n'
 
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
@@ -9,7 +13,15 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '39d01605fde628f780f2',
     cluster: 'eu',
-    encrypt: true
+    encrypt: true,
+    authEndpoint: 'api/broadcasting/auth',
+    auth: {
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + store.state.token
+        }
+    },
+    
 })
 
 
@@ -48,10 +60,7 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-import {router} from './routes'
-import {store} from './store'
-import App from './layouts/App'
-import i18n from './utilities/i18n'
+
 
 Vue.component('app', App)
 Vue.component('action-bar', require('./components/ActionBar.vue').default);
@@ -82,8 +91,3 @@ const app = new Vue({
     store,
     i18n
 });
-
-window.Echo.channel('offers').listen('NewOfferCreated', e =>{
-    console.log('New Offer has been created')
-    console.log(e)
-})

@@ -33,7 +33,6 @@ class NewOfferCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('offers');
-        // return new PrivateChannel('channel-name');
+        return new PrivateChannel('offers.'. $this->offer->tender_id);
     }
 }

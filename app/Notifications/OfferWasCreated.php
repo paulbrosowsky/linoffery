@@ -33,7 +33,7 @@ class OfferWasCreated extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     // /**
@@ -57,12 +57,23 @@ class OfferWasCreated extends Notification
      * @return array
      */
     public function toArray($notifiable)
-    {
-        return [
+    {       
+        return [            
             'message' => 'hat neues Angebot',
             'price' => $this->offer->price,
             'tender_title' => $this->tender->title,
             'tender_id' => $this->tender->id,                       
         ];
     }
+
+    // /**
+    //  * Get the broadcast representation of the notification.
+    //  *
+    //  * @param  mixed  $notifiable
+    //  * @return array
+    //  */
+    // public function toBroadcast($notifiable)
+    // {
+    //     return new NewOfferCreated($this->offer->id);
+    // }
 }

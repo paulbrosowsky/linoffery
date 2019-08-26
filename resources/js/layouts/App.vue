@@ -67,14 +67,25 @@
                 if(this.loggedIn) {
                     this.$store.dispatch('fetchNotifications')
                 }
-            }
+            },            
+
         },
 
         mounted(){
             this.fetchLoggedInUser()
             this.retriveLocale() 
             this.fetchCatgories() 
-            this.fetchNotifications()                    
+            this.fetchNotifications()
+
+            setTimeout(() => {
+                window.Echo
+                    .private('App.User.' + this.$store.state.user.id)
+                    .notification((notification) =>{ 
+                        console.log(notification)
+                        flash(notification)
+                        this.$store.dispatch('fetchNotifications')
+                    })
+            }, 1000);
         }
 
     }

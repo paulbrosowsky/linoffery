@@ -144,6 +144,12 @@ class Tender extends Model
         return $filters->apply($query);
     }
 
+    /**
+     *  Add new Offer to a given tender
+     * 
+     * @param array $offer
+     * @return Offer
+     */
     public function addOffer($offer)
     {
         $offer = $this->offers()->create($offer);
@@ -153,10 +159,13 @@ class Tender extends Model
         return $offer;
     }
 
+    /**
+     *  Notify Tender owner abot new offer
+     * @param Offer
+     */
     public function notifyUser($offer)
     {
-        $this->user->notify(new OfferWasCreated($this, $offer));
-        // NewOfferCreated::dispatch($offer->id);
+        $this->user->notify(new OfferWasCreated($this, $offer));        
     }
 
 
