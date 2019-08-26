@@ -38,7 +38,7 @@ class MakeOfferTest extends PassportTestCase
         $this->makeOffer();      
         
         $this->assertCount(1, $this->tender->offers);  
-        $this->assertDatabaseHas('offers', ['price' => 100]);
+        $this->assertDatabaseHas('offers', ['price' => 100]);        
     }
 
     /** @test */

@@ -10,8 +10,8 @@
             >
                 <tenders-filters v-resize="filterNavResize" ref="filterNav"></tenders-filters>
                 
-                <perfect-scrollbar ref="content" class="h-full">                   
-                    <slot ></slot> 
+                <perfect-scrollbar ref="content" class="h-full rounded-lg">                   
+                    <slot></slot> 
                 </perfect-scrollbar>
                 
             </card>        

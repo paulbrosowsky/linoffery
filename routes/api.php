@@ -49,10 +49,13 @@ Route::group([
 
     Route::post('/settings/account/avatar', 'AvatarsController@store');
     Route::post('/settings/company/logo', 'CompanysLogosController@store');
-
     Route::patch('/settings/account', 'AccountSettingsController@update');
     Route::patch('/settings/password', 'PasswordSettingsController@update');
-    Route::patch('/settings/company', 'CompaniesController@update');  
+    Route::patch('/settings/company', 'CompaniesController@update'); 
+    
+    Route::get('/notifications', 'NotificationsController@index');
+    Route::delete('/notifications', 'NotificationsController@destroyAll');
+    Route::delete('/notifications/{notification}', 'NotificationsController@destroy');
     
     Route::group([
         'middleware' => 'is-confirmed-completed'

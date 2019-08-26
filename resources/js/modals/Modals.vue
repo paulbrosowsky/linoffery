@@ -4,6 +4,10 @@
             <login-modal></login-modal>
         </div>
 
+        <div v-if="loggedIn">
+            <notification-drawer></notification-drawer>
+        </div>
+
         <div v-if="confirmedCompleted">
             <create-tender></create-tender>
 
@@ -18,7 +22,7 @@
             </div>
         </div>
         
-        <nav-drawer-right></nav-drawer-right>
+        <nav-drawer></nav-drawer>
         <flash></flash>
     </div>
 </template>
@@ -27,7 +31,8 @@
     import Flash from '../components/Flash'
     import LoginModal from '../modals/LoginModal'
     import MakeOffer from '../modals/MakeOffer'
-    import NavDrawerRight from '../modals/NavDrawerRight' 
+    import NavDrawer from '../modals/NavDrawer'
+    import NotificationDrawer from '../modals/NotificationDrawer' 
     import OfferCancel from '../modals/OfferCancel' 
     import OfferView from '../modals/OfferView' 
     import TakeItNow from '../modals/TakeItNow' 
@@ -38,7 +43,8 @@
             Flash,
             LoginModal,
             MakeOffer,
-            NavDrawerRight,
+            NavDrawer,
+            NotificationDrawer,
             OfferCancel,
             OfferView,
             TakeItNow

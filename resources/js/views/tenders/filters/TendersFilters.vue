@@ -1,6 +1,12 @@
 <template>
     <div class="absolute bg-gray-700 rounded-t-lg shadow-md z-30 w-full">
-        <nav class=" flex justify-between px-5 md:justify-end ">
+        <nav class=" flex justify-between px-5 ">
+            <button 
+                    class="text-2xl text-gray-500 hidden hover:text-white focus:outline-none md:block"
+                    @click="$router.go(-1)"                    
+                >
+                    <i class="icon ion-md-arrow-back"></i>
+            </button>
 
             <button 
                     class="text-xl text-gray-500 hover:text-white focus:outline-none md:hidden"

@@ -61,10 +61,7 @@
                              <span class="text-sm text-grey-700"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span> -->
                     </div>
 
-                    <span class="text-xs uppercase tracking-tight font-semibold border rounded-full px-2"
-                        v-text="tender.category.name" 
-                        :style="{color: tender.category.color, borderColor: tender.category.color}"
-                    ></span>
+                    <category-tag :category="tender.category" ></category-tag>                    
                 </div>
             </div>
         </router-link>

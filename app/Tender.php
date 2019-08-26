@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Filters\TenderFilters;
+use App\Notifications\OfferWasCreated;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -141,6 +142,21 @@ class Tender extends Model
     public function scopeFilter($query, TenderFilters $filters)
     {        
         return $filters->apply($query);
+    }
+
+    public function addOffer($offer)
+    {
+        $offer = $this->offers()->create($offer);
+
+        $this->notifyUser($offer);
+
+        return $offer;
+    }
+
+    public function notifyUser($offer)
+    {
+        $this->user->notify(new OfferWasCreated($this, $offer));
+        // NewOfferCreated::dispatch($offer->id);
     }
 
 

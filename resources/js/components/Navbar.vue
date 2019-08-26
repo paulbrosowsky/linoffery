@@ -24,15 +24,28 @@
                        {{ $t('auth.login') }} 
                     </a>
                 </div>
-                
+
                 <div class="ml-3" v-show="!loggedIn">
-                    <a class="cursor-pointer" @click="$modal.show('navDrawerRight')">
-                        <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-700"></i>
+                    <a class="cursor-pointer" @click="$modal.show('nav-drawer')">
+                        <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-500"></i>
                     </a>
                 </div>
 
-                <div class="w-10 h-10 cursor-pointer shadow rounded-full overflow-hidden"
-                  @click="$modal.show('navDrawerRight')" 
+                <div class="mr-5" v-show="loggedIn">
+                    <a class="cursor-pointer" @click="$modal.show('notification-drawer')">
+                        <i class=
+                            "icon ion-md-notifications text-xl text-red-500 pt-2 hover:text-red-700" 
+                            v-if="hasNotifications"
+                        ></i>
+                        <i 
+                            class="icon ion-md-notifications-off text-xl text-gray-500 pt-2 hover:text-gray-700" 
+                            v-else
+                        ></i>
+                    </a>
+                </div>
+
+                <div class="w-10 h-10 cursor-pointer shadow-lg rounded-full overflow-hidden"
+                  @click="$modal.show('nav-drawer')" 
                   v-if="loggedIn && user"
                 >                    
                     <avatar :user="user"></avatar>
@@ -64,7 +77,12 @@
 
             user(){
                 return this.$store.state.user
-            }
+            },
+
+            hasNotifications(){
+                return this.$store.getters.hasNotifications
+            },           
+          
         },       
         
     }

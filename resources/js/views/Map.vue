@@ -2,9 +2,10 @@
     <div class="map min-h-screen w-full"></div>
 </template>
 <script>
-    import gmapsInit from '../utilities/gmaps';
-    import RouteBoxer from '../utilities/RouteBoxer';
-    import MarkerClusterer from '@google/markerclusterer';
+    import gmapsInit from '../utilities/gmaps'
+    import RouteBoxer from '../utilities/RouteBoxer'
+    import MarkerClusterer from '@google/markerclusterer'
+    import MapSyles from '../utilities/MapStyles'
 
     export default {      
         
@@ -36,7 +37,8 @@
                     this.map = new google.maps.Map(this.$el, {
                         center: {lat: 51.5, lng: 10.5},
                         zoom: 6,
-                        disableDefaultUI: true
+                        disableDefaultUI: true,
+                        styles: MapSyles
                     });
 
                     this.directionsDisplay.setMap(null)                     

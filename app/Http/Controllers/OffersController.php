@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Tender;
 use Illuminate\Http\Request;
 use App\Offer;
@@ -53,11 +54,11 @@ class OffersController extends Controller
             return response()->json(['message' => 'Your can not make offers for own tender.'], 403);
         }
         
-        $offer = Offer::create([
+        $offer = $tender->addOffer([
             'user_id' => auth()->id(),
             'tender_id' => $tender->id,
             'price' => $request->price
-        ]);
+        ]);         
         
         if($request->takeNow){
             $this->acceptOffer($offer);

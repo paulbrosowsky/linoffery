@@ -61,13 +61,20 @@
 
             fetchCatgories(){
                 this.$store.dispatch('fetchCategories')
+            },
+
+            fetchNotifications(){
+                if(this.loggedIn) {
+                    this.$store.dispatch('fetchNotifications')
+                }
             }
         },
 
         mounted(){
             this.fetchLoggedInUser()
             this.retriveLocale() 
-            this.fetchCatgories()                     
+            this.fetchCatgories() 
+            this.fetchNotifications()                    
         }
 
     }

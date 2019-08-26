@@ -7,7 +7,8 @@ export let store = new Vuex.Store({
     
     state:{
         token: localStorage.getItem('access_token') || null,
-        user: null,          
+        user: null, 
+        notifications: [],         
 
         tender: null,
         tenders: [], 
@@ -15,7 +16,7 @@ export let store = new Vuex.Store({
         categories:null,
         offers: null,
         orders: null,
-        order:null, 
+        order:null,         
 
         page: null,
         lastPage: null,
@@ -70,6 +71,10 @@ export let store = new Vuex.Store({
         noTenders(state){
             return state.page > state.lastPage
         },   
+
+        hasNotifications(state){
+            return state.notifications.length > 0
+        }
     },
 
     mutations:{
@@ -136,7 +141,11 @@ export let store = new Vuex.Store({
             _.remove(state.filterKeys, (key)=>{
                 return key === filter
             })
-        }
+        },
+
+        retrieveNotifications(state, notifications){
+            state.notifications = notifications
+        },
     },
 
     actions:{
@@ -522,10 +531,50 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response))
             })           
         },
-
         //Orders Endpoints END
 
-            
+        //Notifications Endpoints START
+        fetchNotifications(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/notifications')
+                    .then(response =>{                       
+                        context.commit('retrieveNotifications', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        readNotification(context, id){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .delete('/api/notifications/'+ id)
+                    .then(response =>{                       
+                        context.dispatch('fetchNotifications')
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        readAllNotifications(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .delete('/api/notifications')
+                    .then(response =>{                       
+                        context.dispatch('fetchNotifications')
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
       
     }
 })
