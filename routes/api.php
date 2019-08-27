@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Http\Request;
 
 /*
@@ -81,5 +82,3 @@ Route::get('/tenders', 'TendersController@index');
 Route::get('/tenders/{tender}', 'TendersController@show');
 
 Route::get('/categories', 'CategoriesController@index');
-
-// Route::get('/locations', 'LocationsController@index');

@@ -10,7 +10,8 @@
             </div>
 
             <div 
-                class="li-flash-container flex items-center bg-yellow-300 fixed shadow-lg rounded-lg py-2 z-50 m-auto md:m-0 md:w-auto"
+                class="li-flash-container flex items-center bg-yellow-300 fixed shadow-lg rounded-lg py-2 z-50 m-auto md:mt-10"
+                style="max-width: 400px"
                 v-if="notification"
             > 
                 <component :is="component" :notification="{data: notification}"></component>

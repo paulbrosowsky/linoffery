@@ -26,5 +26,7 @@
     "destination": "Destination",
     "detour": "Detour",
     "location": "Location",
-    "range": "Range" 
+    "range": "Range",
+    "notifications": "Notifications",
+    "no_notifications": "No notificatons at the time."
 }

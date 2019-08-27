@@ -14,7 +14,7 @@ class TendersController extends Controller
      *  Get all Cargos
      */
     public function index(Request $request, TenderFilters $filters)
-    {        
+    {   
         return Tender::where('published_at', '!=', NULL )
                     ->where('completed_at', '=', NULL)
                     ->latest()

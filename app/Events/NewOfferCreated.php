@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class NewOfferCreated implements ShouldBroadcast
 {
@@ -33,6 +34,10 @@ class NewOfferCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('offers.'. $this->offer->tender_id);
+        return new Channel('offers');
+    }  
+     
+    public function broadcastAs() {
+        return 'offers' ;
     }
 }

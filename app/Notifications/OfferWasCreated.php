@@ -59,21 +59,10 @@ class OfferWasCreated extends Notification
     public function toArray($notifiable)
     {       
         return [            
-            'message' => 'hat neues Angebot',
+            'message' => _('has new offer'),
             'price' => $this->offer->price,
             'tender_title' => $this->tender->title,
             'tender_id' => $this->tender->id,                       
         ];
-    }
-
-    // /**
-    //  * Get the broadcast representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return array
-    //  */
-    // public function toBroadcast($notifiable)
-    // {
-    //     return new NewOfferCreated($this->offer->id);
-    // }
+    }  
 }

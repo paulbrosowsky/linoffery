@@ -20,10 +20,10 @@
             }
         </style>
       
-        <script>
+        <script>            
             window.App = {!! json_encode([
                 'csrfToken' => csrf_token(),                
-            ]) !!};
+            ]) !!};           
         </script>       
     </head>
     <body>

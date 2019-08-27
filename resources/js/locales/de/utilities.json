@@ -26,5 +26,7 @@
     "destination": "Reiseziel",
     "detour": "Umweg",
     "location": "Standort",
-    "range": "Umkreis" 
+    "range": "Umkreis",
+    "notifications": "Benachrichtigungen",
+    "no_notifications": "Momentan keine Benachrichtigungen." 
 }

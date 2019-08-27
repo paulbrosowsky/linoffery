@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\NewOfferCreated;
 use App\Filters\TenderFilters;
 use App\Notifications\OfferWasCreated;
 use Carbon\Carbon;
@@ -165,7 +166,8 @@ class Tender extends Model
      */
     public function notifyUser($offer)
     {
-        $this->user->notify(new OfferWasCreated($this, $offer));        
+        $this->user->notify(new OfferWasCreated($this, $offer)); 
+        // event(new NewOfferCreated('hello'));           
     }
 
 

@@ -6,23 +6,32 @@ import {store} from './store'
 import App from './layouts/App'
 import i18n from './utilities/i18n'
 
-import Echo from 'laravel-echo'
-import Pusher from 'pusher-js'
-window.Pusher = Pusher
+
+
+import Echo from "laravel-echo"
+window.io = require('socket.io-client');
+// import Pusher from 'pusher-js'
+// window.Pusher = Pusher
+
 window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: '39d01605fde628f780f2',
-    cluster: 'eu',
-    encrypt: true,
-    authEndpoint: 'api/broadcasting/auth',
+    broadcaster: 'socket.io',
+    host:  'localhost:6001',  
+   
+
+    // broadcaster: 'pusher',
+    // key: '39d01605fde628f780f2',
+    // cluster: 'eu',
+    // encrypt: true,
+
+    authEndpoint: '/api/broadcasting/auth',
     auth: {
         headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + store.state.token
         }
     },
-    
-})
+});
+
 
 
 import VueModal from "vue-js-modal"

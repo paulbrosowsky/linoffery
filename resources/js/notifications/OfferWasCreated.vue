@@ -39,7 +39,7 @@
 
         methods:{
             read(){
-                if(this.notification.if){
+                if(this.notification.id){
                     this.$store
                         .dispatch('readNotification', this.notification.id)
                         .then(()=>{                        
