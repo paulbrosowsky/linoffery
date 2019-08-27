@@ -2,11 +2,12 @@
 
 namespace App;
 
-use App\Events\NewOfferCreated;
+use Carbon\Carbon;
 use App\Filters\TenderFilters;
 use App\Notifications\OfferWasCreated;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\OfferWasOutbidded;
+use App\Notifications\TenderIsCompleted;
 
 class Tender extends Model
 {
@@ -116,11 +117,17 @@ class Tender extends Model
      */
     protected function removeUnacceptedOffers()
     {   
-        $this->offers
-            ->where('accepted_at', NULL)
-            ->each(function($offer){
-                $offer->delete();
-            });        
+        $offers = $this->offers->where('accepted_at', NULL);
+        $users = collect(); 
+
+        $offers->each(function($offer) use ($users) {
+            $users = $users->push($offer->user);            
+            $offer->delete();
+        });
+        
+        $users->unique()->each(function($user){
+            $user->notify(new TenderIsCompleted($this));
+        });       
     }
 
     /**
@@ -152,22 +159,36 @@ class Tender extends Model
      * @return Offer
      */
     public function addOffer($offer)
-    {
-        $offer = $this->offers()->create($offer);
+    {   
+        $this->notifyOutbiddedUsers($offer);        
+        
+        $offer = $this->offers()->create($offer); 
 
-        $this->notifyUser($offer);
+        $this->notifyTendersOwner($offer);
 
         return $offer;
     }
 
     /**
-     *  Notify Tender owner abot new offer
+     *  Notify Tender owner about new offer
      * @param Offer
      */
-    public function notifyUser($offer)
+    protected function notifyTendersOwner($offer)
     {
-        $this->user->notify(new OfferWasCreated($this, $offer)); 
-        // event(new NewOfferCreated('hello'));           
+        $this->user->notify(new OfferWasCreated($this, $offer));                  
+    }
+
+    /**
+     *  Notify outbidded offer owners
+     * @param array
+     */
+    protected function notifyOutbiddedUsers($offer)
+    {        
+        $lowestOffer = $this->offers()->where('price', $this->offers()->min('price'))->first();
+      
+        if($lowestOffer && $lowestOffer->price > $offer['price']){
+            $lowestOffer->user->notify(new OfferWasOutbidded($this, $offer));
+        }
     }
 
 

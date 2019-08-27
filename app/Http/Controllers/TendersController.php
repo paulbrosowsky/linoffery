@@ -37,16 +37,18 @@ class TendersController extends Controller
         
         //Load with Offers if tenders owner view the tender
         if($tender->owner()){
-            return $tender->load('offers');
+            return $tender->load(['offers' => function($query){
+                $query->orderBy('price');
+            }]);
         }
-
+        // Loa
         return $tender->load(['offers' => function($query){
             $query->where('user_id', auth('api')->id())->orderBy('price');
         }]);
     }
 
     /**
-     * Store Tender in DB
+     * Store Tender in DBä
      * 
      * @param Request
      * @return Tender

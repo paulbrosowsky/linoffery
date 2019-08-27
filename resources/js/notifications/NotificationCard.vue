@@ -6,12 +6,18 @@
     </div>
 </template>
 <script>
-    import OfferWasCreated from './OfferWasCreated.vue';
+    import OfferWasCreated from './OfferWasCreated';
+    import OfferWasOutbidded from './OfferWasOutbidded'
+    import TenderIsCompleted from './TenderIsCompleted'
+    import OfferWasAccepted from './OfferWasAccepted'
 
     export default {
 
         components:{
-            offerwascreated: OfferWasCreated
+            offerwascreated: OfferWasCreated,
+            offerwasoutbidded: OfferWasOutbidded,
+            tenderiscompleted: TenderIsCompleted,
+            offerwasaccepted: OfferWasAccepted,               
         },
 
         props:['notification'],  

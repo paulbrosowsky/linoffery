@@ -116,7 +116,7 @@ class MakeOfferTest extends PassportTestCase
     }    
 
     /** @test */
-    function users_may_place_order_immedatly()
+    function users_may_place_order_immediatly()
     {
         $this->makeOffer(['takeNow' => true]);
 
@@ -126,6 +126,7 @@ class MakeOfferTest extends PassportTestCase
         
         $this->assertEquals($this->tender->id, $order->tender_id);        
         $this->assertEquals($this->tender->user_id, $order->tenderer_id);
+        $this->assertCount(2, $this->tender->user->unreadNotifications);
     }
 
     public function makeOffer($overrides = [])

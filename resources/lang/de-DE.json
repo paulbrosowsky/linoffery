@@ -31,5 +31,8 @@
     "Dangerous": "Gefahrgut",
 
     "The value is greater them tenders max. price.": "Der Wert ist höher als der max. Preis in der Ausschreibung.",
-    "has new offer": "hat neues Angebot"
+    "has new offer": "hat neues Angebot",
+    "You have been outbid": "Sie wurden überboten",
+    "Tender is completed": "Ausschreibung abgeschlossen",
+    "You have new order": "Sie haben neuen Auftrag"
 }

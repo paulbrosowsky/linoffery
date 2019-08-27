@@ -1,0 +1,52 @@
+<template>
+    <div class="flex items-center w-full px-5 cursor-pointer" @click="read">
+        <div class="w-1/5">
+            <span class="text-xl font-light leading-none " v-text="'€ '+price"></span>
+        </div>
+        <div class="w-4/5 ">
+             <div class="flex items-center justify-between">
+                <p class="tracking-tight text-sm text-gray-500" v-text="message"></p>
+                <p class="text-xs tracking-tight text-gray-500" v-if="created_at" v-text="created_at"></p>
+            </div>
+            <p class="truncate font-bold leading-tight" v-text="tender"></p>           
+        </div>
+
+    </div>
+</template>
+<script>
+    export default {
+        props:['notification'],
+
+        data(){
+            return{                
+                tenderId: this.notification.data.tender_id,
+                tender: this.notification.data.tender_title,
+                message: this.notification.data.message,
+                price: this.notification.data.price,
+            }
+        },
+
+        computed:{
+            created_at(){  
+                if (this.notification.created_at) {
+                    let locale = navigator.language || navigator.userLanguage
+                    return  this.$moment( ).locale(locale).fromNow()
+                }
+            }
+        },
+
+        methods:{
+            read(){
+                if(this.notification.id){
+                    this.$store
+                        .dispatch('readNotification', this.notification.id)
+                        .then(()=>{                        
+                            this.$modal.hide('notification-drawer')
+                        })
+                }                
+                this.$router.push({name:'tender', params:{ tender: this.tenderId}})
+            },            
+        },
+
+    }
+</script>

@@ -59,7 +59,7 @@ class OfferWasCreated extends Notification
     public function toArray($notifiable)
     {       
         return [            
-            'message' => _('has new offer'),
+            'message' => __('has new offer'),
             'price' => $this->offer->price,
             'tender_title' => $this->tender->title,
             'tender_id' => $this->tender->id,                       

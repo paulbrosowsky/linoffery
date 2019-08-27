@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Tender;
-use Illuminate\Http\Request;
 use App\Offer;
 use App\Order;
+use App\Tender;
+use Illuminate\Http\Request;
 
 class OffersController extends Controller
 {
@@ -61,7 +60,7 @@ class OffersController extends Controller
         ]);         
         
         if($request->takeNow){
-            $this->acceptOffer($offer);
+            $offer->accept();            
         }
 
         return $offer;
@@ -77,7 +76,7 @@ class OffersController extends Controller
     {
         $this->authorize('show', $offer->tender);
 
-        $order = $this->acceptOffer($offer);
+        $order = $offer->accept();
 
         return $order;
     }
@@ -94,27 +93,6 @@ class OffersController extends Controller
         }
 
         $offer->delete();
-    }
-
-    /**
-     * Update Offer As accepted and create Order
-     * 
-     * @param Offer
-     * @return Order
-     */   
-    protected function acceptOffer($offer)
-    {        
-        $offer->accept();        
-        $offer->tender->complete();             
-
-        $order= Order::create([
-            'tender_id' => $offer->tender->id,
-            'offer_id' => $offer->id,
-            'carrier_id' => $offer->user_id,
-            'tenderer_id' => $offer->tender->user_id
-        ]);       
-            
-        return $order;
-    }
+    } 
 
 }

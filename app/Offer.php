@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\OfferWasAccepted;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -55,10 +56,34 @@ class Offer extends Model
     }
 
     /**
-     *  Set an order as accepted
+     *  Set an order as accepted 
+     * 
+     * @return Order
      */
     public function accept()
-    {
+    {        
         $this->update(['accepted_at' => Carbon::now()]);
+        $this->tender->complete(); 
+
+        $order = $this->makeOrder();
+        $this->user->notify(new OfferWasAccepted($order, $this));
+        $this->tender->user->notify(new OfferWasAccepted($order, $this));
+
+        return $order;
+    }
+
+    /**
+     *  Make a new Order
+     * 
+     * @return Order
+     */
+    protected function makeOrder()
+    {
+        return Order::create([
+            'tender_id' => $this->tender->id,
+            'offer_id' => $this->id,
+            'carrier_id' => $this->user_id,
+            'tenderer_id' => $this->tender->user_id
+        ]);  
     }
 }
