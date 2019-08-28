@@ -114,6 +114,7 @@ return [
     'uploaded'             => ':attribute konnte nicht hochgeladen werden.',
     'url'                  => ':attribute muss eine URL sein.',
     'uuid'                 => ':attribute muss ein UUID sein.',
+    'vat_number'           => ':attribute ist innerhalb der EU ungültig.',
 
     /*
     |--------------------------------------------------------------------------

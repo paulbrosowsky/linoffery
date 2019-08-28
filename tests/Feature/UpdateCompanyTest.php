@@ -29,7 +29,7 @@ class UpdateCompanyTest extends PassportTestCase
 
         tap(auth()->user()->company->fresh(), function($company){
             $this->assertEquals('Firma', $company->name);
-            $this->assertEquals('DE12345', $company->vat);
+            $this->assertEquals('IE6388047V', $company->vat);
         });
     }
 
@@ -58,13 +58,24 @@ class UpdateCompanyTest extends PassportTestCase
       /** @test */
     function vat_is_unique()
     {
-        create('App\Company', ['vat' => 'DE12345' ]);
+        create('App\Company', ['vat' => 'IE6388047V' ]);
 
         $response = $this->updateCompany()->assertStatus(422);
 
         $errors = $response->json();        
         $this->assertArrayHasKey('vat', $errors['errors']);         
     }  
+
+    /** @test */
+    function vat_must_be_valide()
+    { 
+        $this->withExceptionHandling();        
+
+        $response = $this->updateCompany( ['vat' => 'DE12345678']);
+
+        $errors = $response->json();   
+        $this->assertArrayHasKey('vat', $errors['errors']);            
+    }
 
      /** @test */
     function address_is_required()
@@ -117,7 +128,7 @@ class UpdateCompanyTest extends PassportTestCase
         return $this->patchJson('/api/settings/company', array_merge([
 
             'name' => 'Firma',
-            'vat' => 'DE12345',
+            'vat' => 'IE6388047V', // Google Ireland
             'country' =>'Deutschland',
             'city' => 'Berlin',
             'postcode' => '12345', 

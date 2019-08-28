@@ -26,7 +26,7 @@ class CompaniesController extends Controller
 
         if($request->vat != $company->vat){
             $request->validate([               
-                'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies'],                
+                'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies', 'vat-number'],                
             ]);
         }
 

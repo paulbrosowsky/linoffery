@@ -56,7 +56,7 @@ class RegistrationTest extends TestCase
  
         tap(Company::first(), function($company){
             $this->assertEquals('Secret Ltd.', $company->name);            
-            $this->assertEquals('DE12345678', $company->vat);            
+            $this->assertEquals('IE6388047V', $company->vat);            
         });
     }
 
@@ -182,14 +182,23 @@ class RegistrationTest extends TestCase
     /** @test */
     function vat_is_unique()
     {
-        create(\App\Company::class, ['vat' => 'DE12345678']);
+        create(\App\Company::class, ['vat' => 'IE6388047V']);
 
         $this->withExceptionHandling();        
 
         $response = $this->registerAccount();
         
-        $response->assertSessionHasErrors('vat');
-             
+        $response->assertSessionHasErrors('vat');             
+    }
+
+    /** @test */
+    function vat_must_be_valide()
+    { 
+        $this->withExceptionHandling();        
+
+        $response = $this->registerAccount( ['vat' => 'DE12345678']);
+        
+        $response->assertSessionHasErrors('vat');             
     }
 
    /** @test */
@@ -246,7 +255,7 @@ class RegistrationTest extends TestCase
             'email' => 'john@mail.me',
             'password' =>'secret',
             'company_name' => 'Secret Ltd.',
-            'vat' => 'DE12345678'
+            'vat' => 'IE6388047V' // Google Ireland
         ],$overrides));        
     }
     
