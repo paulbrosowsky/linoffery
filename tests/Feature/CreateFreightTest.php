@@ -17,7 +17,7 @@ class CreateFreightTest extends PassportTestCase
     {
         parent::setUp();
 
-        $this->withExceptionHandling();
+        // $this->withExceptionHandling();
 
         $this->user = create('App\User');
         $this->tender = create('App\Tender', [
@@ -105,6 +105,15 @@ class CreateFreightTest extends PassportTestCase
         $errors = $response->json();
         $this->assertArrayHasKey('freights.0.weight', $errors['errors']);         
     }    
+
+    /** @test */
+    function a_user_can_fetch_all_trasport_types()
+    {
+        create('App\TransportType');
+        $response = $this->getJson('/api/transport-types')->json();
+        
+        $this->assertCount(1, $response);
+    }
     
     public function createFreight($overrides = [])
     {

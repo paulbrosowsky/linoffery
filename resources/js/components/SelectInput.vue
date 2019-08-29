@@ -6,7 +6,7 @@
             track-by="name" 
             label="name" 
             :placeholder="placeholder"
-            :searchable="false" 
+            :searchable="searchable" 
             :allow-empty="true"
             :multiple="multiple"
             :taggable="multiple"
@@ -25,7 +25,7 @@
     export default {
         components: { Multiselect },
 
-        props:['value', 'options', 'placeholder', 'multiple', 'reset'],
+        props:['value', 'options', 'placeholder', 'multiple', 'reset', 'searchable'],
 
         data(){
             return{
@@ -46,11 +46,16 @@
 
 <style>
     .multiselect__tags{
+        min-height: 50px;
         background-color: #e2e8f0;
         font-size: 1em;
         border-color: #e2e8f0;
         border-radius: 0.5rem;        
         padding: 10px 40px 0 16px;
+    }
+
+    .multiselect__input{
+        background:  #e2e8f0;
     }
 
     .multiselect__select {  

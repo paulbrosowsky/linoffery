@@ -19,7 +19,7 @@
     "We received a request for the password change on your user account.": " Wir haben eine Anfrage für die Passwortänderung an Ihrem Benutzerkonto erhalten.",
     "Do you want to change your password?": "Möchten Sie Ihr Passwort ändern?",
     "If you have not sent us anything, just ignore this email.": "Wenn Sie uns nichts gesendet haben, ignorieren Sie einfach diese E-Mail.", 
-    
+   
     "Standard": "Standard",
     "Havy load": "Schwertransport",
     "Foods": "Lebensmittel",
@@ -29,6 +29,17 @@
     "Animals": "Tiere",
     "Luquids": "Flüssigkeiten",
     "Dangerous": "Gefahrgut",
+
+    "Custom size": "Sondergröße",
+    "EURO palett": "EURO Palette",
+    "One-way palett": "Einwegpalette",
+    "INKA palett": "INKA Palette",
+    "Plastic palett": "Kunststoff-Palette",
+    "Chemical palett": "Chemie-Palette",
+    "Drum palett": "Fasspalette",
+    "BigBag palett": "BigBag Palette",
+    "Grid box": "Gitterbox",
+    "Storage Container": "Lagercontainer",
 
     "The value is greater them tenders max. price.": "Der Wert ist höher als der max. Preis in der Ausschreibung.",
     "has new offer": "hat neues Angebot",

@@ -50,11 +50,12 @@
                     class="mb-2" 
                     :options="transport"                     
                     :placeholder="$t('tender.transport_type')"
+                    :searchable="true"
                     @changed="updatePallet"
                 ></select-input>
                 
                 <div class="flex mb-2">
-                    <div class="relative flex items-center mr-2">                        
+                    <div class="relative flex items-center">                        
                         <input
                             class="input"
                             type="number"
@@ -64,18 +65,7 @@
                         >
                     </div>
 
-                                            
-                    <div class="relative flex items-center mr-2">                        
-                        <input
-                            class="input"                             
-                            type="number"
-                            :placeholder="$t('tender.height_cm')" 
-                            @blur="setFreightData"
-                            v-model="form.height"
-                        >
-                    </div>
-
-                    <div class="relative flex items-center">                        
+                    <div class="relative flex items-center mx-2">                        
                         <input
                             class="input" 
                             type="number"
@@ -83,7 +73,17 @@
                             @blur="setFreightData"
                             v-model="form.depth"
                         >
-                    </div>                   
+                    </div> 
+                                            
+                    <div class="relative flex items-center">                        
+                        <input
+                            class="input"                             
+                            type="number"
+                            :placeholder="$t('tender.height_cm')" 
+                            @blur="setFreightData"
+                            v-model="form.height"
+                        >
+                    </div>                                   
 
                 </div>
                 
@@ -121,16 +121,9 @@
                     height: this.freight.height,
                     depth: this.freight.depth,
                     weight: this.freight.weight
-                },
-               
+                },  
 
-                transport:[
-                    {name: 'EPAL'},
-                    {name: 'Gitterbox'},
-                    {name: 'Sonder'}
-                ],
-                
-                cardSmall:false  ,
+                cardSmall:false,
             }
         }, 
         
@@ -146,6 +139,10 @@
                 }
 
                 return errors;                
+            },
+
+            transport(){               
+                return this.$store.state.transportTypes
             }
         },
 
@@ -160,6 +157,9 @@
             
             updatePallet(value){
                 this.form.pallet = value.name
+                this.form.width = value.width
+                this.form.depth = value.depth
+                this.form.height = value.height
                 this.setFreightData()
             },
 

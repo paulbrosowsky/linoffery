@@ -82,3 +82,4 @@ Route::get('/tenders', 'TendersController@index');
 Route::get('/tenders/{tender}', 'TendersController@show');
 
 Route::get('/categories', 'CategoriesController@index');
+Route::get('/transport-types', 'TransportTypesController@index');

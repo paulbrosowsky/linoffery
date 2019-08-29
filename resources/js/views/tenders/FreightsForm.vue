@@ -98,12 +98,12 @@
 
             addData(data, index){
                 this.freights[index] = data            
-            },            
+            },   
         },
 
         created(){
             setTimeout(() => {
-                this.setFreights()            
+                this.setFreights()                        
             }, 500);
             
         }       

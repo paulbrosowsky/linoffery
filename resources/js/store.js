@@ -14,6 +14,7 @@ export let store = new Vuex.Store({
         tenders: [], 
         usersTenders: null, 
         categories:null,
+        transportTypes:null,
         offers: null,
         orders: null,
         order:null,         
@@ -92,6 +93,10 @@ export let store = new Vuex.Store({
         
         retrieveCategories(state, categories){
             state.categories = categories
+        },
+        
+        retrieveTransportTypes(state, data){
+            state.transportTypes = data
         },
 
         retrieveTenders(state, tenders){
@@ -314,6 +319,18 @@ export let store = new Vuex.Store({
                     .get('/api/categories')
                     .then(response =>{                       
                         context.commit('retrieveCategories', response.data)                        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        fetchTransportTypes(context){
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/transport-types')
+                    .then(response =>{                       
+                        context.commit('retrieveTransportTypes', response.data)                        
                         resolve(response)
                     })
                     .catch(errors => reject(errors.response))

@@ -59,9 +59,14 @@
                 }                
             },
 
-            fetchCatgories(){
+            fetchCategories(){
                 this.$store.dispatch('fetchCategories')
             },
+
+            fetchTransportTypes(){
+                this.$store.dispatch('fetchTransportTypes')
+            },
+
 
             fetchNotifications(){
                 if(this.loggedIn) {
@@ -74,8 +79,9 @@
         mounted(){
             this.fetchLoggedInUser()
             this.retriveLocale() 
-            this.fetchCatgories() 
+            this.fetchCategories() 
             this.fetchNotifications()
+            this.fetchTransportTypes()
 
             setTimeout(() => {
                 window.Echo.private('App.User.'+ this.$store.state.user.id)                                 
