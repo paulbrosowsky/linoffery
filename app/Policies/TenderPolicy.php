@@ -18,7 +18,7 @@ class TenderPolicy
      * @return mixed
     */
     public function update(User $user, Tender $tender)
-    {   
+    {           
         // $userId = $tender->user_id;
 
         // if (gettype($userId) == 'string') {
@@ -44,5 +44,6 @@ class TenderPolicy
         
         // If tender umpublished check for owner
         return intval($tender->user_id) === auth('api')->id();
-    }
+    }   
+
 }

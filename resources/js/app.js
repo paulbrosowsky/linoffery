@@ -78,6 +78,7 @@ Vue.component('avatar', require('./components/Avatar.vue').default);
 Vue.component('card', require('./components/Card.vue').default);
 Vue.component('category-tag', require('./components/CategoryTag.vue').default);
 Vue.component('checkbox', require('./components/Checkbox.vue').default);
+Vue.component('confirmation-buttons', require('./components/ConfirmationButtons.vue').default);
 Vue.component('date-picker', require('./components/DatePicker.vue').default);
 Vue.component('date-range', require('./components/DateRange.vue').default);
 Vue.component('default-modal', require('./modals/DefaultModal.vue').default);

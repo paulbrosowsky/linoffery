@@ -57,10 +57,7 @@
     </default-modal>    
 </template>
 <script>
-    import ConfirmationButtons from '../components/ConfirmationButtons'
-
     export default {
-        components:{ConfirmationButtons},
 
         data(){
             return{

@@ -1,6 +1,6 @@
 <template>
     <div v-if="tender">
-        <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !tender.completed_at">            
+        <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !completed">            
             <div class="pl-5 pb-3 border-b">                 
                 <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
             </div>
@@ -16,7 +16,7 @@
              
             <p 
                 class="uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 "  
-                v-if="tender.completed_at"               
+                v-if="completed"               
             >
                 <i class="icon ion-md-checkmark mr-2"></i>  
                 <span>{{$t('utilities.completed')}}</span> 
@@ -146,7 +146,32 @@
                             <span>{{$t('utilities.publish')}} </span> 
                         </button>
                 </div>
-                </div>             
+            </div>   
+
+            <div class="py-5 px-5" v-if="ownsTender && !draft && !completed" > 
+               <div v-show="!confirmation">   
+                    <button class="btn  btn-red w-full" @click="confirmation=true">
+                        <i class=" icon ion-md-close mr-2"></i>  
+                        {{$t('tender.cancel_tender')}}
+                    </button>            
+                </div>
+
+                <confirmation-buttons
+                    :text="$t('tender.cancel_tender_question')" 
+                    v-show="confirmation"
+                    @canceled="confirmation = false"
+                    @confirmed="cancelTender"
+                ></confirmation-buttons> 
+
+                <div class="flex bg-yellow-200 p-3 rounded-lg mt-5" v-show="confirmation">
+                    <i class="icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"></i>  
+                    <div class="text-sm">
+                        <span>{{$t('tender.cancel_tender_info')}}</span>
+                        <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
+                    </div>                    
+                </div>
+                                                   
+            </div>           
         
         </div>
     </div>
@@ -178,6 +203,8 @@
                editPickup: false,
                editDelivery: false,
                editFreights: false,
+
+               confirmation: false, 
            }
        },
 
@@ -216,6 +243,10 @@
 
             loggedIn(){
                 return this.$store.getters.loggedIn
+            },
+
+            completed(){
+                return this.$store.getters.tenderCompleted
             }
             
         },
@@ -228,6 +259,7 @@
                         .dispatch('publishTender', `/api${this.$route.path}/publish`)
                         .then(()=>{
                             flash( this.$i18n.t('tender.published_message'))
+                            this.$router.push({name: 'tenders'});
                         })
                         .catch(errors => console.log(errors))
                 }               
@@ -239,8 +271,16 @@
                     .then(response => {                                              
                         Event.$emit('updateMarkers', response.locations)                       
                     })               
-            },           
+            },  
             
+            cancelTender(){
+                this.$store
+                    .dispatch('cancelTender', `/api${this.$route.path}/cancel`) 
+                    .then(response => {                                              
+                        flash(this.$i18n.t('tender.cancel_tender_message'))   
+                        this.confirmation = false                  
+                    })               
+            }            
         },
 
         mounted(){            

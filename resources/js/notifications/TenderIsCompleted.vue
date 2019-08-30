@@ -13,8 +13,7 @@
         props:['notification'],
 
         data(){
-            return{                
-                
+            return{ 
                 tender: this.notification.data.tender_title,
                 message: this.notification.data.message,
                 

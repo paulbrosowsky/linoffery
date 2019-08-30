@@ -107,7 +107,7 @@ class Tender extends Model
      * Set Tender as completed
      */
     public function complete()
-    {
+    {      
         $this->update(['completed_at' => Carbon::now()]);
         $this->removeUnacceptedOffers();
     }

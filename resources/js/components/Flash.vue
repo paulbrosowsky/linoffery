@@ -25,15 +25,15 @@
     import OfferWasCreated from '../notifications/OfferWasCreated'
     import OfferWasOutbidded from '../notifications/OfferWasOutbidded'
     import TenderIsCompleted from '../notifications/TenderIsCompleted'
-    import OfferWasAccepted from '../notifications/OfferWasAccepted'
-    
+    import OfferWasAccepted from '../notifications/OfferWasAccepted'    
 
     export default { 
         components:{
             offerwascreated: OfferWasCreated,
             offerwasoutbidded: OfferWasOutbidded, 
             tenderiscompleted: TenderIsCompleted,
-            offerwasaccepted: OfferWasAccepted,                  
+            offerwasaccepted: OfferWasAccepted, 
+            tenderrunout: TenderIsCompleted                    
         },
 
         data(){

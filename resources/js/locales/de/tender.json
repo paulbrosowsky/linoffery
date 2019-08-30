@@ -42,6 +42,7 @@
     "length_cm": "Länge cm",
 
     "new_tender": "Neue Ausschreibung",
+    "cancel_tender": "Ausschreibung abbrechen",
     "category": "Kategorie",
     "more_tender_info": "Erzählen Sie mehr zur Ihrer Ausschreibung ...",
     "max_price": "max. Preis",
@@ -77,5 +78,8 @@
     "find_load_by_category": "Finden Sie die passende Kategorie.",
     "find_load_by_price": "Finden Sie den passenden Preis.",
     "find_load_by_date": "Finden Sie den passenden Termin.",
-    "find_load_by_weight": "Finden Sie die Fracht nach dem Gewicht."
+    "find_load_by_weight": "Finden Sie die Fracht nach dem Gewicht.",
+    "cancel_tender_question": "Möchten Sie Ihre Ausschreibung wirklich abbrechen?",
+    "cancel_tender_info": "Wenn Sie die Frage bestätigen, beenden Sie Ihre Ausschreibung und alle dazugehörige Angebote werden gelöscht.",
+    "cancel_tender_message": "Ihre Ausschreibung wurde beendet."
 }

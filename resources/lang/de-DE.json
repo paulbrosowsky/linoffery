@@ -45,5 +45,16 @@
     "has new offer": "hat neues Angebot",
     "You have been outbid": "Sie wurden überboten",
     "Tender is completed": "Ausschreibung abgeschlossen",
-    "You have new order": "Sie haben neuen Auftrag"
+    "You have new order": "Sie haben neuen Auftrag",
+
+    "Your Tender \"": "Ihre Ausschreibung \"",
+    "\" has run out." : "\" ist abgelaufen.",
+    "Open tender": "Ausschreibung öffnen",
+    "If you want to publish this tender again, please use a copy function right on your teders view.":
+    "Wenn Sie diese Ausschreibung erneut veröffentlichen möchten, verwenden Sie bitte eine Kopierfunktion direkt in der Ausschreibungs-Ansicht.",
+    "Your tender has run out.": "Ihre Ausschreibung ist abgelaufen."
+
+
+    
+
 }

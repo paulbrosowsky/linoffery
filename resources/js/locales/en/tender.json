@@ -42,6 +42,7 @@
     "length_cm": "Length cm",
 
     "new_tender": "New Tender",
+    "cancel_tender": "Cancel Tender",
     "category": "Category",
     "more_tender_info": "Tell us more about your tender ...",
     "max_price": "max. Price",
@@ -77,5 +78,8 @@
     "find_load_by_category": "Find the load by the category.",
     "find_load_by_price": "Find the load by the price.",
     "find_load_by_date": "Find the load by the deadline.",
-    "find_load_by_weight": "Find the load by the weight."
+    "find_load_by_weight": "Find the load by the weight.",
+    "cancel_tender_question": "Do you really want to cancel your tender?",
+    "cancel_tender_info": "If you confirm the question, you will end your tender and all related offers will be deleted.",
+    "cancel_tender_message": "Your tender is canceled."
 }

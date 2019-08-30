@@ -6,7 +6,7 @@ use App\Filters\TenderFilters;
 use Illuminate\Http\Request;
 use App\Tender;
 use App\Location;
-
+use PHPUnit\Framework\MockObject\Stub\ReturnStub;
 
 class TendersController extends Controller
 {
@@ -125,6 +125,20 @@ class TendersController extends Controller
         } 
 
         $tender->update(['published_at' => \Carbon\Carbon::now()]);
+
+        return $tender;
+    }
+
+    /**
+     * Set Tender as Completed
+     * 
+     * @param id
+     */
+    public function cancel(Tender $tender)
+    {         
+        $this->authorize('show', $tender);
+    
+        $tender->complete();
 
         return $tender;
     }
