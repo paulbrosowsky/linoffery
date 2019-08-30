@@ -60,7 +60,7 @@ class OffersController extends Controller
         ]);         
         
         if($request->takeNow){
-            $offer->accept();            
+            return $offer->accept();            
         }
 
         return $offer;

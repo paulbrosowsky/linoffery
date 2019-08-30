@@ -4,21 +4,14 @@
         <router-link class="w-full" :to="{ name: 'tender', params: { tender: tender.id }}">
             <div class="flex items-center">
 
-                <p class="text-2xl text-teal-500 leading-none md:text-3xl" v-text="'€ '+offer.price"></p>
+                <p class="text-2xl font-light leading-none" v-text="'€ '+offer.price"></p>
                 
                 <div class=" flex-1 pl-3 overflow-hidden md:pl-8">
                     <p class="truncate font-bold md:text-lg" v-text="tender.title"></p>
 
-                    <div class="flex items-center">
-                        <span class="rounded-full p-1 mr-1" :style="{background: tender.category.color}"></span>
-                        <span class="text-sm uppercase tracking-tight font-bold" v-text="tender.category.name"
-                            :style="{color: tender.category.color}"></span>
-
-                        <span class="text-sm mx-2 text-gray-500 " v-text="weight"></span>
-
-                    </div>
+                    <category-tag :category="tender.category" ></category-tag>  
                     <span class="text-sm text-gray-500 leading-none mr-1">{{$t('tender.valid_until')}}</span>
-                    <span class="text-sm leading-none"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
+                    <span class="text-teal-500 font-bold leading-none"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
 
                 </div>
             </div>

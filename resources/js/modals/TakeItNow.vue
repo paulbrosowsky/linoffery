@@ -36,7 +36,8 @@
                 <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
             </div>                    
         </div>
-
+        
+        <loading-spinner :loading="loading" :position="'absolute'"></loading-spinner> 
     </default-modal>    
 </template>
 <script>
@@ -48,7 +49,8 @@
         data(){
             return{
                 tender: null,  
-                confirmation: false,                                        
+                confirmation: false, 
+                loading: false                                         
             }            
         },
 
@@ -63,15 +65,21 @@
                 this.tender = data
             },
             acceptOffer(){
+                this.loading = true
+
                 this.$store
                     .dispatch('makeOffer', {
                         price: this.tender.immediate_price,
                         path: this.$route.path,
                         takeNow: true
                     })
-                    .then(()=>{
-                        flash(this.$i18n.t('tender.take_now_message'))
-                        this.close()
+                    .then((response)=>{  
+                        setTimeout(() => {
+                            flash(this.$i18n.t('tender.take_now_message'))
+                            this.$router.push({name:'order', params:{ order: response.data.id }})                        
+                            this.close()
+                            this.loading = false 
+                        }, 1000); 
                     })
             },
 
