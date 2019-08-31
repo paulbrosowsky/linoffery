@@ -17,7 +17,7 @@ class CreateFreightTest extends PassportTestCase
     {
         parent::setUp();
 
-        // $this->withExceptionHandling();
+        $this->withExceptionHandling();
 
         $this->user = create('App\User');
         $this->tender = create('App\Tender', [

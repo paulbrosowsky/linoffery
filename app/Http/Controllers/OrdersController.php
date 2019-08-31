@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class OrdersController extends Controller
 {
@@ -20,10 +22,35 @@ class OrdersController extends Controller
                     ->get();
     }
 
+    /**
+     *  View a give Order
+     * 
+     * @param id
+     * @return Order
+     */
     public function show(Order $order)
     {
         $this->authorize('view', $order);
 
         return $order;
+    }
+
+    /**
+     *  Download order as PDF
+     *  
+     * @param Order
+     * @return Response $file
+     */
+    public function pdf(Order $order)
+    {        
+        $this->authorize('view', $order); 
+        
+        $file= storage_path('app/public/pdf/orders/order-'.$order->id.'.pdf');
+        
+        if(!Storage::disk('public')->exists('pdf/orders/order-'.$order->id.'.pdf')){
+            $order->makePdf();
+        }  
+
+        return response()->download($file);
     }
 }

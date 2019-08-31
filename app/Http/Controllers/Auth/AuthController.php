@@ -21,9 +21,9 @@ class AuthController extends Controller
      * @return Response
      */
     public function login(Request $request)
-    {        
+    {   
         $http = new Client;  
-    
+        
         try {            
             $response = $http->post(config('services.passport.login_endpoint'), [
                 'form_params' => [

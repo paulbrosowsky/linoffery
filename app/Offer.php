@@ -79,11 +79,15 @@ class Offer extends Model
      */
     protected function makeOrder()
     {
-        return Order::create([
+        $order =  Order::create([
             'tender_id' => $this->tender->id,
             'offer_id' => $this->id,
             'carrier_id' => $this->user_id,
             'tenderer_id' => $this->tender->user_id
-        ]);  
+        ]); 
+
+        $order->makePdf();
+        
+        return $order;
     }
 }

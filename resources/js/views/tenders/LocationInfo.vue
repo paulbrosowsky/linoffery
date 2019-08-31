@@ -24,7 +24,7 @@
             <i class="icon ion-md-fitness text-2xl text-teal-400 mr-5"></i>
             <div>
                 <div>
-                    <p class="leading-none" v-text="location.loading ? $t('utilities.yes') : $t('utilities.no') "></p>
+                    <p class="leading-none" v-text="location.loading"></p>
                     <span class="text-gray-500 text-sm">{{$t('tender.loading_driver')}}</span>
                 </div>
 

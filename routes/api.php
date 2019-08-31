@@ -45,6 +45,7 @@ Route::group([
 
     Route::get('/orders', 'OrdersController@index');
     Route::get('/orders/{order}', 'OrdersController@show');
+    Route::get('/orders/{order}/pdf', 'OrdersController@pdf');
 
     Route::get('/offers', 'OffersController@index');
 

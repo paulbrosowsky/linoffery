@@ -18,7 +18,7 @@ class OrderPolicy
      * @return mixed
     */
     public function view(User $user, Order $order)
-    {         
+    {    
         return intval($order->tenderer_id) === $user->id || intval($order->carrier_id) === $user->id;    
     }
 }

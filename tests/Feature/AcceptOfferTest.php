@@ -6,6 +6,7 @@ use App\Offer;
 use App\Order;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 class AcceptOfferTest extends PassportTestCase
 {
@@ -18,12 +19,14 @@ class AcceptOfferTest extends PassportTestCase
     public function setUp():void
     {
         parent::setup();
+        
+        Storage::fake(); 
 
         $this->withExceptionHandling();
 
         $this->user = create('App\User');
         $this->tender = create('App\Tender', ['user_id' => $this->user->id]);   
-        $this->offer = create('App\Offer', ['tender_id' => $this->tender->id]);        
+        $this->offer = create('App\Offer', ['tender_id' => $this->tender->id]);   
     }
 
     /** @test */
@@ -66,6 +69,27 @@ class AcceptOfferTest extends PassportTestCase
         $this->acceptOffer();
 
         $this->assertCount(1, Offer::all());
+    }
+
+    /** @test */
+    function create_pdf_upon_new_order()
+    {           
+        create('App\Location', [
+            'type' => 'pickup',
+            'tender_id' => $this->tender->id
+        ]);
+        create('App\Location', [
+            'type' => 'delivery',
+            'tender_id' => $this->tender->id
+        ]);
+        create('App\Freight', [            
+            'tender_id' => $this->tender->id
+        ]);    
+
+        $this->signIn($this->user);
+        $order = $this->offer->accept();
+
+        Storage::disk()->assertExists('/public/pdf/orders/order-'.$order->id.'.pdf');        
     }
 
     public function acceptOffer()

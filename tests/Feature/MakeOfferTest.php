@@ -126,7 +126,7 @@ class MakeOfferTest extends PassportTestCase
         
         $this->assertEquals($this->tender->id, $order->tender_id);        
         $this->assertEquals($this->tender->user_id, $order->tenderer_id);
-        $this->assertCount(2, $this->tender->user->unreadNotifications);
+        $this->assertCount(1, $this->tender->user->unreadNotifications);
     }
 
     public function makeOffer($overrides = [])

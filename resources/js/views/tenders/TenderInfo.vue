@@ -20,12 +20,8 @@
             <div>              
                 <div class="flex items-center mb-1">                                
                     <!-- <span class="rounded-full p-1 mr-1" :style="{background: tender.category.color}"></span>                                  -->
-                    <span 
-                        class="text-sm uppercase tracking-tight border rounded-full font-bold mr-2 px-2"
-                        v-text="tender.category.name"
-                        :style="{color: tender.category.color, borderColor: tender.category.color}"
-                    ></span> 
-                    <span class="text-gray-500 text-sm mr-1">{{$t('tender.valid_until')}}</span>
+                    <category-tag :category="tender.category" ></category-tag>
+                    <span class="text-gray-500 text-sm mr-1 ml-2">{{$t('tender.valid_until')}}</span>
                     <span class="font-semibold"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>                                
                 </div> 
 

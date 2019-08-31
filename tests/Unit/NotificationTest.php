@@ -79,6 +79,17 @@ class NotificationTest extends PassportTestCase
             'carrier_id' => $offer->user_id,
             'tenderer_id' => $offer->tender->user_id
         ]);
+        create('App\Location', [
+            'type' => 'pickup',
+            'tender_id' => $order->tender->id
+        ]);
+        create('App\Location', [
+            'type' => 'delivery',
+            'tender_id' => $order->tender->id
+        ]);
+        create('App\Freight', [            
+            'tender_id' => $order->tender->id
+        ]);
 
         $offer->accept($order);
 

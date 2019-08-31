@@ -566,6 +566,22 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response))
             })           
         },
+
+        downloadOrderPdf(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios({
+                    url: path,
+                    method: 'GET',
+                    responseType: 'blob'
+                })                    
+                .then(response =>{ 
+                    resolve(response.data)
+                })
+                .catch(errors => reject(errors.response))
+            })      
+        },
         //Orders Endpoints END
 
         //Notifications Endpoints START

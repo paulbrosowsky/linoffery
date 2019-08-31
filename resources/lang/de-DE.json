@@ -1,4 +1,6 @@
 {    
+    "Yes": "Ja",
+    "No": "Nein",
     "Invalide Request. Please check your email or password." : "Ungültige Anfrage. Bitte überprüfen Sie Ihre E-Mail oder Ihr Passwort.",
     "You credentials are incorrect. Please try again." : "Ihre Zugangsdaten sind falsch. Bitte versuchen Sie es erneut.",
     "Something went wrong on the server." : "Auf dem Server ist ein Fehler aufgetreten.",
@@ -52,9 +54,33 @@
     "Open tender": "Ausschreibung öffnen",
     "If you want to publish this tender again, please use a copy function right on your teders view.":
     "Wenn Sie diese Ausschreibung erneut veröffentlichen möchten, verwenden Sie bitte eine Kopierfunktion direkt in der Ausschreibungs-Ansicht.",
-    "Your tender has run out.": "Ihre Ausschreibung ist abgelaufen."
+    "Your tender has run out.": "Ihre Ausschreibung ist abgelaufen.",
 
+    "Page {PAGE_NUM} of {PAGE_COUNT}": "Seite {PAGE_NUM} von {PAGE_COUNT}",
 
-    
-
+    "VAT Number": "Umsatzsteuer ID",
+    "Shipper": "Absender",
+    "Carrier": "Spediteur",
+    "Contact": "Ansprechpartner",
+    "Order": "Auftrag",
+    "Agreed price": "Vereinbarter Preis",
+    "Offered at": "Angeboten am",
+    "Offer ID": "Angebot ID",
+    "Category": "Kategorie",
+    "Published at": "Veröffentlicht am",
+    "Tender ID": "Ausschreibung ID",
+    "Pickup details": "Abholdetails",
+    "Delivery details": "Lieferdetails",
+    "Address": "Adresse",
+    "Earliest pickup": "Frühester Abholtermin",
+    "Latest pickup": "Spätester Abholtermin",
+    "Earliest delivery": "Frühester Liefertermin",
+    "Latest delivery": "Spätester Liefertermin",
+    "Loading by driver": "Verladung durch Fahrer",
+    "Latency": "Wartezeit",
+    "Hours": "Stunden",
+    "Freight details": "Frachtdetails",
+    "Transport type": "Transportart",
+    "Dimentions": "Abname",
+    "Weight": "Gewicht"
 }

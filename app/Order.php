@@ -2,7 +2,9 @@
 
 namespace App;
 
+use PDF;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -49,4 +51,27 @@ class Order extends Model
     {
         return $this->belongsTo(Offer::class);
     }
+
+   public function makePdf()
+   {       
+        $pickup = $this->tender->locations->where('type', 'pickup')->first();
+        $delivery = $this->tender->locations->where('type', 'delivery')->first();        
+
+        $pdf = PDF::loadView('pdf.order', [
+            'order' => $this,
+            'tender' => $this->tender,
+            'shipper' => $this->tenderer,
+            'carrier' => $this->carrier,
+            'pickup' => $pickup,
+            'delivery' => $delivery,
+            'loads' =>  $this->tender->freights,            
+        ]); 
+    
+        $dom_pdf = $pdf->getDomPDF();        
+
+        $canvas = $dom_pdf ->get_canvas(); 
+        $canvas->page_text(500, 780, __("Page {PAGE_NUM} of {PAGE_COUNT}"), null, 10, array(0, 0, 0));
+
+        Storage::put('/public/pdf/orders/order-'.$this->id.'.pdf', $pdf->output());        
+   }
 }

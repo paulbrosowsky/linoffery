@@ -55,17 +55,10 @@
                 <div class="px-5 py-3 md:px-8">  
                     <div class="px-2">   
                         
-                        <h1 class="text-2xl leading-tight" v-text="order.tender.title"></h1>                        
+                        <h1 class="text-2xl leading-tight" v-text="order.tender.title"></h1> 
 
-                        <div class="flex items-center py-1">                                
-                            <span class="rounded-full p-1 mr-1" :style="{background: order.tender.category.color}"></span>                                 
-                            <span 
-                                class="text-sm uppercase tracking-tight font-bold mr-2"
-                                v-text="order.tender.category.name"
-                                :style="{color: order.tender.category.color}"
-                            ></span>                                                 
-                        </div> 
-
+                        <category-tag :category="order.tender.category" ></category-tag>
+                        
                         <p class="leading-none mt-2">
                             <span class="text-sm text-gray-500 leading-none">{{$t('tender.tender_on')}}</span>
                             <span class="leading-none"> {{ order.tender.created_at | moment("DD.MM.YYYY") }}</span>
@@ -105,7 +98,7 @@
             <!-- Freights Info END -->
            
            <div class="flex justify-end px-3 pb-10 md:px-10">
-               <button class="btn btn-outlined mr-2">
+               <button class="btn btn-outlined mr-2" @click="downloadPdf">
                    <i class="icon ion-md-download mr-1"></i>
                    <span>PDF</span>
                </button>
@@ -157,11 +150,24 @@
             fetchOrder(){
                 this.$store
                     .dispatch('fetchOrder', `/api${this.$route.path}`) 
-                    .then(response => {
+                    .then(response => {                        
                         // Event.$emit('updateMarkers', response.data.locations)
                         // Event.$emit('zoom-map')
                     })               
-            },   
+            }, 
+            
+            downloadPdf(){
+                this.$store
+                    .dispatch('downloadOrderPdf', 'api'+this.$route.path+'/pdf')
+                    .then(response =>{                      
+                        const url = window.URL.createObjectURL(new Blob([response]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'order-'+this.order.id+'.pdf'); 
+                        document.body.appendChild(link);
+                        link.click();
+                    })
+            }
         },
 
         mounted(){
