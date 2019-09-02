@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
+    use HasCustomId;
+    
     protected $guarded = [];
 
     protected $with = ['tenderer', 'carrier', 'offer', 'tender'];

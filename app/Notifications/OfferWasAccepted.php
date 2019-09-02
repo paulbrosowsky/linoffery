@@ -52,7 +52,7 @@ class OfferWasAccepted extends Notification implements ShouldQueue
         }
 
         return (new MailMessage)
-                    ->subject('linoffery: '.__('New order'))
+                    ->subject('linoffery: '.__('New order').' '. $this->order->custom_id)
                     ->greeting(__('Hello ').$notifiable->name.',')
                     ->line( __('You have a new order'))
                     ->action(__('Open order'), $url)

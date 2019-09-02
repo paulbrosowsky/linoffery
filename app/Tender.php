@@ -11,11 +11,13 @@ use App\Notifications\TenderIsCompleted;
 
 class Tender extends Model
 {
+    use HasCustomId;
+
     protected $guarded = [];
 
     protected $with = [ 'user', 'locations', 'freights', 'category'];
 
-    protected $appends = ['offersCount', 'isActive'];
+    protected $appends = ['offersCount', 'isActive']; 
 
     /**
      * A Tender belong to user

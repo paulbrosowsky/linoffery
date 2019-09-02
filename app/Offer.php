@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {  
+    use HasCustomId;
+
     protected $guarded = [];
 
     protected $with = ['user']; 

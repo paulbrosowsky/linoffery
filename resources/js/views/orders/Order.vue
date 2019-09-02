@@ -23,7 +23,7 @@
                 <div class="px-3 py-8 md:px-8">  
                     <div class="mb-5">
                         <span class="text-2xl text-gray-500 leading-tight mr-2">{{$t('tender.order')}}</span>  
-                        <span class="text-2xl font-bold leading-tight">1234-1234567</span>  
+                        <span class="text-2xl font-bold leading-tight">{{order.custom_id}}</span>  
                     </div>
                                     
                     
@@ -42,7 +42,7 @@
 
                             <p>
                                 <span class="text-sm text-gray-500">{{$t('tender.offer_id')}}</span>
-                                <span class="">1234-1234567</span>
+                                <span class="">{{order.offer.custom_id}}</span>
                             </p>
                         </div>
                        
@@ -64,7 +64,7 @@
                             <span class="leading-none"> {{ order.tender.created_at | moment("DD.MM.YYYY") }}</span>
                         </p>
                         <span class="text-sm text-gray-500">{{$t('tender.tender_id')}}</span>
-                        <span class="">1234-1234567</span>
+                        <span class="">{{order.tender.custom_id}}</span>
                        
                         <p class="text-sm py-3" v-text="order.tender.description"> </p> 
                     </div>                    

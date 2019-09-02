@@ -17,6 +17,7 @@ class CreateTendersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('category_id');
+            $table->string('custom_id')->nullable();
             $table->string('title_image')->nullable();
             $table->string('title');
             $table->text('description')->nullable();

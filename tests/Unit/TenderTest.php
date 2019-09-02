@@ -76,5 +76,13 @@ class TenderTest extends PassportTestCase
         Freight::first()->delete();
         $this->assertEquals(100, $tender->fresh()->weight);
     }
+
+    /** @test */
+    function it_creats_own_unique_custom_id()
+    {
+        $tender = create('App\Tender');        
+        
+        $this->assertNotEmpty($tender->fresh()->custom_id);        
+    }
     
 }

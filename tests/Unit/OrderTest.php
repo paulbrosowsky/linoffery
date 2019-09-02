@@ -42,6 +42,13 @@ class OrderTest extends PassportTestCase
         $this->assertInstanceOf('App\Offer', $this->order->offer);
     }
    
+      /** @test */
+    function it_creats_own_unique_custom_id()
+    {
+        $order = create('App\Order');       
+        
+        $this->assertNotEmpty($order->fresh()->custom_id);        
+    }
 
     
 }

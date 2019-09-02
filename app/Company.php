@@ -8,7 +8,7 @@ use Illuminate\Support\HtmlString;
 
 class Company extends Model
 {
-    use HasAvatar;
+    use HasAvatar, HasCustomId;
 
     protected $guarded = [];
 

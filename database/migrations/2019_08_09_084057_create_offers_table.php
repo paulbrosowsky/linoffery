@@ -17,6 +17,7 @@ class CreateOffersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('tender_id');
+            $table->string('custom_id')->nullable();
             $table->unsignedInteger('price');            
             $table->string('accepted_at')->nullable();
             $table->timestamps();

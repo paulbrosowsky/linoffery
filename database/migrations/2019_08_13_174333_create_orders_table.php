@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('offer_id');
             $table->unsignedInteger('carrier_id');
             $table->unsignedInteger('tenderer_id');
+            $table->string('custom_id')->nullable();
             $table->dateTime('completed_at')->nullable();
             $table->timestamps();
         });

@@ -139,7 +139,7 @@
         </table>
         <hr>
 
-        <h2 style="margin:0;">{{__('Order')}} 12345-12345</h2>
+        <h2 style="margin:0;">{{__('Order').' '. $order->custom_id}}</h2>
 
         <table>
             <tr>
@@ -154,7 +154,7 @@
             </tr>
             <tr>
                 <td>{{__('Offer ID')}}</td>
-                <td>OF1234567890</td>
+                <td>{{$order->offer->custom_id}}</td>
             </tr>
         </table>
         <hr>
@@ -170,7 +170,7 @@
             </tr>
             <tr>
                 <td>{{__('Tender ID')}}</td>
-                <td>OF1234567890</td>
+                <td>{{$tender->custom_id}}</td>
             </tr>
         </table>
 
