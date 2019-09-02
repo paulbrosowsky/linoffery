@@ -45,19 +45,31 @@
 
     "The value is greater them tenders max. price.": "Der Wert ist höher als der max. Preis in der Ausschreibung.",
     "has new offer": "hat neues Angebot",
+    "New order": "Neues Auftrag",
     "You have been outbid": "Sie wurden überboten",
     "Tender is completed": "Ausschreibung abgeschlossen",
-    "You have new order": "Sie haben neuen Auftrag",
+    "You have a new order": "Sie haben neuen Auftrag",
 
     "Your Tender \"": "Ihre Ausschreibung \"",
     "\" has run out." : "\" ist abgelaufen.",
-    "Open tender": "Ausschreibung öffnen",
+    "Open tender": "Zur Ausschreibung",
+
     "If you want to publish this tender again, please use a copy function right on your teders view.":
     "Wenn Sie diese Ausschreibung erneut veröffentlichen möchten, verwenden Sie bitte eine Kopierfunktion direkt in der Ausschreibungs-Ansicht.",
+
     "Your tender has run out.": "Ihre Ausschreibung ist abgelaufen.",
+    "Open order": "Zum Auftrag",
+
+    "Attached you will find the overview and the contact details as PDF.": 
+    "Im Anhang finden Sie die Übersicht und die Kontaktdaten als PDF.",
+
+    "In the further course, the forwarding company will contact you to clarify the details." :  
+    "Im weiteren Verlauf wird das Speditionsunternehmen mit Ihnen den Kontakt aufnehmen, um die Details abzuklären.",
+
+    "Please contact the shipper to clarify further details." : "Bitte kontaktieren Sie den Absender, um weitere Details zu klären.",
+
 
     "Page {PAGE_NUM} of {PAGE_COUNT}": "Seite {PAGE_NUM} von {PAGE_COUNT}",
-
     "VAT Number": "Umsatzsteuer ID",
     "Shipper": "Absender",
     "Carrier": "Spediteur",
@@ -82,5 +94,5 @@
     "Freight details": "Frachtdetails",
     "Transport type": "Transportart",
     "Dimentions": "Abname",
-    "Weight": "Gewicht"
+    "Weight": "Gewicht"    
 }

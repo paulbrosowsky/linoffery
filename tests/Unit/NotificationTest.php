@@ -3,9 +3,11 @@
 
 namespace Tests\Unit ;
 
+use App\Notifications\OfferWasAccepted;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Notification;
 
 class NotificationTest extends PassportTestCase
 {
@@ -68,8 +70,8 @@ class NotificationTest extends PassportTestCase
     }
 
     /** @test */
-    function offerers_recieve_notifications_if_thier_offer_have_been_accepted()
-    {        
+    function order_participants_recieve_notifications_if_offer_have_been_accepted()
+    {   
         $offer = create('App\Offer', [
             'user_id' => auth()->id(),          
         ]);
@@ -91,9 +93,42 @@ class NotificationTest extends PassportTestCase
             'tender_id' => $order->tender->id
         ]);
 
-        $offer->accept($order);
+        $offer->accept($order);       
+        
+        $this->assertCount(1, $order->tenderer->unreadNotifications);
+        $this->assertCount(1, $order->carrier->unreadNotifications);       
+    }
 
-        $this->assertCount(1, auth()->user()->unreadNotifications);
+    /** @test */
+    function order_participants_recieve_emails_if_offer_have_been_accepted()
+    {
+        Notification::fake();
+
+        $offer = create('App\Offer', [
+            'user_id' => auth()->id(),          
+        ]);
+        $order = create('App\Order', [
+            'tender_id' => $offer->tender->id,
+            'offer_id' => $offer->id,
+            'carrier_id' => $offer->user_id,
+            'tenderer_id' => $offer->tender->user_id
+        ]);
+        create('App\Location', [
+            'type' => 'pickup',
+            'tender_id' => $order->tender->id
+        ]);
+        create('App\Location', [
+            'type' => 'delivery',
+            'tender_id' => $order->tender->id
+        ]);
+        create('App\Freight', [            
+            'tender_id' => $order->tender->id
+        ]);
+
+        $offer->accept($order);  
+
+        Notification::assertSentTo($order->tenderer, OfferWasAccepted::class);
+        Notification::assertSentTo($order->carrier, OfferWasAccepted::class);
     }
 
     /** @test */

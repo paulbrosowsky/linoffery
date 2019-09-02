@@ -66,6 +66,7 @@ class Offer extends Model
         $this->tender->complete(); 
 
         $order = $this->makeOrder();
+        
         $this->user->notify(new OfferWasAccepted($order, $this));
         $this->tender->user->notify(new OfferWasAccepted($order, $this));
 

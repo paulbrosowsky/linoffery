@@ -20,7 +20,7 @@ class OfferWasAccepted extends Notification implements ShouldQueue
      * @return void
      */
     public function __construct($order, $offer)
-    {        
+    {           
         $this->order = $order;
         $this->offer = $offer;
     }
@@ -33,22 +33,33 @@ class OfferWasAccepted extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database', 'broadcast'];
+        return ['mail', 'database', 'broadcast'];
     }
 
-    // /**
-    //  * Get the mail representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return \Illuminate\Notifications\Messages\MailMessage
-    //  */
-    // public function toMail($notifiable)
-    // {
-    //     return (new MailMessage)
-    //                 ->line('The introduction to the notification.')
-    //                 ->action('Notification Action', url('/'))
-    //                 ->line('Thank you for using our application!');
-    // }
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {          
+        $message = __('In the further course, the forwarding company will contact you to clarify the details.');    
+        $url = config('app.url').'/orders/'.$this->order->id;
+        
+        if($notifiable->id === $this->order->carrier->id){
+            $message = __('Please contact the shipper to clarify further details.');
+        }
+
+        return (new MailMessage)
+                    ->subject('linoffery: '.__('New order'))
+                    ->greeting(__('Hello ').$notifiable->name.',')
+                    ->line( __('You have a new order'))
+                    ->action(__('Open order'), $url)
+                    ->line(__('Attached you will find the overview and the contact details as PDF.'))
+                    ->line( $message )
+                    ->attach(storage_path('app/public/pdf/orders/order-'.$this->order->id.'.pdf'));
+    }
 
     /**
      * Get the array representation of the notification.
@@ -57,9 +68,9 @@ class OfferWasAccepted extends Notification implements ShouldQueue
      * @return array
      */
     public function toArray($notifiable)
-    {
+    {  
         return [            
-            'message' => __('You have new order'),
+            'message' => __('You have a new order'),
             'price' => $this->offer->price,
             'tender_title' => $this->offer->tender->title,
             'order_id' => $this->order->id,                       

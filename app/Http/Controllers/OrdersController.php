@@ -35,6 +35,22 @@ class OrdersController extends Controller
         return $order;
     }
 
+
+    /**
+     *  Set a given order as completed
+     * 
+     * @param Order id
+     * @return Order
+     */
+    public function update(Order $order)
+    {   
+        $this->authorize('update', $order); 
+        
+        $order->update([ 'completed_at' => now() ]);
+
+        return $order;
+    }
+
     /**
      *  Download order as PDF
      *  

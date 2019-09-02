@@ -46,6 +46,7 @@ Route::group([
     Route::get('/orders', 'OrdersController@index');
     Route::get('/orders/{order}', 'OrdersController@show');
     Route::get('/orders/{order}/pdf', 'OrdersController@pdf');
+    Route::patch('/orders/{order}/update', 'OrdersController@update');
 
     Route::get('/offers', 'OffersController@index');
 

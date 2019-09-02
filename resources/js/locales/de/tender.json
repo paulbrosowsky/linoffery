@@ -81,5 +81,6 @@
     "find_load_by_weight": "Finden Sie die Fracht nach dem Gewicht.",
     "cancel_tender_question": "Möchten Sie Ihre Ausschreibung wirklich abbrechen?",
     "cancel_tender_info": "Wenn Sie die Frage bestätigen, beenden Sie Ihre Ausschreibung und alle dazugehörige Angebote werden gelöscht.",
-    "cancel_tender_message": "Ihre Ausschreibung wurde beendet."
+    "cancel_tender_message": "Ihre Ausschreibung wurde beendet.",
+    "complete_order_message": "Ihr Auftrag wurde als abgeschlossen markiert."
 }

@@ -42,10 +42,13 @@ class TenderRunOut extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     { 
+        $url =  config('app.url').'/tenders/'.$this->tender->id;
+
         return (new MailMessage)
-                    ->greeting(__('Hello ').$this->tender->user->name. ',')
+                    ->subject('linoffery: '.__('Your tender has run out.'))
+                    ->greeting(__('Hello ').$notifiable->name. ',')
                     ->line(__('Your tender "'). $this->tender->title .__('" has run out.'))
-                    ->action(__('Open tender'), config('app.url').'/tenders/'.$this->tender->id)
+                    ->action(__('Open tender'), $url)
                     ->line(__('If you want to publish this tender again, please use a copy function right on your teders view.'));
     }
 

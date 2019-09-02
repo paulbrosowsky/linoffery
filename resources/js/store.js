@@ -79,6 +79,10 @@ export let store = new Vuex.Store({
 
         tenderCompleted(state){
             return state.tender.completed_at != null
+        },
+
+        orderCompleted(state){
+            return state.order.completed_at != null
         }
     },
 
@@ -559,6 +563,20 @@ export let store = new Vuex.Store({
             return new Promise((resolve, reject)=>{
                 axios
                     .get(path)
+                    .then(response =>{                       
+                        context.commit('retrieveOrder', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        completeOrder(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch(path)
                     .then(response =>{                       
                         context.commit('retrieveOrder', response.data)
                         resolve(response)

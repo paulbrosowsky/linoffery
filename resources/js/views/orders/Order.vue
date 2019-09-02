@@ -103,7 +103,7 @@
                    <span>PDF</span>
                </button>
 
-                <button class="btn btn-teal" v-if="isTenderer">
+                <button class="btn btn-teal" v-if="isTenderer && !completed" @click="completeOrder">
                    <i class="icon ion-md-checkmark mr-1"></i>
                    <span>{{$t('utilities.completed')}}</span>
                </button>
@@ -143,6 +143,10 @@
                 if(user){
                     return  user.id === this.order.tenderer_id
                 } 
+            },
+
+            completed(){
+                return this.$store.getters.orderCompleted
             }
         },
 
@@ -158,7 +162,7 @@
             
             downloadPdf(){
                 this.$store
-                    .dispatch('downloadOrderPdf', 'api'+this.$route.path+'/pdf')
+                    .dispatch('downloadOrderPdf', '/api'+this.$route.path+'/pdf')
                     .then(response =>{                      
                         const url = window.URL.createObjectURL(new Blob([response]));
                         const link = document.createElement('a');
@@ -166,6 +170,14 @@
                         link.setAttribute('download', 'order-'+this.order.id+'.pdf'); 
                         document.body.appendChild(link);
                         link.click();
+                    })
+            },
+
+            completeOrder(){
+                this.$store
+                    .dispatch('completeOrder', '/api'+this.$route.path+'/update')
+                    .then(response =>{                      
+                        flash(this.$i18n.t('tender.complete_order_message'))  
                     })
             }
         },
