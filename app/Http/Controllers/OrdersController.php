@@ -60,10 +60,12 @@ class OrdersController extends Controller
     public function pdf(Order $order)
     {        
         $this->authorize('view', $order); 
+
+        // $file = Storage::disk('public')->url('/pdf/orders/'.$order->custom_id.'.pdf');
         
-        $file= storage_path('app/public/pdf/orders/order-'.$order->id.'.pdf');
+        $file= storage_path('app/public/pdf/orders/'.$order->custom_id.'.pdf');
         
-        if(!Storage::disk('public')->exists('pdf/orders/order-'.$order->id.'.pdf')){
+        if(!Storage::disk('public')->exists('pdf/orders/'.$order->custom_id.'.pdf')){
             $order->makePdf();
         }  
 

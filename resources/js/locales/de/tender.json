@@ -82,5 +82,7 @@
     "cancel_tender_question": "Möchten Sie Ihre Ausschreibung wirklich abbrechen?",
     "cancel_tender_info": "Wenn Sie die Frage bestätigen, beenden Sie Ihre Ausschreibung und alle dazugehörige Angebote werden gelöscht.",
     "cancel_tender_message": "Ihre Ausschreibung wurde beendet.",
-    "complete_order_message": "Ihr Auftrag wurde als abgeschlossen markiert."
+    "complete_order_message": "Ihr Auftrag wurde als abgeschlossen markiert.",
+    "clone_tender": "Eine Kopie als Entwurf erstellen",
+    "clone_tender_info": "Sie können zusätlich eine Kopie erstellen. Die aktuelle Ausschreibung wird gelöscht und eine Kopie als Entwurf gespeichert."
 }

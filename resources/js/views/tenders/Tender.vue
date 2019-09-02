@@ -156,6 +156,15 @@
                     </button>            
                 </div>
 
+                <div v-show="confirmation">                     
+                    <checkbox 
+                        :value="withClone" 
+                        :text="$t('tender.clone_tender')"
+                        @toggled="toggle"                        
+                    ></checkbox> 
+                    <p class="text-sm pl-10 -mt-5 mb-5">{{$t('tender.clone_tender_info')}}</p>
+                </div>                
+
                 <confirmation-buttons
                     :text="$t('tender.cancel_tender_question')" 
                     v-show="confirmation"
@@ -205,6 +214,7 @@
                editFreights: false,
 
                confirmation: false, 
+               withClone: false
            }
        },
 
@@ -252,6 +262,9 @@
         },
 
         methods:{
+            toggle(){
+                this.withClone = !this.withClone
+            },
 
             publishTender(){
                 if(this.dataComplete) {
@@ -275,9 +288,16 @@
             
             cancelTender(){
                 this.$store
-                    .dispatch('cancelTender', `/api${this.$route.path}/cancel`) 
+                    .dispatch('cancelTender', {
+                        path: `/api${this.$route.path}/cancel`,
+                        withClone: this.withClone
+                    }) 
                     .then(response => {                                              
-                        flash(this.$i18n.t('tender.cancel_tender_message'))   
+                        flash(this.$i18n.t('tender.cancel_tender_message')) 
+                        if(this.withClone){
+                            this.$router.push({name: 'tender', params:{ tender: response.id }})
+                            this.withClone = false
+                        }  
                         this.confirmation = false                  
                     })               
             }            

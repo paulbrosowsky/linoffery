@@ -58,7 +58,7 @@ class OfferWasAccepted extends Notification implements ShouldQueue
                     ->action(__('Open order'), $url)
                     ->line(__('Attached you will find the overview and the contact details as PDF.'))
                     ->line( $message )
-                    ->attach(storage_path('app/public/pdf/orders/order-'.$this->order->id.'.pdf'));
+                    ->attach(storage_path('app/public/pdf/orders/'.$this->order->custom_id.'.pdf'));
     }
 
     /**

@@ -24,7 +24,7 @@ class DownloadOrderPdfTest extends PassportTestCase
     /** @test */
     function participans_may_download_orders_pdf()
     {
-        Storage::fake(); 
+        // Storage::fake(); 
 
         $order = create('App\Order');
         create('App\Location', [

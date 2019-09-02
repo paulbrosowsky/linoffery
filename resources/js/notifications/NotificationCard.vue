@@ -9,7 +9,8 @@
     import OfferWasCreated from './OfferWasCreated';
     import OfferWasOutbidded from './OfferWasOutbidded'
     import TenderIsCompleted from './TenderIsCompleted'
-    import OfferWasAccepted from './OfferWasAccepted'    
+    import TenderWasCloned from './TenderWasCloned'
+    import OfferWasAccepted from './OfferWasAccepted' 
 
     export default {
 
@@ -18,7 +19,8 @@
             offerwasoutbidded: OfferWasOutbidded,
             tenderiscompleted: TenderIsCompleted,
             offerwasaccepted: OfferWasAccepted, 
-            tenderrunout: TenderIsCompleted              
+            tenderrunout: TenderIsCompleted,
+            tenderwascloned: TenderWasCloned
         },
 
         props:['notification'],  

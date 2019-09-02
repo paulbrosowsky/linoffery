@@ -432,14 +432,14 @@ export let store = new Vuex.Store({
             })           
         },
 
-        cancelTender(context, path){
+        cancelTender(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
             return new Promise((resolve, reject)=>{
                 axios
-                    .patch(path)
+                    .patch(data.path, { withClone: data.withClone})
                     .then(response =>{
-                        resolve(response)
+                        resolve(response.data)
                         context.commit('retrieveTender', response.data)
                     })
                     .catch(errors => reject(errors.response.data.errors))

@@ -82,5 +82,7 @@
     "cancel_tender_question": "Do you really want to cancel your tender?",
     "cancel_tender_info": "If you confirm the question, you will end your tender and all related offers will be deleted.",
     "cancel_tender_message": "Your tender is canceled.",
-    "complete_order_message": "Your order is marked as completed."
+    "complete_order_message": "Your order is marked as completed.",
+    "clone_tender": "Make a copy as a draft.",
+    "clone_tender_info": "You can also create a copy. The current invitation to tender is deleted and a copy is saved as a draft."
 }

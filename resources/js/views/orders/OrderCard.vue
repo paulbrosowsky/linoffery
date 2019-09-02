@@ -5,9 +5,9 @@
             <div class="mb-6">
                 <div class="w-full flex items-center">
                     <span><i class="icon ion-md-flame text-red-400 pr-3" v-show="isCarrier"></i></span>
-                    <span class="truncate leading-tight text-lg font-bold md:text-xl" v-text="tender.title"></span> 
-                </div>               
-
+                    <span class="truncate leading-tight text-lg font-bold md:text-xl" v-text="tender.title"></span>
+                </div> 
+                                
                 <div  v-show="!isCarrier">
                     <span class="text-xs text-gray-500 uppercase">Spedeteur</span>
                     <span class="leading-tight  truncate" v-text="company.name"></span>

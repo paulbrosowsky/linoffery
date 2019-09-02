@@ -134,12 +134,16 @@ class TendersController extends Controller
      * 
      * @param id
      */
-    public function cancel(Tender $tender)
+    public function cancel(Tender $tender, Request $request)
     {         
         $this->authorize('show', $tender);
+
+        if($request->withClone){
+            return $tender->complete($request->withClone);
+        }
     
         $tender->complete();
 
         return $tender;
-    }
+    }    
 }

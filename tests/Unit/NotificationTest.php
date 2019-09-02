@@ -132,6 +132,21 @@ class NotificationTest extends PassportTestCase
     }
 
     /** @test */
+    function offers_recieve_notification_if_tender_was_cloned()
+    {
+        $tender = create('App\Tender');
+        create('App\Offer', [
+            'user_id' => auth()->id(),
+            'tender_id' => $tender->id,
+        ]);
+
+        $withClone = true;
+        $tender->complete($withClone);
+                 
+        $this->assertCount(2, auth()->user()->unreadNotifications);
+    }
+
+    /** @test */
     function a_user_can_clear_specific_notifications()
     {
         create(DatabaseNotification::class);     

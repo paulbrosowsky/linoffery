@@ -74,6 +74,6 @@ class Order extends Model
         $canvas = $dom_pdf ->get_canvas(); 
         $canvas->page_text(500, 780, __("Page {PAGE_NUM} of {PAGE_COUNT}"), null, 10, array(0, 0, 0));
 
-        Storage::put('/public/pdf/orders/order-'.$this->id.'.pdf', $pdf->output());        
+        Storage::disk('public')->put('pdf/orders/'.$this->custom_id.'.pdf', $pdf->output());        
    }
 }

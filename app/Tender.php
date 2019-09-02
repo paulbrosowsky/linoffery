@@ -8,6 +8,7 @@ use App\Notifications\OfferWasCreated;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\OfferWasOutbidded;
 use App\Notifications\TenderIsCompleted;
+use App\Notifications\TenderWasCloned;
 
 class Tender extends Model
 {
@@ -103,34 +104,7 @@ class Tender extends Model
     public function getOffersCountAttribute()
     {
         return $this->offers()->count();
-    }
-
-    /**
-     * Set Tender as completed
-     */
-    public function complete()
-    {      
-        $this->update(['completed_at' => Carbon::now()]);
-        $this->removeUnacceptedOffers();
-    }
-    
-    /**
-     * Delete all unaccepted offers
-     */
-    protected function removeUnacceptedOffers()
-    {   
-        $offers = $this->offers->where('accepted_at', NULL);
-        $users = collect(); 
-
-        $offers->each(function($offer) use ($users) {
-            $users = $users->push($offer->user);            
-            $offer->delete();
-        });
-        
-        $users->unique()->each(function($user){
-            $user->notify(new TenderIsCompleted($this));
-        });       
-    }
+    }    
 
     /**
      *  Check if Tender still Active
@@ -191,6 +165,76 @@ class Tender extends Model
         if($lowestOffer && $lowestOffer->price > $offer['price']){
             $lowestOffer->user->notify(new OfferWasOutbidded($this, $offer));
         }
+    }
+
+    /**
+     * Set Tender as completed
+     */
+    public function complete($withClone = null)
+    {      
+        $this->update(['completed_at' => Carbon::now()]);
+
+        $offerers = $this->removeUnacceptedOffers();
+
+        if($withClone){
+            return $this->cloneTender($offerers);
+        }
+    }
+    
+    /**
+     * Delete all unaccepted offers
+     */
+    protected function removeUnacceptedOffers()
+    {   
+        $offers = $this->offers->where('accepted_at', NULL);
+        $users = collect(); 
+
+        $offers->each(function($offer) use ($users) {
+            $users = $users->push($offer->user);            
+            $offer->delete();
+        });
+        
+        $users->unique()->each(function($user){
+            $user->notify(new TenderIsCompleted($this));
+        }); 
+        
+        return $users;
+    }
+
+    /**
+     * Clone Tender and Delete Original
+     * 
+     * @param Collection $offers
+     * @return Tender
+     */
+    protected function cloneTender($offerers)
+    {    
+        $clone = $this->replicate(['published_at', 'completed_at', 'lowest_offer']); 
+        $clone->save();
+        
+        // Clone all locations from original and attach it to the tender clone
+        foreach ($this->locations as $location) {
+            $location->update(['tender_id' => $clone->id]);
+        }
+        // Clone all freights from original and attach it to the tender clone
+        foreach ($this->freights as $freight) {            
+            $freight->update(['tender_id' => $clone->id]);
+        }  
+        //Delete orginal
+        $this->delete();
+
+        //Notify all offerers
+        $later = now()->addHours(1);
+        foreach ($offerers as $offerer) {
+            if(env('APP_ENV') === 'testing'){
+                $offerer->notify((new TenderWasCloned($clone)));
+            }else{
+                $offerer->notify((new TenderWasCloned($clone))->delay($later));
+            }
+            
+        }        
+
+        return $clone;                         
     }
 
 
