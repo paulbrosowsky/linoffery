@@ -146,4 +146,19 @@ class TendersController extends Controller
 
         return $tender;
     }    
+
+    public function destroy(Tender $tender)
+    {
+        $this->authorize('destroy', $tender);
+
+        $tender->locations()->each(function($location){
+            $location->forceDelete();
+        }); 
+
+        $tender->freights()->each(function($freight){
+            $freight->forceDelete();
+        }); 
+
+        $tender->forceDelete();  
+    }
 }

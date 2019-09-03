@@ -12,7 +12,7 @@ class Order extends Model
     
     protected $guarded = [];
 
-    protected $with = ['tenderer', 'carrier', 'offer', 'tender'];
+    protected $with = ['tenderer', 'carrier', 'offer'];
 
      /**
      * A Order belong to a tenderer

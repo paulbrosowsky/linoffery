@@ -2,7 +2,7 @@
     
         <div 
             class="px-5 pb-5"  
-        >            
+        >           
             
             <!-- <div 
                 class="w-full p-0 bg-black overflow-hidden shadow-md rounded-lg"
@@ -18,8 +18,7 @@
 
            
             <div>              
-                <div class="flex items-center mb-1">                                
-                    <!-- <span class="rounded-full p-1 mr-1" :style="{background: tender.category.color}"></span>                                  -->
+                <div class="flex items-center mb-1">
                     <category-tag :category="tender.category" ></category-tag>
                     <span class="text-gray-500 text-sm mr-1 ml-2">{{$t('tender.valid_until')}}</span>
                     <span class="font-semibold"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>                                

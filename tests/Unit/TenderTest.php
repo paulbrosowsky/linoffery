@@ -43,6 +43,13 @@ class TenderTest extends PassportTestCase
 		$this->assertInstanceOf('App\Category', $this->tender->category);		
     }   
 
+     /** @test */
+    function it_has_one_order()
+    {
+        create('App\Order', ['tender_id'=> $this->tender->id]);        
+        $this->assertInstanceOf('App\Order', $this->tender->order);
+    }
+
     /** @test */
     function it_knows_the_lowest_offer()
     {

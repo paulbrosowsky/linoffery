@@ -8,6 +8,7 @@
 
     "order": "Order",    
     "my_orders": "My Orders", 
+    "open_order": "open order",  
 
     "my_tenders": "My Tenders",  
     "tender_id": "Tender ID", 
@@ -43,6 +44,7 @@
 
     "new_tender": "New Tender",
     "cancel_tender": "Cancel Tender",
+    "delete_tender": "Delete Tender",
     "category": "Category",
     "more_tender_info": "Tell us more about your tender ...",
     "max_price": "max. Price",
@@ -84,5 +86,7 @@
     "cancel_tender_message": "Your tender is canceled.",
     "complete_order_message": "Your order is marked as completed.",
     "clone_tender": "Make a copy as a draft.",
-    "clone_tender_info": "You can also create a copy. The current invitation to tender is deleted and a copy is saved as a draft."
+    "clone_tender_info": "You can also create a copy. The current invitation to tender is deleted and a copy is saved as a draft.",
+    "delete_tender_question": "Do you really want to delete your tender?",
+    "delete_tender_message": "Your tender is deleted."
 }

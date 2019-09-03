@@ -65,17 +65,20 @@ Route::group([
     ], function(){
 
         Route::post('/tenders/store', 'TendersController@store');
-        Route::post('/locations/store', 'LocationsController@store');
-        Route::post('/freights/store', 'FreightsController@store');
+        
 
         Route::patch('/tenders/{tender}/update', 'TendersController@update');
         Route::patch('/tenders/{tender}/publish', 'TendersController@publish');
         Route::patch('/tenders/{tender}/cancel', 'TendersController@cancel');
-       
-        Route::patch('/locations/{location}/update', 'LocationsController@update');
-        Route::patch('/freights/{freight}/update', 'FreightsController@update');
-
         Route::post('/tenders/{tender}/offers/store', 'OffersController@store');
+        Route::delete('/tenders/{tender}/destroy', 'TendersController@destroy');
+
+        Route::post('/locations/store', 'LocationsController@store');       
+        Route::patch('/locations/{location}/update', 'LocationsController@update');
+
+        Route::post('/freights/store', 'FreightsController@store');
+        Route::patch('/freights/{freight}/update', 'FreightsController@update');
+       
         Route::delete('/offers/{offer}/destroy', 'OffersController@destroy');
         Route::patch('/offers/{offer}/update', 'OffersController@update');
     }); 

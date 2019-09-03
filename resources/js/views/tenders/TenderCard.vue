@@ -3,12 +3,13 @@
         <router-link class="w-full" :to="{ name: 'tender', params: { tender: tender.id }}">
            
             <div class="w-full flex mb-2 overflow-hidden" v-show="inDashboard">
-                <div class="w-3/4">
-                    <p class="truncate text-lg font-bold md:text-xl" v-text="tender.title"></p>
+                <div class="flex items-center w-3/4">
+                    <span v-if="tender.orderId"><i class="text-lg text-gray-500 text icon ion-md-list-box pr-2"></i></span>
+                    <span class="flex-1 truncate text-lg font-bold md:text-xl" v-text="tender.title"></span>
                 </div>
                 
-                <div class="w-1/4 text-right">
-                     <p class="font-bold text-teal-500 ml-2">
+                <div class="w-1/4 text-right" v-if="!completed">
+                     <p class="font-bold text-sm text-teal-500 ml-2">
                         {{ tender.valid_date | moment("DD.MM.YYYY") }}                       
                     </p>
                 </div>
@@ -112,6 +113,10 @@
 
             inDashboard(){
                 return this.$route.name === 'dashboard_tenders'
+            },
+
+            completed(){
+                return this.tender.completed_at != null
             }
 
         }

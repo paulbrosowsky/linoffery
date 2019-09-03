@@ -19,6 +19,7 @@ class OrdersController extends Controller
     {
         return Order::where('tenderer_id', auth()->id())
                     ->orWhere('carrier_id', auth()->id())
+                    ->with('tender')
                     ->get();
     }
 
@@ -32,7 +33,7 @@ class OrdersController extends Controller
     {
         $this->authorize('view', $order);
 
-        return $order;
+        return $order->load('tender');
     }
 
 

@@ -14,13 +14,18 @@
 
         <div class="py-5">  
              
-            <p 
-                class="uppercase text-red-500 font-bold tracking-tighter px-5 pb-5 "  
-                v-if="completed"               
-            >
-                <i class="icon ion-md-checkmark mr-2"></i>  
-                <span>{{$t('utilities.completed')}}</span> 
-            </p>
+            <div class="flex justify-between px-5 pb-5" v-if="completed">
+                <p class="uppercase text-red-500 font-bold tracking-tighter" >
+                    <i class="icon ion-md-checkmark mr-2"></i>  
+                    <span>{{$t('utilities.completed')}}</span> 
+                </p>
+
+                <router-link class="text-sm text-gray-500 hover:text-teal-500" :to="{name: 'order', params:{ order: tender.order.id }}" v-if="tender.order">
+                    <i class="icon ion-md-list-box mr-1"></i>  
+                    <span>{{$t('tender.open_order')}}</span> 
+                </router-link>
+            </div>
+          
 
             <p 
                 class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 " 
@@ -141,11 +146,11 @@
                             <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
                         </div>                    
                     </div>
-                <div class="flex justify-end">
-                        <button class="btn btn-teal" @click="publishTender">                     
-                            <span>{{$t('utilities.publish')}} </span> 
-                        </button>
-                </div>
+                
+                <button class="btn btn-teal w-full" @click="publishTender">                     
+                    <span>{{$t('utilities.publish')}} </span> 
+                </button>
+                
             </div>   
 
             <div class="py-5 px-5" v-if="ownsTender && !draft && !completed" > 
@@ -180,7 +185,24 @@
                     </div>                    
                 </div>
                                                    
-            </div>           
+            </div>  
+
+            <div class="py-2 px-5" v-if="ownsTender && (completed || draft) && !tender.orderId">
+                <div v-show="!confirmation">   
+                    <button class="btn  btn-red w-full" @click="confirmation=true">
+                        <i class=" icon ion-md-close mr-2"></i>  
+                        {{$t('tender.delete_tender')}}
+                    </button>            
+                </div>
+
+                <confirmation-buttons
+                    :text="$t('tender.delete_tender_question')" 
+                    v-show="confirmation"
+                    @canceled="confirmation = false"
+                    @confirmed="deleteTender"
+                ></confirmation-buttons> 
+
+            </div>        
         
         </div>
     </div>
@@ -295,12 +317,25 @@
                     .then(response => {                                              
                         flash(this.$i18n.t('tender.cancel_tender_message')) 
                         if(this.withClone){
-                            this.$router.push({name: 'tender', params:{ tender: response.id }})
+                            this.$router.push({name: 'dashboard_tenders', hash: '#drafts'})
                             this.withClone = false
-                        }  
+                        }else{
+                            this.$router.push({name: 'dashboard_tenders'}) 
+                        } 
+                        this.confirmation = false                  
+                    })               
+            } ,
+
+            deleteTender(){
+                this.$store
+                    .dispatch('deleteTender', `/api${this.$route.path}/destroy`)                 
+                    .then(response => {                                              
+                        flash(this.$i18n.t('tender.delete_tender_message'))                         
+                        this.$router.push({name: 'dashboard_tenders'})                        
                         this.confirmation = false                  
                     })               
             }            
+
         },
 
         mounted(){            

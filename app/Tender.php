@@ -18,7 +18,7 @@ class Tender extends Model
 
     protected $with = [ 'user', 'locations', 'freights', 'category'];
 
-    protected $appends = ['offersCount', 'isActive']; 
+    protected $appends = ['offersCount', 'isActive', 'orderId']; 
 
     /**
      * A Tender belong to user
@@ -78,6 +78,17 @@ class Tender extends Model
         return intval($this->user_id) === auth('api')->id();
     }
 
+     /**
+     * A Offer has one order
+     * 
+     * @return hasOne
+     */
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+    
+
     /**
     *  Update lowest offer in DB    
     */
@@ -115,6 +126,17 @@ class Tender extends Model
     {
         return isset($this->published_at) && !isset($this->completed_at) ;
     }
+
+    /**
+     *  Check if Tender still Active
+     * 
+     * @return boolean
+    */
+    public function getOrderIdAttribute()
+    {
+        return $this->order ? $this->order->id : NULL;
+    }
+
 
     /**
      * Apply all relevant Tender filters.

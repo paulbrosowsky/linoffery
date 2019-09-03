@@ -44,6 +44,23 @@ class TenderPolicy
         
         // If tender umpublished check for owner
         return intval($tender->user_id) === auth('api')->id();
-    }   
+    } 
+    
+     /**
+     * Determine wethet the user can destroy the tender
+     * 
+     * @param \App\User $user
+     * @param \App\Tender $tender
+     * @return mixed
+    */
+    public function destroy(User $user, Tender $tender)
+    {  
+        $owns = intval($tender->user_id) === $user->id;
+        $completed =  $tender->completed_at != NULL;
+        $noOrder = $tender->order === NULL ; 
+        $draft = $tender->published_at === NULL;       
+
+        return $owns && ($completed || $draft) && $noOrder;    
+    }
 
 }
