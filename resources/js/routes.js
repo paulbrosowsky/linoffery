@@ -12,6 +12,8 @@ import Logout from './views/auth/Logout'
 import Order from './views/orders/Order'
 import Orders from './views/orders/Orders'
 import OrdersSidebar from './views/orders/OrdersSidebar'
+import Profile from "./views/profiles/Profile"
+import ProfileSidebar from "./views/profiles/ProfileSidebar"
 import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Settings from './views/settings/Settings'
@@ -198,6 +200,19 @@ let routes = [
             layout: 'dashboard',          
             requiresAuth: true,
         },      
+    },
+
+    {
+        name:'profile',
+        path:'/profiles/:profile',
+        components:{
+            default:Profile,
+            sidebar: ProfileSidebar   
+        },
+        meta:{            
+            layout: 'dashboard',          
+            requiresAuth: true,
+        },                 
     },
    
 ]

@@ -78,6 +78,7 @@ Vue.component('avatar', require('./components/Avatar.vue').default);
 Vue.component('card', require('./components/Card.vue').default);
 Vue.component('category-tag', require('./components/CategoryTag.vue').default);
 Vue.component('checkbox', require('./components/Checkbox.vue').default);
+Vue.component('company-info', require('./components/CompanyInfo.vue').default);
 Vue.component('confirmation-buttons', require('./components/ConfirmationButtons.vue').default);
 Vue.component('date-picker', require('./components/DatePicker.vue').default);
 Vue.component('date-range', require('./components/DateRange.vue').default);
@@ -90,6 +91,7 @@ Vue.component('password-input', require('./components/PasswordInput.vue').defaul
 Vue.component('loading-spinner', require('./components/Spinner.vue').default);
 Vue.component('select-input', require('./components/SelectInput.vue').default);
 Vue.component('sidebar-nav', require('./components/SidebarNav.vue').default);
+Vue.component('star-rating', require('vue-star-rating').default);
 Vue.component('tab', require('./components/Tab.vue').default);
 Vue.component('tabs', require('./components/Tabs.vue').default);
 Vue.component('textarea-input', require('./components/TextareaInput.vue').default);

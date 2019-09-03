@@ -14,7 +14,9 @@
     "tender_id": "Tender ID", 
     "tender_on": "Tender on",  
     "consignor": "Shipper",  
-    "carrier": "Carrier",      
+    "carrier": "Carrier", 
+    "shipments": "Shipments",
+    "tenders": "Tenders",      
 
     "valid_until": "valid until",
     "m_offer": "offer",

@@ -6,20 +6,10 @@
         @data="setData"
     >
         <p class="mb-2 text-gray-500 text-xs tracking-tight uppercase">{{$t('tender.offerer')}}</p>
-        <div class="flex items-center">
-            <img class="w-12 h-12 rounded-full shadow-md" :src="company.avatar" alt="">
-
-            <div class="ml-2 overflow-hidden">
-                <p class="font-bold leading-none truncate" v-text="company.name"></p>
-                <span class="text-xs text-gray-600">20 Liferungen |</span>
-                <span class="text-xs text-gray-600">10 Aussreibungen</span>
-                <div class=" -mt-1">
-                    <i class="icon ion-md-star text-base text-orange-500 leading-none mr-1" v-for="index in 5"
-                        :key="index"></i>
-                    <span class="">4.8</span>
-                </div>
-            </div>
-        </div>
+        
+        <router-link :to="{name: 'profile', params:{ profile: company.id}}" @click.native="close()">
+            <company-info :company="company"></company-info> 
+        </router-link>
 
         <div class="flex flex-col items-center py-8" v-if="offer">
             <div class="mb-3">

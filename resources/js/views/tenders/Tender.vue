@@ -116,21 +116,13 @@
 
                 <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
             </div>
-
-             <div class="w-full flex items-center p-5">
-                    <img class="w-12 h-12 rounded-full shadow-md" :src="tender.user.company.avatar" alt="">
-
-                    <div class="ml-3">
-                        <p class="font-bold leading-none" v-text="tender.user.company.name"></p>
-                        <span class="text-xs text-gray-600">20 Liferungen |</span>
-                        <span class="text-xs text-gray-600">10 Aussreibungen</span>
-                        <div class=" -my-1">
-                            <i class="icon ion-md-star text-base text-orange-500 leading-none mr-1" v-for="index in 5" :key="index"></i>
-                            <span class="font-bold">4.8</span>
-                        </div>  
-                    </div>
-                    
-                </div>
+            
+            <div  class="px-5 pb-5">
+                <router-link :to="{name: 'profile', params:{ profile: tender.user.company.id}}">
+                    <company-info :company="tender.user.company"></company-info> 
+                </router-link>
+            </div>
+            
 
             <div class="py-5 px-5" v-if="!ownsTender && loggedIn" > 
                 <button class="w-full btn btn-teal" @click="$modal.show('make-offer')">

@@ -28,5 +28,10 @@
     "location": "Standort",
     "range": "Umkreis",
     "notifications": "Benachrichtigungen",
-    "no_notifications": "Momentan keine Benachrichtigungen." 
+    "no_notifications": "Momentan keine Benachrichtigungen.",
+    "ratings": "Bewertungen",
+    "new_rating": "Neue Bewertung",
+    "save_rating": "Bewertung speichern",
+    "create_rating_message": "Ihre Bewertung wurde gespeichert.",
+    "delete_rating_message": "Ihre Bewertung wurde gelöscht."
 }

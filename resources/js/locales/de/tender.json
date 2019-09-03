@@ -14,7 +14,9 @@
     "tender_id": "Ausschreibung ID", 
     "tender_on": "Ausschreibung vom",     
     "consignor": "Absender",  
-    "carrier": "Spediteur", 
+    "carrier": "Spediteur",
+    "shipments": "Lieferungen",
+    "tenders": "Ausschreibungen", 
 
     "valid_until": "gültig bis",
     "m_offer": "mitbieten", 

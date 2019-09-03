@@ -6,6 +6,7 @@
 
         <div v-if="loggedIn">
             <notification-drawer></notification-drawer>
+            <create-comment></create-comment>
         </div>
 
         <div v-if="confirmedCompleted">
@@ -27,18 +28,20 @@
     </div>
 </template>
 <script>
-    import CreateTender from '../modals/CreateTender'
+    import CreateComment from './CreateComment'
+    import CreateTender from './CreateTender'
     import Flash from '../components/Flash'
-    import LoginModal from '../modals/LoginModal'
-    import MakeOffer from '../modals/MakeOffer'
-    import NavDrawer from '../modals/NavDrawer'
-    import NotificationDrawer from '../modals/NotificationDrawer' 
-    import OfferCancel from '../modals/OfferCancel' 
-    import OfferView from '../modals/OfferView' 
-    import TakeItNow from '../modals/TakeItNow' 
+    import LoginModal from './LoginModal'
+    import MakeOffer from './MakeOffer'
+    import NavDrawer from './NavDrawer'
+    import NotificationDrawer from './NotificationDrawer' 
+    import OfferCancel from './OfferCancel' 
+    import OfferView from './OfferView' 
+    import TakeItNow from './TakeItNow' 
 
     export default {
         components:{
+            CreateComment,
             CreateTender,
             Flash,
             LoginModal,

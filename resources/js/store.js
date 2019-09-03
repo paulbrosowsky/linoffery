@@ -7,7 +7,7 @@ export let store = new Vuex.Store({
     
     state:{
         token: localStorage.getItem('access_token') || null,
-        user: null, 
+        user: null,         
         notifications: [],         
 
         tender: null,
@@ -17,7 +17,8 @@ export let store = new Vuex.Store({
         transportTypes:null,
         offers: null,
         orders: null,
-        order:null,         
+        order:null,
+        company: null,         
 
         page: null,
         lastPage: null,
@@ -38,7 +39,7 @@ export let store = new Vuex.Store({
             return state.user ? state.user.company.completed : false
         },
 
-        company(state){
+        usersCompany(state){
             return  state.user ? state.user.company : ''
         },       
 
@@ -82,7 +83,12 @@ export let store = new Vuex.Store({
         },
 
         orderCompleted(state){
-            return state.order.completed_at != null
+            return state.order ? state.order.completed_at != null : null
+        },
+
+        isCompanyMember(state){
+            let init = state.company && state.user
+            return init ? state.company.id === state.user.company.id : null
         }
     },
 
@@ -97,7 +103,11 @@ export let store = new Vuex.Store({
 
         retrieveUser(state, user){
             state.user = user
-        },   
+        },  
+        
+        retrieveCompany(state, company){
+            state.company = company
+        },
         
         retrieveCategories(state, categories){
             state.categories = categories
@@ -657,6 +667,51 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response))
             })           
         },
+        //Notifications Endpoints END
+        
+        // Profile endpoints START
+        fetchCompany(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get(path)
+                    .then(response =>{                       
+                        context.commit('retrieveCompany', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+        
+        createComment(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .post(data.path, data.data)
+                    .then(response =>{  
+                        resolve(response)
+                    })
+                    .catch(errors =>{
+                        reject(errors.response.data.errors)
+                    })
+            })           
+        },
+
+        deleteComment(context, path){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .delete(path)
+                    .then(response =>{
+                        resolve(response.data)                        
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })           
+        },
+        
       
     }
 })

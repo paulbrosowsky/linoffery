@@ -80,7 +80,7 @@ class TenderSeeder extends Seeder
             ]);
         });
 
-        return $this;;
+        return $this;
     }
 
     public function content()

@@ -34,15 +34,31 @@
             <i class="icon ion-md-list-box text-2xl"></i> 
         </router-link>
 
-        <router-link class="text-gray-600 py-3 px-5 hover:text-white"  active-class="text-teal-400" :to="{name:'settings'}">
+        <router-link 
+            class="text-gray-600 py-3 px-5 hover:text-white"  
+            active-class="text-teal-400" 
+            :to="{name:'settings'}"
+        >
             <i class="icon ion-md-settings text-2xl"></i> 
-        </router-link>        
+        </router-link>  
+
+        <router-link             
+            class="text-gray-600 py-3 px-5 hover:text-white"  
+            active-class="text-teal-400" 
+            :to="{name: 'profile', params:{ profile: company.id }}"
+        >
+            <i class="icon ion-md-business text-2xl"></i> 
+        </router-link>         
 
     </div>    
 </template>
 <script>
     export default {      
-        
+        computed:{
+            company(){
+                return this.$store.getters.usersCompany
+            }, 
+        }
     }
 </script>
 <style>
@@ -59,5 +75,4 @@
     }  
 
 </style>
-li-dashboard-nav
 

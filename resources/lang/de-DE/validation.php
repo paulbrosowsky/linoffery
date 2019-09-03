@@ -190,6 +190,7 @@ return [
         'freights.*.weight'     => 'Gewicht',
         'freights.*.pallet'     => 'Transportart',
         'freights.*.title'      => 'Bezeichnung',
-        'price'                 => 'Preis'
+        'price'                 => 'Preis',
+        'rating'                => 'Bewertung'
     ],
 ];

@@ -1,5 +1,7 @@
 <?php
 
+use App\Comment;
+use App\Company;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -14,7 +16,7 @@ class UsersSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
 
-        $this->users();
+        $this->users()->addComments();
 
         Schema::enableForeignKeyConstraints();
     }
@@ -57,6 +59,18 @@ class UsersSeeder extends Seeder
                     'avatar' => $user['avatar']
                 ]
             );
-        });        
-    }   
+        });  
+        
+        return $this;      
+    }
+    
+    public function addComments()
+    {
+        Comment::truncate();
+
+        Company::all()->each(function($company){
+            factory(Comment::class, 20)->state('from-existing-data')->create(['company_id' => $company->id]);
+        });
+        
+    }
 }

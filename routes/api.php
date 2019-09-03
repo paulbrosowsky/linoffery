@@ -59,6 +59,11 @@ Route::group([
     Route::get('/notifications', 'NotificationsController@index');
     Route::delete('/notifications', 'NotificationsController@destroyAll');
     Route::delete('/notifications/{notification}', 'NotificationsController@destroy');
+
+    Route::get('/profiles/{company}', 'ProfilesController@show');
+    Route::post('/profiles/{company}/comment', 'CommentsController@store');
+
+    Route::delete('/comments/{comment}/destroy', 'CommentsController@destroy');
     
     Route::group([
         'middleware' => 'is-confirmed-completed'

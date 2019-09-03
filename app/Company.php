@@ -12,7 +12,37 @@ class Company extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['completed'];
+    protected $appends = ['completed', 'rating'];
+
+     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at'              
+    ];
+
+    /**
+     *  A company has many comments
+     * 
+     * @return hasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
+
+    /**
+     *  Company has one user
+     * 
+     * @return hasOne
+     */
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 
     /**
      * Get the right logo path
@@ -28,7 +58,7 @@ class Company extends Model
         }
         
         return '/storage/build/images/default_logo.svg';    
-    }
+    }  
 
     /**
      *  Check if company has a full address
@@ -38,5 +68,44 @@ class Company extends Model
     public function getCompletedAttribute()
     {        
         return !empty($this->address && $this->postcode && $this->city && $this->country);
+    }
+
+    /**
+     *  Get Shipment count of the company
+     * 
+     * @return integer
+     */
+    public function getShipmentCountAttribute()
+    {
+        return Order::where('carrier_id', $this->user->id)->count();        
+    }
+
+    /**
+     *  Get active tender count 
+     * 
+     * @return integer
+     */
+    public function getTenderCountAttribute()
+    {        
+        return $this->user->tenders()->where('published_at', '!=', NULL)->count();                   
+    }
+
+     /**
+     *  Get average rating 
+     * 
+     * @return integer
+     */
+    public function getRatingAttribute()
+    {    
+        if(isset($this->comments)){
+            $ratingSum = 0;
+            $commentsCount = $this->comments()->count();
+
+            foreach ($this->comments as $comment) {
+                $ratingSum = $ratingSum + $comment->rating;
+            }  
+
+            return  $commentsCount > 0 ? $ratingSum / $commentsCount : null;
+        }         
     }
 }

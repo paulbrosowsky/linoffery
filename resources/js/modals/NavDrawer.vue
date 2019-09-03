@@ -56,6 +56,13 @@
                     :to="{name: 'settings'}"
                 >
                     <p @click="hide">{{ $t('content.settings') }}</p>                     
+                </router-link>  
+
+                <router-link                    
+                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    :to="{name: 'profile', params:{ profile: company.id }}"
+                >
+                    <p @click="hide">{{ $t('content.profile') }}</p>                     
                 </router-link>              
 
             </div>
@@ -97,8 +104,10 @@
 </template>
 <script>
     export default {
-        computed:{
-            
+        computed:{ 
+            company(){
+                return this.$store.getters.usersCompany
+            },          
 
             loggedIn(){
                 return this.$store.getters.loggedIn

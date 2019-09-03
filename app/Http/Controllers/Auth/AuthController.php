@@ -103,7 +103,7 @@ class AuthController extends Controller
      */
     public function user()
     {       
-        return response()->json(request()->user());
+        return response()->json(request()->user()->load('company'));
     }
 
 }

@@ -3,31 +3,13 @@
         class="flex items-center justify-between cursor-pointer border-b py-3 px-3 md:px-5 hover:bg-gray-200"
         @click="$modal.show('offer-view', offer)"
     >
-        
-        <div class="flex items-center w-2/3">
-            <img class="w-10 h-10 rounded-full shadow-md" :src="company.avatar" alt="">
-
-            <div class="ml-2 overflow-hidden">
-                <p class="font-bold leading-tight truncate" v-text="company.name"></p>
-                 
-                <div class=" -my-1">
-                    <i 
-                        class="icon ion-md-star text-base text-orange-500 leading-none mr-1" 
-                        v-for="index in 5"
-                        :key="index"
-                    ></i>
-                     <span class="">4.8</span>                     
-                </div>
-
+        <div class="w-3/4">   
+            <company-info :company="company">
                 <p class="text-xs text-gray-600">{{ created_at }}</p>
-
-            </div>
+            </company-info>  
         </div>
-
-        <div class="flex flex-col">
-            <p class="text-2xl font-light  -my-2" v-text="'€ '+ offer.price"></p> 
-            
-        </div>
+        
+        <p class="text-2xl font-light  -my-2" v-text="'€ '+ offer.price"></p> 
     </div>
 </template>
 <script>

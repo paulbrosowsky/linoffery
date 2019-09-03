@@ -28,5 +28,10 @@
     "location": "Location",
     "range": "Range",
     "notifications": "Notifications",
-    "no_notifications": "No notificatons at the time."
+    "no_notifications": "No notificatons at the time.",
+    "ratings": "Ratings",
+    "new_rating": "New Rating",
+    "save_rating": "Save Rating",
+    "create_rating_message": "Your rating is saved.",
+    "delete_rating_message": "Your rating is deleted."
 }

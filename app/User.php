@@ -65,6 +65,16 @@ class User extends Authenticatable
     }
 
     /**
+     * A user has many tenders
+     * 
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tenders()
+    {
+        return $this->hasMany(Tender::class);
+    }
+
+    /**
      *  Generate new Token to confirm users email.
      * 
      * @param string
