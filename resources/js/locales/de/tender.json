@@ -7,6 +7,7 @@
     "offer_id": "Angebot ID",
 
     "order": "Auftrag", 
+    "order_id": "Auftrag ID",
     "my_orders": "Meine Aufträge", 
     "open_order": "zum Auftrag",  
     

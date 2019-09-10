@@ -68,7 +68,7 @@ class AuthController extends Controller
         $company = Company::create([
             'name' => $request->company_name,
             'vat' => $request->vat
-        ]);
+        ]);       
        
         $user =  User::create([
             'company_id' => $company->id,
@@ -76,7 +76,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'confirmation_token' => User::makeToken($request->email)
-        ]);        
+        ]);  
 
         Mail::to($user)->send(new ConfirmYourEmail($user));
 

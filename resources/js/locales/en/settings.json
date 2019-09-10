@@ -33,5 +33,20 @@
     "image_uploaded_message": "Your uploded your image successfully.",
 
     "please_complete_company_address": "Please complete the companys address.",
-    "complete_company_address_info": "You can only use our service as a business customer. That's why we need complete information about your company."
+    "complete_company_address_info": "You can only use our service as a business customer. That's why we need complete information about your company.",
+    
+    "credit_card": "Credit Card",
+    "use_your_credit_card": "Use your credit card for convenient payment.",
+    "card_store_info_1": "For legal reasons, we may not manage your card information, but use the secure payment service - ",
+    "card_store_info_2": "Your card information never directly touches our servers. We require your consent that we may share your informations.",
+    "agree_with_payment": "I agree with the terms of payment.",
+    "agree_with_payment_question": "Do you agree with the terms of payment?",
+    "update_card": "Update Card",
+    "update_card_message": "You credit card informations are updated",
+    "accounting": "Accounting",
+    "subtotal": "Subtotal",
+    "accounting_info": "This table is only an overview of the expected payments. The final amounts to be paid can be found in the invoice at the end of the month.",
+    "invoices": "Invoices",
+    "invoice_id": "Invoice ID"    
+
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Stripe\Stripe;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,9 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {       
+    {    
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
         // Enabled Pagination on Collection
         if (!Collection::hasMacro('paginate')) {
             Collection::macro('paginate', 
@@ -37,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
                     $this->forPage($page, $perPage), $this->count(), $perPage, $page, $options))
                     ->withPath('');
             });
-        }
+        } 
 
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex flex-col md:flex-row items-center md:justify-between  bg-blue-400 rounded-lg text-white shadow-md px-5 py-3 mb-10">
+    <div class="w-full flex flex-col md:flex-row items-center md:justify-between  bg-blue-400 rounded-lg text-white shadow-md px-5 py-3 mb-5">
         <div class="flex items-center md:w-2/3">
             <i class="hidden icon ion-md-mail-open text-3xl text-white pr-8 pl-3 lg:block"></i> 
             <div>

@@ -6,7 +6,8 @@
     "active_offers": "Active offers",
     "offer_id": "Offer ID",
 
-    "order": "Order",    
+    "order": "Order", 
+    "order_id": "Order ID",   
     "my_orders": "My Orders", 
     "open_order": "open order",  
 

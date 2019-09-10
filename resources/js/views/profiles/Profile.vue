@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="mt-5 lg:mt-0">
         <card classes="py-2">
             <div v-if="comments">
                 <comment                

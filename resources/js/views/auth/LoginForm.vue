@@ -78,7 +78,7 @@
                 this.$store
                     .dispatch('login', this.form)
                     .then(()=>{                         
-                        this.$router.push({name: 'dashboard' })
+                        this.$router.push({name: 'dashboard_tenders' })
                         this.close()
                     })
                     .catch((error)=>{

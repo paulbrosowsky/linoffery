@@ -17,7 +17,7 @@ class RejectIfNotConfirmedAndCompleted
     {
         $user = $request->user();        
 
-        if (!$user->confirmed || !$user->company->completed) {
+        if (!$user->confirmed || !$user->company->completed || !$user->company->paymentCustomer) {
             return  response()->json([
                 'message' => 'Bitte bestätige deine Email-Adresse, oder vervollständige die Firmenadresse'
             ], 401);           

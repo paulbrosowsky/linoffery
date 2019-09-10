@@ -4,7 +4,7 @@ import {store} from './store'
 
 Vue.use(VueRouter)
 
-import Dashboard from './views/Dashboard'
+// import Dashboard from './views/Dashboard'
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
 import Login from './views/auth/Login'
@@ -47,15 +47,15 @@ let routes = [
         component: Terms
     },
     
-    {
-        name:'dashboard',
-        path:'/dashboard',
-        component: Dashboard,
-        meta:{
-            layout: 'dashboard',          
-            requiresAuth: true
-        }
-    },
+    // {
+    //     name:'dashboard',
+    //     path:'/dashboard',
+    //     component: Dashboard,
+    //     meta:{
+    //         layout: 'dashboard',          
+    //         requiresAuth: true
+    //     }
+    // },
 
     {
         name:'dashboard_tenders',
@@ -248,7 +248,7 @@ router.beforeEach((to, from, next) => {
         // Auth users will redirect to dashbord if a route requires Visitor      
         if (store.getters.loggedIn) {        
             next({
-                name: 'dashboard',            
+                name: 'dashboard_tenders',            
             })
         } else {
             next()

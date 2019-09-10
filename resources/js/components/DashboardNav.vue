@@ -1,14 +1,14 @@
 <template>
     <div class="li-dashboard-nav flex items-center justify-center fixed w-full bottom-0 bg-gray-700 z-20 px-5 md:top-0 md:left-0 md:flex-col md:min-h-screen md:w-20 md:rounded-none">       
         
-        <router-link 
+        <!-- <router-link 
             class="text-gray-600 py-3 px-5 hover:text-white"  
             active-class="text-teal-400" 
             :to="{name: 'dashboard'}"   
             exact       
         >
             <i class="icon ion-md-home text-2xl"></i> 
-        </router-link>
+        </router-link> -->
 
         <router-link 
             class="text-gray-600 py-3 px-5 hover:text-white" 

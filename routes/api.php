@@ -19,7 +19,6 @@ Route::group([
     'namespace' => 'Auth'
 ], function(){
 
-
     Route::post('/login', 'AuthController@login');
     Route::post('/register', 'AuthController@register');
     Route::post('/password/email', 'ForgotPasswordController@index');
@@ -64,13 +63,15 @@ Route::group([
     Route::post('/profiles/{company}/comment', 'CommentsController@store');
 
     Route::delete('/comments/{comment}/destroy', 'CommentsController@destroy');
+
+    Route::get('/payments/invoices', 'PaymentsController@index'); 
+    Route::patch('/payments/update', 'PaymentsController@update');
     
     Route::group([
         'middleware' => 'is-confirmed-completed'
     ], function(){
 
-        Route::post('/tenders/store', 'TendersController@store');
-        
+        Route::post('/tenders/store', 'TendersController@store');        
 
         Route::patch('/tenders/{tender}/update', 'TendersController@update');
         Route::patch('/tenders/{tender}/publish', 'TendersController@publish');
@@ -89,9 +90,10 @@ Route::group([
     }); 
 });
 
-
 Route::get('/tenders', 'TendersController@index');
 Route::get('/tenders/{tender}', 'TendersController@show');
 
 Route::get('/categories', 'CategoriesController@index');
 Route::get('/transport-types', 'TransportTypesController@index');
+
+Route::post('/stripe/webhook', 'StripeWebhooksController@handle');

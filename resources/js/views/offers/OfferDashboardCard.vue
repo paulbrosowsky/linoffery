@@ -1,6 +1,6 @@
 <template>
 
-    <section class="py-3 px-3 hover:bg-gray-100 md:px-8 ">
+    <section class="py-3 px-3 border-b hover:bg-gray-100 md:px-8 ">
         <router-link class="w-full" :to="{ name: 'tender', params: { tender: tender.id }}">
             <div class="flex items-center">
 

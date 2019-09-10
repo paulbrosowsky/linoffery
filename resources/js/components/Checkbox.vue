@@ -6,7 +6,7 @@
         >
             <div class="bg-teal-500 w-full h-full border-2 border-white rounded-full" v-show="show" ></div>
         </div>
-        <p class="text-gray-600 cursor-pointer" v-text="text" @click="toggle"></p>
+        <p class="flex-1 text-gray-600 cursor-pointer" v-text="text" @click="toggle"></p>
     </div>
 </template>
 <script>

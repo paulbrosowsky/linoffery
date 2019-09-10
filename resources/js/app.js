@@ -15,9 +15,8 @@ window.io = require('socket.io-client');
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host:  'localhost:6001',  
-   
-
+    host:  'localhost:6001', 
+    
     // broadcaster: 'pusher',
     // key: '39d01605fde628f780f2',
     // cluster: 'eu',
@@ -59,15 +58,22 @@ window.flash = function(message){
     window.Event.$emit('flash', message)
 }
 
+
+
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-let token = document.head.querySelector('meta[name="csrf-token"]');
 
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
+axios.interceptors.request.use(function(config){
+    config.headers['X-CSRF-TOKEN'] = Linoffery.csrfToken
+    return config;
+})
+// let token = document.head.querySelector('meta[name="csrf-token"]');
+
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+// }
 
 
 

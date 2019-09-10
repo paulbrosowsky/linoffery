@@ -1,5 +1,5 @@
 <template>
-    <card classes="px-0 py-5">
+    <card classes="px-0 py-2">
         <order-card 
             v-for="(order, index) in filtered" 
             :key="index" 
@@ -13,7 +13,7 @@
             v-show="showOffers"
         ></offer-dashboard-card>
 
-        <p class="px-5 md:px-10 text-gray-500" v-show="!filtered && !showOffers">
+        <p class="px-5 py-5 md:px-10 text-gray-500" v-show="!filtered.length && !showOffers">
             <i class="icon ion-md-beer mr-2"></i>
             <span>{{$t('tender.no_orders_info')}}</span>
         </p>
@@ -68,7 +68,7 @@
             },
 
             filtered(){
-                return this[this.$route.hash.substring(1)]
+                return !this.showOffers ? this[this.$route.hash.substring(1)] : []
             },
 
             showOffers(){

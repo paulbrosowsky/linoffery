@@ -33,5 +33,20 @@
     "image_uploaded_message": "Ihr Bild wurde erfolgreich gespeichert.",
 
     "please_complete_company_address": "Bitte vevollständigen Sie die Firmenadresse.",
-    "complete_company_address_info": "Unser Service können Sie nur als Geschäftskunde nutzen. Deshalb benötigen wir vollsändigen Angaben zu Ihrem Unternehmen."
+    "complete_company_address_info": "Unser Service können Sie nur als Geschäftskunde nutzen. Deshalb benötigen wir vollsändigen Angaben zu Ihrem Unternehmen.",
+
+    "credit_card": "Kreditkarte",
+    "use_your_credit_card": "Verwenden Sie Ihre Kreditkarte für die bequeme Bezahlung.",
+    "card_store_info_1": "Aus rechtlichen Gründen dürfen wir Ihre Karteninformationen nicht verwalten, dafür nutzen die sichere Zahlunsdiestleitung - ",
+    "card_store_info_2": "Ihre Karteninformationen berühren damit nie direkt unsere Server. Wir benötigen Ihre zustimmung, dass wir Ihre Daten weitergeben durfen.",
+    "agree_with_payment": "Ich bin mit den Zahlungsbedingungen einverstanden.",
+    "agree_with_payment_question": "Sind Sie mit unsernen Zahlungsbedingungen einverstanden?",
+    "update_card": "Karte aktualisieren",
+    "update_card_message": "Ihre Kreditkarte wurde aktualisiert",
+    "accounting": "Abrechnung",
+    "subtotal": "Zwischensumme",
+    "accounting_info": "Diese Tabelle dient nur zur Übersicht über die voraussichtliche Zahlungen. Die entgültige zu zahlenden Beträge sind aus der Rechnung am Ende des Monats zu entnehmen.",
+    "invoices": "Rechnungen",
+    "invoice_id": "Rechnung ID"    
+       
 }

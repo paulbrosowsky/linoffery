@@ -17,6 +17,8 @@
     "draft": "Draft",
     "drafts": "Drafts",
     "price": "Price",
+    "cost": "Cost",
+    "date": "Date",
     "active": "Active",
     "completed": "Completed",
     "contact_person": "Contact",
@@ -34,4 +36,5 @@
     "save_rating": "Save Rating",
     "create_rating_message": "Your rating is saved.",
     "delete_rating_message": "Your rating is deleted."
+  
 }

@@ -84,7 +84,7 @@
 
         methods:{
             fetchCompany(){
-                this.$store.dispatch('fetchCompany', `api/${this.$route.path}`)
+                this.$store.dispatch('fetchCompany', `api${this.$route.path}`)
             }
         },        
 
@@ -93,7 +93,7 @@
         },
 
         beforeRouteUpdate(to, from, next){
-            this.$store.dispatch('fetchCompany', `api/${to.path}`)
+            this.$store.dispatch('fetchCompany', `api${to.path}`)
             next()  
         },
     }

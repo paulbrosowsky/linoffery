@@ -17,12 +17,14 @@
     "draft": "Entwurf",
     "drafts": "Entwürfe",
     "price": "Preis",
+    "cost": "Kosten",
+    "date": "Datum",
     "active": "Aktiv",
     "completed": "Abgeschlossen",
     "contact_person": "Ansprechpartner",
     "more_results": "Weitere Ergebnisse",
     "no_more_results": "Keine weiteren Ergebnisse.",
-    "origin": "Statpunkt",
+    "origin": "Startpunkt",
     "destination": "Reiseziel",
     "detour": "Umweg",
     "location": "Standort",
@@ -33,5 +35,5 @@
     "new_rating": "Neue Bewertung",
     "save_rating": "Bewertung speichern",
     "create_rating_message": "Ihre Bewertung wurde gespeichert.",
-    "delete_rating_message": "Ihre Bewertung wurde gelöscht."
+    "delete_rating_message": "Ihre Bewertung wurde gelöscht."      
 }

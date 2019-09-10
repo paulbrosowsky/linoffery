@@ -18,7 +18,8 @@ export let store = new Vuex.Store({
         offers: null,
         orders: null,
         order:null,
-        company: null,         
+        company: null, 
+        invoices: null,        
 
         page: null,
         lastPage: null,
@@ -169,6 +170,10 @@ export let store = new Vuex.Store({
         retrieveNotifications(state, notifications){
             state.notifications = notifications
         },
+
+        retrieveInvoices(state, invoices){
+            state.invoices = invoices
+        }
     },
 
     actions:{
@@ -711,6 +716,74 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response.data.errors))
             })           
         },
+        // Profile endpoints END
+
+        // Payment endpoints START
+        // storePaymentCustomer(context){
+        //     axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+        //     return new Promise((resolve, reject)=>{
+        //         axios
+        //             .post('/api/payments/store-costumer')
+        //             .then(response =>{  
+        //                 resolve(response.data)
+        //             })
+        //             .catch(errors =>{
+        //                 console.log(errors.response.data.errors)
+        //                 reject(errors.response.data.errors)
+        //             })
+        //     })           
+        // },
+
+
+        // fetchPaymentIntent(context){
+        //     axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+        //     return new Promise((resolve, reject)=>{
+        //         axios
+        //             .get('/api/payments/intent')
+        //             .then(response =>{  
+        //                 resolve(response.data)
+        //             })
+        //             .catch(errors =>{
+        //                 console.log(errors.response.data.errors)
+        //                 reject(errors.response.data.errors)
+        //             })
+        //     })           
+        // },
+
+        updatePayment(context, data){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch('/api/payments/update', data)
+                    .then(response =>{  
+                        resolve(response.data)
+                    })
+                    .catch(errors =>{
+                        console.log(errors.response.data.errors)
+                        reject(errors.response.data.errors)
+                    })
+            })           
+        },
+
+        fetchInvoices(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('api/payments/invoices')
+                    .then(response =>{                       
+                        context.commit('retrieveInvoices', response.data)
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        
+    
         
       
     }

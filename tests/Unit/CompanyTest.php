@@ -64,5 +64,5 @@ class CompanyTest extends PassportTestCase
 
         $this->assertEquals(3, $this->company->rating);
     }
-    
+   
 }

@@ -46,7 +46,7 @@
 
                 <router-link 
                     class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                    :to="{name: 'dashboard'}"
+                    :to="{name: 'dashboard_tenders'}"
                 >
                    <p @click="hide">Dashboard</p> 
                 </router-link>  

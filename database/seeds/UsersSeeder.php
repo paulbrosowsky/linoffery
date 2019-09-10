@@ -50,6 +50,18 @@ class UsersSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'avatar' => 'https://randomuser.me/portraits/men/10.jpg'
             ],
+            [
+                'name' => 'Andreas Huber',
+                'email' => 'andreas@linoffery.com',
+                'password' => bcrypt('password'),
+                'avatar' => ''
+            ],
+            [
+                'name' => 'Max Lindemann',
+                'email' => 'max@linoffery.com',
+                'password' => bcrypt('password'),
+                'avatar' => '/storage/avatars/max.png'
+            ],
         ])->each(function ($user) {
             factory(User::class)->create(
                 [
