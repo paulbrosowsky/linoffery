@@ -20,7 +20,7 @@ trait HasCustomId{
     {
         preg_match('/^.{0,2}/', class_basename($model), $short);
 
-        $number = strtoupper($short[0]).'-'
+        $number = strtoupper($short[0])
                     .rand(10000, 99999).'-'
                     .rand(10000, 99999);    
             

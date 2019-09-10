@@ -14,6 +14,8 @@ class Order extends Model
 
     protected $with = ['tenderer', 'carrier', 'offer'];
 
+    protected $appends = ['cost'];
+
      /**
      * A Order belong to a tenderer
      * 
@@ -54,8 +56,21 @@ class Order extends Model
         return $this->belongsTo(Offer::class);
     }
 
-   public function makePdf()
-   {       
+    /**
+     *  Get cost attribute of a order
+     * 
+     * @return float
+     */
+    public function getCostAttribute()
+    {
+        return number_format($this->offer->price * 0.1, 2);
+    }
+
+    /**
+     *  Make Order as PDF ans save them in the storage     
+     */
+    public function makePdf()
+    {       
         $pickup = $this->tender->locations->where('type', 'pickup')->first();
         $delivery = $this->tender->locations->where('type', 'delivery')->first();        
 
@@ -75,5 +90,13 @@ class Order extends Model
         $canvas->page_text(500, 780, __("Page {PAGE_NUM} of {PAGE_COUNT}"), null, 10, array(0, 0, 0));
 
         Storage::disk('public')->put('pdf/orders/'.$this->custom_id.'.pdf', $pdf->output());        
-   }
+    }
+
+    /**
+     *  Mark Order as billable when invoice was created    
+     */
+    public function markAsBilled()
+    {
+        $this->update(['billed_at' => now()]);
+    }
 }

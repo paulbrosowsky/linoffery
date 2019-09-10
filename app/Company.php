@@ -2,17 +2,17 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\HtmlString;
 
 class Company extends Model
 {
-    use HasAvatar, HasCustomId;
+    use HasAvatar, HasCustomId, Billable;
 
     protected $guarded = [];
 
-    protected $appends = ['completed', 'rating'];
+    protected $appends = ['completed', 'rating', 'paymentCustomer'];    
 
      /**
      * The attributes that should be hidden for arrays.
@@ -21,7 +21,11 @@ class Company extends Model
      */
     protected $hidden = [
         'created_at',
-        'updated_at'              
+        'updated_at',
+        'stripe_id', 
+        'card_brand', 
+        'card_last_for', 
+        'trail_ends_at'              
     ];
 
     /**
@@ -32,7 +36,7 @@ class Company extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class)->latest();
-    }
+    }    
 
     /**
      *  Company has one user
@@ -107,5 +111,16 @@ class Company extends Model
 
             return  $commentsCount > 0 ? $ratingSum / $commentsCount : null;
         }         
+    } 
+
+    /**
+     * Get Payment Customer Attribute
+     * 
+     * @return boolean
+     */
+    public function getPaymentCustomerAttribute()
+    {   
+        return !empty($this->stripe_id);
     }
+    
 }
