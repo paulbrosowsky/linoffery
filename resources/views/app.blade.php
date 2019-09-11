@@ -22,7 +22,7 @@
         <script>            
             var Linoffery = {   
                 csrfToken: "{{ csrf_token() }}",           
-                stripeKey: "{{ config('services.stripe.key') }}"
+                stripeKey: "{{ config('services.stripe.key') }}"                
             }          
         </script>       
     </head>

@@ -5,10 +5,11 @@ namespace Tests\Feature;
 use Exception;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Traits\InteractsWithStripe;
 
 class StripePaymentTest extends PassportTestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, InteractsWithStripe;
 
     /** @test */
     function it_creates_new_payment_customer_and_update_card_data()
@@ -22,18 +23,9 @@ class StripePaymentTest extends PassportTestCase
 
         $this->assertFalse($company->paymentCustomer);
 
-        $this->signIn($user);
+        $this->signIn($user);       
 
-        $token = \Stripe\Token::create([
-            'card' => [
-                'number' => '4242424242424242',
-                'exp_month' => 1,
-                'exp_year' => 2050,
-                'cvc' => 123
-            ]
-        ]);
-
-        $this->patchJson('api/payments/update', ['token' => $token]);
+        $this->patchJson('api/payments/update', ['token' => $this->getStripeToken()]);
 
         $this->assertTrue($company->fresh()->paymentCustomer);
         $this->assertNotEmpty($company->fresh()->card_brand);

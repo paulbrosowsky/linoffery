@@ -47,6 +47,7 @@
     "subtotal": "Zwischensumme",
     "accounting_info": "Diese Tabelle dient nur zur Übersicht über die voraussichtliche Zahlungen. Die entgültige zu zahlenden Beträge sind aus der Rechnung am Ende des Monats zu entnehmen.",
     "invoices": "Rechnungen",
-    "invoice_id": "Rechnung ID"    
+    "invoice_id": "Rechnung ID",
+    "customer_id": "Kundennummer"   
        
 }

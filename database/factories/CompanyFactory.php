@@ -17,3 +17,5 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'lng' => $faker->longitude($min = 6, $max = 15),  
     ];
 });
+
+

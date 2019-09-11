@@ -50,5 +50,16 @@ class OrderTest extends PassportTestCase
         $this->assertNotEmpty($order->fresh()->custom_id);        
     }
 
+    /** @test */
+    function it_knows_its_cost()
+    {        
+        $offer = create('App\Offer', ['price' => 100]);
+        $this->order->update([
+            'offer_id' => $offer->id
+        ]);     
+       
+        $this->assertEquals(10, $this->order->cost);
+    }
+
     
 }

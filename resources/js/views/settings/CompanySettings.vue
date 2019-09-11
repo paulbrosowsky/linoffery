@@ -15,8 +15,13 @@
                     ></image-upload>
                     
                 </div>
-                <form class="w-full xl:w-2/3"  @submit.prevent="updateCompany">
                 
+                <form class="w-full xl:w-2/3"  @submit.prevent="updateCompany">
+                    <p class="mb-2">
+                        <span class="text-gray-500 mr-2">{{$t('settings.customer_id')}}</span>
+                        <span class="font-bold" v-text="user.company.custom_id"></span>
+                    </p>
+
                     <p class="text-sm text-red-500 mb-2" v-if="errors.name" v-text="errors.name[0]"></p>               
                     <div class="relative flex items-center mb-2">                    
                         <i class="absolute icon ion-md-person text-xl text-gray-500 px-3"></i>   

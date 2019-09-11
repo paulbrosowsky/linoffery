@@ -12,7 +12,7 @@ class CompleteUserCommandTest extends PassportTestCase
     use RefreshDatabase;
     
     /** @test */
-    function tender_will_set_as_complete_after_valid_date()
+    function tender_will_be_seted_as_complete_after_valid_date()
     {
         $tender = create('App\Tender', [
             'valid_date' => now()->subDay()

@@ -65,7 +65,7 @@ class User extends Authenticatable
         return $this->belongsTo(Company::class);
     }
 
-    /**
+     /**
      * A user has many tenders
      * 
      * @return Illuminate\Database\Eloquent\Relations\HasMany
@@ -74,6 +74,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tender::class);
     }  
+
+    /**
+     * A user has many offers
+     * 
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    } 
+    
 
     /**
      *  Generate new Token to confirm users email.

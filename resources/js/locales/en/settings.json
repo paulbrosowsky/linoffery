@@ -47,6 +47,7 @@
     "subtotal": "Subtotal",
     "accounting_info": "This table is only an overview of the expected payments. The final amounts to be paid can be found in the invoice at the end of the month.",
     "invoices": "Invoices",
-    "invoice_id": "Invoice ID"    
+    "invoice_id": "Invoice ID",
+    "customer_id": "Customer ID"    
 
 }

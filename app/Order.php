@@ -57,14 +57,17 @@ class Order extends Model
     }
 
     /**
-     *  Get cost attribute of a order
+     *  Get calculated service cost of an order
      * 
      * @return float
      */
     public function getCostAttribute()
-    {
-        return number_format($this->offer->price * 0.1, 2);
-    }
+    {   
+        // price in euro * (sevice fee in % * / 100%)  
+        $cost = $this->offer->price * (config('linoffery.payment.standard')/100);  
+
+        return number_format($cost, 2);
+    }    
 
     /**
      *  Make Order as PDF ans save them in the storage     
