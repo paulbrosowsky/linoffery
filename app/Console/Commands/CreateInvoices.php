@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Company;
+use App\Jobs\CreateInvoicesJob;
 use App\Order;
 use Illuminate\Console\Command;
 
@@ -42,16 +43,7 @@ class CreateInvoices extends Command
         $companies = Company::where('stripe_id', 'LIKE', 'cus_%');       
         
         $companies->each(function($company){
-
-            $orders = Order::where('carrier_id', $company->user->id)            
-                        ->where('carrier_id', $company->user->id)
-                        ->where('billed_at', NULL)
-                        ->get();
-            
-            if (!$orders->isEmpty()) {
-                $company->createInvoice($orders);
-            }           
-            
+           CreateInvoicesJob::dispatch($company);            
         });
     }
 }

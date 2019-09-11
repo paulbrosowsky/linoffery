@@ -7,6 +7,7 @@ use Tests\PassportTestCase;
 use Tests\Traits\InteractsWithStripe;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Queue;
 
 class CreateInvoicesCommandTest extends PassportTestCase
 {
@@ -14,7 +15,7 @@ class CreateInvoicesCommandTest extends PassportTestCase
     
     /** @test */
     function it_creates_monthly_invoices()
-    {        
+    {  
         $company = create('App\Company', ['stripe_id' => NULL]);
         $user = create('App\User', ['company_id' => $company->id]); 
         $order = create('App\Order', [

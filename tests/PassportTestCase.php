@@ -8,6 +8,7 @@ use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\ClientRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
 
 class PassportTestCase extends TestCase
 {
@@ -30,7 +31,7 @@ class PassportTestCase extends TestCase
             'client_id' => $client->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-        ]);        
+        ]); 
     }
 
     public function signIn($user = null)
