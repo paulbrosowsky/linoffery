@@ -48,7 +48,9 @@
                         </div>
 
                         <div class="flex-1">
-                            <button class="btn btn-teal w-full mb-2" @click="$modal.show('make-offer')" v-if="!ownsTender && loggedIn">
+                            <button class="btn btn-teal w-full mb-2"
+                                @click="$modal.show('make-offer')" 
+                                v-if="!ownsTender && loggedIn && fullyAuthorized">
                                 {{$t('tender.make_offer')}}
                             </button> 
                             <button 
@@ -92,7 +94,11 @@
 
             price(){
                 return this.tender.lowest_offer ? this.tender.lowest_offer : this.tender.max_price
-            }
+            },
+            
+            fullyAuthorized(){
+                return this.$store.getters.fullyAuthorized
+            },
         },        
         
     }

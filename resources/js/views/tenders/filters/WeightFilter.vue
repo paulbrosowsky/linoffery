@@ -12,17 +12,20 @@
                 <i class="icon ion-md-close text-lg text-white px-3"></i>
             </button>
         </div>
-         
+        
+        <form @sumbit.prevent="triggerFilter">
             <div class="flex">            
                 <div class="w-1/2 mr-1">
                     <div class="relative flex items-center">
                         <i class="absolute icon ion-md-download text-xl text-gray-500 px-3"></i>
                         <input 
+                            id="min-weight"
                             class="input pl-10" 
                             type="number" 
                             :placeholder="$t('tender.min_weight')" 
                             v-model.number="weight.min"
                             @blur="triggerFilter"
+                            @keyup.enter="triggerFilter"
                         >
                     </div>
                 </div>
@@ -31,15 +34,18 @@
                     <div class="relative flex items-center">
                         <i class="absolute icon ion-md-download text-xl text-gray-500 px-3"></i>
                         <input 
+                            id="max-weight"
                             class="input pl-10" 
                             type="number" 
                             :placeholder="$t('tender.max_weight')" 
                             v-model.number="weight.max"
                             @blur="triggerFilter"
+                            @keyup.enter="triggerFilter"
                         >
                     </div>
                 </div>
             </div>
+        </form>
         
     </div>
     
@@ -64,6 +70,10 @@
             async triggerFilter(){                
                 if(typeof this.weight.min === 'number' && typeof this.weight.max === 'number'){                    
                     await this.updateFilter()
+
+                    document.getElementById("min-weight").blur()
+                    document.getElementById("max-weight").blur()
+
                     this.$emit('changed')
                 }
             },

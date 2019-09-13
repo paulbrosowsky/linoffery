@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\App;
 use Stripe\Customer;
 use Stripe\InvoiceItem;
 use Stripe\Invoice as StripeInvoice;
+use Stripe\Subscription;
 
 trait Billable{
 
@@ -35,7 +36,7 @@ trait Billable{
             'customer_created_at' => now(),
             'card_brand' => $token['card']['brand'],
             'card_last_four' => $token['card']['last4']
-        ]); 
+        ]);
     }
 
     /**
@@ -62,20 +63,14 @@ trait Billable{
      */
     public function createInvoice($orders)
     {  
-        $this->createInvoiceItems($orders);
+        $orders->each(function($order){
+            $this->createInvoiceItem($order);
+        });        
 
-        $invoice = StripeInvoice::create([
+        StripeInvoice::create([
             'customer' => $this->stripe_id,
             'auto_advance' => true,                     
-        ]);
-
-        Invoice::create([
-            'company_id' => $this->id,
-            'custom_id' => $invoice->number,
-            'stripe_id' => $invoice->id,
-            'pdf_url' => $invoice->invoice_pdf,
-            'hosted_url' => $invoice->hosted_invoice_url 
-        ]);        
+        ]);               
     }
 
     /**
@@ -83,20 +78,37 @@ trait Billable{
      * 
      *  @param Order $orders
      */
-    public function createInvoiceItems($orders)
-    {
-        $orders->each(function($order){ 
-            $offer = \App\Offer::where('id', $order->offer_id)->get();            
-            InvoiceItem::create([
-                'customer' => $this->stripe_id,                
-                'amount' => $order->cost * 100, // in € Cent
-                'currency' => 'eur',
-                'description' => $order->custom_id .' vom '. $order->created_at->format('d.m.Y'), 
-            ]);
+    public function createInvoiceItem($order)
+    {                      
+        InvoiceItem::create([
+            'customer' => $this->stripe_id,                
+            'amount' => $order->cost * 100, // in € Cent
+            'currency' => 'eur',
+            'description' => $order->custom_id .' vom '. $order->created_at->format('d.m.Y'), 
+        ]);
 
-            $order->markAsBilled();
-        });       
+        $order->markAsBilled();             
     } 
+
+    /**
+     *  Create Stipe Subscription + Payment Subscription in DB
+     */
+    public function createPaymentSubscription()
+    {      
+        $subscription = Subscription::create([
+            "customer" => $this->stripe_id,
+            "items" => [
+                [
+                    "plan" => "main"
+                ],
+            ],                
+        ]);
+        
+        $this->paymentSubscription()->create([
+            "stripe_id" => $subscription->id,
+            "plan" => $subscription->plan->id
+        ]);
+    }
 
     /**
      *  A Company has many invoices
@@ -106,6 +118,16 @@ trait Billable{
     public function invoices()
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    /**
+     *  A Company has one payment subscriptions
+     * 
+     * @return hasOne
+     */
+    public function paymentSubscription()
+    {
+        return $this->hasOne(PaymentSubscription::class);
     }
     
 }

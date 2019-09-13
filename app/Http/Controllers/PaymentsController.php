@@ -25,10 +25,13 @@ class PaymentsController extends Controller
      */
     public function update(Request $request)
     {  
-        $company = auth()->user()->company;
+        $company = auth()->user()->company;        
 
-        if(!$company->paymentCustomer){
-            return $company->addAsStripeCustomer($request->token);
+        if(!$company->hasPaymentSubscription){
+            if(!$company->stripe_id){
+               $company->addAsStripeCustomer($request->token);
+            }
+            return $company->createPaymentSubscription();
         }
 
         $company->updatePaymentMethod($request->token);

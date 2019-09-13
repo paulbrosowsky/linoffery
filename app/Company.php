@@ -12,7 +12,7 @@ class Company extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['completed', 'rating', 'paymentCustomer'];    
+    protected $appends = ['completed', 'rating', 'hasPaymentSubscription'];    
 
      /**
      * The attributes that should be hidden for arrays.
@@ -118,9 +118,9 @@ class Company extends Model
      * 
      * @return boolean
      */
-    public function getPaymentCustomerAttribute()
+    public function getHasPaymentSubscriptionAttribute()
     {   
-        return !empty($this->stripe_id);
+        return !empty($this->paymentSubscription);
     }
     
 }

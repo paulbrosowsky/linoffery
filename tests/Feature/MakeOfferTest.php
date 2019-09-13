@@ -57,13 +57,13 @@ class MakeOfferTest extends PassportTestCase
         $this->makeOffer()->assertStatus(401);        
     }
 
-     /** @test */
-    function a_users_maus_have_payment_informations_to_make_offer()
-    { 
-        $this->user->company->update(['stripe_id' => null]);  
+    //  /** @test */
+    // function a_users_maus_have_payment_informations_to_make_offer()
+    // { 
+    //     $this->user->company->update(['stripe_id' => null]);  
              
-        $this->makeOffer()->assertStatus(401);        
-    }
+    //     $this->makeOffer()->assertStatus(401);        
+    // }
 
     /** @test */
     function tender_owners_may_not_make_offers()

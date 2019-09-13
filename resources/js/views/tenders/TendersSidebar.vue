@@ -1,9 +1,13 @@
 <template>
     <div>
-        <h1 class="text-gray-700 font-light leading-none text-2xl lg:-ml-2">
+        <h1 class="text-gray-700 font-light leading-none mb-5 text-2xl lg:-ml-2">
             {{$t('tender.my_tenders')}}
         </h1>
-        <button class="btn btn-teal shadow-md my-5 lg:w-full lg:-ml-2" @click="$modal.show('create-tender')">
+        <button
+            v-show="fullyAuthorized" 
+            class="btn btn-teal shadow-md mb-5 lg:w-full lg:-ml-2" 
+            @click="$modal.show('create-tender')"
+        >
             <span><i class="icon ion-md-add mr-2"></i></span>
             <span>{{$t('tender.new_tender')}}</span>
         </button>
@@ -52,7 +56,11 @@
                 }else{
                     return []
                 }          
-            },           
+            },
+            
+            fullyAuthorized(){
+                return this.$store.getters.fullyAuthorized
+            },
         },        
         
     }

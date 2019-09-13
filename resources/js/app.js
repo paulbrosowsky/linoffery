@@ -31,8 +31,6 @@ window.Echo = new Echo({
     },
 });
 
-
-
 import VueModal from "vue-js-modal"
 Vue.use(VueModal)
 

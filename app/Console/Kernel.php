@@ -27,9 +27,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('linoffery:complete-tender')->daily(); 
          
-        $schedule->command('linoffery:create-invoices')
-            ->monthly()
-            ->emailOutputOnFailure(config('linoffrey.email.techology'));       
+        // $schedule->command('linoffery:create-invoices')
+        //     ->monthly()
+        //     ->emailOutputOnFailure(config('linoffrey.email.techology'));       
     }
 
     /**

@@ -58,13 +58,13 @@ class CreateTenderTest extends PassportTestCase
         $this->createTender()->assertStatus(401);        
     }
 
-    /** @test */
-    function a_users_maus_have_payment_informations_to_create_a_tender()
-    { 
-        $this->user->company->update(['stripe_id' => null]);  
+    // /** @test */
+    // function a_users_maus_have_payment_informations_to_create_a_tender()
+    // { 
+    //     $this->user->company->update(['stripe_id' => null]);  
              
-        $this->createTender()->assertStatus(401);        
-    }
+    //     $this->createTender()->assertStatus(401);        
+    // }
 
      /** @test */
     function title_is_required()

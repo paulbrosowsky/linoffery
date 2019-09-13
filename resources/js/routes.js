@@ -220,16 +220,17 @@ let routes = [
 export const router = new VueRouter({
     mode: 'hash',
     routes,
-    scrollBehavior(to,from, savedPosition){        
+    scrollBehavior(to,from, savedPosition){
         if(savedPosition){
             return savedPosition
         }
-        return { x: 0, y: 0 }
+       
+        return { x: 0, y: 0}
     }   
 })
 
 window.popStateDetected = false
-window.addEventListener('popstate', () => {
+window.addEventListener('popstate', () => {    
     window.popStateDetected = true
 })
 

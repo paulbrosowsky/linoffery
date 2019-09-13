@@ -9,7 +9,7 @@
             <create-comment></create-comment>
         </div>
 
-        <div v-if="confirmedCompleted">
+        <div v-if="fullyAuthorized">
             <create-tender></create-tender>
 
             <div v-if="!ownsTender && $route.name === 'tender'">
@@ -58,8 +58,8 @@
                 return this.$store.getters.loggedIn
             },
 
-            confirmedCompleted(){
-                return this.$store.getters.confirmed && this.$store.getters.companyCompleted
+            fullyAuthorized(){
+                return this.$store.getters.fullyAuthorized
             },
 
             ownsTender(){

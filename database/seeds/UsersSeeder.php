@@ -63,7 +63,7 @@ class UsersSeeder extends Seeder
                 'avatar' => '/storage/avatars/max.png'
             ],
         ])->each(function ($user) {
-            factory(User::class)->create(
+            factory(User::class)->state('no-stripe-customer')->create(
                 [
                     'name' => $user['name'],                 
                     'email' => $user['email'],

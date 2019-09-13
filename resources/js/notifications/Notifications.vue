@@ -2,7 +2,7 @@
     <div v-if="loggedIn"> 
         <confirm-email v-if="!emailConfirmed"></confirm-email>
         <complete-company-address v-if="!companyAddressComplete"></complete-company-address>
-        <update-payment-info v-if="!isPaymentCustomer"></update-payment-info>
+        <update-payment-info v-if="!hasPaymentSubscription"></update-payment-info>
     </div>
 </template>
 <script>
@@ -23,15 +23,15 @@
             },
 
             companyAddressComplete(){                                           
-                return this.$store.getters.companyCompleted
+                return this.$store.getters.usersCompany.completed
             },
             
             loggedIn(){
                 return this.$store.getters.loggedIn
             },
 
-            isPaymentCustomer(){
-                return this.$store.getters.usersCompany.paymentCustomer
+            hasPaymentSubscription(){
+                return this.$store.getters.usersCompany.hasPaymentSubscription
             }
         },
     }

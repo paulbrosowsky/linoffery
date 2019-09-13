@@ -10,9 +10,11 @@
             >
                 <tenders-filters v-resize="filterNavResize" ref="filterNav"></tenders-filters>
                 
-                <perfect-scrollbar ref="content" class="h-full rounded-lg">                   
-                    <slot></slot> 
-                </perfect-scrollbar>
+                
+                    <perfect-scrollbar ref="content" class="h-full rounded-lg overflow-scroll">                                       
+                        <slot></slot> 
+                    </perfect-scrollbar >
+                               
                 
             </card>        
 
@@ -133,7 +135,7 @@
         mounted(){
             // Content Drawer handling on Mobile View
             if(window.innerWidth < 640){                
-                this.setResizeDrawer()
+                // this.setResizeDrawer()
                 // Triggered in TendersFilters
                 Event.$on('drawerDown', () => this.closeDrawer())
                 // Triggered in TendersFilters

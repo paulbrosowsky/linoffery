@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use App\Invoice;
+use App\PaymentSubscription;
 use Illuminate\Http\Request;
 
 class StripeWebhooksController extends Controller
@@ -32,10 +34,30 @@ class StripeWebhooksController extends Controller
      * 
     */
     public function whenInvoiceFinalized($payload)
-    {        
-        $invoice = Invoice::where('stripe_id', $payload['data']['object']['id'])->first();        
+    {    
+        $invoice = $payload['data']['object'];
+        $company = Company::where('stripe_id', $invoice['customer'])->first();
+        
+        Invoice::create([
+            'company_id' => $company->id,
+            'custom_id' => $invoice['number'],
+            'stripe_id' => $invoice['id'],
+            'pdf_url' => $invoice['invoice_pdf'],
+            'hosted_url' => $invoice['hosted_invoice_url'] 
+        ]); 
+    }
 
-        $invoice->addPdf($payload['data']['object']);
+    /** 
+     *  Handel when subscription is deleted
+     * 
+     * @param array $payload
+     * 
+    */
+    public function whenCustomerSubscriptionDeleted($payload)
+    {
+        $subscription = $payload['data']['object'];
+        
+        PaymentSubscription::where('stripe_id', $subscription['id'])->delete(); 
     }
 
     /**

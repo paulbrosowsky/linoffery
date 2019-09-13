@@ -64,5 +64,13 @@ class CompanyTest extends PassportTestCase
 
         $this->assertEquals(3, $this->company->rating);
     }
+
+    /** @test */
+    function it_knows_if_it_has_paymentSubscription()
+    {        
+        create('App\PaymentSubscription', ['company_id' => $this->company]);
+       
+        $this->assertTrue($this->company->hasPaymentSubscription);
+    }
    
 }

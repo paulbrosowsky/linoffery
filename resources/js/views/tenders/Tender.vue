@@ -1,203 +1,205 @@
 <template>
-    <div v-if="tender">
-        <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !completed">            
-            <div class="pl-5 pb-3 border-b">                 
-                <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
+    <!-- <perfect-scrollbar class="h-full" > -->
+        <div v-if="tender">
+            <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !completed">            
+                <div class="pl-5 pb-3 border-b">                 
+                    <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
+                </div>
+                
+                <offer-card                 
+                    :offer="offer"                 
+                    v-for="(offer, index) in tender.offers" 
+                    :key="index"
+                ></offer-card>
             </div>
-            
-            <offer-card                 
-                :offer="offer"                 
-                v-for="(offer, index) in tender.offers" 
-                :key="index"
-            ></offer-card>
-        </div>
 
-        <div class="py-5">  
-             
-            <div class="flex justify-between px-5 pb-5" v-if="completed">
-                <p class="uppercase text-red-500 font-bold tracking-tighter" >
-                    <i class="icon ion-md-checkmark mr-2"></i>  
-                    <span>{{$t('utilities.completed')}}</span> 
+            <div class="py-5">  
+                
+                <div class="flex justify-between px-5 pb-5" v-if="completed">
+                    <p class="uppercase text-red-500 font-bold tracking-tighter" >
+                        <i class="icon ion-md-checkmark mr-2"></i>  
+                        <span>{{$t('utilities.completed')}}</span> 
+                    </p>
+
+                    <router-link class="text-sm text-gray-500 hover:text-teal-500" :to="{name: 'order', params:{ order: tender.order.id }}" v-if="tender.order">
+                        <i class="icon ion-md-list-box mr-1"></i>  
+                        <span>{{$t('tender.open_order')}}</span> 
+                    </router-link>
+                </div>
+            
+
+                <p 
+                    class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 " 
+                    v-if="draft"
+                >
+                    <i class="icon ion-md-create mr-2"></i>  
+                    <span>{{$t('utilities.draft')}}</span> 
                 </p>
 
-                <router-link class="text-sm text-gray-500 hover:text-teal-500" :to="{name: 'order', params:{ order: tender.order.id }}" v-if="tender.order">
-                    <i class="icon ion-md-list-box mr-1"></i>  
-                    <span>{{$t('tender.open_order')}}</span> 
-                </router-link>
-            </div>
-          
-
-            <p 
-                class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 " 
-                v-if="draft"
-            >
-                <i class="icon ion-md-create mr-2"></i>  
-                <span>{{$t('utilities.draft')}}</span> 
-            </p>
-
-            <tender-info 
-                :tender="tender"
-                v-if="!editTender"
-                @edit="editTender = !editTender"
-            ></tender-info> 
-            
-            <div class="px-5 py-5" v-if="editTender && draft">
-                <tender-form :tender="tender" :edit="true" @cancel="editTender = false"></tender-form>
-            </div>
-            
-
-            <div class="bg-gray-100 p-5">
+                <tender-info 
+                    :tender="tender"
+                    v-if="!editTender"
+                    @edit="editTender = !editTender"
+                ></tender-info> 
                 
-                <div class="w-full pb-5 " >                 
+                <div class="px-5 py-5" v-if="editTender && draft">
+                    <tender-form :tender="tender" :edit="true" @cancel="editTender = false"></tender-form>
+                </div>
+                
+
+                <div class="bg-gray-100 p-5">
+                    
+                    <div class="w-full pb-5 " >                 
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-log-in text-gray-500 mr-2"></i>  
+                            <p class="uppercase text-sm text-gray-500">{{$t('tender.pickup_details')}}</p>
+                            <button 
+                                class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
+                                @click="editPickup = !editPickup"
+                                v-if="draft"
+                            >
+                                <i class="icon ion-md-create"></i>  
+                            </button>
+                        </div>  
+
+                        <location-form 
+                            :value="pickup" 
+                            :name="'pickup'" 
+                            v-if="!pickup || editPickup && draft "
+                            @close="editPickup = false"
+                        ></location-form>              
+
+                        <location-info :location="pickup" v-if="pickup && !editPickup"></location-info> 
+                    </div>
+
+                    <div class="w-full" > 
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-log-out text-gray-500 mr-3"></i>                           
+                            <p class="uppercase text-sm text-gray-500">{{$t('tender.delivery_details')}}</p>
+                            <button 
+                                class="py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
+                                @click="editDelivery = !editDelivery"
+                                v-if="draft"
+                            >
+                                <i class="icon ion-md-create"></i>  
+                            </button>
+                        </div>   
+
+                        <location-form 
+                            :value="delivery" 
+                            :name="'delivery'" 
+                            v-if="!delivery || editDelivery && draft"
+                            @close="editDelivery = false"
+                        ></location-form>   
+
+                        <location-info :location="delivery" v-if="delivery && !editDelivery"></location-info>                                            
+                    </div>
+                </div>
+                
+
+                <div class="p-5">
                     <div class="flex items-center mb-2">
-                        <i class="icon ion-md-log-in text-gray-500 mr-2"></i>  
-                        <p class="uppercase text-sm text-gray-500">{{$t('tender.pickup_details')}}</p>
+                        <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>
                         <button 
                             class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                            @click="editPickup = !editPickup"
+                            @click="editFreights = !editFreights"
                             v-if="draft"
                         >
                             <i class="icon ion-md-create"></i>  
                         </button>
                     </div>  
+                    
+                    <freights-form 
+                        :values="tender.freights" 
+                        v-if="!hasFreights || editFreights && draft"
+                        @close="editFreights = false"
+                    ></freights-form>
 
-                    <location-form 
-                        :value="pickup" 
-                        :name="'pickup'" 
-                        v-if="!pickup || editPickup && draft "
-                        @close="editPickup = false"
-                    ></location-form>              
-
-                    <location-info :location="pickup" v-if="pickup && !editPickup"></location-info> 
+                    <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
                 </div>
-
-                <div class="w-full" > 
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-log-out text-gray-500 mr-3"></i>                           
-                        <p class="uppercase text-sm text-gray-500">{{$t('tender.delivery_details')}}</p>
-                        <button 
-                            class="py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                            @click="editDelivery = !editDelivery"
-                            v-if="draft"
-                        >
-                            <i class="icon ion-md-create"></i>  
-                        </button>
-                    </div>   
-
-                    <location-form 
-                        :value="delivery" 
-                        :name="'delivery'" 
-                        v-if="!delivery || editDelivery && draft"
-                        @close="editDelivery = false"
-                    ></location-form>   
-
-                    <location-info :location="delivery" v-if="delivery && !editDelivery"></location-info>                                            
-                </div>
-            </div>
-            
-
-            <div class="p-5">
-                <div class="flex items-center mb-2">
-                    <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>
-                    <button 
-                        class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                        @click="editFreights = !editFreights"
-                        v-if="draft"
-                    >
-                        <i class="icon ion-md-create"></i>  
-                    </button>
-                </div>  
                 
-                <freights-form 
-                    :values="tender.freights" 
-                    v-if="!hasFreights || editFreights && draft"
-                    @close="editFreights = false"
-                ></freights-form>
+                <div  class="px-5 pb-5">
+                    <router-link :to="{name: 'profile', params:{ profile: tender.user.company.id}}">
+                        <company-info :company="tender.user.company"></company-info> 
+                    </router-link>
+                </div>
+                
 
-                <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
-            </div>
-            
-            <div  class="px-5 pb-5">
-                <router-link :to="{name: 'profile', params:{ profile: tender.user.company.id}}">
-                    <company-info :company="tender.user.company"></company-info> 
-                </router-link>
-            </div>
-            
+                <div class="py-5 px-5" v-if="!ownsTender && loggedIn && fullyAuthorized" > 
+                    <button class="w-full btn btn-teal" @click="$modal.show('make-offer')">
+                        {{$t('tender.make_offer')}}
+                    </button>                                      
+                </div>  
 
-            <div class="py-5 px-5" v-if="!ownsTender && loggedIn" > 
-                <button class="w-full btn btn-teal" @click="$modal.show('make-offer')">
-                    {{$t('tender.make_offer')}}
-                </button>                                      
-            </div>  
+                <div class="py-3 px-5" v-if="draft && dataComplete && ownsTender">
+                        <div class="flex bg-yellow-200 p-5 rounded-lg mb-3">
+                            <i class="icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"></i>  
+                            <div class="text-sm">
+                                <span>{{$t('tender.publish_info')}}</span>
+                                <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
+                            </div>                    
+                        </div>
+                    
+                    <button class="btn btn-teal w-full" @click="publishTender">                     
+                        <span>{{$t('utilities.publish')}} </span> 
+                    </button>
+                    
+                </div>   
 
-            <div class="py-3 px-5" v-if="draft && dataComplete && ownsTender">
-                    <div class="flex bg-yellow-200 p-5 rounded-lg mb-3">
+                <div class="py-5 px-5" v-if="ownsTender && !draft && !completed" > 
+                <div v-show="!confirmation">   
+                        <button class="btn  btn-red w-full" @click="confirmation=true">
+                            <i class=" icon ion-md-close mr-2"></i>  
+                            {{$t('tender.cancel_tender')}}
+                        </button>            
+                    </div>
+
+                    <div v-show="confirmation">                     
+                        <checkbox 
+                            :value="withClone" 
+                            :text="$t('tender.clone_tender')"
+                            @toggled="toggle"                        
+                        ></checkbox> 
+                        <p class="text-sm pl-10 -mt-5 mb-5">{{$t('tender.clone_tender_info')}}</p>
+                    </div>                
+
+                    <confirmation-buttons
+                        :text="$t('tender.cancel_tender_question')" 
+                        v-show="confirmation"
+                        @canceled="confirmation = false"
+                        @confirmed="cancelTender"
+                    ></confirmation-buttons> 
+
+                    <div class="flex bg-yellow-200 p-3 rounded-lg mt-5" v-show="confirmation">
                         <i class="icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"></i>  
                         <div class="text-sm">
-                            <span>{{$t('tender.publish_info')}}</span>
+                            <span>{{$t('tender.cancel_tender_info')}}</span>
                             <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
                         </div>                    
                     </div>
-                
-                <button class="btn btn-teal w-full" @click="publishTender">                     
-                    <span>{{$t('utilities.publish')}} </span> 
-                </button>
-                
-            </div>   
+                                                    
+                </div>  
 
-            <div class="py-5 px-5" v-if="ownsTender && !draft && !completed" > 
-               <div v-show="!confirmation">   
-                    <button class="btn  btn-red w-full" @click="confirmation=true">
-                        <i class=" icon ion-md-close mr-2"></i>  
-                        {{$t('tender.cancel_tender')}}
-                    </button>            
-                </div>
+                <div class="py-2 px-5" v-if="ownsTender && (completed || draft) && !tender.orderId">
+                    <div v-show="!confirmation">   
+                        <button class="btn  btn-red w-full" @click="confirmation=true">
+                            <i class=" icon ion-md-close mr-2"></i>  
+                            {{$t('tender.delete_tender')}}
+                        </button>            
+                    </div>
 
-                <div v-show="confirmation">                     
-                    <checkbox 
-                        :value="withClone" 
-                        :text="$t('tender.clone_tender')"
-                        @toggled="toggle"                        
-                    ></checkbox> 
-                    <p class="text-sm pl-10 -mt-5 mb-5">{{$t('tender.clone_tender_info')}}</p>
-                </div>                
+                    <confirmation-buttons
+                        :text="$t('tender.delete_tender_question')" 
+                        v-show="confirmation"
+                        @canceled="confirmation = false"
+                        @confirmed="deleteTender"
+                    ></confirmation-buttons> 
 
-                <confirmation-buttons
-                    :text="$t('tender.cancel_tender_question')" 
-                    v-show="confirmation"
-                    @canceled="confirmation = false"
-                    @confirmed="cancelTender"
-                ></confirmation-buttons> 
-
-                <div class="flex bg-yellow-200 p-3 rounded-lg mt-5" v-show="confirmation">
-                    <i class="icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"></i>  
-                    <div class="text-sm">
-                        <span>{{$t('tender.cancel_tender_info')}}</span>
-                        <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
-                    </div>                    
-                </div>
-                                                   
-            </div>  
-
-            <div class="py-2 px-5" v-if="ownsTender && (completed || draft) && !tender.orderId">
-                <div v-show="!confirmation">   
-                    <button class="btn  btn-red w-full" @click="confirmation=true">
-                        <i class=" icon ion-md-close mr-2"></i>  
-                        {{$t('tender.delete_tender')}}
-                    </button>            
-                </div>
-
-                <confirmation-buttons
-                    :text="$t('tender.delete_tender_question')" 
-                    v-show="confirmation"
-                    @canceled="confirmation = false"
-                    @confirmed="deleteTender"
-                ></confirmation-buttons> 
-
-            </div>        
-        
+                </div>        
+            
+            </div>
         </div>
-    </div>
+    <!-- </perfect-scrollbar> -->
 </template>
 <script>
     import FreightInfo from '../tenders/FreightInfo'
@@ -271,8 +273,11 @@
 
             completed(){
                 return this.$store.getters.tenderCompleted
-            }
-            
+            },
+
+            fullyAuthorized(){
+                return this.$store.getters.fullyAuthorized
+            },            
         },
 
         methods:{

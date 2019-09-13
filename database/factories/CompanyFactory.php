@@ -3,8 +3,8 @@
 use Faker\Generator as Faker;
 
 $factory->define(App\Company::class, function (Faker $faker) {
-    $faker = \Faker\Factory::create('at_AT');
-
+    $faker = \Faker\Factory::create('at_AT');  
+    
     return [        
         'name' => $faker->company,
         'vat' => $faker->vat(false),    

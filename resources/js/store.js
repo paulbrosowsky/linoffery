@@ -36,8 +36,11 @@ export let store = new Vuex.Store({
             return  state.user ? state.user.confirmed : ''
         },
 
-        companyCompleted(state){
-            return state.user ? state.user.company.completed : false
+        fullyAuthorized(state){
+            if(state.user){
+                let company = state.user.company 
+                return  company.completed && company.hasPaymentSubscription && state.user.confirmed
+            }
         },
 
         usersCompany(state){
@@ -90,7 +93,7 @@ export let store = new Vuex.Store({
         isCompanyMember(state){
             let init = state.company && state.user
             return init ? state.company.id === state.user.company.id : null
-        }
+        },        
     },
 
     mutations:{
@@ -718,40 +721,7 @@ export let store = new Vuex.Store({
         },
         // Profile endpoints END
 
-        // Payment endpoints START
-        // storePaymentCustomer(context){
-        //     axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
-
-        //     return new Promise((resolve, reject)=>{
-        //         axios
-        //             .post('/api/payments/store-costumer')
-        //             .then(response =>{  
-        //                 resolve(response.data)
-        //             })
-        //             .catch(errors =>{
-        //                 console.log(errors.response.data.errors)
-        //                 reject(errors.response.data.errors)
-        //             })
-        //     })           
-        // },
-
-
-        // fetchPaymentIntent(context){
-        //     axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
-
-        //     return new Promise((resolve, reject)=>{
-        //         axios
-        //             .get('/api/payments/intent')
-        //             .then(response =>{  
-        //                 resolve(response.data)
-        //             })
-        //             .catch(errors =>{
-        //                 console.log(errors.response.data.errors)
-        //                 reject(errors.response.data.errors)
-        //             })
-        //     })           
-        // },
-
+        // Payment endpoints START  
         updatePayment(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
@@ -781,10 +751,7 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response))
             })           
         },
-
-        
-    
-        
+        // Payment endpoints END 
       
     }
 })

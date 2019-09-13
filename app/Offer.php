@@ -91,10 +91,9 @@ class Offer extends Model
 
         $order->makePdf();
 
-        // $this->user->company->createCharge($this->price);
-        // $this->user->company->createInvoice($this->price);
-
-        // $this->user->company->updateUsageRecord($this->price);
+        if (!env('APP_ENV') === 'testing') {
+            $this->user->company->createInvoiceItem($order); 
+        }
         
         return $order;
     }

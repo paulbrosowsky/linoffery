@@ -6,6 +6,10 @@
                 <router-view name="sidebar"></router-view>
             </template> 
 
+            <template v-slot:map>
+                <router-view name="map"></router-view>
+            </template>
+
             <router-view :key="$route.fullPath"></router-view>
             
         </component>         

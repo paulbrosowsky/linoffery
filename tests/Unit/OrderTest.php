@@ -59,7 +59,7 @@ class OrderTest extends PassportTestCase
         ]);     
        
         $this->assertEquals(10, $this->order->cost);
-    }
+    }   
 
     
 }
