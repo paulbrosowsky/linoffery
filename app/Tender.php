@@ -20,6 +20,24 @@ class Tender extends Model
 
     protected $appends = ['offersCount', 'isActive', 'orderId']; 
 
+
+
+    protected static function boot()
+    {
+        parent::boot(); 
+
+        static::deleted(function($tender){
+            $tender->locations()->each(function($location){
+                $location->delete();
+            });  
+            
+            $tender->freights()->each(function($freight){
+                $freight->delete();
+            }); 
+        });  
+       
+    }
+
     /**
      * A Tender belong to user
      * 
@@ -256,8 +274,19 @@ class Tender extends Model
             
         }        
 
-        return $clone;                         
+        return $clone;                        
     }
 
-
+    /**
+     *  Destroy existing tender
+     * 
+     */
+    public function destroyTender()
+    {
+        if(!empty($this->order)){
+            return 'Delete not alowed.';
+        }
+        $this->complete();
+        $this->delete();
+    }
 }

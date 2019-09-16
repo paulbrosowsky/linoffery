@@ -42,4 +42,17 @@ class CancelOffersTest extends PassportTestCase
         
         $this->assertEmpty(Offer::all());
     }
+
+      /** @test */
+    function owners_can_cancel_thier_offers_if_order_is_craeted()
+    {
+        $this->signIn($this->user);
+
+        $this->assertCount(1, Offer::all());
+
+        create('App\Order', ['offer_id' => $this->offer->id]);
+
+        $this->deleteJson('/api/offers/'.$this->offer->id.'/destroy')->assertStatus(403);       
+        
+    }
 }

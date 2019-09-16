@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {   
         $http = new Client;  
-        
+       
         try {            
             $response = $http->post(config('services.passport.login_endpoint'), [
                 'form_params' => [
@@ -34,7 +34,7 @@ class AuthController extends Controller
                     'password' => $request->password
                 ]
             ]); 
-                   
+
             return $response->getBody(); 
 
         } catch (BadResponseException $e) {
@@ -62,7 +62,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
             'company_name' => ['required', 'string'],
-            'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies', 'vat-number'],
+            // 'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies', 'vat-number'],
         ]);        
 
         $company = Company::create([
@@ -104,6 +104,11 @@ class AuthController extends Controller
     public function user()
     {       
         return response()->json(request()->user()->load('company'));
+    }
+
+    public function destroy()
+    {        
+        auth()->user()->delete();        
     }
 
 }

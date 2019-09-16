@@ -12,12 +12,14 @@ class Freight extends Model
     {
         parent::boot();
         
-        static::created(function($freight){
+        static::created(function($freight){                     
             $freight->tender->updateWeight();            
         });  
 
         static::deleted(function($freight){
-            $freight->tender->updateWeight();            
+            if(!empty($freight->tender)){
+                $freight->tender->updateWeight(); 
+            }                        
         });  
     }
     

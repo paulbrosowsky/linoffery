@@ -3,7 +3,7 @@
     "account": "Benutzerkonto",
     "company": "Firma",
     "payment": "Bezahlung",
-    "notifications": "Mitteilungen",
+    "notifications": "Mittelungen",
 
     "account_settings": "Benutzerkonto - Einstellungen",    
     "update_account": "Benutzerkonto aktualisieren",
@@ -48,6 +48,12 @@
     "accounting_info": "Diese Tabelle dient nur zur Übersicht über die voraussichtliche Zahlungen. Die entgültige zu zahlenden Beträge sind aus der Rechnung am Ende des Monats zu entnehmen.",
     "invoices": "Rechnungen",
     "invoice_id": "Rechnung ID",
-    "customer_id": "Kundennummer"   
-       
+    "customer_id": "Kundennummer",
+    "agree_with_newsletters": "Ich möchte Newsletter per Email erhalten.",
+    "newsletters_info": "Wir informieren Sie per Email über unsere neue Funktionen, letzte Eregnisse und vieles mehr. KEIN SPAM garantiert!",
+    "delete_account": "Benutzerkonto löschen",
+    "delete_account_question": "Möchten Sie wirklich Ihr Benutzerkonto löschen?",
+    "delete_account_info": "Nach dem Löschen könnnen Sie auf Ihre Konto nicht mehr zugreifen. Ihre Daten werden allerdings nicht vollständig gelöscht.", 
+    "delete_account_message": "Ihr Benutzerkonto wurde gelöscht.",
+    "info_privacy": "Mehr Informationen erhalten Sie aus unserer Datenschutzerklärung."   
 }

@@ -23,8 +23,7 @@ Route::group([
     Route::post('/register', 'AuthController@register');
     Route::post('/password/email', 'ForgotPasswordController@index');
     Route::post('/password/reset', 'ForgotPasswordController@update');
-    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index'); 
-      
+    Route::get('/email-confirmation/confirm', 'EmailConfirmationController@index');       
 
     Route::group([
         'middleware' => 'auth:api'
@@ -32,7 +31,9 @@ Route::group([
 
         Route::get('/logout', 'AuthController@logout');
         Route::get('/user', 'AuthController@user');
-        Route::get('/email-confirmation/email', 'EmailConfirmationController@update');  
+        Route::get('/email-confirmation/email', 'EmailConfirmationController@update');
+        
+        Route::delete('/destroy', 'AuthController@destroy');
     });
 });
 
@@ -54,6 +55,7 @@ Route::group([
     Route::patch('/settings/account', 'AccountSettingsController@update');
     Route::patch('/settings/password', 'PasswordSettingsController@update');
     Route::patch('/settings/company', 'CompaniesController@update'); 
+    Route::patch('/settings/newsletters', 'NotificationSettingsController@update'); 
     
     Route::get('/notifications', 'NotificationsController@index');
     Route::delete('/notifications', 'NotificationsController@destroyAll');

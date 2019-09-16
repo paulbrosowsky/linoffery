@@ -48,6 +48,7 @@
     "accounting_info": "This table is only an overview of the expected payments. The final amounts to be paid can be found in the invoice at the end of the month.",
     "invoices": "Invoices",
     "invoice_id": "Invoice ID",
-    "customer_id": "Customer ID"    
-
+    "customer_id": "Customer ID",
+    "agree_with_newsletters": "I would like to receive newsletters by email.",
+    "newsletters_info": "We will inform you via email about our new features, last events and much more. NO SPAM guaranteed!" 
 }

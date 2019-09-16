@@ -47,11 +47,16 @@ class AddAvatarTest extends PassportTestCase
     }
 
     /** @test */
-    function delete_avatar_in_the_storag_upon_deleting_a_user_account()
-    {
-        $user = create('App\User');
+    function delete_avatar_in_the_storage_upon_deleting_a_user_account()
+    {        
+        $company = create('App\Company', [            
+            'stripe_id' => NULL,
+            'card_brand' => NULL,
+            'card_last_four' => NULL
+        ]);
+        $user = create('App\User', ['company_id' => $company->id]);
 
-        $this->signIn($user);
+        $this->signIn($user);        
 
         Storage::fake('public');
 
@@ -63,9 +68,8 @@ class AddAvatarTest extends PassportTestCase
             
         Storage::disk('public')->assertExists('avatars/' .$file->hashName());
 
-        $user->delete();
+        $user->delete();        
         
-        $this->assertDatabaseMissing('users', ['email' => $user->email]);
         Storage::disk('public')->assertMissing('avatars/' .$file->hashName());
     }
     

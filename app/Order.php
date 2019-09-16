@@ -23,7 +23,7 @@ class Order extends Model
      */
     public function tenderer()
     {
-        return $this->belongsTo(User::class, 'tenderer_id');
+        return $this->belongsTo(User::class, 'tenderer_id')->withTrashed();
     }
 
     /**
@@ -33,7 +33,7 @@ class Order extends Model
      */
     public function carrier()
     {
-        return $this->belongsTo(User::class, 'carrier_id');
+        return $this->belongsTo(User::class, 'carrier_id')->withTrashed();
     }
 
     /**

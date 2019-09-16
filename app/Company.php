@@ -4,11 +4,12 @@ namespace App;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
-    use HasAvatar, HasCustomId, Billable;
+    use HasAvatar, HasCustomId, Billable, SoftDeletes;
 
     protected $guarded = [];
 
@@ -27,6 +28,14 @@ class Company extends Model
         'card_last_for', 
         'trail_ends_at'              
     ];
+
+    protected static function boot(){
+        parent::boot();
+
+        static::deleting(function($company){
+            $company->deleteStipeCustomer();
+        });
+    }
 
     /**
      *  A company has many comments

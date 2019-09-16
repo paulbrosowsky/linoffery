@@ -35,6 +35,12 @@ class UserTest extends PassportTestCase
     {        
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->user->offers);
     }
+
+     /** @test */
+    function is_has_many_comments()
+    {        
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->user->comments);
+    }
     
     
 }

@@ -88,7 +88,7 @@ class OffersController extends Controller
      */
     public function destroy(Offer $offer)
     {
-        if($offer->user_id != auth()->id()){
+        if($offer->user_id != auth()->id() || !empty($offer->order)){
             return response()->json(['message' => 'Your are not authorized to delete this offer.'], 403);
         }
 

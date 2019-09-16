@@ -6,11 +6,12 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, HasAvatar;
+    use HasApiTokens, Notifiable, HasAvatar, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +28,9 @@ class User extends Authenticatable
         'position',
         'phone',
         'avatar',
-        'password_reset_token'
+        'password_reset_token',
+        'newsletters',
+        'deleted_at'
     ];
 
     /**
@@ -50,10 +53,32 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'confirmed' => 'boolean'
+        'confirmed' => 'boolean',
+        'newsletters' => 'boolean'
     ];
 
     protected $with = ['company'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($user){
+            $user->tenders()->each(function($tender){
+                $tender->destroyTender();
+            });
+
+            $user->offers()->each(function($offer){
+                $offer->destroyOffer();
+            });
+
+            $user->comments()->each(function($comment){
+                $comment->delete();
+            });
+
+            $user->company->delete();            
+        });
+    }
 
     /**
      * A User belongs to a company
@@ -62,7 +87,7 @@ class User extends Authenticatable
      */
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
      /**
@@ -84,6 +109,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Offer::class);
     } 
+
+    /**
+     * A user has many comments
+     * 
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
     
 
     /**

@@ -26,6 +26,7 @@ class CreateCompaniesTable extends Migration
             $table->float('lat')->nullable();
             $table->float('lng')->nullable(); 
             $table->string('website')->nullable();
+            $table->timestamp('deleted_at')->nullable();  
             $table->timestamps();
         });
     }

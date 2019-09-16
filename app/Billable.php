@@ -32,8 +32,7 @@ trait Billable{
         ]);  
         
         $this->update([
-            'stripe_id' => $customer->id,
-            'customer_created_at' => now(),
+            'stripe_id' => $customer->id,            
             'card_brand' => $token['card']['brand'],
             'card_last_four' => $token['card']['last4']
         ]);
@@ -128,6 +127,28 @@ trait Billable{
     public function paymentSubscription()
     {
         return $this->hasOne(PaymentSubscription::class);
+    }
+    
+    /**
+     *  Delete a Stripe Customer      * 
+     */
+    public function deleteStipeCustomer()
+    {
+        if($this->stripe_id){
+            $customer = Customer::retrieve($this->stripe_id);
+            $customer->delete();
+        }
+
+        if (env('APP_ENV')==='testing') {
+            return;
+        }
+
+        $this->update([
+            'stripe_id' => NULL,
+            'card_last_four' => NULL,
+            'card_brand' => NULL,
+        ]);
+       
     }
     
 }

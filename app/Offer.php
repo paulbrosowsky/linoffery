@@ -12,17 +12,7 @@ class Offer extends Model
 
     protected $guarded = [];
 
-    protected $with = ['user']; 
-
-    /**
-     * A Offer belong to a user
-     * 
-     * @return belondsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $with = ['user'];   
 
     protected static function boot()
     {
@@ -35,6 +25,16 @@ class Offer extends Model
         static::deleted(function($offer){
             $offer->tender->updateLowestOffer();            
         });  
+    }
+
+      /**
+     * A Offer belong to a user
+     * 
+     * @return belondsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -96,5 +96,17 @@ class Offer extends Model
         }
         
         return $order;
+    }
+
+    /**
+     *  Destroy existing Offer
+     * 
+     */
+    public function destroyOffer()
+    {
+        if(!empty($this->order)){
+            return 'Delete not alowed.';
+        }        
+        $this->delete();
     }
 }

@@ -8,7 +8,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class AuthenticationTest extends PassportTestCase
 {
     use RefreshDatabase;
-
     public function setUp():void
     {
         parent::setUp();
@@ -21,8 +20,7 @@ class AuthenticationTest extends PassportTestCase
 
     /** @test */
     function  a_user_can_login()
-    {   
-        
+    {          
         $this->login([
             'password' => 'not valide'
         ])->assertStatus(401);        

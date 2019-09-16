@@ -79,7 +79,7 @@
             <loading-spinner :loading="loadingAccount" :position="'absolute'"></loading-spinner>  
         </card>
     
-        <card class="relative mt-5">       
+        <card class="relative my-5">       
             <template v-slot:title>{{ $t('settings.change_password')}}</template> 
             
             <form @submit.prevent="changePassword">
@@ -121,6 +121,30 @@
             <loading-spinner :loading="loadingPassword" :position="'absolute'"></loading-spinner> 
         </card>
 
+        <card class="relative">            
+            <button 
+                v-show="!confirmation"
+                class="btn btn-outlined btn-red-outlined"
+                @click="confirmation = true"
+            >
+                {{ $t('settings.delete_account')}}
+            </button>
+
+            <div v-show="confirmation">
+                <div class="md:w-1/2">
+                    <confirmation-buttons
+                        :text="$t('settings.delete_account_question')"
+                        @canceled="confirmation = false"
+                        @confirmed="deleteAccount"
+                    ></confirmation-buttons> 
+                </div>
+                <p class="mt-5">
+                    {{$t('settings.delete_account_info')}}
+                    <router-link to="/privacy" class="text-teal-500 hover:text-teal-700">{{$t('settings.info_privacy')}}</router-link>
+                </p>
+            </div>  
+        </card>
+
         
 
     </div>
@@ -150,7 +174,9 @@
                 avatarPreview: null,
                 errors: [] ,
                 loadingAccount: false,
-                loadingPassword: false              
+                loadingPassword: false,                
+                
+                confirmation: false
             }
         }, 
 
@@ -191,6 +217,17 @@
                     })
             },
 
+            deleteAccount(){                
+                
+                this.$store
+                    .dispatch('deleteAccount')
+                    .then(() => { 
+                        this.$router.push('/logout')
+                        flash(this.$i18n.t('settings.delete_account_message'))
+                    })
+                  
+            },
+
             // Update Password if password field chanded
             updateOldPassword(value){               
                 this.old_password = value
@@ -209,7 +246,8 @@
             // Update phone number if phone field chanded
             updatePhone(phone){
                 this.phone = phone
-            },            
+            },  
+                     
            
         },       
         

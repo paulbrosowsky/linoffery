@@ -290,7 +290,20 @@ export let store = new Vuex.Store({
             })  
         },
 
-        // SETTINGS Actions START
+        deleteAccount(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+            
+            return new Promise((resolve, reject)=>{
+                axios
+                    .delete('/api/auth/destroy')
+                    .then(response =>{        
+                        resolve(response)
+                    })
+                    .catch(errors => reject(errors.response.data.errors))
+            })  
+        },
+
+        // SETTINGS endpoints START
         updateAccount(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
@@ -336,7 +349,7 @@ export let store = new Vuex.Store({
                         reject(errors.response.data.errors)
                     })
             })
-        },  
+        },          
         // SETTINGS Actions END 
 
         fetchCategories(context){
@@ -573,7 +586,6 @@ export let store = new Vuex.Store({
         //Offers endpoints END
 
         //Orders Endpoints START 
-
         fetchOrders(context){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
@@ -671,6 +683,19 @@ export let store = new Vuex.Store({
                     .then(response =>{                       
                         context.dispatch('fetchNotifications')
                         resolve(response)
+                    })
+                    .catch(errors => reject(errors.response))
+            })           
+        },
+
+        toggleNewsletters(context){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+
+            return new Promise((resolve, reject)=>{
+                axios
+                    .patch('/api/settings/newsletters')
+                    .then(response =>{
+                        resolve(response.data)
                     })
                     .catch(errors => reject(errors.response))
             })           
