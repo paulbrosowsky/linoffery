@@ -61,7 +61,7 @@
             buttonIcon(){
                 return this.mapOpened ? 'ion-md-arrow-back' : 'ion-md-map'
             },          
-        },
+        },        
         
     }
 </script>

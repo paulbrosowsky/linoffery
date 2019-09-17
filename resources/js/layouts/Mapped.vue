@@ -143,7 +143,7 @@
                 // Triggered in Tender
                 Event.$on('setDrawerSize', () => this.setDrawerSize())
             }            
-            this.setDrawerSize()          
+            this.setDrawerSize()
         }        
     }
 </script>

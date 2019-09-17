@@ -23,14 +23,23 @@
             var Linoffery = {   
                 csrfToken: "{{ csrf_token() }}",           
                 stripeKey: "{{ config('services.stripe.key') }}"                
-            }          
+            }  
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+                (function(){
+                    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                    s1.async=true;
+                    s1.src='https://embed.tawk.to/5d7fe6d0c22bdd393bb6215b/default';
+                    s1.charset='UTF-8';
+                    s1.setAttribute('crossorigin','*');
+                    s0.parentNode.insertBefore(s1,s0);
+                })();        
         </script>       
     </head>
     <body>
-            <div id="app"> 
-                <app><app>
-            </div>
+        <div id="app"> 
+            <app><app>
+        </div>
         
-       <script src="/js/app.js"></script>
+        <script src="/js/app.js"></script>      
     </body>
 </html>

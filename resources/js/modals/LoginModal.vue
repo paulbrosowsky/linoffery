@@ -2,7 +2,7 @@
     <default-modal 
         name="login"
         width="400"
-        @close="$modal.hide('login')"
+        @close="$modal.hide('login')" 
     >
         
         <login-form ></login-form>
@@ -12,8 +12,7 @@
     import LoginForm from '../views/auth/LoginForm'
 
     export default {
-        components:{ LoginForm },
-
-       
+        components:{ LoginForm }, 
+      
     }
 </script>

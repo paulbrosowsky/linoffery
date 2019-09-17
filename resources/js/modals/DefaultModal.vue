@@ -8,12 +8,12 @@
         :adaptive="true"                    
         @before-open="beforeOpen" 
         @opened="$emit('opened')"
-        @closed="$emit('close')"
+        @closed="hideModal"
         v-cloak
     >
         <button 
             class="absolute top-0 right-0 p-5  focus:outline-none"  
-            @click="$emit('close')"
+            @click="hideModal"
         >     
             <div>
                 <i class="icon ion-md-close text-xl text-gray-500"></i> 
@@ -39,8 +39,14 @@
 
         methods:{
             beforeOpen(event){   
-               this.$emit('data', event.params)                               
-            },
+               this.$emit('data', event.params)  
+               Tawk_API.hideWidget()                             
+            },          
+
+            hideModal(){
+                this.$emit('close')
+                Tawk_API.showWidget()
+            }
         }
     }
       

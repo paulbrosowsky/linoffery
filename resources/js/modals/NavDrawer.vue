@@ -95,8 +95,7 @@
                 <router-link :to="{name: 'logout'}">
                     <button class="btn btn-teal mt-10" @click="hide">{{ $t('auth.logout') }} </button>
                 </router-link>   
-            </div>
-            
+            </div>           
 
         </div>
         
@@ -129,8 +128,8 @@
                 this.$i18n.locale = locale   
                 this.$cookies.set('locale', locale, 365) 
                 this.hide()
-           }
-        }
+           },           
+        }      
         
     }
 </script>

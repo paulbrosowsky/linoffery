@@ -5,10 +5,11 @@
         :width="width"
         :pivotX=1
         :classes="classes" 
+        @before-open="beforeOpen"
     >
         <button 
             class="absolute right-0 py-4 px-6 z-20 focus:outline-none"  
-            @click="$emit('close')"
+            @click="hideModal"
         >        
             <i class="icon ion-md-close text-2xl text-white hover:text-gray-300"></i>            
         </button>
@@ -29,6 +30,16 @@
                 return screen.width > 640 ? '350px' : '100%'
             }, 
         },
+
+        methods:{
+            hideModal(){
+                this.$emit('close')
+                Tawk_API.showWidget()
+            },
+            beforeOpen(){
+                Tawk_API.hideWidget()  
+            }
+        }
 
        
     }
