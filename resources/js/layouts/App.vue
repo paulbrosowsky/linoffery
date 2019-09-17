@@ -76,7 +76,7 @@
                 if(this.loggedIn) {
                     this.$store.dispatch('fetchNotifications')
                 }
-            },            
+            },
 
         },
 
@@ -92,12 +92,23 @@
                     .notification((notification) =>{                         
                         flash(notification)
                         this.$store.dispatch('fetchNotifications')
-                    })
-            }, 1000);
-               
+                    }) 
+            }, 1000);   
+            
+            window.addEventListener('scroll', ()=>{
+                if(this.layout != 'default-layout') {
+                    Tawk_API.hideWidget()
+                } else{
+                    let scrollPosition = document.documentElement.scrollTop            
+                    let scrollable = document.documentElement.scrollHeight  
 
-                   
-                      
+                    if(scrollable - (window.innerHeight+100) < scrollPosition){                        
+                        Tawk_API.hideWidget()
+                    }else{
+                        Tawk_API.showWidget()
+                    }
+                }               
+            })            
         }
 
     }
