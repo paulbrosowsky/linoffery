@@ -252,7 +252,7 @@ let routes = [
 ]
 
 export const router = new VueRouter({
-    mode: 'hash',
+    mode: 'history',
     routes,
     scrollBehavior(to,from, savedPosition){
         if(savedPosition){
