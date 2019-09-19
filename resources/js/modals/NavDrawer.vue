@@ -7,35 +7,36 @@
 
         <div class="px-5 py-5">
             <a 
-                class="text-white text-lg uppercase cursor-pointer px-1 hover:text-gray-300"
+                class="text-white text-lg uppercase cursor-pointer px-1 hover:text-teal-300"
                 @click="changeLocale('de-DE')"
             >DE</a>
             <a 
-                class="text-white text-lg uppercase cursor-pointer px-1 hover:text-gray-300"
+                class="text-white text-lg uppercase cursor-pointer px-1 hover:text-teal-300"
                 @click="changeLocale('en-EN')"
             >EN</a>
         </div>
 
-        <div class="flex flex-col min-h-screen items-center  justify-center">
+        <div class="flex flex-col min-h-screen items-center justify-center -mt-16">
+
             <div class="flex flex-col items-center" v-if="!loggedIn">
                 <router-link 
-                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                     to="/"                
                 >
                  <p @click="hide">Home</p>
                 </router-link>
 
                 <router-link 
-                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                    to="/"
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
+                    to="/about"
                 >
                     <p @click="hide">{{ $t('content.about') }}</p>
                     
                 </router-link>
 
                 <router-link 
-                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                    to="/"
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
+                    to="/services"
                 >
                     <p @click="hide">{{ $t('content.services') }}</p>
                 </router-link>
@@ -45,21 +46,21 @@
             <div class="flex flex-col items-center" v-if="loggedIn">              
 
                 <router-link 
-                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                     :to="{name: 'dashboard_tenders'}"
                 >
                    <p @click="hide">Dashboard</p> 
                 </router-link>  
 
                 <router-link 
-                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                     :to="{name: 'settings'}"
                 >
                     <p @click="hide">{{ $t('content.settings') }}</p>                     
                 </router-link>  
 
                 <router-link                    
-                    class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                     :to="{name: 'profile', params:{ profile: company.id }}"
                 >
                     <p @click="hide">{{ $t('content.profile') }}</p>                     
@@ -69,31 +70,33 @@
             
 
             <router-link 
-                class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
+                class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                 :to="{name: 'tenders'}"
-            >
-              
+            >              
                 <p @click="hide">{{ $t('content.find_fright') }}</p>   
             </router-link>
 
-            <router-link 
-                class="uppercase text-white font-bold text-lg py-2 hover:text-gray-300" 
-                to="/"
+            <p
+                class="uppercase text-white font-bold text-lg mb-2 cursor-pointer hover:text-teal-300" 
+                @click="openNewTenderModal"
             >
                {{ $t('content.create_tender') }}
-            </router-link>
+            </p>
 
-            <div class="flex flex-col pt-10" v-if="!loggedIn">
-                <router-link :to="{name: 'register'}">
-                    <button class="btn btn-outlined btn-teal-outlined mb-2" @click="hide"> {{ $t('auth.signup') }}  </button>
-                </router-link>   
-                             
-                <button class="btn btn-teal" @click="showLogin"> {{ $t('auth.login') }} </button>
+            <router-link 
+                class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
+                :to="{name: 'support'}"
+            >              
+                <p @click="hide">support</p>   
+            </router-link>
+            
+            <div v-if="!loggedIn"> 
+                <button class="btn btn-outlined btn-teal-outlined mt-10" @click="showLogin"> {{ $t('auth.login') }} </button>
             </div>
 
             <div v-if="loggedIn">
                 <router-link :to="{name: 'logout'}">
-                    <button class="btn btn-teal mt-10" @click="hide">{{ $t('auth.logout') }} </button>
+                    <button class="btn btn-outlined btn-teal-outlined mt-10" @click="hide">{{ $t('auth.logout') }} </button>
                 </router-link>   
             </div>           
 
@@ -128,7 +131,16 @@
                 this.$i18n.locale = locale   
                 this.$cookies.set('locale', locale, 365) 
                 this.hide()
-           },           
+           },
+           
+           openNewTenderModal(){
+                if(this.loggedIn){
+                    this.$modal.show('create-tender')                    
+                }else{
+                    this.$modal.show('login')
+                }
+                this.hide()
+           }
         }      
         
     }

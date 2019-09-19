@@ -42,6 +42,10 @@
             
             loggedIn(){
                 return this.$store.getters.loggedIn
+            },
+
+            user(){
+                return this.$store.state.user
             }
         },
 
@@ -92,7 +96,7 @@
                     .notification((notification) =>{                         
                         flash(notification)
                         this.$store.dispatch('fetchNotifications')
-                    }) 
+                    })
             }, 1000);   
             
             window.addEventListener('scroll', ()=>{

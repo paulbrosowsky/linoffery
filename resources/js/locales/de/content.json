@@ -1,6 +1,7 @@
 {
     "terms": "AGB",
-    "privacy": "Datenschutzbestimmungen",
+    "terms_long": "Allgemeine Geschäftsbedingungen",
+    "privacy": "Datenschutzerklärung",
     "legals": "Impressum",
 
     "about": "Über uns",
@@ -10,7 +11,10 @@
     "learn_more": "mehr erfahren",
     "consignor": "Versender",
     "carrier": "Spedition",
+    "for_consignor": "für Versender",
+    "for_carrier": "für Spedition",
     "settings": "Enstellungen",
 
-    "profile": "Profil"
+    "profile": "Profil",
+    "career": "Karriere"  
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full px-5 my-10 mx-auto xl:w-1/2">
-        <h1 class="text-4xl text-teal-500 mb-10">Impressum</h1>
+        <h1 class="text-4xl text-teal-500 mb-10">{{$t('content.legals')}}</h1>
         
         <h2 class="text-2xl my-5">Angaben gemäß § 5 TMG</h2>
 

@@ -93,14 +93,14 @@
             <div class="flex flex-col items-center justify-center md:flex-row ">
                 <p class="text-sm text-gray-500 pr-5">linoffery © 2019 </p>
                 <div class="flex">
-                    <p><router-link class="link text-sm pr-2" to="/impressum">
+                    <p><router-link class="link text-sm pr-2" to="/legals">
                         {{ $t('content.legals') }}
                     </router-link></p>
-                    <p><router-link class="link text-sm pr-2" to="/">
+                    <p><router-link class="link text-sm pr-2" to="/privacy">
                         {{ $t('content.privacy') }}
                     </router-link></p>
-                    <p><router-link class="link text-sm" to="/">
-                        {{ $t('content.terms') }}
+                    <p><router-link class="link text-sm" to="/terms">
+                        {{ $t('content.terms_short') }}
                     </router-link></p>  
                 </div>
                         

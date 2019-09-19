@@ -22,67 +22,58 @@
                         <a href="#">
                             <i class="icon ion-logo-xing  text-xl text-gray-600 hover:text-teal-500"></i> 
                         </a>                       
-                    </div>
+                    </div>                    
                 </div>
 
             </div>
 
             <div class="flex flex-col md:flex-row">
-                <div class="mr-5">
-                    <p class="text-gray-500 uppercase text-sm mb-2">linoffery</p>
-                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
-                        Über uns
+                <div class="mt-3 mr-5 md:mt-0">
+                    <p class="text-gray-500 uppercase text-sm mb-1">linoffery</p>
+                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/about">
+                        {{$t('content.about')}}
                     </router-link></p>
-                    <p><router-link class="text-gray-700 hover:text-teal-500" to="/">
-                        Karriere
+                    <p><router-link class="text-gray-700 hover:text-teal-500" to="/about">
+                        {{$t('content.career')}}
                     </router-link></p>
-                    <router-link class="text-gray-700 hover:text-teal-500" to="/">
-                        Presse
-                    </router-link>           
-
                 </div>
 
-                <div class="mr-5">
-                    <p class="text-gray-500 uppercase text-sm mb-2">Unsere Leistungen</p>
-                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
-                        für Speditionen
+                <div class="mt-3 mr-5 md:mt-0">
+                    <p class="text-gray-500 uppercase text-sm mb-1">{{$t('content.services')}}</p>
+                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/services">
+                        {{$t('content.for_consignor')}}
                     </router-link></p>
-                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
-                        für Versender 
-                    </router-link></p>
-                    <router-link class="text-sm font-bold text-teal-500 uppercase hover:text-teal-700" to="/">
-                        Partner werden
-                    </router-link>           
-
+                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/services">
+                        {{$t('content.for_carrier')}}
+                    </router-link></p>  
                 </div>  
 
-                <div>
-                    <p class="text-gray-500 text-sm uppercase mb-2">kontakt</p>
-                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
-                        Formular
+                <div class="mt-3 md:mt-0">
+                    <p class="text-gray-500 text-sm uppercase mb-1">Support</p>
+                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/support">
+                        FAQ
                     </router-link></p>                    
-                    <p><router-link class="text-gray-700 hover:text-teal-500 mb-2" to="/">
+                    <p class="text-gray-700 mb-2">
                         info@linoffery.com
-                    </router-link></p>         
+                    </p>         
 
                 </div>  
             </div> 
         </div>
 
-        <div class="flex flex-col text-sm pb-5 md:flex-row md:justify-end">
+        <div class="flex flex-col text-gray-700 pb-5 md:flex-row md:justify-end">
             <p class="pr-5">linoffery © 2019 </p>
             <div class="flex">
-                <p><router-link class="hover:text-teal-500 pr-2" to="/impressum">
-                    Impressum 
+                <p><router-link class="hover:text-teal-500 pr-2" to="/legals">
+                    {{$t('content.legals')}}
                 </router-link></p>
-                <p><router-link class="hover:text-teal-500 pr-2" to="/">
-                    Datenschutzbestimmungen
+                <p><router-link class="hover:text-teal-500 pr-2" to="/privacy">
+                    {{$t('content.privacy')}}
                 </router-link></p>
-                <p><router-link class="hover:text-teal-500" to="/">
-                    AGB
+                <p><router-link class="hover:text-teal-500" to="/terms">
+                    {{$t('content.terms')}}
                 </router-link></p>  
-            </div>
-                     
+            </div>                     
         </div>
 
     </div>

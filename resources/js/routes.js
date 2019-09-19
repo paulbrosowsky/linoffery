@@ -5,19 +5,24 @@ import {store} from './store'
 Vue.use(VueRouter)
 
 // import Dashboard from './views/Dashboard'
+import About from './views/About'
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
 import Login from './views/auth/Login'
 import Logout from './views/auth/Logout'
+import NotFound from './views/NotFound'
 import Order from './views/orders/Order'
 import Orders from './views/orders/Orders'
 import OrdersSidebar from './views/orders/OrdersSidebar'
+import Privacy from "./views/Privacy"
 import Profile from "./views/profiles/Profile"
 import ProfileSidebar from "./views/profiles/ProfileSidebar"
 import Register from './views/auth/Register'
 import ResetPassword from './views/auth/ResetPassword'
+import Services from './views/Services'
 import Settings from './views/settings/Settings'
 import SettingsSidebar from './views/settings/SettingsSidebar'
+import Support from './views/Support'
 import Tender from './views/tenders/Tender'
 import TendersDashboard from './views/tenders/TendersDashboard'
 import Tenders from './views/tenders/Tenders'
@@ -26,6 +31,11 @@ import Terms from './views/Terms'
 import Welcome from './views/Welcome'
 
 let routes = [
+    {
+        path: '*',
+        component: NotFound,     
+    },
+
     {
         name: 'home',
         path:'/',
@@ -36,8 +46,8 @@ let routes = [
     },   
 
     {
-        name:'impressum',
-        path:'/impressum',
+        name:'legals',
+        path:'/legals',
         component: Impressum
     },
 
@@ -45,6 +55,30 @@ let routes = [
         name:'terms',
         path:'/terms',
         component: Terms
+    },
+
+    {
+        name:'privacy',
+        path:'/privacy',
+        component: Privacy
+    },
+
+    {
+        name:'support',
+        path:'/support',
+        component: Support
+    },
+
+    {
+        name:'about',
+        path:'/about',
+        component: About
+    },
+
+    {
+        name:'services',
+        path:'/services',
+        component: Services
     },
     
     // {

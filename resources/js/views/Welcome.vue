@@ -19,7 +19,9 @@
                                 </router-link>                               
                             </button>
                             <button class="btn btn-outlined btn-teal-outlined is-outlined">
-                                {{ $t('content.learn_more') }}
+                                <router-link to="/services">
+                                    {{ $t('content.services') }}
+                                </router-link>                                 
                             </button>
                         </div>
                     </div>
@@ -62,12 +64,10 @@
                         <span class="text-xl text-gray-700">Unabhängige Vermittlung</span>
                     </div>                     
 
-                    <div class="text-center mt-10">
-                        <router-link to="/cargos">
-                            <button class="btn btn-teal">
-                                {{ $t('content.create_tender') }}
-                            </button>
-                        </router-link>
+                    <div class="text-center mt-10">                        
+                        <button class="btn btn-teal"  @click="$modal.show('login')">
+                            {{ $t('content.create_tender') }}
+                        </button>
                     </div>                    
                 </div>
                 <div class="bg-gray-300 rounded-lg shadow-lg p-8 mt-5 md:mt-0">  
@@ -89,7 +89,7 @@
                     </div>                     
 
                     <div class="text-center mt-10">
-                        <router-link to="/cargos">
+                        <router-link to="/tenders">
                             <button  class="btn btn-teal">
                                 {{ $t('content.find_fright') }}
                             </button>
@@ -118,9 +118,11 @@
                     Auswahl an Ausschreibungen, welche speziell auf die Speditionen zugeschnitten sind.
                 </p>
                 <div class="mt-10">
-                    <button class="btn btn-outlined btn-teal-outlined">
-                        {{ $t('content.services') }}
-                    </button>
+                    <router-link to="/about">
+                        <button class="btn btn-outlined btn-teal-outlined">
+                            {{ $t('content.learn_more') }}
+                        </button>
+                    </router-link>                  
                 </div> 
             </div>
 
