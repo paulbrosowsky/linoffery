@@ -134,10 +134,7 @@
    
 </template>
 <script>
-    export default {
-        mounted(){
-            console.log(Linoffery)
-        }
+    export default {       
     }
 </script>
 <style>
