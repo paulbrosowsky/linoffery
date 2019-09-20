@@ -52,13 +52,13 @@ class UsersSeeder extends Seeder
             ],
             [
                 'name' => 'Andreas Huber',
-                'email' => 'andreas@linoffery.com',
+                'email' => 'info@linoffery.com',
                 'password' => bcrypt('password'),
                 'avatar' => ''
             ],
             [
                 'name' => 'Max Lindemann',
-                'email' => 'max@linoffery.com',
+                'email' => 'max.lindemann@linoffery.com',
                 'password' => bcrypt('password'),
                 'avatar' => '/storage/avatars/max.png'
             ],
