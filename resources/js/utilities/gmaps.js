@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyCoJBPcXOkZ9rfG5kjHAggdn8bUK85YP7E';
+const API_KEY = Linoffery.mapsKey;
 const CALLBACK_NAME = 'gmapsCallback';
 
 let initialized = !!window.google;
@@ -11,7 +11,8 @@ const initPromise = new Promise((resolve, reject) => {
   rejectInitPromise = reject;
 });
 
-export default function init() {
+export default function init() {  
+    
   // If Google Maps already is initialized
   // the `initPromise` should get resolved
   // eventually.
@@ -32,6 +33,6 @@ export default function init() {
   script.src = `https://maps.googleapis.com/maps/api/js?libraries=places&key=${API_KEY}&callback=${CALLBACK_NAME}`;  
   script.onerror = rejectInitPromise;
   document.querySelector('head').appendChild(script);  
-
+  
   return initPromise;
 }

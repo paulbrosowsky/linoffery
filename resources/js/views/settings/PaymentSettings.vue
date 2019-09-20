@@ -166,9 +166,9 @@
             }
         },
 
-        mounted(){
+        mounted(){            
             setTimeout(() => {               
-                this.initStipe() 
+                this.initStipe()
             }, 500);                    
         }
                 

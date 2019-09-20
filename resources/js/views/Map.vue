@@ -236,7 +236,6 @@
 </script>
 
 <style>
-
     /* Hide Google Logo and Terms */
     a[href^="http://maps.google.com/maps"]{display:none !important}
     a[href^="https://maps.google.com/maps"]{display:none !important}
