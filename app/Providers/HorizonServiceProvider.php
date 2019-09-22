@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Laravel\Horizon\Horizon;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class HorizonServiceProvider extends HorizonApplicationServiceProvider
 {
@@ -16,6 +18,21 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Horizon::auth(function ($request) { 
+
+            $authorized = in_array($request->user()->email, [
+                'max.lindemann@linoffery.com',
+                'paul.brosowsky@gmail.com',
+                'john@example.com'
+            ]);
+
+            if ( !$authorized ) {
+                throw new UnauthorizedHttpException('Unauthorized');
+            }
+
+            return true;
+        });
 
         // Horizon::routeSmsNotificationsTo('15556667777');
         // Horizon::routeMailNotificationsTo('example@example.com');
@@ -34,11 +51,12 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewHorizon', function ($user) {
-            return true;
-            // return in_array($user->email, [
-            //     'max.lindemann@linoffery.com',
-            //     'paul.brosowsky@gmail.com'
-            // ]);
+            // return true;
+            return in_array($user->email, [
+                'max.lindemann@linoffery.com',
+                'paul.brosowsky@gmail.com',
+                'john@example.com'
+            ]);
         });
     }
 }

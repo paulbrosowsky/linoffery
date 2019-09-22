@@ -61,7 +61,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'is-confirmed-completed' => \App\Http\Middleware\RejectIfNotConfirmedAndCompleted::class
+        'is-confirmed-completed' => \App\Http\Middleware\RejectIfNotConfirmedAndCompleted::class,
+        'horizon.auth' =>  \App\Http\Middleware\HorizonBasicAuth::class,
     ];
 
     /**
