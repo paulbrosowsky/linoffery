@@ -15,7 +15,7 @@ window.io = require('socket.io-client');
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host:  'localhost:6001', 
+    host:  Linoffery.url + ':6001', 
     
     // broadcaster: 'pusher',
     // key: '39d01605fde628f780f2',

@@ -20,7 +20,8 @@
         </style>
         <script src="https://js.stripe.com/v3/"></script>
         <script>            
-            var Linoffery = {   
+            var Linoffery = {  
+                url: "{{ config('app.url') }}", 
                 csrfToken: "{{ csrf_token() }}",           
                 stripeKey: "{{ config('services.stripe.key') }}",
                 mapsKey: "{{ config('services.maps.key') }}"               
