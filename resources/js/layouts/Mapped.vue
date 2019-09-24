@@ -11,7 +11,7 @@
                 <tenders-filters v-resize="filterNavResize" ref="filterNav"></tenders-filters>
                 
                 
-                    <perfect-scrollbar ref="content" class="h-full rounded-lg overflow-scroll">                                       
+                    <perfect-scrollbar ref="content" class="h-full rounded-lg overflow-scroll pt-16">                                       
                         <slot></slot> 
                     </perfect-scrollbar >
                                
