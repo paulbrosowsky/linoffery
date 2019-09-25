@@ -23,7 +23,7 @@ class EmailConfirmationController extends Controller
 
         $user->confirm(); 
         
-        return redirect('/dashboard')
+        return redirect('/')
             ->with('flash', 'Du hast deien Anmeldung bestätigt. Herzlich Willkommen!');
     }
 

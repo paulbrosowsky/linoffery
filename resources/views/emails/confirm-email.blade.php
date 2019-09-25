@@ -8,6 +8,8 @@
     @lang('Confirm Email')
 @endcomponent
 
+<small>{{url('/api/auth/email-confirmation/confirm?token=' . $user->confirmation_token)}}</small>
+
 @lang('Thank you,')<br>
 {{ config('app.name') }}-Team
 @endcomponent
