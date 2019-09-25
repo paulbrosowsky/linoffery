@@ -1,26 +1,17 @@
 import Vue from "vue"
-window._ = require('lodash');
+window._ = require('lodash/reduce');
 
 import {router} from './routes'
 import {store} from './store'
 import App from './layouts/App'
 import i18n from './utilities/i18n'
 
-
-
 import Echo from "laravel-echo"
 window.io = require('socket.io-client');
-// import Pusher from 'pusher-js'
-// window.Pusher = Pusher
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host:  'localhost:6001', 
-    
-    // broadcaster: 'pusher',
-    // key: '39d01605fde628f780f2',
-    // cluster: 'eu',
-    // encrypt: true,
+    host:  Linoffery.url+':6001', 
 
     authEndpoint: '/api/broadcasting/auth',
     auth: {
@@ -37,12 +28,9 @@ Vue.use(VueModal)
 import VueCookies from "vue-cookies"
 Vue.use(VueCookies)
 
-import VueMoment from "vue-moment"
-import moment from 'moment-timezone'
-Vue.use(VueMoment, {
-    moment,
-})
-
+import VueMoment from "vue-moment";
+Vue.use(VueMoment);
+ 
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 Vue.use(PerfectScrollbar)

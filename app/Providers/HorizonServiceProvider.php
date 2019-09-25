@@ -17,26 +17,24 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         parent::boot();
 
+        Horizon::auth(function ($request) { 
+            $authorized = in_array($request->user()->email, [
+                'max.lindemann@linoffery.com',
+                'paul.brosowsky@gmail.com',
+                'john@example.com'
+            ]);
+
+            if ( !$authorized ) {
+                throw new UnauthorizedHttpException('Unauthorized');
+            }
+
+            return true;
+        });
+
         // Horizon::routeSmsNotificationsTo('15556667777');
         // Horizon::routeMailNotificationsTo('example@example.com');
         // Horizon::routeSlackNotificationsTo('slack-webhook-url', '#channel');
         
         // Horizon::night();
-    }
-
-    /**
-     * Register the Horizon gate.
-     *
-     * This gate determines who can access Horizon in non-local environments.
-     *
-     * @return void
-     */
-    protected function gate()
-    {
-        Gate::define('viewHorizon', function ($user) {
-            return in_array($user->email, [
-                'john@example.com'
-            ]);
-        });
-    }
+    }  
 }

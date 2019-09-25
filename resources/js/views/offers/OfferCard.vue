@@ -21,9 +21,8 @@
                 return this.offer.user.company
             },
 
-            created_at(){                
-                let locale = navigator.language || navigator.userLanguage
-                return  this.$moment(this.offer.created_at).locale(locale).fromNow()
+            created_at(){ 
+                return  this.$moment(this.offer.created_at).fromNow()
             }
         }        
     }
