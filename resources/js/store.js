@@ -705,7 +705,7 @@ export let store = new Vuex.Store({
         // Profile endpoints START
         fetchCompany(context, path){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
-
+            
             return new Promise((resolve, reject)=>{
                 axios
                     .get(path)

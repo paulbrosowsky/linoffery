@@ -50,4 +50,8 @@ return [
         'client_secret' => env('PASSPORT_CLIENT_SECRET'),
     ],
 
+    'maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY')
+    ],
+
 ];

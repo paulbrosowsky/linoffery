@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyCoJBPcXOkZ9rfG5kjHAggdn8bUK85YP7E';
+const API_KEY = Linoffery.mapsKey;
 const CALLBACK_NAME = 'gmapsCallback';
 
 let initialized = !!window.google;

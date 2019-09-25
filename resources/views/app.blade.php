@@ -22,7 +22,8 @@
         <script>            
             var Linoffery = {   
                 csrfToken: "{{ csrf_token() }}",           
-                stripeKey: "{{ config('services.stripe.key') }}"                
+                stripeKey: "{{ config('services.stripe.key') }}",
+                mapsKey: "{{ config('services.maps.key') }}"                 
             }  
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
                 (function(){

@@ -100,7 +100,7 @@
                         {{ $t('content.privacy') }}
                     </router-link></p>
                     <p><router-link class="link text-sm" to="/terms">
-                        {{ $t('content.terms_short') }}
+                        {{ $t('content.terms') }}
                     </router-link></p>  
                 </div>
                         

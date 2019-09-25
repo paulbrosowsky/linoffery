@@ -83,8 +83,8 @@
         },
 
         methods:{
-            fetchCompany(){
-                this.$store.dispatch('fetchCompany', `api${this.$route.path}`)
+            fetchCompany(){                
+                this.$store.dispatch('fetchCompany', `/api${this.$route.path}`)
             }
         },        
 
@@ -92,8 +92,8 @@
             this.fetchCompany()
         },
 
-        beforeRouteUpdate(to, from, next){
-            this.$store.dispatch('fetchCompany', `api${to.path}`)
+        beforeRouteUpdate(to, from, next){           
+            this.$store.dispatch('fetchCompany', `/api${to.path}`)
             next()  
         },
     }

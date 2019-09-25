@@ -3,8 +3,8 @@
 return [
 
     'emails' => [
-        'technology' => 'linoffery.info@gmail.com',
-        'support' => 'linoffery.info@gmail.com'
+        'technology' => 'tech@linoffery.com',
+        'support' => 'support@linoffery.com'
     ],
 
     'payment' => [
