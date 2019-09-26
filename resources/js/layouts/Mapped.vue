@@ -1,7 +1,8 @@
 <template>
     <div class="flex flex-col min-h-screen w-full">
         <navbar layout="map"></navbar>
-        <gmap></gmap>            
+
+        <gmap v-if="agreeCookies"></gmap>            
            
             <card 
                 classes="li-mapped-sidebar fixed bottom-0 shadow-lg z-20 md:mb-3 md:ml-3 md:h-full"
@@ -14,8 +15,6 @@
                     <perfect-scrollbar ref="content" class="h-full rounded-lg overflow-scroll">                                       
                         <slot></slot> 
                     </perfect-scrollbar >
-                               
-                
             </card>        
 
         <app-footer layout="map"></app-footer>
@@ -37,6 +36,12 @@
                 drawerHeight: 200, 
                 drawerWidth: 400,
                 minDrawerHeight: 54              
+            }
+        },
+
+        computed:{
+            agreeCookies(){                 
+                return this.$cookies.get('cookies_agree') ? true : false;
             }
         },
 

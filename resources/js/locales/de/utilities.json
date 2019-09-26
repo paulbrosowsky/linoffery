@@ -35,5 +35,8 @@
     "new_rating": "Neue Bewertung",
     "save_rating": "Bewertung speichern",
     "create_rating_message": "Ihre Bewertung wurde gespeichert.",
-    "delete_rating_message": "Ihre Bewertung wurde gelöscht."      
+    "delete_rating_message": "Ihre Bewertung wurde gelöscht.",
+    
+    "cookies_info": "Um unsere Webseite für Sie optimal zu gestalten und fortlaufend verbessern zu können, verwenden wir Cookies. Weitere Informationen zu Cookies erhalten Sie in unserer",
+    "agree": "Ich stimme zu"
 }
