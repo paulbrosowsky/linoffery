@@ -29,14 +29,14 @@
                     <div class="hidden xl:block flex-1 relative">
                         <div class="absolute inset-0 px-8">
                             <img class="rounded-lg shadow-xl relative z-10"
-                                src="https://lino-live-c730a062982044519ff2ab77c50c1-6ae113a.divio-media.net/filer_public_thumbnails/filer_public/66/cf/66cfdf1a-fac7-4e3e-83fc-5e430b41843f/artikelheader.jpg__0x750_q90_subsampling-2.jpg" 
+                                src="/storage/build/images/welcome_header.jpg" 
                                 style = "max-width: none; height: 512px !important;"
                             >
                         </div>                
                     </div>                
                 </div>
                 <img class="rounded-lg shadow-xl z-10 my-16 xl:hidden"
-                    src="https://lino-live-c730a062982044519ff2ab77c50c1-6ae113a.divio-media.net/filer_public_thumbnails/filer_public/66/cf/66cfdf1a-fac7-4e3e-83fc-5e430b41843f/artikelheader.jpg__0x750_q90_subsampling-2.jpg"                            
+                   src="/storage/build/images/welcome_header.jpg"                        
                 >
             </div>            
             

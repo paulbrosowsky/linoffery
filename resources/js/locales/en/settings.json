@@ -50,5 +50,10 @@
     "invoice_id": "Invoice ID",
     "customer_id": "Customer ID",
     "agree_with_newsletters": "I would like to receive newsletters by email.",
-    "newsletters_info": "We will inform you via email about our new features, last events and much more. NO SPAM guaranteed!" 
+    "newsletters_info": "We will inform you via email about our new features, last events and much more. NO SPAM guaranteed!",
+    "delete_account": "Delete Account",
+    "delete_account_question": "Do you really want to delete your account?",
+    "delete_account_info": "After deleting, you will lose access to your account. Your data will not be completely deleted.", 
+    "delete_account_message": "Your user account has been deleted.",
+    "info_privacy": "More information can be found in our privacy policy."
 }

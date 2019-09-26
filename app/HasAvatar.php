@@ -54,5 +54,16 @@ trait HasAvatar{
         
         Storage::put('public/'.$path, $croped);  
     }
+
+    /**
+     *  Get avatar path for public storage
+     * 
+     * @param string $avatar
+     * @return string
+     */
+    protected function getAvatarAttribute($avatar)
+    {
+        return '/storage/'. $avatar;
+    }
     
 }

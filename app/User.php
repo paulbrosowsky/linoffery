@@ -141,5 +141,5 @@ class User extends Authenticatable
         $this->confirmation_token = null;
 
         $this->save(); 
-    }
+    }  
 }
