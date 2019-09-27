@@ -11,7 +11,8 @@ trait HasAvatar{
     protected static function bootHasAvatar()
     {
         static::deleting(function($model){ 
-            Storage::disk('public')->delete( $model->avatar );
+            $avatar_path = substr($model->avatar, 9); 
+            Storage::disk('public')->delete( $avatar_path);
         });
     }
 
@@ -63,7 +64,7 @@ trait HasAvatar{
      */
     protected function getAvatarAttribute($avatar)
     {
-        return '/storage/'. $avatar;
+        return $avatar ? '/storage/'. $avatar : null;
     }
     
 }

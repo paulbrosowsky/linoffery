@@ -222,7 +222,7 @@ class RegistrationTest extends TestCase
         $this->assertNotEmpty($user->confirmation_token);
                 
         $this->get( '/api/auth/email-confirmation/confirm?token=' . $user->confirmation_token)
-            ->assertRedirect('/dashboard');
+            ->assertRedirect('/');
 
         tap($user->fresh(), function($user){
             $this->assertTrue($user->fresh()->confirmed); 

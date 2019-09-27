@@ -41,7 +41,7 @@ class AddAvatarTest extends PassportTestCase
             'image' => $file = UploadedFile::fake()->image('avatar.jpg')       
         ]);    
 
-        $this->assertEquals('avatars/' .$file->hashName(), auth()->user()->avatar);       
+        $this->assertEquals('/storage/avatars/' .$file->hashName(), auth()->user()->avatar);       
             
         Storage::disk('public')->assertExists('avatars/' .$file->hashName());
     }
@@ -64,7 +64,7 @@ class AddAvatarTest extends PassportTestCase
             'image' => $file = UploadedFile::fake()->image('avatar.jpg')       
         ]);    
 
-        $this->assertEquals('avatars/' .$file->hashName(), $user->avatar);       
+        $this->assertEquals('/storage/avatars/' .$file->hashName(), $user->avatar);       
             
         Storage::disk('public')->assertExists('avatars/' .$file->hashName());
 
