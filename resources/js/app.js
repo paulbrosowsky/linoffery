@@ -78,6 +78,7 @@ Vue.component('date-range', require('./components/DateRange.vue').default);
 Vue.component('default-modal', require('./modals/DefaultModal.vue').default);
 Vue.component('drawer-right', require('./modals/DrawerRight.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
+Vue.component('filter-header', require('./views/tenders/filters/FilterHeader.vue').default);
 Vue.component('image-upload', require('./components/ImageUpload.vue').default);
 Vue.component('navbar', require('./components/Navbar.vue').default);
 Vue.component('password-input', require('./components/PasswordInput.vue').default);

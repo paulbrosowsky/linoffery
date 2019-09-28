@@ -1,17 +1,10 @@
 <template>
    <div class="px-5 pb-5"> 
-        <div class=" flex items-center justify-between mb-2 ">
-            <div class="flex items-center ">
-                <button class="focus:outline-none" @click="$emit('close')">
-                    <i class="icon ion-md-arrow-up text-lg text-white pr-3"></i>
-                </button>
-                <p class="text-white text-sm">{{$t('tender.find_load_by_weight')}}</p>
-            </div>
-            
-            <button class="focus:outline-none" @click="removeFilter">
-                <i class="icon ion-md-close text-lg text-white px-3"></i>
-            </button>
-        </div>
+        <filter-header 
+            :text="$t('tender.find_load_by_weight')"
+            @close="$emit('close')"
+            @remove="removeFilter"
+        ></filter-header> 
         
         <form @sumbit.prevent="triggerFilter">
             <div class="flex">            
