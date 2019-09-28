@@ -165,7 +165,7 @@ export let store = new Vuex.Store({
         removeFilters(state, filter){
             delete state.filters[filter]            
             
-            _.remove(state.filterKeys, (key)=>{
+            _remove(state.filterKeys, (key)=>{
                 return key === filter
             })
         },

@@ -65,7 +65,7 @@
                 this.loading = true                
                 let params = null
 
-                if(!_.isEmpty(this.filters)){ 
+                if(!_isEmpty(this.filters)){ 
                     params = { params: this.filters}
                 }
                

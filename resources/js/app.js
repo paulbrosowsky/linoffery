@@ -1,5 +1,6 @@
 import Vue from "vue"
-window._ = require('lodash/reduce');
+window._remove = require('lodash/remove');
+window._isEmpty= require('lodash/isEmpty');
 
 import {router} from './routes'
 import {store} from './store'
