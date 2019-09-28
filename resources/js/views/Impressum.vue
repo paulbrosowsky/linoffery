@@ -7,13 +7,11 @@
         <p>Inhaber: Max Lindemann<br>
         Dienstleistung im Online-Bereich</p>
 
-        <p>Siemenstr, 8<br>
-        73066 Uhingen</p>
+        <p>Kirchstraße 35<br>
+        89555 Steinheim am Almbuch</p>
 
-        <h2 class="text-2xl my-5">Kontakt</h2>
-
-        <p>Telefon: 071619661841<br>
-        E-Mail: <a href="mailto:m.lindemann@linoffery.com">m.lindemann@linoffery.com</a></p>
+        <h2 class="text-2xl my-5">Kontakt</h2>        
+        <p>E-Mail: <a href="mailto:max.lindemann@linoffery.com">max.lindemann@linoffery.com</a></p>
 
         <h2 class="text-2xl my-5" >Berufsbezeichnung und berufsrechtliche Regelungen</h2>
 

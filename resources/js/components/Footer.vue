@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full px-3 md:px-10" :class="classes">
+    <div class="w-full px-3 pb-12 md:pb-0 md:px-10" :class="classes">
         <div class="flex flex-col py-4 md:flex-row" v-if="layout != 'map'">
             <div class="md:flex-grow">
                 <div class="text-gray-700 mr-6"> 
@@ -61,7 +61,7 @@
             </div> 
         </div>
 
-        <div class="flex flex-col text-gray-700 pb-5 md:flex-row md:justify-end">
+        <div class="flex flex-col text-gray-700 text-sm pb-5 md:text-base md:flex-row md:justify-end">
             <p class="pr-5">linoffery © 2019 </p>
             <div class="flex">
                 <p><router-link class="hover:text-teal-500 pr-2" to="/legals">
