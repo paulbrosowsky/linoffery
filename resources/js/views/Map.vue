@@ -90,7 +90,7 @@
 
             addMarker(position, location = null){
 
-                let icon = location ? '/build/icons/' + location.type + '_marker.svg' : ''                
+                let icon = location ? '/storage/build/icons/' + location.type + '_marker.svg' : ''                
                                  
                 let marker = new google.maps.Marker({
                     position:position,

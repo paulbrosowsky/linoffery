@@ -1,6 +1,6 @@
 <template>
     <section v-if="company">
-        <card>
+        <card class="mb-5">
             <div class="flex flex-col items-center">
 
                 <div class="w-32 h-32 rounded-full text-2xl shadow-md overflow-hidden mb-5" >
@@ -46,7 +46,7 @@
 
         <button
             v-if="!isCompanyMember" 
-            class="btn btn-teal shadow-md my-5 w-full"
+            class="btn btn-teal shadow-md mb-5 w-full"
              @click="$modal.show('create-comment')"
         >
             <span><i class="icon ion-md-add mr-2"></i></span>
@@ -69,12 +69,13 @@
 
             rating(){
                 let rating = null;
-                let comments = this.company.comments
+                let comments = this.company.comments;
+
                 comments.forEach(comment => {
-                    rating = rating + comment.rating
+                    rating = rating + comment.rating;
                 });
 
-                return rating / comments.length
+                return comments.length == 0 ? 0 : rating / comments.length;   
             },
 
             isCompanyMember(){

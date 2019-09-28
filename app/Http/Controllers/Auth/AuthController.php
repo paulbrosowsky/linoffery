@@ -62,7 +62,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
             'company_name' => ['required', 'string'],
-            'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies', 'vat_number'],
+            'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies', 'vat-number'],
         ]);        
 
         $company = Company::create([

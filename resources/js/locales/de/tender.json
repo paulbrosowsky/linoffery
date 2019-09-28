@@ -91,5 +91,6 @@
     "clone_tender": "Eine Kopie als Entwurf erstellen",
     "clone_tender_info": "Sie können zusätlich eine Kopie erstellen. Die aktuelle Ausschreibung wird gelöscht und eine Kopie als Entwurf gespeichert.",
     "delete_tender_question": "Möchten Sie Ihre Ausschreibung wirklich löschen?",
-    "delete_tender_message": "Ihre Ausschreibung wurde gelöscht."
+    "delete_tender_message": "Ihre Ausschreibung wurde gelöscht.",
+    "no_comments_info": "Momenten keine Bewertungen vorhanden."
 }

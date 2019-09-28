@@ -91,5 +91,6 @@
     "clone_tender": "Make a copy as a draft.",
     "clone_tender_info": "You can also create a copy. The current invitation to tender is deleted and a copy is saved as a draft.",
     "delete_tender_question": "Do you really want to delete your tender?",
-    "delete_tender_message": "Your tender is deleted."
+    "delete_tender_message": "Your tender is deleted.",
+    "no_comments_info": "Currently no comments available."
 }

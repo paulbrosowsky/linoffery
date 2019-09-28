@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\CompleteTender',
-        'App\Console\Commands\CreateInvoices'
+        // 'App\Console\Commands\CreateInvoices'
     ];
 
     /**
