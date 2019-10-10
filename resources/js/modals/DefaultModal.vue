@@ -5,7 +5,7 @@
         height="auto"
         :width= "width"
         :scrollable="true" 
-        :adaptive="true"                    
+        :adaptive="true"                              
         @before-open="beforeOpen" 
         @opened="$emit('opened')"
         @closed="hideModal"
@@ -55,6 +55,13 @@
 <style lang="scss">      
     .v--modal{
         border-radius: 0.5rem;        
+    }
+    .v--modal-background-click{
+        display: flex;        
+        align-items: center;
+    }
+    .v--modal-box.v--modal { 
+        top: 0 !important;        
     }
 </style>
 
