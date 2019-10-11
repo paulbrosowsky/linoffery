@@ -20,6 +20,7 @@
         >
         
         <button class="btn btn-teal w-32 mt-2" @click="submitFile" v-if="showUplaodBtn">{{$t('utilities.upload')}}</button>
+        <loading-spinner :loading="loading" :position="'absolute'"></loading-spinner> 
     </div>
 </template>
 <script>   
@@ -34,7 +35,8 @@
                 showPreview: false,
                 imagePreview: null,
                 showUplaodBtn: false,
-                errors: []
+                errors: [],
+                loading:false,        
             }
         },
 
@@ -78,6 +80,7 @@
                 formData.append('image', this.file) 
 
                 // Upload the Image to Server
+                this.loading = true;
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.state.token 
                 axios.post(this.endpoint ,
                         formData,                                               
@@ -90,9 +93,13 @@
                     .then(()=>{
                         flash(this.$i18n.t('settings.image_uploaded_message'))
                         this.$store.dispatch('fetchLoggedInUser')   
-                        this.showUplaodBtn = false                  
+                        this.showUplaodBtn = false 
+                        this.loading = false;                 
                     })
-                    .catch(errors => this.errors = errors.response.data.errors ) 
+                    .catch(errors =>{
+                        this.loading = false;
+                        this.errors = errors.response.data.errors;
+                    }) 
              
             },  
             

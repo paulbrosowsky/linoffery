@@ -722,7 +722,7 @@ export let store = new Vuex.Store({
         
         createComment(context, data){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
-
+            console.log(data.path);
             return new Promise((resolve, reject)=>{
                 axios
                     .post(data.path, data.data)

@@ -1,16 +1,18 @@
 <template>
     <div>
-        <div class="w-full flex py-5">
-            <img class="w-16 h-16 rounded-full shadow-md" :src="user.company.avatar" alt="">
+        <router-link :to="{name: 'profile', params:{ profile: user.company.id}}">
+            <div class="w-full flex py-5">            
+                <img class="w-16 h-16 rounded-full shadow-md" :src="user.company.avatar" alt="">
 
-            <div class="ml-3 md:ml-5">
-                <p class="text-lg font-bold mb-1" v-text="user.company.name"></p>
-                <p class="leading-none" v-text="user.company.address"></p>
-                <span v-text="user.company.postcode"></span>
-                <span v-text="user.company.city"></span>
-                <p class="leading-none text-gray-500" v-text="user.company.country"></p>
+                <div class="ml-3 md:ml-5">
+                    <p class="text-lg font-bold mb-1" v-text="user.company.name"></p>
+                    <p class="leading-none" v-text="user.company.address"></p>
+                    <span v-text="user.company.postcode"></span>
+                    <span v-text="user.company.city"></span>
+                    <p class="leading-none text-gray-500" v-text="user.company.country"></p>
+                </div>
             </div>
-        </div>
+        </router-link>
 
         <div class="w-full flex ml-5">
             <img class="w-10 h-10 rounded-full shadow-md mt-5" :src="user.avatar" alt="">

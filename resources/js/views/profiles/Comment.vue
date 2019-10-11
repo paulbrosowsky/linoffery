@@ -65,7 +65,7 @@
                 this.$store.dispatch('deleteComment', `/api/comments/${this.comment.id}/destroy`)
                     .then(()=>{
                         flash(this.$i18n.t('utilities.delete_rating_message'))
-                        this.$store.dispatch('fetchCompany', `api${this.$route.path}`)
+                        this.$store.dispatch('fetchCompany', `/api${this.$route.path}`)
                     }) 
             }
         }

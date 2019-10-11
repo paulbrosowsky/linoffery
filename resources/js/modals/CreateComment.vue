@@ -65,15 +65,15 @@
 
             createComment(){
                 this.loading = false
-
+                
                 this.$store
                     .dispatch('createComment', {
-                        path: `api${this.$route.path}/comment`,
+                        path: `/api${this.$route.path}/comment`,
                         data: this.form
                     })
                     .then(()=>{
                         flash(this.$i18n.t('utilities.create_rating_message'))
-                        this.$store.dispatch('fetchCompany', `api${this.$route.path}`)
+                        this.$store.dispatch('fetchCompany', `/api${this.$route.path}`)
                         this.close()
                     })
                     .catch(errors=>{
