@@ -246,7 +246,10 @@ export let store = new Vuex.Store({
                         context.commit('retrieveUser', response.data)                        
                         resolve(response)
                     })
-                    .catch(errors => reject(errors.response))
+                    .catch(errors => {
+                        reject(errors.response)
+                        context.dispatch('logout');
+                    })
             })  
         },
 
