@@ -91,7 +91,7 @@ class Offer extends Model
 
         $order->makePdf();
 
-        if (!env('APP_ENV') === 'testing') {
+        if (env('APP_ENV') != 'testing') {
             $this->user->company->createInvoiceItem($order); 
         }
         

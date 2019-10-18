@@ -67,7 +67,10 @@
                         this.loading = false
                         this.$router.push('/')
                     })
-                    .catch(errors => this.errors = errors)
+                    .catch(errors =>{
+                        this.errors = errors;
+                        this.loading = false;
+                    })
             }
         }
     }

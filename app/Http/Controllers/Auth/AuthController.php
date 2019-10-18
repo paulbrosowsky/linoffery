@@ -18,7 +18,7 @@ class AuthController extends Controller
     /**
      * Login a user
      * 
-     * @return Response
+     * @return Response     * 
      */
     public function login(Request $request)
     {   
