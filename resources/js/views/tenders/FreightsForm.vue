@@ -31,7 +31,7 @@
             FreightForm
         },
 
-        props:['values'],
+        props:['tenderId', 'values'],
 
         data(){
             return{
@@ -45,26 +45,21 @@
         methods:{
             
             storeFreights(){
-                this.loading = true                
-                    this.$store
-                        .dispatch('storeFreight', {'freights': this.freights})
-                        .then(()=>{
-                            setTimeout(() => {  
-                                flash(this.$i18n.t('tender.store_freight_message'))
-                                this.$store.dispatch('fetchTender', `/api${this.$route.path}`)
-                                this.$emit('close')                          
-                                this.loading = false
-                            }, 2000);
-                        })
-                        .catch(errors => {
-                            this.loading = false
-                            this.errors = errors
-                        })
+                this.loading = true
+                axios
+                    .post('/api/freights/store', {'freights': this.freights})
+                    .then(response =>{
+                        flash(this.$i18n.t('tender.store_freight_message'));                        
+                        this.$emit('close');                          
+                        this.loading = false;                        
+                    })
+                    .catch(errors => {
+                        this.errors = errors.response.data.errors;
+                    });                      
                 
             },
 
-            setFreights(){  
-                           
+            setFreights(){ 
                 if(this.values.length > 0){
                     this.values.forEach(value => {
                         value.index = this.index
@@ -78,7 +73,7 @@
 
             addFreight(){
                 let freight = {
-                    tender_id: this.$store.getters.tenderId,
+                    tender_id: this.tenderId,
                     index: this.index,
                     title: null,
                     description: null,

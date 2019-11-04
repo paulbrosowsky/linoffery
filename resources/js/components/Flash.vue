@@ -10,7 +10,7 @@
             </div>
 
             <div 
-                class="li-flash-container flex items-center bg-yellow-300 fixed shadow-lg rounded-lg py-2 z-50 m-auto md:mt-0"
+                class="li-flash-container flex items-center bg-white fixed shadow-lg rounded-lg py-2 z-50 m-auto md:mt-0"
                 style="max-width: 420px"
                 v-if="notification"
             > 

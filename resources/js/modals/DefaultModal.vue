@@ -12,12 +12,10 @@
         v-cloak
     >
         <button 
-            class="absolute top-0 right-0 p-5  focus:outline-none"  
+            class="absolute icon-btn top-0 right-0 m-3"  
             @click="hideModal"
-        >     
-            <div>
-                <i class="icon ion-md-close text-xl text-gray-500"></i> 
-            </div>   
+        >   
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z"/></svg>  
                        
         </button>
 

@@ -29,11 +29,15 @@
 
         methods:{
             toggleNewsletters(){
-                this.newsletters = !this.newsletters
-
-                this.$store
-                    .dispatch('toggleNewsletters')
-                    .then((response) => flash(response.message))
+                this.newsletters = !this.newsletters;
+                
+                axios
+                    .patch('/api/settings/newsletters')
+                    .then(response =>{
+                        flash(response.data.message);
+                        this.$store.dispatch('fetchLoggedInUser');
+                    })
+                    .catch(errors => console.log(errors.response));
             }
         },
         

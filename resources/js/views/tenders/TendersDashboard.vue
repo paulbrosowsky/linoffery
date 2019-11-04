@@ -17,12 +17,13 @@
             TenderCard
         }, 
 
-        computed:{   
-            
-            tenders(){
-                return this.$store.state.usersTenders
-            },
+        data(){
+            return{
+                tenders: null
+            }
+        },
 
+        computed:{ 
             active(){
                 if(this.tenders){
                     return this.tenders.filter((tender)=>{
@@ -56,7 +57,30 @@
             filtered(){
                 return this[this.$route.hash.substring(1)]
             }
-        },         
+        },  
+        
+        methods:{   
+            fetchTenders(){
+                axios
+                    .get('/api/dashboard/tenders')
+                    .then(response =>{                       
+                        this.tenders =  response.data;                       
+                    })
+                    .catch(errors => console.log(errors.response))
+            }
+        },
+        
+        created(){
+            this.fetchTenders();
+
+            setTimeout(()=>{
+                Event.$emit('tendersCount', {
+                    active: this.active.length,
+                    drafts: this.drafts.length,
+                    completed: this.completed.length
+                })
+            },500);
+        },
         
         beforeRouteEnter(to, from, next){            
            if(!to.hash){

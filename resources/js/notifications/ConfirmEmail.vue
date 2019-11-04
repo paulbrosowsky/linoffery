@@ -26,13 +26,13 @@
 
         methods:{
             sendConfirmationEmail(){
-                this.$store
-                    .dispatch('sendConfirmationEmail')
-                    .then(()=>{
+                axios
+                    .get('/api/auth/email-confirmation/email')
+                    .then(response =>{        
                         flash(this.$i18n.t('auth.confirm_email_message'))
-                    })
-            }
+                    });  
+            } 
         }
-
+        
     }
 </script>

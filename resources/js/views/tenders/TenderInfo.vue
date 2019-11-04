@@ -2,20 +2,7 @@
     
         <div 
             class="px-5 pb-5"  
-        >           
-            
-            <!-- <div 
-                class="w-full p-0 bg-black overflow-hidden shadow-md rounded-lg"
-                :class="cardHeaderSmall ? '' : 'lg:w-3/5'" 
-            >
-                <div class="relative block w-full h-0 aspect-ratio-4/3 overflow-hidden">                
-                    <img class="absolute block -max-w-full max-h-full m-auto top-0 bottom-0 right-0 left-0" 
-                        src="https://lino-live-c730a062982044519ff2ab77c50c1-6ae113a.divio-media.net/filer_public_thumbnails/filer_public/66/cf/66cfdf1a-fac7-4e3e-83fc-5e430b41843f/artikelheader.jpg__0x750_q90_subsampling-2.jpg" 
-                        alt=""
-                    >              
-                </div>
-            </div>  -->
-
+        > 
            
             <div>              
                 <div class="flex items-center mb-1">
@@ -55,7 +42,7 @@
                             </button> 
                             <button 
                                 class=" w-full text-red-500 font-bold  hover:text-red-700 focus:outline-none"
-                                @click="$modal.show('take-it-now', tender)"                                    
+                                @click="takeItNow"                                    
                                 v-if="tender.immediate_price"
                             >                               
                                 <span class="text-lg mr-2 " v-text="'€ '+ tender.immediate_price"></span>
@@ -85,21 +72,31 @@
             },
 
             ownsTender(){
-                return this.$store.getters.ownsTender
-            },
+                let user = this.$store.state.user;
 
-            loggedIn(){
-                return this.$store.getters.loggedIn
+                if (user && this.tender) {
+                    return this.tender.user_id === user.id;
+                }                
             },
 
             price(){
                 return this.tender.lowest_offer ? this.tender.lowest_offer : this.tender.max_price
             },
+
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            },
             
             fullyAuthorized(){
                 return this.$store.getters.fullyAuthorized
             },
-        },        
+        },    
+        
+        methods:{
+            takeItNow(){
+                this.ownsTender ? '' :  this.$modal.show('take-it-now', this.tender);                
+            }
+        }
         
     }
 </script>

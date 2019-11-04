@@ -183,9 +183,10 @@
 
         methods:{
             updateCompany(){
-                this.loading = true
-                this.$store
-                    .dispatch('updateCompany',{
+                this.loading = true;
+
+                axios
+                    .patch('/api/settings/company', {
                         name: this.name,
                         logo: this.logo,
                         vat: this.vat,
@@ -197,14 +198,15 @@
                         lat: this.lat,
                         lng: this.lng   
                     })
-                    .then(()=>{
-                        this.loading = false
-                        flash(this.$i18n.t('settings.changed_company_message'))
+                    .then(()=>{  
+                        this.$store.dispatch('fetchLoggedInUser');                                               
+                        this.loading = false;
+                        flash(this.$i18n.t('settings.changed_company_message'));
                     })
-                    .catch(errors => {
-                        this.loading = false
-                        this.errors = errors
-                    })
+                    .catch(errors =>{ 
+                        this.loading = false;
+                        this.errors = errors.response.data.errors;
+                    })               
             },
 
             updateLogoPreview(value){                

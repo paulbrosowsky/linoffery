@@ -60,35 +60,35 @@
 
         computed:{
             company(){
-                return this.offer ? this.offer.user.company : ''
+                return this.offer ? this.offer.user.company : '';
             }
         },
 
         methods:{
             setData(data){
-                this.offer = data
+                this.offer = data;
             },
 
             acceptOffer(){
-                this.loading = true
+                this.loading = true;              
 
-                this.$store
-                    .dispatch('acceptOffer', this.offer.id)
+                axios
+                    .patch(`/api/offers/${this.offer.id}/update`)
                     .then(response =>{
-                        setTimeout(() => {
-                            flash(this.$i18n.t('tender.place_order_message'))                    
-                            this.close()
-                            this.$router.push({name:'order', params:{ order: response.id }})
-                            this.loading = false
-                        }, 1000);                        
+                        flash(this.$i18n.t('tender.place_order_message'));                    
+                        this.close();
+                        this.$router.push({name:'order', params:{ order: response.data.id }});                            
                     })
-                    .catch(errors => console.log(errors))
+                    .catch(errors =>{
+                        console.log(errors.response.data.errors);
+                        this.loading = false;
+                    });
             },
 
             close(){
-                this.confirmOffer = false
-                this.cancelOffer = false
-                this.$modal.hide('offer-view')
+                this.confirmation= false;                
+                this.$modal.hide('offer-view');
+                this.loading = false;
             }
         }
     }

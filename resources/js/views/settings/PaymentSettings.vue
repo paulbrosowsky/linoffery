@@ -111,15 +111,19 @@
             },
 
             updatePayment(token){
-                // Submit Token to the Server
-                this.$store
-                        .dispatch('updatePayment', {token: token})
-                        .then(()=>{
-                            this.loading = false
-                            flash(this.$i18n.t('settings.update_card_message'))
-                            this.$store.dispatch('fetchLoggedInUser')
-                        })
-                        .catch(()=> this.loading = false)      
+                
+                // Submit Token to the Server               
+                axios
+                    .patch('/api/payments/update', {token: token})
+                    .then(response =>{  
+                        this.loading = false;
+                        flash(this.$i18n.t('settings.update_card_message'));
+                        this.$store.dispatch('fetchLoggedInUser');
+                    })
+                    .catch(errors =>{
+                        console.log(errors.response.data.errors);
+                        this.loading = false;
+                    })      
             },
 
             initStipe(){

@@ -30,6 +30,6 @@ class ConfirmYourEmail extends Mailable implements ShouldQueue
     public function build()
     {               
         return $this->markdown('emails.confirm-email')
-            ->subject(__('Please confirm you email address.'));
+            ->subject(__('Please confirm your email address.'));
     }
 }

@@ -77,11 +77,11 @@
                     //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings
                     Event.$on('fetchAddress',(element) =>{                                                
                         this.fetchAddress(element)
-                    }),  
+                    }) 
 
-                    Event.$on('boxRoute', value => {                
-                        this.boxRoute(value)
-                    })  
+                    // Event.$on('boxRoute', value => {                
+                    //     this.boxRoute(value)
+                    // })  
                   
                 } catch (error) {
                     console.error(error);
@@ -231,7 +231,11 @@
         
         mounted(){  
             this.mountMap() 
-        },        
+        },   
+        
+        beforeDestroy(){
+            Event.$off();
+        }
     }
 </script>
 

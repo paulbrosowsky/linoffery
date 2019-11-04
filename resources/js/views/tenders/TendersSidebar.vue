@@ -11,57 +11,42 @@
             <span><i class="icon ion-md-add mr-2"></i></span>
             <span>{{$t('tender.new_tender')}}</span>
         </button>
-        <tabs>
-            <tab :name="$i18n.t('utilities.active')" hash="#active" :count="active.length"></tab>
-            <tab :name="$i18n.t('utilities.drafts')" hash="#drafts" :count="drafts.length"></tab>
-            <tab :name="$i18n.t('utilities.completed')" hash="#completed" :count="completed.length"></tab>
+        <tabs v-if="tenders">
+            <tab :name="$i18n.t('utilities.active')" hash="#active" :count="tenders.active"></tab>
+            <tab :name="$i18n.t('utilities.drafts')" hash="#drafts" :count="tenders.drafts"></tab>
+            <tab :name="$i18n.t('utilities.completed')" hash="#completed" :count="tenders.completed"></tab>
         </tabs>
 
     </div>
     
 </template>
 <script>
-    export default {
-        computed:{   
-            
-            tenders(){
-                return this.$store.state.usersTenders
-            },
+    export default { 
+        data(){
+            return{
+                tenders: null,
+            }
+        },       
+        computed:{ 
 
-            active(){
-                if(this.tenders){
-                    return this.tenders.filter((tender)=>{
-                        return tender.isActive
-                    })
-                }else{
-                    return []
-                }                          
-            },
-
-            drafts(){
-                if(this.tenders){
-                    return this.tenders.filter((tender)=>{
-                        return !tender.published_at
-                    })
-                }else{
-                    return []
-                }              
-            },
-
-            completed(){
-                if(this.tenders){
-                    return this.tenders.filter((tender)=>{
-                        return tender.completed_at
-                    })
-                }else{
-                    return []
-                }          
-            },
-            
             fullyAuthorized(){
                 return this.$store.getters.fullyAuthorized
             },
-        },        
+        }, 
+
+        methods:{
+            setData(data){
+                this.tenders = data;
+            }
+        },
+
+        created(){
+            Event.$on('tendersCount', this.setData );
+        },
+
+        beforeDestroy(){
+            Event.$off('tendersCount', this.setData );
+        }
         
     }
 </script>

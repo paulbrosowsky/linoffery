@@ -48,23 +48,23 @@
 
         methods:{
             makeOffer(){
-                this.loading = true
+                this.loading = true;             
+                
+                axios
+                    .post(`/api${this.$route.path}/offers/store`, { price: this.price })
+                    .then(response =>{
+                        flash(this.$i18n.t('tender.make_offer_message')); 
 
-                this.$store.dispatch('makeOffer', {
-                    price: this.price, 
-                    path: this.$route.path
-                })
-                .then(()=>{
-                    setTimeout(() => {
-                        flash(this.$i18n.t('tender.make_offer_message'))
-                        this.$store.dispatch('fetchTender', `/api${this.$route.path}`) 
-                        this.close()
-                    }, 1000);                    
-                })
-                .catch(errors => {
-                    this.errors = errors
-                    this.loading = false
-                })            
+                        // Fetch Tender data from API. 
+                        // Linstener in /views/tenders/Tender.vue
+                        Event.$emit('retrieveTender');
+                        
+                        this.close();
+                    })
+                    .catch(errors =>{
+                        this.errors = errors.response.data.errors;
+                        this.loading = false;
+                    });
             },
 
             close(){

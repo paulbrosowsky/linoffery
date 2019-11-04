@@ -143,22 +143,23 @@
             },
 
             register(){
-                this.loading = true
-                this.$store
-                    .dispatch('register', {
+                this.loading = true;
+
+                axios
+                    .post('/api/auth/register', {
                         name: this.name,
                         email: this.email,
                         password: this.password,
                         company_name: this.company_name,
                         vat: this.spacelessVat
                     })
-                    .then(()=>{
-                        this.login()                        
+                    .then((response)=>{                        
+                        this.login() ; 
                     })
-                    .catch(errors => {
-                        this.errors = errors
+                    .catch(errors =>{                        
+                        this.errors = errors.response.data.errors
                         this.loading = false 
-                    })
+                    });           
             },
 
             login(){                

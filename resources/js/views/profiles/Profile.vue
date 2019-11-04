@@ -24,11 +24,45 @@
 
         components:{ Comment },
 
-        computed:{
-            comments(){
-                let company = this.$store.state.company
-                return company ? company.comments : null
+        data(){
+            return{
+                company: null,
             }
+        },
+
+        computed:{
+            comments(){                
+                return this.company ? this.company.comments : '';
+            }
+        },
+
+        methods:{
+            fetchCompanyProfile(){
+                axios
+                    .get(`/api${this.$route.path}`)
+                    .then(response =>{                       
+                        this.company = response.data;                        
+                    })
+                    .catch(errors => console.log(errors.response));
+            }
+        },
+
+        created(){
+            this.fetchCompanyProfile();
+
+            setTimeout(() => {      
+                // Set Company Data on the Sidebar
+                // Listener in /views/profiles/ProfileSidebar.vue           
+               Event.$emit('setCompanyData', this.company);
+            }, 500);
+
+            // Refresh Company Data
+            // Trigger in /modals/CreateComment.vue, /views/profiles/Comment.vue
+            Event.$on('retrieveCompany', this.fetchCompanyProfile);
+        },
+
+        beforeDestroy(){
+            Event.$off('retrieveCompany', this.fetchCompanyProfile);
         }
         
     }

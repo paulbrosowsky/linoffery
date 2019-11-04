@@ -20,6 +20,7 @@ Route::group([
 ], function(){
 
     Route::post('/login', 'AuthController@login');
+    Route::post('/login/refresh', 'AuthController@refresh');    
     Route::post('/register', 'AuthController@register');
     Route::post('/password/email', 'ForgotPasswordController@index');
     Route::post('/password/reset', 'ForgotPasswordController@update');
@@ -28,7 +29,7 @@ Route::group([
     Route::group([
         'middleware' => 'auth:api'
     ], function(){
-
+        
         Route::get('/logout', 'AuthController@logout');
         Route::get('/user', 'AuthController@user');
         Route::get('/email-confirmation/email', 'EmailConfirmationController@update');

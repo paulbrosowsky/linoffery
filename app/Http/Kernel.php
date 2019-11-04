@@ -40,7 +40,8 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings', 
-            \App\Http\Middleware\Localization::class,  
+            \App\Http\Middleware\Localization::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class, 
         ],
     ];
 

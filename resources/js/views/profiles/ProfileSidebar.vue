@@ -58,10 +58,13 @@
 <script>
     export default {
 
-        computed:{
-            company(){
-                return this.$store.state.company
-            },
+        data(){
+            return{
+                company: null,
+            }
+        },
+
+        computed:{           
 
             commentsCount(){                
                 return this.company ? this.company.comments.length : null
@@ -79,23 +82,25 @@
             },
 
             isCompanyMember(){
-                return this.$store.getters.isCompanyMember
-            }
-        },
-
+                let user = this.$store.state.user;
+                return user.company.id == this.company.id;
+            },            
+        }, 
+        
         methods:{
-            fetchCompany(){                
-                this.$store.dispatch('fetchCompany', `/api${this.$route.path}`)
+            setData(value){
+                this.company = value;
             }
-        },        
-
-        created(){
-            this.fetchCompany()
         },
 
-        beforeRouteUpdate(to, from, next){           
-            this.$store.dispatch('fetchCompany', `/api${to.path}`)
-            next()  
+        created(){  
+            // Set Company Data on the Sidebar
+            // Trigger in /views/profiles/Profile.vue             
+            Event.$on('setCompanyData', this.setData);            
         },
+
+        beforeDestroy(){
+            Event.$off('setCompanyData', this.setData);
+        }       
     }
 </script>

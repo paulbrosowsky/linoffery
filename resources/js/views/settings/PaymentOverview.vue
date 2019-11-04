@@ -38,10 +38,13 @@
 </template>
 <script>
     export default {
-        computed:{
-            orders(){
-                return this.$store.state.orders                
-            },
+
+        data(){
+            return{
+                orders:null,
+            }
+        },
+        computed:{          
 
             payable(){
                 let user = this.$store.state.user
@@ -75,11 +78,20 @@
         methods:{
             toOrder(order){
                 this.$router.push({name:'order', params:{ order: order}})
+            },
+
+            fetchOrders(){
+                axios
+                    .get('/api/orders')
+                    .then(response =>{                       
+                        this.orders = response.data;
+                    })
+                    .catch(errors => console.log(errors.response));
             }
         },
 
         created(){
-            this.$store.dispatch('fetchOrders')                       
+            this.fetchOrders();                     
         }
 
     }

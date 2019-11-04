@@ -61,12 +61,17 @@
         },
 
         methods:{
-            deleteComment(){
-                this.$store.dispatch('deleteComment', `/api/comments/${this.comment.id}/destroy`)
-                    .then(()=>{
+            deleteComment(){              
+                axios
+                    .delete(`/api/comments/${this.comment.id}/destroy`)
+                    .then(response =>{
                         flash(this.$i18n.t('utilities.delete_rating_message'))
-                        this.$store.dispatch('fetchCompany', `/api${this.$route.path}`)
-                    }) 
+
+                        // Refresh Company Data
+                        // Listener in /views/profiles/Profile.vue 
+                        Event.$emit('retrieveCompany');                     
+                    })
+                    .catch(errors => console.log(errors.response.data.errors)) 
             }
         }
     }

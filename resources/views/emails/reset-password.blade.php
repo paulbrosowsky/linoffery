@@ -8,6 +8,8 @@
     @lang('Reset Password')
 @endcomponent
 
+<small>{{url('/api/auth/email-confirmation/confirm?token=' . $user->password_reset_token)}}</small>
+
 <p>@lang('If you have not sent us anything, just ignore this email.')</p> 
 
 @lang('Thank you,')<br>

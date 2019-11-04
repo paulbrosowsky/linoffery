@@ -45,7 +45,7 @@
                 return layout ? layout + '-layout': 'default-layout'                
             }, 
             
-            loggedIn(){
+            loggedIn(){                
                 return this.$store.getters.loggedIn
             },
 
@@ -58,12 +58,7 @@
             }
         },
 
-        methods:{
-            fetchLoggedInUser(){                
-                if (this.loggedIn) {
-                    this.$store.dispatch('fetchLoggedInUser')
-                }
-            },
+        methods:{            
 
             //Get a localization settings from a cookie and set a propper app language
             retriveLocale(){                
@@ -74,22 +69,8 @@
                     this.$i18n.locale = navigator.language
                     this.$cookies.set('locale', navigator.language, 60*60*24*365)   
                 }                
-            },
-
-            fetchCategories(){
-                this.$store.dispatch('fetchCategories')
-            },
-
-            fetchTransportTypes(){
-                this.$store.dispatch('fetchTransportTypes')
-            },
-
-
-            fetchNotifications(){
-                if(this.loggedIn) {
-                    this.$store.dispatch('fetchNotifications')
-                }
-            },
+            }, 
+            
 
             initTawk(){
                var Tawk_API = Tawk_API || {}, Tawk_LoadStart=new Date();
@@ -106,20 +87,9 @@
 
         },
 
-        created() {
-            this.fetchLoggedInUser()
-            this.retriveLocale()
-            this.fetchCategories()
-            this.fetchNotifications()
-            this.fetchTransportTypes()
-
-            setTimeout(() => {
-                window.Echo.private('App.User.' + this.$store.state.user.id)
-                    .notification((notification) => {
-                        flash(notification);
-                        this.$store.dispatch('fetchNotifications');
-                    });
-            }, 1000);
+        created() {            
+            this.retriveLocale()            
+            
 
             // Load Tawk.to when cookies are agreed
             if (this.agreeCookies) {
@@ -139,8 +109,8 @@
                         }
                     }
                 });
-            }
-
+            } 
+            
         }
 
     }

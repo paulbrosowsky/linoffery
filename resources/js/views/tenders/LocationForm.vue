@@ -59,12 +59,12 @@
 
     export default {       
 
-        props:['name', 'value'],
+        props:['tenderId', 'name', 'value'],
 
         data() {
             return {
                 form: {   
-                    tender_id: this.$store.getters.tenderId,                 
+                    tender_id: this.tenderId,                 
                     type: this.name,
                     address:null, 
                     earliest_date:null,
@@ -85,50 +85,39 @@
         methods: {
 
             submit(){
-                this.value ? this.updateLocation() : this.storeLocation()
+                this.value ? this.updateLocation() : this.storeLocation();
             },
 
             storeLocation() {
-                this.loading = true
+                this.loading = true 
 
-                this.$store
-                    .dispatch('storeLocation', this.form)
-                    .then(() => {                       
-                        setTimeout(() => {  
-                            flash(this.$i18n.t('tender.store_location_message'))
-                            this.$store.dispatch('fetchTender', `/api${this.$route.path}`) 
-                            this.$emit('close')                           
-                            this.loading = false
-                        }, 2000);
-
+                axios
+                    .post('/api/locations/store', this.form)
+                    .then(response =>{
+                        flash(this.$i18n.t('tender.store_location_message'));
+                        this.$emit('close');                           
+                        this.loading = false;                        
                     })
-                    .catch(errors =>{
-                        this.loading = false
-                        this.errors = errors
-                    })
+                    .catch(errors => {
+                        this.errors = errors.response.data.errors;
+                        this.loading = false;
+                    });
             },
 
             updateLocation() {
                 this.loading = true
 
-                this.$store
-                    .dispatch('updateLocation', {
-                        location_id: this.value.id, 
-                        form: this.form
-                    })
-                    .then(() => {                       
-                        setTimeout(() => {  
-                            flash(this.$i18n.t('tender.store_location_message'))
-                            this.$store.dispatch('fetchTender', `/api${this.$route.path}`)  
-                            this.$emit('close')                       
-                            this.loading = false
-                        }, 2000);
-
+                axios
+                    .patch('/api/locations/'+this.value.id+'/update', this.form)                
+                    .then(response =>{
+                        flash(this.$i18n.t('tender.store_location_message'));                        
+                        this.$emit('close');                       
+                        this.loading = false;
                     })
                     .catch(errors =>{
-                        this.loading = false
-                        this.errors = errors
-                    })
+                        this.errors = errors.response.data.errors;
+                        this.loading = false;
+                    });
             },          
             
             // Set Address on Event at ./view/Map.vue getAddress()
@@ -185,9 +174,13 @@
                 Event.$emit('fetchAddress', document.getElementById('delivery')) 
             }, 500);  
             
-            Event.$on('setAddress', (value) => this.setAddress(value))
+            Event.$on('setAddress', this.setAddress);
 
-            this.setData()
+            this.setData();            
+        }, 
+        
+        beforeDestroy(){
+            Event.$off('setAddress', this.setAddress);
         }
     }
 </script>

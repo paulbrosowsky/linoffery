@@ -40,37 +40,50 @@ body{
 }
 
 .btn-blue-outlined{
-    @apply .border-blue-400 .text-blue-400
+    @apply .border-blue-400 .text-blue-400;
 }
 .btn-blue-outlined:hover{
-    @apply .bg-blue-400
+    @apply .bg-blue-400;
 }
 
 .btn-blue{
-    @apply bg-blue-400
+    @apply .bg-blue-400;
 }
 .btn-blue:hover{
-    @apply .bg-blue-600
+    @apply .bg-blue-600;
 }
 
 .btn-red{
-    @apply bg-red-400
+    @apply bg-red-400;
 }
 .btn-red:hover{
-    @apply .bg-red-600
+    @apply .bg-red-600;
 }
 .btn-red-outlined{
-    @apply .border-red-400 .text-red-400
+    @apply .border-red-400 .text-red-400;
 }
 .btn-red-outlined:hover{
-    @apply .bg-red-400
+    @apply .bg-red-400;
+}
+
+.icon-btn{
+    @apply .flex .text-gray-500 .cursor-pointer .rounded-full .p-2;
+}
+.icon-btn svg{
+    @apply .w-6 .h-6 .fill-current; 
+}
+.icon-btn:hover{
+    @apply bg-gray-200;
+}
+.icon-btn:focus{
+    @apply .outline-none; 
 }
 
 .input{
     @apply .bg-gray-300 .appearance-none .border-2 .border-gray-300 .rounded-lg .w-full .py-3 .px-4 .text-gray-700 .leading-tight;      
 }
 .input:focus{
-    @apply .outline-none .bg-white .border-teal-500
+    @apply .outline-none .bg-white .border-teal-500;
 } 
 
 .link{

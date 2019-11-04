@@ -20,7 +20,8 @@
 
         <form @submit.prevent="login">
             <div class="relative flex items-center mb-2">
-                <i class="absolute icon ion-md-mail text-xl text-gray-500 px-3"></i>   
+                <svg class="h-6 fill-current absolute text-gray-500 px-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M437.332 80H74.668C51.199 80 32 99.198 32 122.667v266.666C32 412.802 51.199 432 74.668 432h362.664C460.801 432 480 412.802 480 389.333V122.667C480 99.198 460.801 80 437.332 80zM432 170.667L256 288 80 170.667V128l176 117.333L432 128v42.667z"/></svg>
+                  
                 <input 
                     class="input pl-10"
                     type="email" 

@@ -61,23 +61,23 @@
             },
 
             resetPassword(){
-                this.loading = true
+                this.loading = true;
                 
-                this.$store
-                    .dispatch('resetPassword', { 
+                axios
+                    .post('/api/auth/password/reset', 
+                    { 
                         new_password: this.new_password,
                         token: this.token
-                    })                    
-                    .then(() =>{
-                        flash(this.$i18n.t('auth.reset_password_message'))
-                        this.$router.push({name:'login'})
-                        this.loading = false
                     })
-                    .catch(errors =>{ 
-                        this.errors = errors 
-                        this.loading = false
+                    .then((response)=>{  
+                        flash(this.$i18n.t('auth.reset_password_message'));
+                        this.$router.push({name:'login'});
+                        this.loading = false; 
                     })
-
+                    .catch(errors =>{                        
+                        this.errors = errors.response.data.errors;
+                        this.loading = false;
+                    })
             }           
         },     
         

@@ -5,44 +5,38 @@
          </h1>
 
          <tabs class="ml-2" route="orders">
-             <tab :name="$i18n.t('utilities.active')" hash="#active" :count="active.length"></tab>
-             <tab :name="$i18n.t('utilities.completed')" hash="#completed" :count="completed.length"></tab>
-             <tab :name="$i18n.t('tender.active_offers')" hash="#active-offers" :count="offers.length"></tab>
+             <tab :name="$i18n.t('utilities.active')" hash="#active" :count="active"></tab>
+             <tab :name="$i18n.t('utilities.completed')" hash="#completed" :count="completed"></tab>
+             <tab :name="$i18n.t('tender.active_offers')" hash="#active-offers" :count="offers"></tab>
          </tabs>
     </div>
 </template>
 <script>
     export default {
 
-        computed:{
-            orders(){
-                return this.$store.state.orders
-            },
-
-            offers(){
-                return this.$store.state.offers ? this.$store.state.offers : [] 
-            },
-
-            active(){
-                if(this.orders){
-                    return this.orders.filter((order)=>{
-                        return order.completed_at === null
-                    })
-                }else{
-                    return []
-                }               
-            },
-
-            completed(){
-                if(this.orders){
-                    return this.orders.filter((order)=>{
-                        return order.completed_at != null
-                    })             
-                }else{
-                    return []
-                }             
-            },            
+        data(){
+            return{
+                active: null,
+                completed: null,
+                offers: null
+            }
         },
+
+        methods:{
+            setData(data){               
+                this.active = data.active;
+                this.completed = data.completed;
+                this.offers = data.offers;
+            }
+        },
+
+        created(){
+            Event.$on('ordersCount', this.setData);
+        },
+
+        beforeDestroy(){
+            Event.$off('ordersCount', this.setData);
+        }
         
     }
 </script>

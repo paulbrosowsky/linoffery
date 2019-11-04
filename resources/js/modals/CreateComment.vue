@@ -64,26 +64,30 @@
             },
 
             createComment(){
-                this.loading = false
-                
-                this.$store
-                    .dispatch('createComment', {
-                        path: `/api${this.$route.path}/comment`,
-                        data: this.form
-                    })
-                    .then(()=>{
+                this.loading = true;
+
+                axios
+                    .post(`/api${this.$route.path}/comment`, this.form)
+                    .then(response =>{  
                         flash(this.$i18n.t('utilities.create_rating_message'))
-                        this.$store.dispatch('fetchCompany', `/api${this.$route.path}`)
-                        this.close()
+
+                        // Refresh Company Data
+                        // Listener in /views/profiles/Profile.vue 
+                        Event.$emit('retrieveCompany');
+                        
+                        this.close();
                     })
-                    .catch(errors=>{
-                        this.errors = errors.rating                        
-                    })
+                    .catch(errors =>{
+                        this.errors = errors.response.data.errors.rating;  
+                        this.loading = false;
+                    })                
+             
             },
             close(){
                 this.form.rating = null,
                 this.form.body = '',
                 this.errors = null
+                this.loading = false;
 
                 this.$modal.hide('create-comment')
             }

@@ -1,5 +1,4 @@
 <template>
-    <!-- <perfect-scrollbar class="h-full" > -->
         <div v-if="tender">
             <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !completed">            
                 <div class="pl-5 pb-3 border-b">                 
@@ -26,7 +25,6 @@
                         <span>{{$t('tender.open_order')}}</span> 
                     </router-link>
                 </div>
-            
 
                 <p 
                     class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 " 
@@ -43,9 +41,8 @@
                 ></tender-info> 
                 
                 <div class="px-5 py-5" v-if="editTender && draft">
-                    <tender-form :tender="tender" :edit="true" @cancel="editTender = false"></tender-form>
+                    <tender-form :tender="tender" :edit="true" @cancel="updateTenderData('tender')"></tender-form>
                 </div>
-                
 
                 <div class="bg-gray-100 p-5">
                     
@@ -63,10 +60,11 @@
                         </div>  
 
                         <location-form 
+                            :tenderId="tender.id"
                             :value="pickup" 
                             :name="'pickup'" 
                             v-if="!pickup || editPickup && draft "
-                            @close="editPickup = false"
+                            @close="updateTenderData('pickup')"
                         ></location-form>              
 
                         <location-info :location="pickup" v-if="pickup && !editPickup"></location-info> 
@@ -86,10 +84,11 @@
                         </div>   
 
                         <location-form 
+                            :tenderId="tender.id"
                             :value="delivery" 
                             :name="'delivery'" 
                             v-if="!delivery || editDelivery && draft"
-                            @close="editDelivery = false"
+                            @close="updateTenderData('delivery')"
                         ></location-form>   
 
                         <location-info :location="delivery" v-if="delivery && !editDelivery"></location-info>                                            
@@ -110,9 +109,10 @@
                     </div>  
                     
                     <freights-form 
+                        :tenderId="tender.id"
                         :values="tender.freights" 
                         v-if="!hasFreights || editFreights && draft"
-                        @close="editFreights = false"
+                        @close="updateTenderData('freights')"
                     ></freights-form>
 
                     <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
@@ -198,17 +198,32 @@
                 </div>        
             
             </div>
+
+            <div v-if="!ownsTender">
+                <make-offer></make-offer>
+                <offer-cancel></offer-cancel>
+                <take-it-now></take-it-now>
+            </div>
+
+            <div v-if="ownsTender">
+                <offer-view></offer-view>
+            </div>
         </div>
-    <!-- </perfect-scrollbar> -->
+   
 </template>
 <script>
     import FreightInfo from '../tenders/FreightInfo'
     import FreightsForm from '../tenders/FreightsForm'
     import LocationForm from '../tenders/LocationForm'
     import LocationInfo from '../tenders/LocationInfo'
+    import MakeOffer from '../../modals/MakeOffer'
     import OfferCard from '../offers/OfferCard'
+    import OfferCancel from '../../modals/OfferCancel' 
+    import OfferView from '../../modals/OfferView' 
+    import TakeItNow from '../../modals/TakeItNow' 
     import TenderForm from '../tenders/TenderForm'
     import TenderInfo from '../tenders/TenderInfo'
+    
 
     export default {
 
@@ -217,13 +232,18 @@
            FreightsForm,
            LocationForm,
            LocationInfo,
+           MakeOffer,
            OfferCard,
+           OfferCancel,
+           OfferView,
            TenderForm,
            TenderInfo
        },   
+
        
        data(){
            return{
+               tender: null,
                editTender: false,
                editPickup: false,
                editDelivery: false,
@@ -234,45 +254,46 @@
            }
        },
 
-        computed:{
-            tender(){                
-                return this.$store.state.tender
-            },   
+        computed:{               
             
             hasFreights(){                
-                return this.tender.freights.length > 0
+                return this.tender.freights.length > 0;
             },
 
             delivery(){
-                return this.tender.locations.find(location => location.type === 'delivery')                
+                return this.tender.locations.find(location => location.type === 'delivery');                
             },
 
             pickup(){
-                return this.tender.locations.find(location => location.type === 'pickup')                
+                return this.tender.locations.find(location => location.type === 'pickup');                
             },   
             
             draft(){
-                return !this.tender.published_at
-            },
-
-            dataComplete(){
-                return this.hasFreights && this.delivery && this.pickup
-            },
-
-            ownsTender(){
-                return this.$store.getters.ownsTender
+                return !this.tender.published_at;
             },
 
             hasOffers(){
-                return this.tender.offers.length > 0
+                return this.tender.offers.length > 0;
+            },  
+
+            dataComplete(){
+                return this.hasFreights && this.delivery && this.pickup;
+            },
+
+            ownsTender(){
+                let user = this.$store.state.user;
+
+                if (user && this.tender) {
+                    return this.tender.user_id == user.id;
+                }                
+            },                     
+
+            completed(){
+                return this.tender.completed_at
             },
 
             loggedIn(){
                 return this.$store.getters.loggedIn
-            },
-
-            completed(){
-                return this.$store.getters.tenderCompleted
             },
 
             fullyAuthorized(){
@@ -282,63 +303,88 @@
 
         methods:{
             toggle(){
-                this.withClone = !this.withClone
+                this.withClone = !this.withClone;
             },
 
             publishTender(){
-                if(this.dataComplete) {
-                    this.$store
-                        .dispatch('publishTender', `/api${this.$route.path}/publish`)
-                        .then(()=>{
+                if(this.dataComplete) {                  
+                    axios
+                        .patch(`/api${this.$route.path}/publish`)
+                        .then(response =>{                       
                             flash( this.$i18n.t('tender.published_message'))
                             this.$router.push({name: 'tenders'});
                         })
-                        .catch(errors => console.log(errors))
+                        .catch(errors => console.log(errors.response.data.errors))
                 }               
             },
 
-            fetchData(){
-                this.$store
-                    .dispatch('fetchTender', `/api${this.$route.path}`) 
-                    .then(response => {                                              
-                        Event.$emit('updateMarkers', response.locations)                       
-                    })               
+            fetchData(){                
+                axios
+                    .get(`/api${this.$route.path}`)
+                    .then(response =>{                       
+                        this.tender = response.data; 
+                        Event.$emit('updateMarkers', response.data.locations);                        
+                    })
+                    .catch(errors => console.log(errors));             
             },  
             
-            cancelTender(){
-                this.$store
-                    .dispatch('cancelTender', {
-                        path: `/api${this.$route.path}/cancel`,
-                        withClone: this.withClone
-                    }) 
-                    .then(response => {                                              
+            cancelTender(){ 
+                axios
+                    .patch(`/api${this.$route.path}/cancel`, { withClone: this.withClone})
+                    .then(response =>{
                         flash(this.$i18n.t('tender.cancel_tender_message')) 
+
                         if(this.withClone){
                             this.$router.push({name: 'dashboard_tenders', hash: '#drafts'})
                             this.withClone = false
                         }else{
-                            this.$router.push({name: 'dashboard_tenders'}) 
+                            this.$router.push({name: 'dashboard_tenders',  hash: '#completed'}) 
                         } 
-                        this.confirmation = false                  
-                    })               
+
+                        this.confirmation = false  
+                    })
+                    .catch(errors => console.log(errors.response.data.errors));             
             } ,
 
             deleteTender(){
-                this.$store
-                    .dispatch('deleteTender', `/api${this.$route.path}/destroy`)                 
-                    .then(response => {                                              
+                axios
+                    .delete(`/api${this.$route.path}/destroy`)
+                    .then(response =>{
                         flash(this.$i18n.t('tender.delete_tender_message'))                         
-                        this.$router.push({name: 'dashboard_tenders'})                        
-                        this.confirmation = false                  
-                    })               
-            }            
-
+                        this.$router.push({name: 'dashboard_tenders'}) 
+                        this.confirmation = false                          
+                    })
+                    .catch(errors => reject(errors.response.data.errors))              
+            },
+            
+            updateTenderData(data){                
+                if(data == 'pickup'){
+                    this.editPickup = false;
+                }else if(data == 'delivery'){
+                    this.editDelivery = false;
+                }else if(data == 'freights'){
+                    this.editFreights = false;
+                }else{
+                    this.editTender = false;
+                }
+                this.fetchData();
+            }
         },
 
         mounted(){            
             this.fetchData() 
+
             // Listener in Mapped
-            Event.$emit('setDrawerSize') 
+            Event.$emit('setDrawerSize'); 
+            Event.$emit('scrollTop'); 
+
+            // Fetch Tender data from API. 
+            // Trigger in /modals/OfferCancel.vue, /modals/MakeOffer.vue                        
+            Event.$on('retrieveTender', this.fetchData);
+        }, 
+        
+        beforeDestroy(){
+            Event.$off('retrieveTender', this.fetchData);
         }
     }
 </script>

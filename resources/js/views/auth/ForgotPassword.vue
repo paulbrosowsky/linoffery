@@ -20,7 +20,7 @@
             <p class="text-sm text-gray-600 pb-2">
                 {{$t('auth.forgot_password_info')}}
             </p>
-            <form @submit.prevent="sendEmail">
+            <form @submit.prevent="sendEmail" >
                 <p class="text-sm text-red-500 mb-2" v-if="errors.email" v-text="errors.email[0]"></p>
                     <div class="relative flex items-center mb-2 " >
                         <i class="absolute icon ion-md-mail text-xl text-gray-500 px-3"></i>   
@@ -59,18 +59,19 @@
 
         methods:{
             sendEmail(){
-                this.loading = true
-                this.$store
-                    .dispatch('sendPasswordResetEmail', {email: this.email})
-                    .then(()=> {
-                        flash(this.$i18n.t('auth.password_email_sent_message'))
-                        this.loading = false
-                        this.$router.push('/')
+                this.loading = true;
+                axios
+                    .post('/api/auth/password/email', { email: this.email })
+                    .then(()=>{    
+                        this.loading = false;                    
+                        flash(this.$i18n.t('auth.password_email_sent_message')); 
+                        this.$router.push({name: 'home'});
                     })
                     .catch(errors =>{
-                        this.errors = errors;
-                        this.loading = false;
-                    })
+                        this.errors = errors.response.data.errors;
+                        this.loading = false;                   
+                })
+               
             }
         }
     }

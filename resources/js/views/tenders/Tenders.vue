@@ -1,93 +1,102 @@
-<template>   
-        <div>          
-                <tender-card 
-                    v-for="(tender, index) in tenders" 
-                    :key="index" 
-                    :tender="tender"                
-                ></tender-card>
-            
+<template>     
+    <div ref="tendersList">     
+        <div v-if="tenders">
+            <tender-card 
+                v-for="(tender, index) in tenders" 
+                :key="index" 
+                :tender="tender"                                  
+            ></tender-card>
+        </div> 
 
-                <div class="flex justify-center py-5">
-                    <button 
-                        class="btn btn-outlined" 
-                        v-show="!loading && !noData"
-                        @click="fetchTenders()"
-                    >
-                    {{$t('utilities.more_results')}}
-                    </button>
+        <paginator 
+            class="px-3 py-8" 
+            :data-set="dataSet" 
+            v-if="dataSet" 
+            @change="fetchTenders"
+        ></paginator>               
 
-                    <p class="text-gray-500" v-show="noData">
-                        {{$t('utilities.no_more_results')}}
-                    </p>
-
-                    <loading-spinner :loading="loading" size="48px" position="unset"></loading-spinner>
-                </div>            
-        </div>
-
+        <loading-spinner :loading="loading" size="48px" position="absolute"></loading-spinner>
+                       
+    </div>
 </template>
 <script>
-    import TenderCard from '../tenders/TenderCard'
-    
+    import TenderCard from '../tenders/TenderCard';
+    import Paginator from '../../components/Paginator';    
 
     export default {
-        components:{ TenderCard},
+        components:{TenderCard, Paginator},
         
         data(){
-            return{ 
+            return{                 
                 loading: false, 
+                tenders: null,
+                dataSet: null,
             }
         },
 
         computed:{
-            tenders(){                
-                return this.$store.state.tenders
-            },   
-            
             locations(){
-                return this.$store.getters.locations
-            },  
-            
-            page(){
-                return this.$store.state.page
-            },
+                let locations = [];
 
-            noData(){
-                return this.$store.getters.noTenders
-            },
+                if(this.tenders){
+                    this.tenders.map(tender => {  
+                        if(tender.locations.length > 0){
+                            tender.locations.forEach( location => {
+                                locations.push(location);
+                            }); 
+                        }              
+                    });
+                }
+
+                return locations;
+            }, 
 
             filters(){
                 return this.$store.state.filters
+            },
+
+            loggedIn(){
+                return this.$store.getters.loggedIn
             }
         },   
 
         methods:{  
-            fetchTenders(){  
+            fetchTenders(endpoint){  
                 this.loading = true                
                 let params = null
 
                 if(!_isEmpty(this.filters)){ 
                     params = { params: this.filters}
-                }
-               
-                this.$store
-                    .dispatch('fetchTenders', params )
-                    .then(response => {
-                        this.loading = false 
-                        setTimeout(()=>{
-                            Event.$emit('updateMarkers', this.locations)
-                        }, 500)                        
-                    })       
+                } 
+            
+                Event.$emit('scrollTop'); 
+                
+                axios
+                    .get(endpoint)
+                    .then(response =>{                       
+                        this.tenders = response.data.data;
+                        this.dataSet = response.data;
+                        this.loading= false;
+                        Event.$emit('updateMarkers', this.locations)  
+                    })
+                    .catch(errors =>{
+                        console.log(errors);
+                        this.loading= false;
+                    });
             },            
            
         },
-        
-        created(){            
-            setTimeout(()=>{                
-                Event.$emit('updateMarkers', this.locations)
-            }, 500)  
+
+        created(){             
+            this.fetchTenders(`/api${this.$route.fullPath}`);              
             
             // Trigger in TendersFilters @filterTenders
             Event.$on('fetchTenders', ()=> this.fetchTenders())
-        },            
+        },
+
+        beforeDestroy(){           
+
+            Event.$off('fetchTenders', () => this.fetchTenders())
+        }
     }
 </script>

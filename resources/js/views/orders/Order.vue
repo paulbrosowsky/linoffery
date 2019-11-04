@@ -125,10 +125,13 @@
             LocationInfo
         },
 
-        computed:{
-            order(){
-                return this.$store.state.order
-            },
+        data(){
+            return{
+                order: null,
+            }
+        },
+
+        computed:{         
 
             delivery(){                
                 return this.order.tender.locations.find(location => location.type === 'delivery')
@@ -146,44 +149,50 @@
             },
 
             completed(){
-                return this.$store.getters.orderCompleted
+                return this.order.completed_at ? true : false;
             }
         },
 
         methods:{
-            fetchOrder(){
-                this.$store
-                    .dispatch('fetchOrder', `/api${this.$route.path}`) 
-                    .then(response => {                        
-                        // Event.$emit('updateMarkers', response.data.locations)
-                        // Event.$emit('zoom-map')
-                    })               
+            fetchOrder(){                
+                axios
+                    .get(`/api${this.$route.path}`)
+                    .then(response =>{                       
+                        this.order = response.data;
+                    })
+                    .catch(errors => reject(errors.response));             
             }, 
             
-            downloadPdf(){
-                this.$store
-                    .dispatch('downloadOrderPdf', '/api'+this.$route.path+'/pdf')
-                    .then(response =>{                      
-                        const url = window.URL.createObjectURL(new Blob([response]));
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.setAttribute('download', this.order.custom_id+'.pdf'); 
-                        document.body.appendChild(link);
-                        link.click();
-                    })
+            downloadPdf(){                
+                axios({
+                    url: `/api${this.$route.path}/pdf`,
+                    method: 'GET',
+                    responseType: 'blob'
+                })                    
+                .then(response =>{ 
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', this.order.custom_id+'.pdf'); 
+                    document.body.appendChild(link);
+                    link.click();
+                })
+                .catch(errors => console.log(errors.response))
             },
 
-            completeOrder(){
-                this.$store
-                    .dispatch('completeOrder', '/api'+this.$route.path+'/update')
-                    .then(response =>{                      
-                        flash(this.$i18n.t('tender.complete_order_message'))  
+            completeOrder(){                
+                axios
+                    .patch(`/api${this.$route.path}/update`)
+                    .then(response =>{                       
+                        flash(this.$i18n.t('tender.complete_order_message')); 
+                        this.fetchOrder(); 
                     })
+                    .catch(errors => console.log(errors.response));
             }
         },
 
         mounted(){
-            this.fetchOrder()
+            this.fetchOrder();
         }
         
     }

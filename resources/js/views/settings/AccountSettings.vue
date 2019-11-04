@@ -182,50 +182,51 @@
 
         methods:{
             updateAccount(){
-                this.loadingAccount = true
-                this.$store
-                    .dispatch('updateAccount',{
+                this.loadingAccount = true;
+
+                axios
+                    .patch('/api/settings/account',{
                         name: this.name,
                         email: this.email,
                         position: this.position,
                         phone: this.phone
                     })
-                    .then(()=>{
-                        this.loadingAccount = false
-                        flash(this.$i18n.t('settings.changed_accout_message'))
+                    .then((response)=>{ 
+                        this.$store.commit('retrieveUser', response.data);                         
+                        this.loadingAccount = false;
+                        flash(this.$i18n.t('settings.changed_accout_message'));
                     })
-                    .catch(errors => {
-                         this.loadingAccount = false
-                        this.errors = errors
-                    })
+                    .catch(errors =>{ 
+                        this.loadingAccount = false;
+                        this.errors = errors.response.data.errors;
+                    }); 
             },
 
             changePassword(){
                 this.loadingPassword = true
-                this.$store
-                    .dispatch('changePassword',{
+
+                axios
+                    .patch('/api/settings/password', {
                         old_password: this.old_password,
                         new_password: this.new_password,
                     })
-                    .then(() =>{
-                        this.loadingPassword = false
-                        flash(this.$i18n.t('settings.changed_password_message'))
+                    .then((r)=>{                              
+                        this.loadingPassword = false;
+                        flash(this.$i18n.t('settings.changed_password_message'));
                     })
-                    .catch(errors => {
-                        this.loadingPassword = false                        
-                        this.errors = errors
-                    })
+                    .catch(errors =>{    
+                        this.loadingPassword = false;                       
+                        this.errors = errors.response.data.errors;                          
+                    })  
             },
 
-            deleteAccount(){                
-                
-                this.$store
-                    .dispatch('deleteAccount')
+            deleteAccount(){
+                axios
+                    .delete('/api/auth/destroy')
                     .then(() => { 
                         this.$router.push('/logout')
                         flash(this.$i18n.t('settings.delete_account_message'))
-                    })
-                  
+                });               
             },
 
             // Update Password if password field chanded

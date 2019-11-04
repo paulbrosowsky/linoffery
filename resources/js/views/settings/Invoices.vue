@@ -31,14 +31,25 @@
 <script>
     export default {
 
-        computed:{
-            invoices(){
-                return this.$store.state.invoices
+        data(){
+            return{
+                invoices: null,
+            }
+        },
+
+        methods:{
+            fetchInvoices(){
+                axios
+                    .get('api/payments/invoices')
+                    .then(response =>{ 
+                        this.invoices = response.data;
+                    })
+                    .catch(errors => console.log(errors.response))
             }
         },
 
         created(){
-            this.$store.dispatch('fetchInvoices');
+            this.fetchInvoices();
         }
         
     }

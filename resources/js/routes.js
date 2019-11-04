@@ -80,16 +80,6 @@ let routes = [
         path:'/services',
         component: Services
     },
-    
-    // {
-    //     name:'dashboard',
-    //     path:'/dashboard',
-    //     component: Dashboard,
-    //     meta:{
-    //         layout: 'dashboard',          
-    //         requiresAuth: true
-    //     }
-    // },
 
     {
         name:'dashboard_tenders',
@@ -101,15 +91,7 @@ let routes = [
         meta:{
             layout: 'dashboard',          
             requiresAuth: true
-        },
-        beforeEnter: (to, from, next) => { 
-            if(window.popStateDetected){
-                next() 
-            }else{                
-                store.dispatch('fetchUsersTenders')                
-                next()
-            }                   
-        }     
+        },       
     },
 
     {
@@ -180,16 +162,7 @@ let routes = [
         component: Tenders,
         meta:{
             layout: 'mapped',
-        },       
-        beforeEnter: (to, from, next) => {                       
-            if(window.popStateDetected){
-                next()               
-            }else{  
-                store.commit('resetPagination')           
-                store.dispatch('fetchTenders')                              
-                next()
-            }                                
-        }       
+        },  
     },
 
     {
@@ -211,16 +184,7 @@ let routes = [
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
-        },
-        beforeEnter: (to, from, next) => { 
-            if(window.popStateDetected){
-                next() 
-            }else{                
-                store.dispatch('fetchOrders') 
-                store.dispatch('fetchOffers')                
-                next()
-            }                   
-        }     
+        },          
     },
 
     {

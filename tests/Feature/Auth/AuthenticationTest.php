@@ -8,6 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class AuthenticationTest extends PassportTestCase
 {
     use RefreshDatabase;
+
+    protected $user;
+
     public function setUp():void
     {
         parent::setUp();
@@ -25,8 +28,7 @@ class AuthenticationTest extends PassportTestCase
             'password' => 'not valide'
         ])->assertStatus(401);        
         
-        $this->login()->assertStatus(200); 
-         
+        $this->login()->assertStatus(200);          
     }
 
     /** @test */
@@ -45,11 +47,11 @@ class AuthenticationTest extends PassportTestCase
         $response = $this->getJson('api/auth/user')->json();
 
         $this->assertEquals($this->user->email, $response['email']); 
-    }    
+    } 
 
     protected function login($overrides = [])
     {
-        return $this->post('/api/auth/login', array_merge([            
+        return $this->postJson('/api/auth/login', array_merge([            
             'email' => 'john@example.com',
             'password' => 'password'           
         ],$overrides));        

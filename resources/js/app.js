@@ -26,8 +26,8 @@ window.Echo = new Echo({
 import VueModal from "vue-js-modal"
 Vue.use(VueModal)
 
-import VueCookies from "vue-cookies"
-Vue.use(VueCookies)
+// import VueCookies from "vue-cookies"
+// Vue.use(VueCookies)
 
 import VueMoment from "vue-moment";
 Vue.use(VueMoment);
@@ -49,20 +49,21 @@ window.flash = function(message){
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.state.token;
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] =  Linoffery.csrfToken;
 
-axios.interceptors.request.use(function(config){
-    config.headers['X-CSRF-TOKEN'] = Linoffery.csrfToken
-    return config;
-})
-// let token = document.head.querySelector('meta[name="csrf-token"]');
-
-// if (token) {
-//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-// } else {
-//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-// }
-
-
+axios.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    async (error) => {
+        if(error.response.status == 401){
+            await store.dispatch('refreshToken', error.response)                
+        }else{
+            return Promise.reject(error);
+        }
+    } 
+);
 
 Vue.component('app', App)
 Vue.component('action-bar', require('./components/ActionBar.vue').default);

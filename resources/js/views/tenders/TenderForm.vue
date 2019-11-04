@@ -112,57 +112,24 @@
                 immediatePrice:null,
                 valid_date:null,
 
+                categories:null,
                 errors:[],
                 cardSmall:false,
                 loading: false,
                 category: null
             }
-        },
-
-        computed:{
-            categories(){
-                return this.$store.state.categories
-            }
-        },
+        },       
 
         methods:{
-
             submit(){
-                this.edit ? this.updateTender() : this.storeTender() 
+                this.edit ? this.updateTender() : this.storeTender();
             },
 
             storeTender(){                
-                this.loading = true
+                this.loading = true;
 
-                this.$store.dispatch('storeTender', {
-                    category_id: this.category_id,
-                    title: this.title,
-                    description: this.description,
-                    max_price: this.maxPrice,
-                    immediate_price: this.immediatePrice,
-                    valid_date: this.valid_date
-                })
-                .then(response=>{ 
-
-                    setTimeout(() => {  
-                        flash(this.$i18n.t('tender.store_tender_message'))
-                        this.$router.push(`/tenders/${response.data.id}`) 
-                        this.$emit('cancel')
-                        this.loading = false
-                    }, 2000);
-                    
-                })
-                .catch(errors => {
-                    this.errors = errors
-                    this.loading =false
-                })
-            }, 
-            
-            updateTender(){
-                this.loading = true
-                this.$store
-                    .dispatch('updateTender', {
-                        path: this.$route.path,
+                axios
+                    .post('/api/tenders/store', {
                         category_id: this.category_id,
                         title: this.title,
                         description: this.description,
@@ -170,19 +137,39 @@
                         immediate_price: this.immediatePrice,
                         valid_date: this.valid_date
                     })
-                    .then(response=>{ 
-
-                        setTimeout(() => {  
-                            flash(this.$i18n.t('tender.store_tender_message'))                            
-                            this.$emit('cancel')
-                            this.loading = false
-                        }, 2000);
-                        
+                    .then(response =>{  
+                        flash(this.$i18n.t('tender.store_tender_message'));
+                        this.$router.push(`/tenders/${response.data.id}`); 
+                        this.$emit('cancel');
+                        this.loading = false;
                     })
-                    .catch(errors => {
-                        this.errors = errors
-                        this.loading =false
-                    })              
+                    .catch(errors =>{
+                        this.errors = errors.response.data.errors;
+                        this.loading = false;
+                    })
+            }, 
+            
+            updateTender(){
+                this.loading = true;
+               
+                axios
+                    .patch(`/api${this.$route.path}/update`, {                       
+                        category_id: this.category_id,
+                        title: this.title,
+                        description: this.description,
+                        max_price: this.maxPrice,
+                        immediate_price: this.immediatePrice,
+                        valid_date: this.valid_date                    
+                    })
+                    .then(response =>{                       
+                        flash(this.$i18n.t('tender.store_tender_message'))                            
+                        this.$emit('cancel');
+                        this.loading = false;
+                    })
+                    .catch(errors =>{
+                        this.errors = errors.response.data.errors;
+                        this.loading =false;
+                    });             
             },
             
             updateCategory(category){                
@@ -207,11 +194,21 @@
                     this.valid_date = this.tender.valid_date
                     this.category = this.tender.category
                 }
-            }
+            },
+
+            fetchCategories(){
+                axios
+                    .get('/api/categories')
+                    .then(response =>{                       
+                        this.categories = response.data;
+                    })
+                    .catch(errors => reject(errors.response))
+            },
         },  
         
         created(){
-            this.setData()
+            this.setData();
+            this.fetchCategories();
         }
     }   
 </script>

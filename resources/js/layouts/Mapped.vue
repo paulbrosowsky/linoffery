@@ -9,12 +9,13 @@
                 ref="drawer"
                 :style="{height: drawerHeight + 'px', width: drawerWidth + 'px'}"
             >
-                <tenders-filters v-resize="filterNavResize" ref="filterNav"></tenders-filters>
+                <!-- <tenders-filters v-resize="filterNavResize" ref="filterNav"></tenders-filters> -->
                 
-                
-                    <perfect-scrollbar ref="content" class="h-full rounded-lg overflow-scroll">                                       
-                        <slot></slot> 
-                    </perfect-scrollbar >
+                 
+                <perfect-scrollbar ref="content" class="h-full rounded-lg">                                       
+                    <slot></slot>                        
+                </perfect-scrollbar >                     
+                    
             </card>        
 
         <app-footer layout="map"></app-footer>
@@ -46,6 +47,9 @@
         },
 
         methods:{
+            scrollTop(){
+                this.$refs.content.$el.scrollTop = 0;
+            },
             
             setResizeDrawer(){
                 //Content Drawer ref
@@ -137,7 +141,10 @@
 
         },
 
-        mounted(){
+        mounted(){   
+            
+            Event.$on('scrollTop', () => this.scrollTop())
+            
             // Content Drawer handling on Mobile View
             if(window.innerWidth < 640){                
                 // this.setResizeDrawer()
@@ -149,7 +156,13 @@
                 Event.$on('setDrawerSize', () => this.setDrawerSize())
             }            
             this.setDrawerSize()
-        }        
+        },
+
+        beforeDestroy(){
+            Event.$off();
+        }
+        
+    
     }
 </script>
 

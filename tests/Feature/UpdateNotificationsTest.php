@@ -14,6 +14,7 @@ class UpdateNotificationsTest extends PassportTestCase
     function users_may_disable_thier_newsletters()
     {
         $this->signIn();
+        $this->assertTrue(auth()->user()->newsletters);
 
         $this->patchJson("api/settings/newsletters");
         

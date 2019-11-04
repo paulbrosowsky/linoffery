@@ -18,18 +18,16 @@
                 <div class="lg:flex-grow"></div>
                 <div v-show="!loggedIn"> 
                     <a 
-                        class="px-4 py-3 leading-none rounded-full text-sm font-semibold text-gray-700 uppercase hover:text-teal-500 hover:bg-white"
+                        class="px-4 py-3 leading-none rounded-full text-sm font-semibold text-gray-700 uppercase cursor-pointer hover:text-teal-500 hover:bg-white"
                         @click="$modal.show('login')"
                     >
                        {{ $t('auth.login') }} 
                     </a>
                 </div>
 
-                <div class="ml-3" v-show="!loggedIn">
-                    <a class="cursor-pointer" @click="$modal.show('nav-drawer')">
-                        <i class="icon ion-md-menu text-xl text-gray-700 pt-2 hover:text-gray-500"></i>
-                    </a>
-                </div>
+                <button class="icon-btn" v-show="!loggedIn" @click="$modal.show('nav-drawer')">
+                    <svg class="text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 384h384v-42.666H64V384zm0-106.666h384v-42.667H64v42.667zM64 128v42.665h384V128H64z"/></svg>
+                </button>
 
                 <div class="mr-5" v-show="loggedIn">
                     <a class="cursor-pointer" @click="$modal.show('notification-drawer')">

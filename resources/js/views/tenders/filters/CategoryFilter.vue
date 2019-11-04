@@ -59,7 +59,15 @@
 
                 this.$store.commit('removeFilters', 'category')                
                 this.$emit('changed')
-            } 
+            },
+
+            fetchCategories(){
+                this.$store.dispatch('fetchCategories')
+            },
+        },
+
+        created(){
+            // this.fetchCategories();
         }
         
     }

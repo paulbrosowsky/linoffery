@@ -38,15 +38,14 @@
             OrderCard
         },
 
-        computed:{
-            orders(){
-                return this.$store.state.orders
-            },
+        data(){
+            return{
+                offers: null,
+                orders: null
+            }
+        },
 
-            offers(){
-                return this.$store.state.offers ? this.$store.state.offers : [] 
-            },
-
+        computed:{ 
             active(){
                 if(this.orders){
                     return this.orders.filter((order)=>{
@@ -74,6 +73,39 @@
             showOffers(){
                 return this.$route.hash === '#active-offers'
             }
+        },
+
+        methods:{
+            fetchOffers(){
+                axios
+                    .get('/api/offers')
+                    .then(response =>{                       
+                        this.offers = response.data;
+                    })
+                    .catch(errors => console.log(errors.response))
+            },
+
+            fetchOrders(){
+                axios
+                    .get('/api/orders')
+                    .then(response =>{                       
+                        this.orders = response.data;
+                    })
+                    .catch(errors => console.log(errors.response))
+            },            
+        },
+
+        created(){
+            this.fetchOrders();
+            this.fetchOffers();
+
+            setTimeout(() => {
+                Event.$emit('ordersCount', {
+                    active: this.active.length,
+                    completed: this.completed.length,
+                    offers: this.offers.length
+                });
+            }, 500);
         },
 
         beforeRouteEnter(to, from, next){            

@@ -12,41 +12,39 @@ use App\Company;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmYourEmail;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {  
     /**
      * Login a user
      * 
-     * @return Response     * 
+     * @return Response    
      */
     public function login(Request $request)
     {   
-        $http = new Client;  
-       
-        try {            
-            $response = $http->post(config('services.passport.login_endpoint'), [
-                'form_params' => [
-                    'grant_type' => 'password',
-                    'client_id' => config('services.passport.client_id'),
-                    'client_secret' => config('services.passport.client_secret'),
-                    'username' => $request->email,
-                    'password' => $request->password
-                ]
-            ]); 
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],            
+        ]);
 
-            return $response->getBody(); 
+        return $this->passportRequest('password', [
+            'username' => $request->email,
+            'password' => $request->password
+        ]);
+    }
 
-        } catch (BadResponseException $e) {
-            if($e->getCode() === 400 ){
-                return response()->json(__('Invalid Request. Please check your email or password.'), $e->getCode());
-            }else if($e->getCode() === 401){ 
-                return response()->json(__('You credentials are incorrect. Please try again.'), $e->getCode());
-            }
+    /**
+     * Refresh Access Token
+     */
+    public function refresh()
+    {
+        $requestToken = request()->cookie('refresh_token');
 
-            return response()->json(__('Something went wrong on the server.'), $e->getCode());
-        }
-
+        return $this->passportRequest('refresh_token', [
+            'refresh_token' => $requestToken
+        ]);
     }
 
     /**
@@ -55,8 +53,7 @@ class AuthController extends Controller
      * @return App\User
      */
     public function register(Request $request)
-    {    
-
+    { 
         $request->validate([
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -81,19 +78,28 @@ class AuthController extends Controller
         Mail::to($user)->send(new ConfirmYourEmail($user));
 
         return $user;
-
     }
 
     /**
      *  Logout the current user
+     *  Forget Refresh and Access Token Cookies
      */
     public function logout()
-    {        
-        auth()->user()->tokens->each(function($token, $key){
+    {         
+        auth()->user()->tokens->each(function($token){
+
+            DB::table('oauth_refresh_tokens')
+                ->where('access_token_id', $token->id)
+                ->delete();
+
             $token->delete();
-        });
+        });   
+        
+        Cookie::queue( Cookie::forget('refresh_token'));
+        Cookie::queue( Cookie::forget('access_token'));
 
         return response()->json(__('Logged out successfully.'), 200);
+                
     }
 
     /**
@@ -106,9 +112,72 @@ class AuthController extends Controller
         return response()->json(request()->user()->load('company'));
     }
 
+    /** 
+     *  Delete User Account
+     */
     public function destroy()
     {        
         auth()->user()->delete();        
+    }
+
+    /**
+     *  Make a Request to the OAuth Server
+     *  And Set Refresh and Access Tokens
+     * 
+     * @param stirng $grantType
+     * @param array $data
+     * @return Response 
+     */
+    protected function passportRequest($grantType, array $data = [])
+    {   
+        $http = new Client;  
+       
+        try {            
+            $response = $http->post(config('services.passport.login_endpoint'), [
+                'form_params' => array_merge($data,[
+                    'grant_type' => $grantType,
+                    'client_id' => config('services.passport.client_id'),
+                    'client_secret' => config('services.passport.client_secret'),                    
+                ])
+            ]); 
+
+            $data = json_decode($response->getBody()); 
+            
+            Cookie::queue(Cookie::make(
+                'refresh_token',
+                $data->refresh_token,
+                14400, // Minutes = 10 days
+                null,
+                null,
+                false,
+                true // HttpOnly
+            ));
+
+            Cookie::queue(Cookie::make(
+                'access_token',
+                $data->access_token,
+                $data->expires_in,
+                null,
+                null,
+                false,
+                false
+            ));
+
+            return response([
+                'access_token' => $data->access_token,                        
+                'expires_in' => $data->expires_in
+            ]);
+
+        } catch (BadResponseException $e) {
+            if($e->getCode() === 400 ){
+                return response()->json(__('Invalid Request. Please check your email or password.'), $e->getCode());
+            }else if($e->getCode() === 401){ 
+                return response()->json(__('You credentials are incorrect. Please try again.'), $e->getCode());
+            }
+
+            return response()->json(__('Something went wrong on the server.'), $e->getCode());
+        }
+        
     }
 
 }

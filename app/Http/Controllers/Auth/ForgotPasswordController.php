@@ -17,7 +17,7 @@ class ForgotPasswordController extends Controller
      * @param Request email
      */
     public function index(Request $request)
-    {
+    {        
         $request->validate([
             'email' => 'required | email | exists:users,email'
         ]);

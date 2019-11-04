@@ -10,17 +10,7 @@
         </div>
 
         <div v-if="fullyAuthorized">
-            <create-tender></create-tender>
-
-            <div v-if="!ownsTender && $route.name === 'tender'">
-                <make-offer></make-offer>
-                <offer-cancel></offer-cancel>
-                <take-it-now></take-it-now>
-            </div>
-
-            <div v-if="ownsTender">
-                <offer-view></offer-view>
-            </div>
+            <create-tender></create-tender>          
         </div>
         
         <nav-drawer></nav-drawer>
@@ -31,26 +21,18 @@
     import CreateComment from './CreateComment'
     import CreateTender from './CreateTender'
     import Flash from '../components/Flash'
-    import LoginModal from './LoginModal'
-    import MakeOffer from './MakeOffer'
+    import LoginModal from './LoginModal'   
     import NavDrawer from './NavDrawer'
-    import NotificationDrawer from './NotificationDrawer' 
-    import OfferCancel from './OfferCancel' 
-    import OfferView from './OfferView' 
-    import TakeItNow from './TakeItNow' 
+    import NotificationDrawer from './NotificationDrawer'
 
     export default {
         components:{
             CreateComment,
             CreateTender,
             Flash,
-            LoginModal,
-            MakeOffer,
+            LoginModal,           
             NavDrawer,
             NotificationDrawer,
-            OfferCancel,
-            OfferView,
-            TakeItNow
         },
 
         computed:{
@@ -60,11 +42,7 @@
 
             fullyAuthorized(){
                 return this.$store.getters.fullyAuthorized
-            },
-
-            ownsTender(){
-                return this.$store.getters.ownsTender
-            }
+            },            
         }
         
     }

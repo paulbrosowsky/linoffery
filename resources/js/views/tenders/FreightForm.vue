@@ -19,13 +19,9 @@
             ></p>
         </div>
             
-        <div 
-            class="block"   
-            ref="form" 
-            v-resize="oneColumDesign"
-            :class="cardSmall ? '': 'md:flex'"
-        >
-            <div class="w-full" :class="cardSmall ? '': 'w-1/2 mr-1'">                
+        <div>                     
+        
+            <div class="w-full">                
                 <div class="relative flex items-center mb-2">
                     <input 
                         class="input"                        
@@ -45,13 +41,14 @@
                 ></textarea-input>
             </div>
             
-            <div class="w-full" :class="cardSmall ? '': 'w-1/2 ml-1'">
+            <div class="w-full">
                 <select-input 
                     class="mb-2" 
                     :options="transport"                     
                     :placeholder="$t('tender.transport_type')"
                     :searchable="true"
                     @changed="updatePallet"
+                    v-if="transport"
                 ></select-input>
                 
                 <div class="flex mb-2">
@@ -123,6 +120,7 @@
                     weight: this.freight.weight
                 },  
 
+                transport: null,
                 cardSmall:false,
             }
         }, 
@@ -139,22 +137,14 @@
                 }
 
                 return errors;                
-            },
-
-            transport(){               
-                return this.$store.state.transportTypes
-            }
+            },          
         },
 
         methods:{
             setFreightData(){
                 this.$emit('changed', this.form)
             },
-           
-            oneColumDesign(){
-                this.cardSmall = this.$refs.form.clientWidth < 640 ? true : false
-            },
-            
+                        
             updatePallet(value){
                 this.form.pallet = value.name
                 this.form.width = value.width
@@ -167,7 +157,21 @@
                 this.form.description= value
                 this.setFreightData()
             }, 
+
+            // Fetch Transport Types for select input
+            fetchTransportTypes(){                
+                axios
+                    .get('/api/transport-types')
+                    .then(response =>{     
+                        this.transport = response.data;
+                    })
+                    .catch(errors => reject(errors.response))
+            }
         },
+
+        created(){
+            this.fetchTransportTypes();
+        }
         
     }
 </script>

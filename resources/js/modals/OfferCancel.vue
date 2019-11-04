@@ -58,15 +58,18 @@
                 this.offer = data
             },
 
-            cancelOffer(){
-                this.$store
-                    .dispatch('cancelOffer', this.offer.id)
-                    .then(()=>{
+            cancelOffer(){               
+                axios
+                    .delete(`/api/offers/${this.offer.id}/destroy`)
+                    .then(response =>{
                         flash(this.$i18n.t('tender.withdraw_offer_message'))
-                        this.$store.dispatch('fetchTender', `/api${this.$route.path}`) 
+
+                        // Fetch Tender data from API. 
+                        // Linstener in /views/tenders/Tender.vue
+                        Event.$emit('retrieveTender');                        
                         this.close()
                     })
-                    .catch(errors => console.log(errors))
+                    .catch(errors => console.log(errors.response.data.errors));
             },
 
             close(){
