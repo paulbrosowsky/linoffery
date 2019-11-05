@@ -129,13 +129,9 @@ export let store = new Vuex.Store({
                     axios
                         .post('/api/auth/login/refresh')
                         .then((response)=>{
-                            let token = response.data.access_token;
-    
-                            context.commit('retrieveToken', token); 
-    
-                            context.dispatch('retryRequest', data);
-                            context.commit('refreshTokenPromise', null); 
-    
+                            let token = response.data.access_token;    
+                            context.commit('retrieveToken', token);                            
+                            context.commit('refreshTokenPromise', null);     
                             resolve(response);
                         })
                         .catch(errors =>{    
@@ -174,25 +170,7 @@ export let store = new Vuex.Store({
     
                 })
             }            
-        },
-
-        retryRequest(context, data){
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
-
-            return new Promise((resolve, reject) => {
-                axios({
-                    method: data.config.method,
-                    url: data.config.url,
-                    data: data.config.data
-                })                    
-                    .then((response)=>{                       
-                        resolve(response)
-                    })
-                    .catch(errors =>{                         
-                        reject(errors);
-                    });
-            });
-        },
+        },       
 
         fetchLoggedInUser(context){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 

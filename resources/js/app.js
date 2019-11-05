@@ -48,17 +48,34 @@ window.flash = function(message){
 
 
 window.axios = require('axios');
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.state.token;
-window.axios.defaults.headers.common['X-CSRF-TOKEN'] =  Linoffery.csrfToken;
+// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.state.token;
+// window.axios.defaults.headers.common['X-CSRF-TOKEN'] =  Linoffery.csrfToken;
+
+axios.interceptors.request.use(
+    (config) => {
+        config.headers['X-Requested-With']= 'XMLHttpRequest';
+        config.headers['X-CSRF-TOKEN'] = Linoffery.csrfToken;
+        config.headers['Authorization'] = 'Bearer ' + store.state.token;
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+)
 
 axios.interceptors.response.use(
     (response) => {
         return response;
     },
-    async (error) => {
+    (error) => {
         if(error.response.status == 401){
-            await store.dispatch('refreshToken', error.response)                
+            return store
+                .dispatch('refreshToken', error.response)
+                .then(() => {
+                    return axios.request(error.config)
+                })                             
         }else{
             return Promise.reject(error);
         }
