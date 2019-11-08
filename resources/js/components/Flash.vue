@@ -1,14 +1,6 @@
 <template>
     <transition name="slide-out">
-        <div v-show="show">
-             <div 
-                class="li-flash-container flex items-center bg-green-500 fixed shadow-lg rounded-lg py-2 px-5 z-50 m-auto md:m-0 md:w-auto"
-                v-show="message"
-            >            
-                <i class="icon ion-md-checkmark-circle-outline text-3xl text-white pr-5 "></i> 
-                <p class="text-white" v-text="message"></p>
-            </div>
-
+        <div v-show="show"> 
             <div 
                 class="li-flash-container flex items-center bg-white fixed shadow-lg rounded-lg py-2 z-50 m-auto md:mt-0"
                 style="max-width: 420px"
@@ -26,7 +18,8 @@
     import OfferWasOutbidded from '../notifications/OfferWasOutbidded'
     import TenderIsCompleted from '../notifications/TenderIsCompleted'
     import TenderWasCloned from '../notifications/TenderWasCloned'
-    import OfferWasAccepted from '../notifications/OfferWasAccepted'    
+    import OfferWasAccepted from '../notifications/OfferWasAccepted' 
+    import Flash from '../notifications/Flash';   
 
     export default { 
         components:{
@@ -35,13 +28,14 @@
             tenderiscompleted: TenderIsCompleted,           
             offerwasaccepted: OfferWasAccepted, 
             tenderrunout: TenderIsCompleted,
-            tenderwascloned: TenderWasCloned                   
+            tenderwascloned: TenderWasCloned,
+            success: Flash,
+            danger: Flash,
         },
 
         data(){
             return{
-                notification:null,
-                message: null,
+                notification:null,                
                 show: false
             }
         },
@@ -54,15 +48,9 @@
         },
 
         methods:{
-            flash(data){  
-                if (typeof data === 'string'){
-                    this.message = data
-                }else{
-                    this.notification = data  
-                }
-
-                this.show = true
-
+            flash(data){                
+                this.notification = data ;
+                this.show = true;
                 this.hide();
             },
 

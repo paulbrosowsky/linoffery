@@ -41,7 +41,7 @@ class TendersController extends Controller
                 $query->orderBy('price');
             }]);
         }
-        // Loa
+      
         return $tender->load(['offers' => function($query){
             $query->where('user_id', auth('api')->id())->orderBy('price');
         }]);

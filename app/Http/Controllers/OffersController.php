@@ -52,18 +52,22 @@ class OffersController extends Controller
         if(intval($tender->user_id) === auth()->id()){
             return response()->json(['message' => 'Your can not make offers for own tender.'], 403);
         }
-        
-        $offer = $tender->addOffer([
-            'user_id' => auth()->id(),
-            'tender_id' => $tender->id,
-            'price' => $request->price
-        ]);         
-        
-        if($request->takeNow){
-            return $offer->accept();            
+
+        if($tender->isActive){
+            $offer = $tender->addOffer([
+                'user_id' => auth()->id(),
+                'tender_id' => $tender->id,
+                'price' => $request->price
+            ]);         
+            
+            if($request->takeNow){
+                return $offer->accept();            
+            }
+
+            return $offer;
         }
 
-        return $offer;
+        return response()->json(['message' => __('This Tender is no longer active.')], 403);        
     }
 
     /**

@@ -57,7 +57,7 @@ class MakeOfferTest extends PassportTestCase
         $this->makeOffer()->assertStatus(401);        
     }
 
-    //  /** @test */
+    // /** @test */
     // function a_users_maus_have_payment_informations_to_make_offer()
     // { 
     //     $this->user->company->update(['stripe_id' => null]);  
@@ -69,6 +69,14 @@ class MakeOfferTest extends PassportTestCase
     function tender_owners_may_not_make_offers()
     {
         $this->tender->update(['user_id' => $this->user->id]);
+
+        $this->makeOffer()->assertStatus(403);
+    }
+
+    /** @test */
+    function users_may_not_make_offer_at_not_active_tender()
+    {
+        $this->tender->update(['completed_at' => now()]);
 
         $this->makeOffer()->assertStatus(403);
     }
@@ -135,6 +143,14 @@ class MakeOfferTest extends PassportTestCase
         $this->assertEquals($this->tender->id, $order->tender_id);        
         $this->assertEquals($this->tender->user_id, $order->tenderer_id);
         $this->assertCount(1, $this->tender->user->unreadNotifications);
+    }
+
+    /** @test */
+    function users_may_place_order_at_not_active_tender()
+    {
+        $this->tender->update(['completed_at' => now()]);
+
+        $this->makeOffer(['takeNow' => true])->assertStatus(403);
     }
 
     public function makeOffer($overrides = [])

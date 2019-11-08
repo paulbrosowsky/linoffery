@@ -41,11 +41,13 @@ Vue.directive('resize', VueResize );
 
 window.Event = new Vue()
 
-window.flash = function(message){    
-    window.Event.$emit('flash', message)
+window.flash = function(message, type = 'success'){  
+    let data = {
+        message: message,
+        type: type
+    }  
+    window.Event.$emit('flash', data)
 }
-
-
 
 window.axios = require('axios');
 // window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

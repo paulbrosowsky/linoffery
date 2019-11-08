@@ -165,6 +165,7 @@ export let store = new Vuex.Store({
                             context.commit('retrieveUser', null);
                             $cookies.remove('access_token');
                             localStorage.clear();
+                            window.location.reload();
                             reject(errors);
                         })
     

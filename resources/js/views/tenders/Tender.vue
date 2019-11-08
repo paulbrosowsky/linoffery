@@ -236,6 +236,7 @@
            OfferCard,
            OfferCancel,
            OfferView,
+           TakeItNow,
            TenderForm,
            TenderInfo
        },   
@@ -325,7 +326,12 @@
                         this.tender = response.data; 
                         Event.$emit('updateMarkers', response.data.locations);                        
                     })
-                    .catch(errors => console.log(errors));             
+                    .catch(errors => {                        
+                        if(errors.response.status == 403){                            
+                            flash(this.$i18n.t('tender.tender_not_available_message'), 'danger');
+                            this.$router.push({name:'tenders'});
+                        }
+                    });             
             },  
             
             cancelTender(){ 

@@ -63,6 +63,10 @@
                     })
                     .catch(errors =>{
                         this.errors = errors.response.data.errors;
+                        if(errors.response.status == 403){                            
+                            flash(this.$i18n.t('tender.tender_not_available_message'), 'danger');
+                            this.$router.push({name:'tenders'});
+                        }
                         this.loading = false;
                     });
             },

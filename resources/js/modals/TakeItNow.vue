@@ -67,20 +67,27 @@
             acceptOffer(){
                 this.loading = true
 
-                this.$store
-                    .dispatch('makeOffer', {
-                        price: this.tender.immediate_price,
-                        path: this.$route.path,
+                axios
+                    .post(`/api${this.$route.path}/offers/store`, { 
+                        price: this.tender.immediate_price,                       
                         takeNow: true
                     })
-                    .then((response)=>{  
+                    .then(response =>{
+                        flash(this.$i18n.t('tender.make_offer_message')); 
                         setTimeout(() => {
                             flash(this.$i18n.t('tender.take_now_message'))
                             this.$router.push({name:'order', params:{ order: response.data.id }})                        
                             this.close()
                             this.loading = false 
-                        }, 1000); 
+                        }, 1000);                         
                     })
+                    .catch(errors =>{                        
+                        if(errors.response.status == 403){                            
+                            flash(this.$i18n.t('tender.tender_not_available_message'), 'danger');
+                            this.$router.push({name:'tenders'});
+                        }
+                        this.loading = false;
+                    });              
             },
 
             close(){
