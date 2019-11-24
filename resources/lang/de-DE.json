@@ -1,16 +1,16 @@
 {    
     "Yes": "Ja",
     "No": "Nein",
-    "Invalide Request. Please check your email or password." : "Ungültige Anfrage. Bitte überprüfen Sie Ihre E-Mail oder Ihr Passwort.",
-    "You credentials are incorrect. Please try again." : "Ihre Zugangsdaten sind falsch. Bitte versuchen Sie es erneut.",
+    "Invalide Request. Please check your email or password." : "Ungültige Anfrage. Bitte überprüfe deine E-Mail oder dein Passwort.",
+    "You credentials are incorrect. Please try again." : "Ihre Zugangsdaten sind falsch. Bitte versuche es erneut.",
     "Something went wrong on the server." : "Auf dem Server ist ein Fehler aufgetreten.",
     "Logged out successfully." : "Erfolgreich abgemeldet.",
     "Language changed.": "Sprache geändert.",
 
-    "Please confirm your email address." : "Bitte bestätigen Sie Ihre Email-Adresse",
+    "Please confirm your email address." : "Bitte bestätige deine Email-Adresse",
     "Welcome!": "Herzlich Willkommen!",
     "Now only one step is missing.": "Jetzt fehlt nur noch ein Schritt.",
-    "Please confirm your email address and you are ready to go." : "Bitte bestätigen Sie deine Email-Adresse, und es kann losgehen.",
+    "Please confirm your email address and you are ready to go." : "Bitte bestätige deine Email-Adresse, und es kann losgehen.",
     "Confirm Email": "Email bestätigen",
     "Thank you,": "Vielen Dank,",
 
@@ -18,9 +18,9 @@
 
     "Reset Password": "Passwort zurücksetzen",
     "Hello ": "Hallo ",
-    "We received a request for the password change on your user account.": " Wir haben eine Anfrage für die Passwortänderung an Ihrem Benutzerkonto erhalten.",
-    "Do you want to change your password?": "Möchten Sie Ihr Passwort ändern?",
-    "If you have not sent us anything, just ignore this email.": "Wenn Sie uns nichts gesendet haben, ignorieren Sie einfach diese E-Mail.", 
+    "We received a request for the password change on your user account.": " Wir haben eine Anfrage für die Passwortänderung an deinem Benutzerkonto erhalten.",
+    "Do you want to change your password?": "Möchtest du dein Passwort ändern?",
+    "If you have not sent us anything, just ignore this email.": "Wenn du uns nichts gesendet hast, ignoriere einfach diese E-Mail.", 
    
     "Standard": "Standard",
     "Havy load": "Schwertransport",
@@ -46,27 +46,27 @@
     "The value is greater them tenders max. price.": "Der Wert ist höher als der max. Preis in der Ausschreibung.",
     "has new offer": "hat neues Angebot",
     "New order": "Neues Auftrag",
-    "You have been outbid": "Sie wurden überboten",
+    "You have been outbid": "Du wurdest überboten",
     "Tender is completed": "Ausschreibung abgeschlossen",
-    "You have a new order": "Sie haben neuen Auftrag",
+    "You have a new order": "Du hast neuen Auftrag",
 
-    "Your Tender \"": "Ihre Ausschreibung \"",
+    "Your Tender \"": "Deine Ausschreibung \"",
     "\" has run out." : "\" ist abgelaufen.",
     "Open tender": "Zur Ausschreibung",
 
     "If you want to publish this tender again, please use a copy function right on your teders view.":
-    "Wenn Sie diese Ausschreibung erneut veröffentlichen möchten, verwenden Sie bitte eine Kopierfunktion direkt in der Ausschreibungs-Ansicht.",
+    "Wenn du diese Ausschreibung erneut veröffentlichen möchtest, verwende du bitte eine Kopierfunktion direkt in der Ausschreibungs-Ansicht.",
 
-    "Your tender has run out.": "Ihre Ausschreibung ist abgelaufen.",
+    "Your tender has run out.": "Deine Ausschreibung ist abgelaufen.",
     "Open order": "Zum Auftrag",
 
     "Attached you will find the overview and the contact details as PDF.": 
-    "Im Anhang finden Sie die Übersicht und die Kontaktdaten als PDF.",
+    "Im Anhang findest du die Übersicht und die Kontaktdaten als PDF.",
 
     "In the further course, the forwarding company will contact you to clarify the details." :  
-    "Im weiteren Verlauf wird das Speditionsunternehmen mit Ihnen den Kontakt aufnehmen, um die Details abzuklären.",
+    "Im weiteren Verlauf wird das Speditionsunternehmen mit dir den Kontakt aufnehmen, um die Details abzuklären.",
 
-    "Please contact the shipper to clarify further details." : "Bitte kontaktieren Sie den Absender, um weitere Details zu klären.",
+    "Please contact the shipper to clarify further details." : "Bitte kontaktiere den Absender, um weitere Details zu klären.",
 
 
     "Page {PAGE_NUM} of {PAGE_COUNT}": "Seite {PAGE_NUM} von {PAGE_COUNT}",
