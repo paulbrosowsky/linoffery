@@ -82,9 +82,9 @@
                         <img src="{{asset('/storage/build/images/linoffery_logo.png')}}" width="100">
                     </td>
                     <td style="text-align:right">
-                        <p>Simensstr.8</p>
-                        <p>73326 Uhingen</p>
-                        <p>Umsatzsteuer ID: DE12345678 </p>
+                        <p>Kirchstraße 35</p>
+                        <p>89555 Steinheim am Almbuch</p>
+                        {{-- <p>Umsatzsteuer ID: DE12345678 </p> --}}
                     </td>
                 </tr>
                 <tr>

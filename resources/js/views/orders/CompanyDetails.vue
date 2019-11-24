@@ -15,7 +15,8 @@
         </router-link>
 
         <div class="w-full flex ml-5">
-            <img class="w-10 h-10 rounded-full shadow-md mt-5" :src="user.avatar" alt="">
+            <img class="w-10 h-10 rounded-full shadow-md mt-5" :src="user.avatar" alt="" v-if="user.avatar">
+            <avatar v-if="!user.avatar" :user="user"></avatar>
 
             <div class="ml-3 md:ml-5">
                 <p class="uppercase text-xs text-gray-500 ">{{$t('utilities.contact_person')}}</p>  

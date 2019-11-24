@@ -72,12 +72,16 @@ axios.interceptors.response.use(
         return response;
     },
     (error) => {
-        if(error.response.status == 401){
-            return store
-                .dispatch('refreshToken', error.response)
-                .then(() => {
-                    return axios.request(error.config)
-                })                             
+        if(error.response.status == 401 && !error.config.url.includes('/api/auth/login') ){
+            if(error.config.url.includes('/api/auth/login/refresh')){
+                store.dispatch('logout');
+            }else{
+                return store
+                    .dispatch('refreshToken', error.response)
+                    .then(() => {
+                        return axios.request(error.config)
+                    })    
+            }                                    
         }else{
             return Promise.reject(error);
         }
