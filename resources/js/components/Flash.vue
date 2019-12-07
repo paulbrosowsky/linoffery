@@ -65,9 +65,15 @@
 
         created(){
             Event.$on('flash', data => {                
-                this.flash(data)
+                this.flash(data);
             })            
-        }        
+        } ,
+        
+        beforeDestroy(){
+            Event.$off('flash', data => {                
+                this.flash(data);
+            })   
+        }
     }
 </script>
 <style>

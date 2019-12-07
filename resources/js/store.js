@@ -25,13 +25,13 @@ export let store = new Vuex.Store({
     state:{
         token: $cookies.get('access_token') || null,
         refreshTokenPromise: null,
-        user: null,         
+        user: null, 
+
+        filters:{} ,  
+        categories:null,
+
         notifications: [],
-        
-        invoices: null, 
-        
-        filters:{} ,
-        filterKeys:[]    
+        invoices: null,  
     },
 
     getters:{
@@ -77,23 +77,18 @@ export let store = new Vuex.Store({
             state.refreshTokenPromise = promise;
         },
         
-        retrieveCompany(state, company){
-            state.company = company
+        retrieveCategories(state, categories){
+            state.categories = categories
         },   
 
-        addFilters(state, filter){
+        addFilter(state, filter){
             state.filters = Object.assign({},state.filters, filter)
-
-            state.filterKeys = state.filterKeys.concat(Object.keys(filter))          
         },
 
-        removeFilters(state, filter){
+        removeFilter(state, filter){
             delete state.filters[filter]            
-            
-            _remove(state.filterKeys, (key)=>{
-                return key === filter
-            })
         },
+
 
         retrieveNotifications(state, notifications){
             state.notifications = notifications
@@ -147,7 +142,7 @@ export let store = new Vuex.Store({
         },
         
         logout(context){            
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            // axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
 
             if (context.getters.loggedIn) {
                 return new Promise((resolve, reject) => {
@@ -174,7 +169,7 @@ export let store = new Vuex.Store({
         },       
 
         fetchLoggedInUser(context){
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
+            // axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
             
             return new Promise((resolve, reject)=>{
                 axios
@@ -188,7 +183,22 @@ export let store = new Vuex.Store({
                         context.dispatch('logout');
                     })
             })  
-        },  
+        }, 
+        
+        fetchCategories(context){
+            return new Promise((resolve, reject)=>{
+                axios
+                    .get('/api/categories')
+                    .then(response =>{                                             
+                        context.commit('retrieveCategories', response.data)                        
+                        resolve(response)
+                    })
+                    .catch(errors => {
+                        reject(errors.response)
+                        context.dispatch('logout');
+                    })
+            })  
+        },
 
         //Notifications Endpoints START
         fetchNotifications(context){
@@ -232,6 +242,7 @@ export let store = new Vuex.Store({
                     .catch(errors => reject(errors.response))
             })           
         },      
+        
         //Notifications Endpoints END   
     }
 })

@@ -5,15 +5,13 @@ namespace App\Http\Controllers;
 use App\Filters\TenderFilters;
 use Illuminate\Http\Request;
 use App\Tender;
-use App\Location;
-use PHPUnit\Framework\MockObject\Stub\ReturnStub;
 
 class TendersController extends Controller
 {
     /**
      *  Get all Cargos
      */
-    public function index(Request $request, TenderFilters $filters)
+    public function index(TenderFilters $filters)
     {   
         return Tender::where('published_at', '!=', NULL )
                     ->where('completed_at', '=', NULL)

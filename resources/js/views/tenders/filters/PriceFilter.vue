@@ -1,12 +1,10 @@
 <template>
-    <div class="px-5 pb-5">
-        <filter-header 
-            :text="$t('tender.find_load_by_price')"
-            @close="$emit('close')"
-            @remove="removeFilter"
-        ></filter-header> 
-         
-        <form @sumbit.prevent="triggerFilter">
+    <div class="px-5">   
+
+        <p class="text-white font-bold mb-2" v-text="$t('tender.find_load_by_price')"></p>
+        <p class="text-red-500 mb-2" v-if="error" v-text="error.message"></p>
+
+        <form>
             <div class="flex">            
                 <div class="w-1/2 mr-1">
                     <div class="relative flex items-center">
@@ -16,9 +14,8 @@
                             class="input pl-10" 
                             type="number" 
                             :placeholder="$t('tender.min_price')" 
-                            v-model.number="price.min"
-                            @blur="triggerFilter"
-                            @keyup.enter="triggerFilter"
+                            v-model.number="price.min" 
+                            @keyup="error= null"                             
                         >
                     </div>
                 </div>
@@ -32,16 +29,19 @@
                             type="number" 
                             :placeholder="$t('tender.max_price')" 
                             v-model.number="price.max"
-                            @blur="triggerFilter"
-                            @keyup.enter="triggerFilter"
+                            @keyup="error= null"                              
                         >
                     </div>
                 </div>
-            </div>
+            </div>          
 
         </form>
-           
-        
+
+        <filter-footer 
+            @close="$emit('close')"
+            @remove="removeFilter"
+            @filter="triggerFilter"
+        ></filter-footer>        
     </div>
 
 </template>
@@ -53,35 +53,56 @@
                 price:{
                     min: null,
                     max: null 
-                }              
+                },
+                error: null              
             }
         },
 
-        methods:{
-            updateFilter(){
-                this.$store.commit('addFilters', {                    
-                    price: this.price
-                })                
-            },
+        computed:{
+            filters(){
+                return this.$store.state.filters
+            }
+        },
+
+        methods:{            
 
             async triggerFilter(){                
-                if(typeof this.price.min === 'number' && typeof this.price.max === 'number'){                    
-                    await this.updateFilter()
+                if(typeof this.price.min == 'number' && typeof this.price.max == 'number'){ 
+                    if(this.price.max > this.price.min){
 
-                    document.getElementById("min-price").blur()
-                    document.getElementById("max-price").blur()
+                        await this.$store.commit('addFilter', {                    
+                            price: this.price
+                        });
 
-                    this.$emit('changed')
+                        this.$emit('filter');
+
+                    }else{
+                        this.error = { message: this.$i18n.t('tender.filter_message_min_max') };
+                    } 
+                }else{
+                    this.error = { message: this.$i18n.t('tender.filter_message_number') };
                 }
             },
 
-            removeFilter(){                
-                this.price.min = null                
-                this.price.max = null 
+            async removeFilter(){                
+                this.price.min = null;                
+                this.price.max = null; 
+                this.error = null;
+                             
+                await this.$store.commit('removeFilter', 'price');
+                this.$emit('filter');
+                this.$emit('close');
+            },
 
-                this.$store.commit('removeFilters', 'price')                
-                this.$emit('changed')
-            } 
+            setFilter(){                
+                if (this.filters.price) {                    
+                    this.price = this.filters.price;
+                }
+            }
+        },
+
+        created(){           
+            this.setFilter();
         }
         
     }

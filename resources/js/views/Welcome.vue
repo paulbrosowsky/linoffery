@@ -3,14 +3,15 @@
         <section class="li-welcome-header overflow-hidden ">
             <div class="w-full relative mx-auto py-10 px-5 md:px-10 xl:pb-48" style="max-width: 1280px!important;">
                 <div class="flex">
-                    <div class="w-full relative z-10 max-w-3xl xl:max-w-2xl xl:px-12 xl:pt-16">
-                        <p class="text-3xl sm:text-5xl font-light leading-none">Die Brücke zwischen</p>
-                        <p class="text-4xl sm:text-5xl font-light leading-none text-teal-500">Spedition und Versender</p>
+                    <div class="w-full relative z-10 max-w-3xl xl:max-w-2xl xl:px-12 xl:pt-16">    
+                     
+                        <p class="text-3xl sm:text-4xl font-light leading-none ">{{ $t('home.header_title_1')}}</p>
+                        <p class="text-4xl sm:text-5xl font-light leading-none text-teal-500 ">{{ $t('home.header_title_2')}}</p>
+                                                               
+                        
+
                         <p class="text-lg text-gray-600 mt-10 leading-relaxed">
-                            Unsere Lösung war eine Plattform zu entwickeln welche sich auf die Bedürfnisse vom 
-                            jeden einzelnen Unternehmen anpasst und damit jeder so handeln kann wie es für sein 
-                            eigenes Unternehmen für richtig hält. Jedem sollte die Möglichkeit gegeben werden 
-                            sein Anteil oder Potenzial zu erweitern, oder auf dem Markt zu sichern.
+                           {{ $t('home.header_text')}}
                         </p>
                         <div class="flex mt-12">                            
                             <button class="btn btn-teal mr-2">

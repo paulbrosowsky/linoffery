@@ -93,5 +93,9 @@
     "delete_tender_question": "Möchtest du deine Ausschreibung wirklich löschen?",
     "delete_tender_message": "Deine Ausschreibung wurde gelöscht.",
     "no_comments_info": "Momenten keine Bewertungen vorhanden.",
-    "tender_not_available_message": "Die Ausschreibung ist nicht mehr verfügbar."
+    "tender_not_available_message": "Die Ausschreibung ist nicht mehr verfügbar.",
+
+    "filter_message_number": "Die Werte müssen numerisch sein.",
+    "filter_message_min_max": "Max. Wert muss größer als min. sein."
+
 }

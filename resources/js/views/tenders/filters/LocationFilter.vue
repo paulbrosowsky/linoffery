@@ -1,10 +1,6 @@
 <template>
-    <div class="px-5 pb-5">
-        <filter-header 
-            :text="$t('tender.find_load_near_by')"
-            @close="$emit('close')"
-            @remove="removeFilter"
-        ></filter-header> 
+    <div class="px-5">        
+        <p class="text-white font-bold mb-2" v-text="$t('tender.find_load_near_by')"></p>  
 
         <div class="relative flex items-center mb-2">
             <i class="absolute icon ion-md-pin text-xl text-gray-500 px-3"></i>
@@ -20,7 +16,7 @@
 
         <div class="relative flex items-center relative">
             <i class=" absolute icon ion-md-expand text-xl text-gray-500 px-3"></i>
-            <select class="input pl-10" v-model="range" @change="triggerFilter">
+            <select class="input pl-10" v-model="range">
                 <option disabled selected class="text-grey-500">{{$t('utilities.range')}}</option>
                 <option :value="10">10 km</option>                  
                 <option :value="20">20 km</option> 
@@ -36,6 +32,12 @@
             </div>
         </div>
 
+        <filter-footer 
+            @close="$emit('close')"
+            @remove="removeFilter"
+            @filter="triggerFilter"
+        ></filter-footer> 
+
     </div>
 </template>
 <script>
@@ -46,8 +48,14 @@
                 location: null               
             }
         },
-        methods:{
-            removeFilter(){},
+
+        computed:{
+            filters(){
+                return this.$store.state.filters
+            },           
+        },
+
+        methods:{            
 
             fetchGeolocation(){
                 // Fetch HTML5 Browser geolocation
@@ -56,23 +64,30 @@
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
                         type: 'address'
-                    }]                   
-                    // Listener in Maps @initMap
-                    Event.$emit('updateMarkers', this.location)                    
+                    }];                   
+                    // Listener in Maps 
+                    Event.$emit('updateMarkers', this.location);                    
                 })
             },
 
-            async triggerFilter(){
-                // Set filter bounds at search range and given (current) location 
-                let bounds = await{                    
+            setBounds(){
+                return {                                      
                     east: this.location[0].lng + (this.range/71.5),
                     west: this.location[0].lng - (this.range/71.5),
                     north: this.location[0].lat + (this.range/113.5),                    
                     south: this.location[0].lat - (this.range/113.5)
                 }
-                // Retrieve filters variable in store
-                this.$store.commit('addFilters', {location: bounds})
-                this.$emit('changed')
+            },
+
+            async triggerFilter(){
+                if(this.location && typeof this.range == 'number'){
+                    // Set filter bounds at search range and given (current) location 
+                    let bounds = await this.setBounds();
+
+                    // Retrieve filters variable in store
+                    this.$store.commit('addFilter', { location: bounds });
+                    this.$emit('filter');
+                }                
             },   
             
             setLocation(value){ 
@@ -83,12 +98,13 @@
                 }]
             },
 
-            removeFilter(){                
-                this.location = null
-                this.range = this.$i18n.t('utilities.range')
+            async removeFilter(){                
+                this.location = null;
+                this.range = this.$i18n.t('utilities.range');
                 
-                this.$store.commit('removeFilters', 'location')                
-                this.$emit('changed')
+                await this.$store.commit('removeFilter', 'location');
+                this.$emit('filter');
+                this.$emit('close');
             } 
 
         },
@@ -99,8 +115,13 @@
                 //  Listener '@fetchAddress' in Map.vue                          
                 Event.$emit('fetchAddress', document.getElementById('address'))                 
             }, 500)
+
             // Trigger in Map @fetchAddress
             Event.$on('setAddress', value => this.setLocation(value))
+        },
+
+        beforeDestroy(){
+            Event.$off('setAddress', value => this.setLocation(value))
         }
 
     }

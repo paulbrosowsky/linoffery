@@ -41,7 +41,11 @@
                 axios
                     .get(`/api${this.$route.path}`)
                     .then(response =>{                       
-                        this.company = response.data;                        
+                        this.company = response.data; 
+
+                        // Set Company Data on the Sidebar
+                        // Listener in /views/profiles/ProfileSidebar.vue
+                        Event.$emit('setCompanyData', this.company);                      
                     })
                     .catch(errors => console.log(errors.response));
             }
@@ -49,13 +53,7 @@
 
         created(){
             this.fetchCompanyProfile();
-
-            setTimeout(() => {      
-                // Set Company Data on the Sidebar
-                // Listener in /views/profiles/ProfileSidebar.vue           
-               Event.$emit('setCompanyData', this.company);
-            }, 500);
-
+            
             // Refresh Company Data
             // Trigger in /modals/CreateComment.vue, /views/profiles/Comment.vue
             Event.$on('retrieveCompany', this.fetchCompanyProfile);

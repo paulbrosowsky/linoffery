@@ -1,19 +1,19 @@
 <template>
-     <div class="px-5 pb-5"> 
-        <filter-header 
-            :text="$t('tender.find_load_by_date')"
-            @close="$emit('close')"
-            @remove="removeFilter"
-        ></filter-header> 
+     <div class="px-5">        
+        <p class="text-white font-bold mb-2" v-text="$t('tender.find_load_by_date')"></p>
 
         <date-range 
             :from="date.from"
-            :to="date.to"
-            @inputFrom="updateFrom" 
-            @inputTo="updateTo"            
+            :to="date.to"                        
             :left="true"
             :reset="reset"
         ></date-range>  
+
+        <filter-footer 
+            @close="$emit('close')"
+            @remove="removeFilter"
+            @filter="triggerFilter"
+        ></filter-footer>   
     </div>    
     
 </template>
@@ -29,39 +29,42 @@
             }
         },
 
-        methods:{
-            updateFrom(value){
-                this.date.from = value
-                this.reset = false
-                this.triggerFilter()
+        computed:{
+            filters(){
+                return this.$store.state.filters
+            }
+        },
+
+        methods:{          
+
+            async triggerFilter() {
+                await this.$store.commit('addFilter', {
+                    date: this.date
+                });
+
+                this.$emit('filter');
             },
 
-            updateTo(value){
-                this.date.to = value
-                this.reset = false
-                this.triggerFilter()
+            async removeFilter(){                
+                this.date.from = null;                
+                this.date.to = null; 
+                this.reset = true;
+                             
+                await this.$store.commit('removeFilter', 'date');
+                this.$emit('filter');
+                this.$emit('close');
             },
 
-            updateFilter(){
-                if(this.date.from && this.date.to){
-                    this.$store.commit('addFilters', { date: this.date })
+            setFilter(){                
+                if (this.filters.date) {
+                    console.log(this.filters);
+                    this.date = this.filters.date;
                 }
-            },
+            }
+        },
 
-            async triggerFilter(){
-                await this.updateFilter()
-                this.$emit('changed')
-            },
-
-             removeFilter(){                
-                this.date.from = null                
-                this.date.to = null 
-                this.reset = true
-
-                this.$store.commit('removeFilters', 'date')                
-                this.$emit('changed')
-            } 
-
+        created(){           
+            this.setFilter();
         }
     }
 </script>

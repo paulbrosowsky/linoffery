@@ -3,22 +3,25 @@
         <!-- <p class="text-sm text-red-500 mb-2" v-if="errors" v-text="errors.earliest_date[0]"></p> -->
         <date-picker  
             class="mb-2"    
-            :value="from"       
-            :placeholder="$t('tender.earliest_date')"             
+            :value="range.from"       
+            :placeholder="$t('tender.earliest_date')" 
+            :disabled-dates="disabledFrom"                       
             :highlighted="range"
             :left="left"
             :reset ="reset"
             @changed="updateFrom"
+            
         ></date-picker>
         <!-- <p class="text-sm text-red-500 mb-2" v-if="errors" v-text="errors.latest_date[0]"></p> -->
         <date-picker     
-            :value="to"        
+            :value="range.to"        
             :placeholder="$t('tender.latest_date')"             
-            :disabled-dates="range.from"
+            :disabled-dates="{to: range.from}"
             :highlighted="range"
             :left="left"
             :reset ="reset"
-            @changed="updateTo"                      
+            @changed="updateTo" 
+                              
         ></date-picker>
     </div>
 </template>
@@ -31,8 +34,8 @@
         data(){
             return{
                 range:{
-                    from:null,
-                    to:null
+                    from: this.form,
+                    to: this.to
                 }
             }
         },
@@ -43,20 +46,33 @@
                     this.range.from = null 
                     this.range.to = null 
                 }               
+            },
+        },
+
+        computed:{
+            disabledFrom(){
+                return {
+                    from: this.range.to, 
+                    to: this.$moment().subtract(1, 'days')._d
+                }
             }
         },
         
 
         methods:{
             updateFrom(value){
-                this.range.from = value
+                if(value > this.range.to){
+                    this.range.to = value;
+                    this.$emit('inputTo', this.range.to)
+                }
+                this.range.from = value;            
                 this.$emit('inputFrom', this.range.from)
             },
 
             updateTo(value){
-                this.range.to = value
+                this.range.to = value                
                 this.$emit('inputTo', this.range.to)
-            }
+            },            
         }
         
     }

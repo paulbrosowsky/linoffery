@@ -1,20 +1,23 @@
 <template>
-    <div class="px-5 pb-5">
-        <filter-header 
-            :text="$t('tender.find_load_by_category')"
-            @close="$emit('close')"
-            @remove="removeFilter"
-        ></filter-header> 
+    <div class="px-5">  
+
+        <p class="text-white font-bold mb-2" v-text="$t('tender.find_load_by_category')"></p>     
 
         <select-input
-            :value="categories" 
-            :options="list" 
-            v-if="list" 
+            :value="selected" 
+            :options="categories" 
+            v-if="categories" 
             :placeholder="$t('tender.category')"
             :multiple="true"
-            @changed="triggerFilter"
+            @changed="updateFilter"
             :reset="reset"
         ></select-input> 
+
+        <filter-footer 
+            @close="$emit('close')"
+            @remove="removeFilter"
+            @filter="triggerFilter"
+        ></filter-footer> 
     </div>
    
 </template>
@@ -22,52 +25,63 @@
     export default {
         data(){
             return{
-                categories: null,
+                selected: null,
                 reset: false,
+                filter: null,              
             }
         },
 
         computed:{
-            list(){
+            categories(){
                 return this.$store.state.categories
-            }
+            },
+
+            filters(){
+                return this.$store.state.filters
+            },           
         },
 
         methods:{
-            updateFilter(value){
-                this.reset = false
-                this.categories = value
-                let categoryIds = []
-                
-                this.categories.map((category)=>{
-                    return categoryIds.push(category.id)
-                })
-                
-                this.$store.commit('addFilters', {                    
-                    category: categoryIds.length >0 ? JSON.stringify(categoryIds): ''
-                })
+            updateFilter(value){                
+                this.selected = value; 
+
+                let selectedIds = [];
+
+                this.selected.forEach(category=> {
+                    selectedIds.push(category.id);
+                });
+
+                this.filter =  JSON.stringify(selectedIds);
             },
 
-            async triggerFilter(value){                
-                await this.updateFilter(value)
-                this.$emit('changed')
+            async triggerFilter() { 
+                if(this.selected){
+                    await this.$store.commit('addFilter', {
+                        category:  JSON.stringify(this.selected)
+                    });
+                    this.$emit('filter');
+                }                
+            },           
+
+            async removeFilter(){                
+                this.selected = null;                
+                this.reset = true;
+                this.filter = '';
+
+                await this.$store.commit('removeFilter', 'category');            
+                this.$emit('filter');
+                this.$emit('close');
             },
-
-            removeFilter(){                
-                this.categories = null                
-                this.reset = true
-
-                this.$store.commit('removeFilters', 'category')                
-                this.$emit('changed')
-            },
-
-            fetchCategories(){
-                this.$store.dispatch('fetchCategories')
-            },
-        },
-
-        created(){
-            // this.fetchCategories();
+            
+            setFilter(){                
+                if (this.filters.category) {                    
+                    this.selected = JSON.parse(this.filters.category);
+                }
+            }
+        },   
+        
+        created(){           
+            this.setFilter();
         }
         
     }

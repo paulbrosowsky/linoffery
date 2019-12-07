@@ -83,13 +83,17 @@
                     s1.setAttribute('crossorigin','*');
                     s0.parentNode.insertBefore(s1,s0);
                 })();                   
+            },
+
+            fetchCategories(){
+                this.$store.dispatch('fetchCategories');
             }
 
         },
 
         created() {            
-            this.retriveLocale()            
-            
+            this.retriveLocale();            
+            this.fetchCategories();
 
             // Load Tawk.to when cookies are agreed
             if (this.agreeCookies) {

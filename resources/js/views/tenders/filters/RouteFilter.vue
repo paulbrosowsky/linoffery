@@ -1,11 +1,7 @@
 <template>
-    <nav class="bg-gray-700 px-5 pb-5">
+    <nav class="bg-gray-700 px-5">
         
-        <filter-header 
-            :text="$t('tender.find_load_on_route')"
-            @close="$emit('close')"
-            @remove="removeFilter"
-        ></filter-header>
+       <p class="text-white font-bold mb-2" v-text="$t('tender.find_load_on_route')"></p>
         
         <!-- Origin Input -->
         <div class="relative flex items-center mb-2">
@@ -36,6 +32,12 @@
                 </svg>
             </div>
         </div>
+
+        <filter-footer 
+            @close="$emit('close')"
+            @remove="removeFilter"
+            @filter="triggerFilter"
+        ></filter-footer>
     </nav>
 
 </template>
@@ -46,7 +48,9 @@
             return{
                 origin:null,
                 destination:null,
-                range: this.$i18n.t('utilities.detour')
+                range: this.$i18n.t('utilities.detour'),
+                filter: null,
+                route: null,
             }
         },
 
@@ -62,31 +66,50 @@
                 })
             },
 
+            setRoute(values){
+                this.route = values;
+                this.range = null;
+                this.range = this.$i18n.t('utilities.detour');               
+            },
+
             triggerRouteBoxer(){  
-                // Trigger google Map RouteBoxer Utility to Create Route Bounds for Searching Tenders 
-                // Listener in Map.vue               
-                Event.$emit('boxRoute', this.range)                
+                if(this.route && this.range){
+
+                    // Trigger google Map RouteBoxer Utility to Create Route Bounds for Searching Tenders 
+                    // Trigger in ./views/Map.vue @created           
+                    Event.$emit('boxRoute', {
+                        path: this.route.path,
+                        range: this.range
+                    }); 
+                }            
             }, 
 
-            triggerFilter(values){
-                this.$store.commit('addFilters', {
-                    route:{
-                        bounds: values.bounds,
-                        locations: values.locations
-                    }
-                })
-                this.$emit('changed')
+            setFilter(values){                
+                this.filter = {
+                    bounds: values.bounds,
+                    locations: this.route.locations
+                };
+            },
+
+            triggerFilter(){
+                if(this.filter){
+                    this.$store.commit('addFilter', { route: this.filter });               
+                    this.$emit('filter')
+                }                
             },
             
-            removeFilter(){
-                this.origin = null,
-                this.destination = null,
-                this.range = this.$i18n.t('utilities.detour')
+            async removeFilter(){
+                this.origin = null;
+                this.destination = null;
+                this.range = this.$i18n.t('utilities.detour');
                 
-                this.$store.commit('removeFilters', 'route')
-                //Listener in Map
-                Event.$emit('removeRoute') 
-                this.$emit('changed')
+                await this.$store.commit('removeFilter', 'route');
+
+               // Trigger in ./views/Map.vue @created
+                Event.$emit('removeRoute'); 
+
+                this.$emit('filter');
+                this.$emit('close');
             }            
         },
 
@@ -99,13 +122,21 @@
             }, 500)
 
             // Trigger in Map fatchAddress
-            Event.$on('setAddress', (value)=>{
-                this.setLocation(value)
-            }) 
+            Event.$on('setAddress', value => this.setLocation(value) );
+
+            // Trigger in ./views/Map.vue @displayRoute
+            Event.$on('setRoute', values => this.setRoute(values) );
 
             // Trigger in  Map @boxRoute
-            Event.$on('filterByRoute', values => this.triggerFilter(values))
+            Event.$on('setRouteBounds', values => this.setFilter(values) );
+        },
+
+        beforeDestroy(){
+            Event.$off('setAddress', value => this.setLocation(value) );
+            Event.$off('setRouteBounds', values => this.setFilter(values) );
+            Event.$off('setRoute', values => this.setRoute(values) );
         }
+
         
     }
 </script>

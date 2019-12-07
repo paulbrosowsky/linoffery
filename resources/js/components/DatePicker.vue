@@ -9,7 +9,7 @@
             v-model="date"
             @input="$emit('changed', date)"
             :highlighted="highlighted" 
-            :disabled-dates="{to:inactiveDates}"           
+            :disabled-dates="inactiveDates"           
         > </datepicker>  
     </div>  
    
@@ -59,7 +59,7 @@
 
             // If not Props given disable all dates until today
             inactiveDates(){
-                return this.disabledDates ? this.disabledDates : this.$moment().subtract(1, 'days')._d
+                return this.disabledDates ? this.disabledDates : {to:this.$moment().subtract(1, 'days')._d}
             }
         },
 

@@ -10,7 +10,7 @@ class TenderFilters extends Filters
     /**
      * Registered Filters
     */
-    protected $filters = ['route', 'location', 'category', 'price', 'date', 'weight'];
+    protected $filters = ['route', 'location', 'category', 'weight', 'price', 'date'];
 
 
     /**
@@ -62,9 +62,13 @@ class TenderFilters extends Filters
      */
     protected function category($list)
     {  
-        $categories = json_decode($list);
+        $categoryIds = [];
+
+        foreach (json_decode($list) as $category){
+            array_push($categoryIds, $category->id);
+        } 
         
-        return $this->builder->whereIn('category_id', $categories);
+        return $this->builder->whereIn('category_id', $categoryIds);
     }
 
     /**
@@ -141,7 +145,7 @@ class TenderFilters extends Filters
     protected function findTenders($bounds)
     {
         $locations = collect();
-
+        
         foreach ($bounds as $area){
             // Find Location between the route borders
             $location = Location::whereBetween('lat', [$area->south, $area->north])

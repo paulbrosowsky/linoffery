@@ -62,21 +62,19 @@
 
         methods:{  
             fetchTenders(endpoint){  
-                this.loading = true                
-                let params = null
-
-                if(!_isEmpty(this.filters)){ 
-                    params = { params: this.filters}
-                } 
-            
-                Event.$emit('scrollTop'); 
+                this.loading = true  
                 
+                // Listener in ./layouts/Mapped.vue
+                Event.$emit('scrollTop'); 
+
                 axios
-                    .get(endpoint)
+                    .get(endpoint, {params: this.filters})
                     .then(response =>{                       
                         this.tenders = response.data.data;
                         this.dataSet = response.data;
                         this.loading= false;
+
+                        // Listener in ./views/Map.vue
                         Event.$emit('updateMarkers', this.locations)  
                     })
                     .catch(errors =>{
@@ -91,11 +89,10 @@
             this.fetchTenders(`/api${this.$route.fullPath}`);              
             
             // Trigger in TendersFilters @filterTenders
-            Event.$on('fetchTenders', ()=> this.fetchTenders())
+            Event.$on('fetchTenders', ()=> this.fetchTenders(`/api/tenders`))
         },
 
-        beforeDestroy(){           
-
+        beforeDestroy(){ 
             Event.$off('fetchTenders', () => this.fetchTenders())
         }
     }

@@ -4,36 +4,31 @@
 <script>
     import gmapsInit from '../utilities/gmaps'
     import RouteBoxer from '../utilities/RouteBoxer'
-    import MarkerClusterer from '@google/markerclusterer'
+    // import MarkerClusterer from '@google/markerclusterer'
     import MapSyles from '../utilities/MapStyles'
 
     export default {      
         
         data(){
             return{                
-                markers:[],                
-                route: [], 
-                routeLocations: null,               
-                              
-                map: null ,
-                markerCluster: null           
+                markers:[],                              
+                map: null,
+                // markerCluster: null           
             }
-        },  
-        
-        computed:{
-            locations(){
-               return this.$store.getters.locations
-            }
-        },
+        },    
 
         methods:{
 
             async mountMap(){
                 try {
                     let google = await gmapsInit();
+
                     let geocoder = new google.maps.Geocoder();
+
                     this.directionsService = new google.maps.DirectionsService;
+
                     this.directionsDisplay = new google.maps.DirectionsRenderer; 
+
                     this.map = new google.maps.Map(this.$el, {
                         center: {lat: 51.5, lng: 10.5},
                         zoom: 6,
@@ -43,45 +38,10 @@
 
                     this.directionsDisplay.setMap(null)                     
 
-                    this.markerCluster = new MarkerClusterer(this.map, this.markers, {
-                        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-                    });  
-                    
-                    Event.$on('zoom-map',()=>{
-                        setTimeout(() => {
-                            this.zoomToMarkers()
-                        }, 500);                        
-                    })                                        
-
-                    Event.$on('updateMarkers',value => {                       
-                        this.resetAllMarkers()                                               
-                        this.updateMarkers(value)                                          
-                    }) 
-
-                    //Trigger in locationFilter
-                    Event.$on('removeMarkers',() => {                       
-                        this.resetAllMarkers()                  
-                    })
-
-                    Event.$on('displayRoute', value => {
-                        this.resetAllMarkers()
-                        this.displayRoute(value.origin, value.destination)
-                    }) 
-
-                     //Trigger in RouteFilter
-                    Event.$on('removeRoute',() => {                       
-                        this.directionsDisplay.setMap(null)                   
-                    })
-                    
-                    // Fetch Address with Places API
-                    //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings
-                    Event.$on('fetchAddress',(element) =>{                                                
-                        this.fetchAddress(element)
-                    }) 
-
-                    // Event.$on('boxRoute', value => {                
-                    //     this.boxRoute(value)
-                    // })  
+                    // this.markerCluster = new MarkerClusterer(this.map, this.markers, {
+                    //     imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                    // });  
+                     
                   
                 } catch (error) {
                     console.error(error);
@@ -101,20 +61,7 @@
 
                 marker.addListener('click', () => this.$router.push(`/tenders/${location.tender_id}`))
                 this.markers.push(marker) 
-            },
-
-            // geocodePosition(address){
-            //     if(this.geocoder){
-            //         this.geocoder.geocode({ address:address   }, (results, status) => {
-            //             if (status !== 'OK' || !results[0]) {
-            //                 throw new Error(status);
-            //             }
-            //             this.addMarker(results[0].geometry.location)   
-            //              map.setCenter(results[0].geometry.location);
-            //              map.fitBounds(results[0].geometry.viewport);                    
-            //         });
-            //     }               
-            // },
+            },            
 
             async updateMarkers(locations){                
                 
@@ -124,7 +71,7 @@
                 })
                 
                 // Add updated Markers to Cluster
-                this.markerCluster.addMarkers(this.markers)
+                // this.markerCluster.addMarkers(this.markers)
                 
                 this.zoomToMarkers()                               
             },  
@@ -173,12 +120,14 @@
                         origin: origin,
                         destination: destination,
                         travelMode: 'DRIVING'
-                    }, function(response, status) {                        
-                        if (status === 'OK') {                            
-                            that.directionsDisplay.setDirections(response)                            
-                            that.route = response.routes[0].overview_path
+                    }, function(response, status) { 
 
-                            that.routeLocations = {
+                        if (status === 'OK') {
+                            that.directionsDisplay.setDirections(response); 
+
+                            let route = response.routes[0].overview_path;
+
+                            let routeLocations = {
                                 start: {
                                     lat: response.routes[0].legs[0].start_location.lat(),
                                     lng: response.routes[0].legs[0].start_location.lng()
@@ -187,26 +136,28 @@
                                     lat: response.routes[0].legs[0].end_location.lat(),
                                     lng: response.routes[0].legs[0].end_location.lng()
                                 } 
-                            }
+                            };
+
+                            // Listener in ./views/filters/RouteFilter.vue
+                            Event.$emit('setRoute', {
+                                path: route,  
+                                locations: routeLocations                  
+                            });                            
                             
-                            that.boxRoute()
                         } else {
                             window.alert('Directions request failed due to ' + status);
                         }
                     });               
             } ,
 
-            boxRoute(range = 10){      
-                if(this.route.length === 0){
-                    return
-                } 
-                
+            boxRoute(route){  
+
                 let routeBoxer = RouteBoxer()
-                let bounds = routeBoxer.box(this.route, range)
-                // Listener in RouteFilter
-                Event.$emit('filterByRoute', {
-                    bounds: bounds,
-                    locations: this.routeLocations
+                let bounds = routeBoxer.box(route.path, route.range)
+
+                // Listener in ./views/filters/RouteFilter.vue
+                Event.$emit('setRouteBounds', {
+                    bounds: bounds,                    
                 }) 
                 // this.resetAllMarkers()               
             },
@@ -225,16 +176,55 @@
             resetAllMarkers(){                
                 this.markers.map(marker => marker.setMap(null))
                 this.markers = [] 
-                this.markerCluster.clearMarkers()             
+                // this.markerCluster.clearMarkers()             
             },            
         },
         
-        mounted(){  
-            this.mountMap() 
+        created(){  
+            this.mountMap(); 
+
+            //Trigger in ./views/tenders/filters/RouteFilter.vue @removeFilter
+            Event.$on('removeRoute',() => this.directionsDisplay.setMap(null) ); 
+            
+            // Fetch Address with Places API
+            //  Trigger in: RouteFilters, LocationFilter, LocationsForm, CompanySettings
+            Event.$on('fetchAddress', element => this.fetchAddress(element));   
+            
+            // Get Route Bounds for RouteFilter
+            // Trigger in ./views/tenders/filters/RouteFilter.vue @triggerRouteBoxer
+            Event.$on('boxRoute', value =>  this.boxRoute(value) );
+
+            // Update current Markers
+            // Trigger in ./views/tenders/Tenders.vue @fetchTenders
+            // Trigger in ./views/tenders/Tender.vue @fetchData
+            Event.$on('updateMarkers',value => {                       
+                this.resetAllMarkers();                                               
+                this.updateMarkers(value);                                          
+            }); 
+
+            // Dispaly Route
+            // Trigger in ./views/tenders/filters/RouteFilter.vue @setLocation
+            Event.$on('displayRoute', value => {
+                this.resetAllMarkers();
+                this.displayRoute(value.origin, value.destination);
+            });
+                      
         },   
         
-        beforeDestroy(){
-            Event.$off();
+        beforeDestroy(){            
+            Event.$off('removeRoute',() => this.directionsDisplay.setMap(null) ); 
+            Event.$off('fetchAddress', element => this.fetchAddress(element) );  
+            Event.$off('boxRoute', value =>  this.boxRoute(value) ); 
+
+            Event.$off('updateMarkers',value => {                       
+                this.resetAllMarkers();                                               
+                this.updateMarkers(value);                                          
+            }); 
+
+            Event.$off('displayRoute', value => {
+                this.resetAllMarkers();
+                this.displayRoute(value.origin, value.destination);
+            });
         }
     }
 </script>

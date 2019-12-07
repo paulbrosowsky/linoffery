@@ -9,10 +9,10 @@
                 ref="drawer"
                 :style="{height: drawerHeight + 'px', width: drawerWidth + 'px'}"
             >
-                <!-- <tenders-filters v-resize="filterNavResize" ref="filterNav"></tenders-filters> -->
+                <tender-filters ref="filterNav" @toggled="filterNavResize"></tender-filters>
                 
                  
-                <perfect-scrollbar ref="content" class="h-full rounded-lg">                                       
+                <perfect-scrollbar ref="content" class="h-full rounded-lg pt-5">                                       
                     <slot></slot>                        
                 </perfect-scrollbar >                     
                     
@@ -24,12 +24,12 @@
 </template>
 <script> 
     import Gmap from '../views/Map'
-    import TendersFilters from '../views/tenders/filters/TendersFilters' 
+    import TenderFilters from '../views/tenders/filters/TenderFilters' 
 
     export default {
         components:{
             Gmap, 
-            TendersFilters         
+            TenderFilters         
         },
 
         data(){
@@ -119,12 +119,13 @@
             },
 
             filterNavResize(){                
-                let filterNav = this.$refs.filterNav.$el
-                let content = this.$refs.content.$el
-                // Ajust padding on top of Drawer Inner Content by Toggle an Filter Nab 
-                content.style.paddingTop = filterNav.offsetHeight + 'px'
-                // Make filters Visible if Drawer is Closed
-                this.minDrawerHeight = filterNav.offsetHeight       
+                let filterNav = this.$refs.filterNav.$el;
+                let content = this.$refs.content.$el;
+                
+                // Ajust padding on top of Drawer Inner Content by Toggle an Filter Tab 
+                setTimeout(() => {
+                   content.style.paddingTop = filterNav.offsetHeight + 'px';     
+                }, 100); 
             },
 
             openDrawer(){                
@@ -142,7 +143,7 @@
         },
 
         mounted(){   
-            
+            // Trigger in ./views/tenders/Tenders.vue @fetchTenders
             Event.$on('scrollTop', () => this.scrollTop())
             
             // Content Drawer handling on Mobile View
@@ -155,11 +156,15 @@
                 // Triggered in Tender
                 Event.$on('setDrawerSize', () => this.setDrawerSize())
             }            
-            this.setDrawerSize()
+            this.setDrawerSize();
+            this.filterNavResize();
         },
 
         beforeDestroy(){
-            Event.$off();
+            Event.$off('scrollTop', () => this.scrollTop());
+            Event.$off('drawerDown', () => this.closeDrawer());
+            Event.$off('drawerUp', () => this.openDrawer()); 
+            Event.$off('setDrawerSize', () => this.setDrawerSize());
         }
         
     

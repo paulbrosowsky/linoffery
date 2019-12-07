@@ -1,12 +1,10 @@
 <template>
-   <div class="px-5 pb-5"> 
-        <filter-header 
-            :text="$t('tender.find_load_by_weight')"
-            @close="$emit('close')"
-            @remove="removeFilter"
-        ></filter-header> 
-        
-        <form @sumbit.prevent="triggerFilter">
+   <div class="px-5">        
+
+        <p class="text-white font-bold mb-2" v-text="$t('tender.find_load_by_weight')"></p>
+        <p class="text-red-500 mb-2" v-if="error" v-text="error.message"></p>
+
+        <form>
             <div class="flex">            
                 <div class="w-1/2 mr-1">
                     <div class="relative flex items-center">
@@ -14,11 +12,10 @@
                         <input 
                             id="min-weight"
                             class="input pl-10" 
-                            type="number" 
+                            type="number"
                             :placeholder="$t('tender.min_weight')" 
-                            v-model.number="weight.min"
-                            @blur="triggerFilter"
-                            @keyup.enter="triggerFilter"
+                            v-model.number="weight.min"  
+                            @keyup="error= null"                         
                         >
                     </div>
                 </div>
@@ -31,14 +28,19 @@
                             class="input pl-10" 
                             type="number" 
                             :placeholder="$t('tender.max_weight')" 
-                            v-model.number="weight.max"
-                            @blur="triggerFilter"
-                            @keyup.enter="triggerFilter"
+                            v-model.number="weight.max" 
+                            @keyup="error= null"                            
                         >
                     </div>
                 </div>
             </div>
         </form>
+
+        <filter-footer 
+            @close="$emit('close')"
+            @remove="removeFilter"
+            @filter="triggerFilter"
+        ></filter-footer>
         
     </div>
     
@@ -49,34 +51,57 @@
             return{  
                 weight:{
                     min: null,
-                    max: null 
-                }              
+                    max: null,
+                } ,
+                error: null
             }
         },
 
-        methods:{
-            updateFilter(){
-                this.$store.commit('addFilters', {                    
-                    weight: this.weight
-                })
-            },
+        computed:{
+            filters(){
+                return this.$store.state.filters
+            }
+        },
+
+        methods:{            
+
             async triggerFilter(){                
-                if(typeof this.weight.min === 'number' && typeof this.weight.max === 'number'){                    
-                    await this.updateFilter()
+                if(typeof this.weight.min == 'number' && typeof this.weight.max == 'number'){ 
+                    if(this.weight.max > this.weight.min){
 
-                    document.getElementById("min-weight").blur()
-                    document.getElementById("max-weight").blur()
+                        await this.$store.commit('addFilter', {                    
+                            weight: this.weight
+                        });
 
-                    this.$emit('changed')
+                        this.$emit('filter');
+
+                    }else{
+                        this.error = { message: this.$i18n.t('tender.filter_message_min_max') };
+                    } 
+                }else{
+                    this.error = { message: this.$i18n.t('tender.filter_message_number') };
                 }
             },
-            removeFilter(){                
-                this.weight.min = null                
-                this.weight.max = null 
 
-                this.$store.commit('removeFilters', 'weight')                
-                this.$emit('changed')
-            } 
+            async removeFilter(){                
+                this.weight.min = null;                
+                this.weight.max = null; 
+                this.error = null;
+                             
+                await this.$store.commit('removeFilter', 'weight');
+                this.$emit('filter');
+                this.$emit('close');
+            },
+
+            setFilter(){
+                if (this.filters.weight) {
+                    this.weight = this.filters.weight;
+                }
+            }
+        },
+
+        created(){
+            this.setFilter();
         }
         
     }

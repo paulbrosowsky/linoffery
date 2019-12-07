@@ -9,6 +9,7 @@ import en_utilities from '../locales/en/utilities.json'
 
 import de_auth from  '../locales/de/auth.json'
 import de_content from '../locales/de/content.json'
+import de_home from '../locales/de/home.json'
 import de_settings from '../locales/de/settings.json'
 import de_tender from '../locales/de/tender.json'
 import de_utilities from '../locales/de/utilities.json'
@@ -26,6 +27,7 @@ const messages = {
     'de-DE': {
         auth: de_auth,
         content: de_content,
+        home: de_home,
         settings: de_settings, 
         tender: de_tender, 
         utilities: de_utilities, 

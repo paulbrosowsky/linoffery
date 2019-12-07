@@ -199,7 +199,7 @@
             
             </div>
 
-            <div v-if="!ownsTender">
+            <div v-if="!ownsTender && loggedIn">
                 <make-offer></make-offer>
                 <offer-cancel></offer-cancel>
                 <take-it-now></take-it-now>
@@ -324,6 +324,8 @@
                     .get(`/api${this.$route.path}`)
                     .then(response =>{                       
                         this.tender = response.data; 
+                        
+                        // Listener in ./views/Map.vue
                         Event.$emit('updateMarkers', response.data.locations);                        
                     })
                     .catch(errors => {                        

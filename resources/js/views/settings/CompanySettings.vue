@@ -268,9 +268,11 @@
             
             // On Event from Google Maps set address fields in the form
             // reference getAddress() on ./views/Map.vue
-            Event.$on('setAddress', (place) =>{
-                this.setAddress(place)
-            });
+            Event.$on('setAddress', place => this.setAddress(place) );            
+        },
+
+        beforeDestroy(){
+            Event.$off('setAddress', place => this.setAddress(place) );   
         }
         
     }
