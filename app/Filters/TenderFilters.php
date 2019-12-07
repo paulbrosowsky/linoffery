@@ -4,6 +4,7 @@ namespace App\Filters;
 
 use App\Location;
 use App\Tender;
+use Carbon\Carbon;
 
 class TenderFilters extends Filters
 {
@@ -95,13 +96,14 @@ class TenderFilters extends Filters
     {
         $range = json_decode($values);
 
-        $from = date_create($range->from);
-        $to = date_create($range->to);           
+        $from = new Carbon ($range->from);
+        $to = new Carbon($range->to); 
 
         // Find Locations in given date range
         $locations = Location::whereBetween('latest_date', [$from, $to])
                             ->orWhereBetween('earliest_date', [$from, $to])
                             ->get();
+        
         // Group Location by tender_id and fing Tenders with 2 Locations
         $tenders = $locations->groupBy('tender_id')                
                         ->filter(function($group, $key){

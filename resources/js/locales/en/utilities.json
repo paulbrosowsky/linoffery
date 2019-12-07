@@ -38,5 +38,6 @@
     "delete_rating_message": "Your rating is deleted.",
 
     "cookies_info": "In order to optimize our website and improve it continuously, we use cookies. For more information about cookies, please visit our",
-    "agree": "I agree"  
+    "agree": "I agree",
+    "filter": "Filter" 
 }

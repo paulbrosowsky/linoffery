@@ -7,6 +7,8 @@
             :to="date.to"                        
             :left="true"
             :reset="reset"
+            @inputFrom="updateFrom" 
+            @inputTo="updateTo" 
         ></date-range>  
 
         <filter-footer 
@@ -56,10 +58,17 @@
             },
 
             setFilter(){                
-                if (this.filters.date) {
-                    console.log(this.filters);
+                if (this.filters.date) {                    
                     this.date = this.filters.date;
                 }
+            },
+
+            updateFrom(value){
+                this.date.from = value;
+            },
+
+            updateTo(value){
+                this.date.to = value;
             }
         },
 

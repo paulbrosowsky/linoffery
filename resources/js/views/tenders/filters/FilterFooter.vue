@@ -10,7 +10,10 @@
         </div>
               
 
-        <button class="btn btn-outlined" @click="$emit('filter')">Filtern</button>        
+        <button 
+            class="uppercase text-white font-bold rounded-full px-3 hover:bg-white hover:text-gray-700" 
+            @click="$emit('filter')"
+        >{{$t('utilities.filter')}}</button>        
     </div>
 </template>
 <script>
