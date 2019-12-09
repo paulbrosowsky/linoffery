@@ -11,7 +11,7 @@
               
 
         <button 
-            class="uppercase text-white font-bold rounded-full px-3 hover:bg-white hover:text-gray-700" 
+            class="uppercase text-white font-bold rounded-full px-3 hover:bg-white hover:text-gray-700 focus:outline-none" 
             @click="$emit('filter')"
         >{{$t('utilities.filter')}}</button>        
     </div>

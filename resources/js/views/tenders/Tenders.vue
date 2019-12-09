@@ -74,8 +74,11 @@
                         this.dataSet = response.data;
                         this.loading= false;
 
-                        // Listener in ./views/Map.vue
-                        Event.$emit('updateMarkers', this.locations)  
+                        setTimeout(()=>{
+                            // Listener in ./views/Map.vue                        
+                            Event.$emit('updateMarkers', this.locations)  
+                        }, 500);
+                        
                     })
                     .catch(errors =>{
                         console.log(errors);
