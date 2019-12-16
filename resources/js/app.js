@@ -68,11 +68,14 @@ axios.interceptors.request.use(
 )
 
 axios.interceptors.response.use(
-    (response) => {
+    (response) => {        
         return response;
     },
-    (error) => {
-        if(error.response.status == 401 && !error.config.url.includes('/api/auth/login') ){
+    (error) => {   
+        let login = error.config.url.includes('/api/auth/login');
+        let logout =  error.config.url.includes('/api/auth/logout');
+
+        if(error.response.status == 401 && !login && !logout ){
             if(error.config.url.includes('/api/auth/login/refresh')){
                 store.dispatch('logout');
             }else{

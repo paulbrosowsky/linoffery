@@ -135,7 +135,7 @@
             filterTenders(){  
                 // this.$store.commit('resetPagination')               
                 // Listener in Tenders @mounted
-                Event.$emit('fetchTenders')
+                Event.$emit('fetchTenders');
             },
 
             active(filter){

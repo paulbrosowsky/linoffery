@@ -33,14 +33,14 @@
 
         data(){
             return{
-                date: this.value
+                date: ''
             }
         },
 
         watch:{
             reset(){
                 this.reset ? this.date = null : ''
-            }
+            },            
         },
 
 
@@ -61,9 +61,13 @@
             inactiveDates(){
                 return this.disabledDates ? this.disabledDates : {to:this.$moment().subtract(1, 'days')._d}
             }
-        },
+        },  
 
-        
+        created(){           
+            if(this.value){
+                this.date = new Date(this.value);
+            }            
+        }
     }
 </script>
 <style>    

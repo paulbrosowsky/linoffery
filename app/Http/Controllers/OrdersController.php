@@ -20,6 +20,7 @@ class OrdersController extends Controller
         return Order::where('tenderer_id', auth()->id())
                     ->orWhere('carrier_id', auth()->id())
                     ->with('tender')
+                    ->orderBy('created_at', 'desc')
                     ->get();
     }
 

@@ -41,7 +41,12 @@
                 ></tender-info> 
                 
                 <div class="px-5 py-5" v-if="editTender && draft">
-                    <tender-form :tender="tender" :edit="true" @cancel="updateTenderData('tender')"></tender-form>
+                    <tender-form 
+                        :tender="tender" 
+                        :edit="true" 
+                        :left="true"
+                        @cancel="updateTenderData('tender')"
+                    ></tender-form>
                 </div>
 
                 <div class="bg-gray-100 p-5">

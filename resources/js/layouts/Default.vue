@@ -1,4 +1,5 @@
 <template>
+    
     <div class="flex flex-col min-h-screen">
         <navbar></navbar>
         <div class="flex-1">

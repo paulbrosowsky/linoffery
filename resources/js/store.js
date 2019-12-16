@@ -44,9 +44,11 @@ export let store = new Vuex.Store({
         },
 
         fullyAuthorized(state){
-            if(state.user){
-                let company = state.user.company 
-                return  company.completed && company.hasPaymentSubscription && state.user.confirmed
+            if(state.user && state.user.company){
+                let company = state.user.company;
+                let confirmed =  state.user.confirmed;
+
+                return  company.completed && company.hasPaymentSubscription && confirmed;
             }
         },
 

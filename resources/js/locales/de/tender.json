@@ -66,7 +66,7 @@
     "publish_info_terms": "Mehr Informationen erhaltest du aus unseren AGB.",
     "published_message": "Deine Ausschreibung wurde veröffentlicht.",
 
-    "make_offer_info": "Dein Angebot ist verbindlich! Solange der Ausschreiber es nicht angenommen hat, kannst du dein Angebot zurückziehen.",
+    "make_offer_info": "Dein Angebot ist verbindlich, und gilt solange die Ausschreibung aktiv ist!",
     "make_offer_message": "Dein Angebot wurde an Ausschreiber weitergeleitet.",
     "accept_offer_question": "Möchtest du wirklich das Angebot annehmen?",
     "withdraw_offer_question": "Möchtest du wirklich dein Angebot zurückziehen?",

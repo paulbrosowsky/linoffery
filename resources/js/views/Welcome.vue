@@ -43,7 +43,7 @@
             
         </section>
         
-        <section class=" w-full flex flex-col items-center px-5 md:px-10">
+        <section class=" w-full flex flex-col items-center px-5 md:px-10 lg:mt-20">
             <div>
                 <p class="text-4xl sm:text-5xl font-light leading-none mb-12">Fair für beide Seiten</p>
             </div>            
@@ -101,24 +101,33 @@
             </div>
         </section>
 
-        <section class="li-welcome-footer py-24 xl:py-32"> 
+        <section class="flex flex-col items-center mx-auto px-5 py-24 lg:px-48 " style="max-width: 1280px!important;">
+            <p class="text-3xl sm:text-4xl font-light leading-none mb-10">{{$t('home.responsive_text')}}</p>
+            <img class="w-full mx-auto " src="/storage/build/images/responsive.svg" alt="">
+        </section>
+
+        <section class="li-welcome-footer pb-24 xl:pb-32"> 
             
-            <div class="flex flex-col items-center mx-auto px-5 md:px-10 xl:w-1/2 xl:px-0">
-                <p class="text-center text-3xl sm:text-4xl font-light leading-none">Lassen Sie Ihr Unternehmen wachsen,</p>
-                <p class="text-2xl sm:text-3xl text-teal-500 font-light leading-none">nützen Sie Ihre Zeit effektiv.</p>
+            <div class="mx-auto px-5 md:px-10 xl:w-1/2 xl:px-0" style="max-width: 1280px!important;">
+                <p class="text-center text-3xl sm:text-4xl font-light leading-none">{{$t('home.footer_text_head_1')}}</p>
+                <p class="text-center text-2xl sm:text-3xl text-teal-500 font-light leading-none">{{$t('home.footer_text_head_2')}}</p>
             
-                <p class="text-lg text-gray-600 mt-10 leading-relaxed">
-                    Linoffery ist eine unabhängige Vergleichs- und Bieterplattform in der Logistik, 
-                    und richtet sich an alle Gewerbetreibenden die auf der Suche nach Spedition oder Fracht sind.
-                    Sie erspart den Nutzern umfangreiche eigene Recherchen, zeitaufwändig und kostenintensiv sind. 
+                <p class="text-lg text-gray-600 mt-8 leading-relaxed">
+                   {{$t('home.footer_text_1')}}
                 </p>  
                 <p class="text-lg text-gray-600 mt-5 leading-relaxed">
-                    Als Versender vergleichen Sie unverbindliche Angebote und Leistungen von Speditionen 
-                    in dem Sie Ihre Ladung auf der Plattform anonym für andere Sichtbar stellen. 
-                    Als Trasportunternehmer profitieren von einer kostenfreien und aktuellen 
-                    Auswahl an Ausschreibungen, welche speziell auf die Speditionen zugeschnitten sind.
-                </p>
-                <div class="mt-10">
+                   {{$t('home.footer_text_2')}}
+                </p> 
+                <p class="text-lg text-gray-600 mt-5 leading-relaxed">
+                   {{$t('home.footer_text_3')}}
+                </p> 
+                               
+                <div class="flex justify-center mt-10">
+                    <button class="btn btn-teal mr-2">
+                        <router-link to="/register">
+                            {{ $t('auth.signup') }}
+                        </router-link>                               
+                    </button>
                     <router-link to="/about">
                         <button class="btn btn-outlined btn-teal-outlined">
                             {{ $t('content.learn_more') }}

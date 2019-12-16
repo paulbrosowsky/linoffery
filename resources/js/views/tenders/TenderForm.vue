@@ -76,6 +76,7 @@
                     class="mb-2"                     
                     :placeholder="$t('tender.valid_date')"
                     @changed="updateDate"
+                    :left="left"
                 ></date-picker>
                 <p class="text-sm text-gray-500">
                     {{$t('tender.valid_date_info')}}
@@ -101,7 +102,7 @@
 </template>
 <script>    
     export default {        
-        props:['tender', 'edit'],
+        props:['tender', 'edit', 'left'],
 
         data(){
             return{   

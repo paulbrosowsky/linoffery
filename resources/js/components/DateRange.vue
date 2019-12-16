@@ -34,7 +34,7 @@
         data(){
             return{
                 range:{
-                    from: this.form,
+                    from: this.from,
                     to: this.to
                 }
             }
@@ -73,6 +73,15 @@
                 this.range.to = value                
                 this.$emit('inputTo', this.range.to)
             },            
+        },
+
+        created(){           
+            if(this.from || this.to){
+                this.range = {
+                    from: new Date(this.from),
+                    to: new Date (this.to)
+                }
+            }           
         }
         
     }

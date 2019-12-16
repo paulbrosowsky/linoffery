@@ -91,10 +91,10 @@
                 };
             },
 
-            triggerFilter(){
+            async triggerFilter(){
                 if(this.filter){
-                    this.$store.commit('addFilter', { route: this.filter });               
-                    this.$emit('filter')
+                    await this.$store.commit('addFilter', { route: this.filter });               
+                    this.$emit('filter');
                 }                
             },
             
