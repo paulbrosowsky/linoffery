@@ -113,11 +113,7 @@
                         }
                     }
                 });
-            }
-
-            if(this.$store.state.loggedIn){
-                this.$store.dispatch('loginToNotificationBroadcast');  
-            }             
+            }                     
         }
 
     }

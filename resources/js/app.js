@@ -18,7 +18,7 @@ window.Echo = new Echo({
     auth: {
         headers: {
             'Accept': 'application/json',
-            // 'Authorization': 'Bearer ' + store.state.token
+            'Authorization': 'Bearer ' + store.state.token
         }
     },
 });

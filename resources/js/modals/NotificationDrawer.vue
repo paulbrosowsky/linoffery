@@ -58,7 +58,16 @@
                     .then(()=>this.$modal.hide('notification-drawer'))
                 
             }
-        },        
+        }, 
         
+        created(){
+            setTimeout(() => {
+                window.Echo.private('App.User.' + this.$store.state.user.id)
+                    .notification((notification) => {
+                        flash(notification);
+                        this.$store.dispatch('fetchNotifications');
+                    });
+            }, 1000);
+        }
     }
 </script>

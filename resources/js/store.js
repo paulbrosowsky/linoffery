@@ -130,11 +130,6 @@ export let store = new Vuex.Store({
                             context.commit('retrieveToken', token);                            
                             context.commit('refreshTokenPromise', null);  
 
-                            // Login to Notification Broadcast with New Token
-                            setTimeout(() => {
-                                context.dispatch('loginToNotificationBroadcast');  
-                            }, 1000);  
-
                             resolve(response);
                         })
                         .catch(errors =>{    
@@ -149,9 +144,7 @@ export let store = new Vuex.Store({
             return context.state.refreshTokenPromise;
         },
         
-        logout(context){            
-            //Leave Notification Broadcast Channel
-            window.Echo.leave('App.User.' + context.state.user.id);
+        logout(context){
 
             if (context.getters.loggedIn) {
                 return new Promise((resolve, reject) => {
@@ -185,12 +178,6 @@ export let store = new Vuex.Store({
                     .get('/api/auth/user')
                     .then(response =>{                                             
                         context.commit('retrieveUser', response.data); 
-
-                        // Login to Notification Broadcast with New Token
-                        setTimeout(() => {
-                            context.dispatch('loginToNotificationBroadcast');  
-                        }, 1000);    
-
                         resolve(response)
                     })
                     .catch(errors => {
@@ -216,17 +203,7 @@ export let store = new Vuex.Store({
         },
 
         //Notifications Endpoints START
-
-        loginToNotificationBroadcast(context){
-            window.Echo.connector.options.auth.headers['Authorization'] = 'Bearer ' + context.state.token
-
-            window.Echo.private('App.User.' + context.state.user.id)                                               
-                .notification((notification) => {                       
-                    flash(notification);
-                    context.dispatch('fetchNotifications');
-                });
-        },
-
+        
         fetchNotifications(context){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token 
 
