@@ -16,11 +16,9 @@
                 >        
                     <i class="icon ion-md-trash text-lg text-white hover:text-gray-300"></i>            
                 </button>
-                vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css
+                
             </div>            
-        </div>
-
-        
+        </div>        
 
         <perfect-scrollbar class="h-full pt-20">  
                 <p class="text-gray-500 text-center px-5" v-if="notifications.length === 0">
@@ -34,10 +32,7 @@
             
         </perfect-scrollbar> 
 
-    </div>
-        
-        
-       
+    </div>       
 
     </drawer-right>    
     
