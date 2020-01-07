@@ -18,16 +18,13 @@ window.Echo = new Echo({
     auth: {
         headers: {
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + store.state.token
+            // 'Authorization': 'Bearer ' + store.state.token
         }
     },
 });
 
 import VueModal from "vue-js-modal"
 Vue.use(VueModal)
-
-// import VueCookies from "vue-cookies"
-// Vue.use(VueCookies)
 
 import VueMoment from "vue-moment";
 Vue.use(VueMoment);

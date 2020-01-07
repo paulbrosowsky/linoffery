@@ -16,7 +16,7 @@
                 >        
                     <i class="icon ion-md-trash text-lg text-white hover:text-gray-300"></i>            
                 </button>
-                
+                vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css
             </div>            
         </div>
 
@@ -63,17 +63,7 @@
                     .then(()=>this.$modal.hide('notification-drawer'))
                 
             }
-        },
-
-        created(){
-            setTimeout(() => {
-                window.Echo.private('App.User.' + this.$store.state.user.id)
-                    .notification((notification) => {
-                        flash(notification);
-                        this.$store.dispatch('fetchNotifications');
-                    });
-            }, 1000);
-        }
+        },        
         
     }
 </script>
