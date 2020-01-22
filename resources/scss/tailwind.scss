@@ -85,6 +85,9 @@ body{
 .input:focus{
     @apply .outline-none .bg-white .border-teal-500;
 } 
+.input-icon{
+    @apply .absolute .fill-current .h-6 .text-xl .text-gray-500 .px-3;
+}
 
 .link{
     @apply .text-teal-500 .cursor-pointer;

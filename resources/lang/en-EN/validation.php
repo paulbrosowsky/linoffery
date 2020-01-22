@@ -163,7 +163,9 @@ return [
         'freights.*.weight'     => 'weight',
         'freights.*.pallet'     => 'transport type',
         'freights.*.title'      => 'title', 
-        'rating'                => 'rating'              
+        'rating'                => 'rating',
+        'terms_accepted'        => 'Terms of use',
+        'payment_terms_accepted'=> 'Terms of payment'              
     ],
 
 ];

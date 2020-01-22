@@ -105,6 +105,7 @@ Vue.component('dropdown', require('./components/Dropdown.vue').default);
 Vue.component('filter-footer', require('./views/tenders/filters/FilterFooter.vue').default);
 Vue.component('image-upload', require('./components/ImageUpload.vue').default);
 Vue.component('loading-spinner', require('./components/Spinner.vue').default);
+Vue.component('gmap', require('./views/Map.vue').default);
 Vue.component('navbar', require('./components/Navbar.vue').default);
 Vue.component('password-input', require('./components/PasswordInput.vue').default);
 Vue.component('select-input', require('./components/SelectInput.vue').default);

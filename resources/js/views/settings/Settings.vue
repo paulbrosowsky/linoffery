@@ -5,17 +5,14 @@
     </div> 
     
 </template>
-<script>
-    import Gmap from '../Map'
-
+<script>  
     import AccountSettings from '../settings/AccountSettings'
     import CompanySettings from '../settings/CompanySettings'
     import NotificationSettings from '../settings/NotificationSettings'
     import PaymentSettings from '../settings/PaymentSettings'
 
     export default {
-        components: {
-            Gmap,
+        components: {         
             AccountSettings,
             CompanySettings,
             NotificationSettings,

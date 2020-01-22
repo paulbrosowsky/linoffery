@@ -63,12 +63,13 @@
             //Get a localization settings from a cookie and set a propper app language
             retriveLocale(){                
                 let locale = this.$cookies.get('locale')
-                if(locale){
-                    this.$i18n.locale = locale
-                }else{
-                    this.$i18n.locale = navigator.language
-                    this.$cookies.set('locale', navigator.language, 60*60*24*365)   
-                }                
+                this.$i18n.locale = locale
+                // if(locale){
+                //     this.$i18n.locale = locale
+                // }else{
+                //     this.$i18n.locale = navigator.language
+                //     this.$cookies.set('locale', navigator.language, 60*60*24*365)   
+                // }                
             }, 
             
 

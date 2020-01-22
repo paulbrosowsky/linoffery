@@ -37,8 +37,8 @@ const messages = {
 };
 
 export default new VueI18n({
-    locale: navigator.language,
-    fallbackLocale: 'en-EN',
+    locale: 'de-DE',
+    fallbackLocale: 'de-DE',
     messages
 })
 

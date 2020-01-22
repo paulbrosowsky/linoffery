@@ -4,10 +4,7 @@
 use App\User;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
-use App\Cargo;
-use App\Location;
 use Carbon\Carbon;
-use App\Freight;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +29,9 @@ $factory->define(User::class, function (Faker $faker) {
         'password_reset_token' => null,
         'confirmed' => true,
         'newsletters' => true,
-        'deleted_at' => null
+        'deleted_at' => null,
+        'terms_accepted_at' => Carbon::now(),
+        'payment_terms_accepted_at' => Carbon::now()
     ];
 });
 

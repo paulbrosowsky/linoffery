@@ -22,8 +22,7 @@
                 {{$t('settings.card_store_info_1')}} 
                 <a class="text-teal-500 font-bold hover:text-teal-700" href="https://stripe.com">Stripe.</a>               
                 {{$t('settings.card_store_info_2')}}                 
-            </p>              
-            
+            </p>  
             
             <div>
                 <form @submit.prevent>

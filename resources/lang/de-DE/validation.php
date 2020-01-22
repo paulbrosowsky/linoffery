@@ -191,6 +191,8 @@ return [
         'freights.*.pallet'     => 'Transportart',
         'freights.*.title'      => 'Bezeichnung',
         'price'                 => 'Preis',
-        'rating'                => 'Bewertung'
+        'rating'                => 'Bewertung',
+        'terms_accepted'        => 'AGB-Zustimmung',
+        'payment_terms_accepted'=> 'Zustimmung mit Zahlungbedingungen'
     ],
 ];

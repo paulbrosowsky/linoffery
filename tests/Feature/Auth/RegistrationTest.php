@@ -6,6 +6,7 @@ use App\User;
 use App\Company;
 use Tests\TestCase;
 use App\Mail\ConfirmYourEmail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,19 +19,8 @@ class RegistrationTest extends TestCase
 
     public function setUp():void
     {
-        parent::setUp();
-
-       
-
-        // Pass Recaptcha validation without the Rule
-		// app()->singleton(GoogleReCaptchaV3ValidationRule::class, function (){
-            
-		// 	$m = \Mockery::mock(GoogleReCaptchaV3ValidationRule::class, function ($m){                
-        //         $m->shouldReceive('passes')->andReturn(true);               
-        //     });            
-        //     return $m;
-			
-		// });
+        parent::setUp();   
+        $this->withExceptionHandling();        
     }
 
     /** @test */
@@ -62,54 +52,35 @@ class RegistrationTest extends TestCase
 
     /** @test */
     function name_is_required()
-    {
-        $this->withExceptionHandling();        
+    {             
 
-        $response = $this->registerAccount([
+        $this->registerAccount([
             'name' => ''
-        ]);
-        
-        $response->assertSessionHasErrors('name');        
-        $this->assertCount(0, User::all());
+        ])->assertStatus(422);  
     }  
 
     /** @test */
     function email_is_required()
-    {
-        $this->withExceptionHandling();        
-
-        $response = $this->registerAccount([
+    {  
+        $this->registerAccount([
             'email' => ''
-        ]);
-        
-        $response->assertSessionHasErrors('email');        
-        $this->assertCount(0, User::all());
+        ])->assertStatus(422);     
     }
 
     /** @test */
     function email_is_valide()
     {
-        $this->withExceptionHandling();         
- 
         $response = $this->registerAccount([
             'email' => 'not-valid-email'
-        ]); 
-         
-        $response->assertSessionHasErrors('email');        
-        $this->assertCount(0, User::all());
+        ])->assertStatus(422);        
     }
 
     /** @test */
     function email_cannot_exeed_255_chars()
     {   
-        $this->withExceptionHandling();        
-
-        $response = $this->registerAccount([
+        $this->registerAccount([
             'email' => substr(str_repeat('a', 256) . '@example.com', -256),
-        ]);
-       
-        $response->assertSessionHasErrors('email');        
-        $this->assertCount(0, User::all());
+        ])->assertStatus(422);     
     }
 
     /** @test */
@@ -117,88 +88,60 @@ class RegistrationTest extends TestCase
     {
         create(\App\User::class, ['email' => 'john@mail.me']);
 
-        $this->withExceptionHandling();        
-
-        $response = $this->registerAccount();
-        
-        $response->assertSessionHasErrors('email');
-             
+        $this->registerAccount()->assertStatus(422);          
     }
 
     /** @test */
     function password_is_required()
     {
-        $this->withExceptionHandling();
-        
-
         $response = $this->registerAccount([
             'password' => ''
-        ]);
-        
-        $response->assertSessionHasErrors('password');        
-        $this->assertCount(0, User::all());
+        ])->assertStatus(422);
     }
 
     /** @test */
     function password_must_have_6_chars()
     {
-        $this->withExceptionHandling();        
- 
-        $response = $this->registerAccount([
+        $this->registerAccount([
             'password' => 'sec' ,
             'password_confirmation' => 'sec'          
-        ]); 
-        
-        $response->assertSessionHasErrors('password');        
-        $this->assertCount(0, User::all());
+        ])->assertStatus(422);
     }
 
      /** @test */
     function company_name_is_required()
     {
-        $this->withExceptionHandling();        
- 
         $response = $this->registerAccount([
             'company_name' => ''
-        ]);
-         
-        $response->assertSessionHasErrors('company_name');        
-        $this->assertCount(0, Company::all());
+        ])->assertStatus(422);       
     }
 
     /** @test */
     function vat_number_is_required()
     {
-        $this->withExceptionHandling();        
- 
-        $response = $this->registerAccount([
+        $this->registerAccount([
             'vat' => ''
-        ]);
-         
-        $response->assertSessionHasErrors('vat');        
-        $this->assertCount(0, Company::all());
+        ])->assertStatus(422);
     }
 
     /** @test */
     function vat_is_unique()
     {
         create(\App\Company::class, ['vat' => 'IE6388047V']);
-
-        $this->withExceptionHandling();        
-
-        $response = $this->registerAccount();
-        
-        $response->assertSessionHasErrors('vat');             
+        $this->registerAccount()->assertStatus(422);
     }
 
     /** @test */
     function vat_must_be_valide()
     { 
-        $this->withExceptionHandling();        
+       $this->registerAccount( ['vat' => 'DE12345678'])->assertStatus(422);
+    }
 
-        $response = $this->registerAccount( ['vat' => 'DE12345678']);
-        
-        $response->assertSessionHasErrors('vat');             
+    /** @test */
+    function terms_must_be_confirmed()
+    {  
+        $this->registerAccount( ['terms_accepted' => ''])->assertStatus(422);
+        $this->registerAccount( ['payment_terms_accepted' => ''])->assertStatus(422);
     }
 
    /** @test */
@@ -235,27 +178,22 @@ class RegistrationTest extends TestCase
     {
         $this->get('/api/auth/email-confirmation/confirm?token=invalid')
             ->assertRedirect('/');            
-    }
-
-    // /** @test */
-    // function recaptcha_validation_is_required()
-    // {
-    //     unset(app()[GoogleReCaptchaV3ValidationRule::class]);
-
-    //     $this->withExceptionHandling();
-       
-    //     $this->registerAccount(['gRecaptchaResponse' => 'test'])
-    //         ->assertSessionHasErrors('gRecaptchaResponse');
-    // }
+    }   
 
     protected function registerAccount($overrides = [])
     {
-        return $this->post('/api/auth/register', array_merge([
+        return $this->postJson('/api/auth/register', array_merge([
             'name' => 'John Doe',
             'email' => 'john@mail.me',
             'password' =>'secret',
             'company_name' => 'Secret Ltd.',
-            'vat' => 'IE6388047V' // Google Ireland
+            'vat' => 'IE6388047V', // Google Ireland,
+            'address' => 'street 5',
+            'city' => 'paris',
+            'postcode' => '12345',
+            'country' => 'deutschland',
+            'terms_accepted' => true,
+            'payment_terms_accepted' => true,
         ],$overrides));        
     }
     

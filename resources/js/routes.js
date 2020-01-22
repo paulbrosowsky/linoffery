@@ -17,7 +17,7 @@ import OrdersSidebar from './views/orders/OrdersSidebar'
 import Privacy from "./views/Privacy"
 import Profile from "./views/profiles/Profile"
 import ProfileSidebar from "./views/profiles/ProfileSidebar"
-import Register from './views/auth/Register'
+import Register from './views/auth/register/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Services from './views/Services'
 import Settings from './views/settings/Settings'

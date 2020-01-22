@@ -12,6 +12,7 @@ use App\Company;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmYourEmail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
@@ -60,11 +61,31 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:6'],
             'company_name' => ['required', 'string'],
             'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies', 'vat-number'],
+            'address' => ['required'],
+            'postcode' => ['required'],
+            'city' => ['required'],
+            'country' => ['required'],
+            'terms_accepted' => ['required', 'boolean', function($attribute, $value, $fail){ 
+                if($value == false){
+                    $fail(__('Please confirm our terms of use.'));
+                };                
+            }],
+            'payment_terms_accepted' => ['required', 'boolean', function($attribute, $value, $fail){ 
+                if($value == false){
+                    $fail(__('Please confirm our payment terms.'));
+                };                
+            }]            
         ]);        
 
         $company = Company::create([
             'name' => $request->company_name,
-            'vat' => $request->vat
+            'vat' => $request->vat,
+            'country' => $request->country,
+            'city' => $request->city,
+            'postcode' => $request->postcode,
+            'address' => $request->address,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
         ]);       
        
         $user =  User::create([
@@ -72,7 +93,9 @@ class AuthController extends Controller
             'name' => $request->name,            
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'confirmation_token' => User::makeToken($request->email)
+            'confirmation_token' => User::makeToken($request->email),
+            'terms_accepted_at' => Carbon::now(),
+            'payment_terms_accepted_at' => Carbon::now(),
         ]);  
 
         Mail::to($user)->send(new ConfirmYourEmail($user));

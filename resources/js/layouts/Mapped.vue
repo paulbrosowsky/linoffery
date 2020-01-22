@@ -22,13 +22,11 @@
 
     </div>
 </template>
-<script> 
-    import Gmap from '../views/Map'
+<script>     
     import TenderFilters from '../views/tenders/filters/TenderFilters' 
 
     export default {
-        components:{
-            Gmap, 
+        components:{           
             TenderFilters         
         },
 

@@ -14,16 +14,15 @@
                            {{ $t('home.header_text')}}
                         </p>
                         <div class="flex mt-12">                            
-                            <button class="btn btn-teal mr-2">
-                                <router-link to="/register">
-                                    {{ $t('auth.signup') }}
-                                </router-link>                               
-                            </button>
-                            <button class="btn btn-outlined btn-teal-outlined is-outlined">
-                                <router-link to="/services">
-                                    {{ $t('content.services') }}
-                                </router-link>                                 
-                            </button>
+                            
+                            <router-link to="/register" class="btn btn-teal mr-2">
+                                {{ $t('auth.signup') }}
+                            </router-link> 
+
+                            <router-link to="/services" class="btn btn-outlined btn-teal-outlined is-outlined">
+                                {{ $t('content.services') }}
+                            </router-link>                                 
+                            
                         </div>
                     </div>
 
@@ -123,23 +122,17 @@
                 </p> 
                                
                 <div class="flex justify-center mt-10">
-                    <button class="btn btn-teal mr-2">
-                        <router-link to="/register">
-                            {{ $t('auth.signup') }}
-                        </router-link>                               
-                    </button>
-                    <router-link to="/about">
-                        <button class="btn btn-outlined btn-teal-outlined">
-                            {{ $t('content.learn_more') }}
-                        </button>
+                   
+                    <router-link to="/register" class="btn btn-teal mr-2">
+                        {{ $t('auth.signup') }}
+                    </router-link>                               
+                   
+                    <router-link to="/about" class="btn btn-outlined btn-teal-outlined">
+                        {{ $t('content.learn_more') }}
                     </router-link>                  
                 </div> 
-            </div>
-
-            
-             
+            </div>             
         </section>
-
     </div>
    
 </template>
