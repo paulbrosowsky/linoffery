@@ -12,11 +12,11 @@
         <p class="text-xl text-gray-500 text-center h-screen">Hier kommt ein langer AGB Text ... </p>
 
         <div>
-            <checkbox 
-                :value="termsAccepted" 
-                :text=" $t('auth.accept_terms')"
-                @toggled="termsAccepted = !termsAccepted"
-            ></checkbox> 
+            <p class="text-sm text-gray-700 mb-1">{{$t('auth.accept_terms')}}</p>
+            <button class="btn flex btn-teal" @click="termsAccepted = true">
+                <svg class="h-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z"/></svg>
+                {{$t('utilities.accept')}}
+            </button>
         </div>
 
         <div class="flex justify-between my-5">
