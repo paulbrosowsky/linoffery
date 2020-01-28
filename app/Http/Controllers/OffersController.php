@@ -90,13 +90,13 @@ class OffersController extends Controller
      * 
      * @param Offer     
      */
-    public function destroy(Offer $offer)
-    {
-        if($offer->user_id != auth()->id() || !empty($offer->order)){
-            return response()->json(['message' => 'Your are not authorized to delete this offer.'], 403);
-        }
+    // public function destroy(Offer $offer)
+    // {
+    //     if($offer->user_id != auth()->id() || !empty($offer->order)){
+    //         return response()->json(['message' => 'Your are not authorized to delete this offer.'], 403);
+    //     }
 
-        $offer->delete();
-    } 
+    //     $offer->delete();
+    // } 
 
 }

@@ -167,9 +167,12 @@ class ViewTendersTest extends PassportTestCase
     /** @test */
     function users_cam_filter_tenders_by_category()
     {
-        create('App\Tender', [], 5);
+        $tenders = create('App\Tender', [], 5);
 
-        $categories = [2,3];
+        $categories = [
+            $tenders->first()->category, 
+            $tenders->last()->category
+        ];
 
         $response = $this->getJson('api/tenders?category='.json_encode($categories))->json(); 
 

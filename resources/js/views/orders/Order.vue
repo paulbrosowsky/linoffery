@@ -24,9 +24,7 @@
                     <div class="mb-5">
                         <span class="text-2xl text-gray-500 leading-tight mr-2">{{$t('tender.order')}}</span>  
                         <span class="text-2xl font-bold leading-tight">{{order.custom_id}}</span>  
-                    </div>
-                                    
-                    
+                    </div> 
 
                     <div class="md:flex px-2">
                         <div>

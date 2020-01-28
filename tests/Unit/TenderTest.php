@@ -85,7 +85,7 @@ class TenderTest extends PassportTestCase
     }
 
     /** @test */
-    function it_creats_own_unique_custom_id()
+    function it_creates_own_unique_custom_id()
     {
         $tender = create('App\Tender');        
         

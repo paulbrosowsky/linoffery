@@ -62,7 +62,7 @@ class TenderFilters extends Filters
      * @return Collection
      */
     protected function category($list)
-    {  
+    {          
         $categoryIds = [];
 
         foreach (json_decode($list) as $category){

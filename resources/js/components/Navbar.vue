@@ -1,13 +1,13 @@
 <template>
-    <nav class="w-full px-5 py-3 z-10 md:px-10" :class="classes"> 
+    <nav class="w-full px-5 py-2 z-10 md:px-10" :class="classes"> 
         <div class="flex items-center justify-between">
             <div class="flex"> 
                 <div>
                     <router-link to="/">                
-                        <div class="flex items-center flex-1 text-gray-700 mr-6"> 
-                            <span class="font-light text-2xl">lin</span>
-                            <span class="text-2xl text-teal-500">o</span>
-                            <span class="font-light text-2xl">ffery</span>
+                        <div class="flex items-center flex-1 text-gray-700 text-2xl mr-6 md:text-3xl"> 
+                            <span class="font-light">lin</span>
+                            <span class="text-teal-500">o</span>
+                            <span class="font-light">ffery</span>
                         </div>
                     </router-link>
                 </div>                

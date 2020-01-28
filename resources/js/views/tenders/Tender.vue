@@ -206,12 +206,12 @@
 
             <div v-if="!ownsTender && loggedIn">
                 <make-offer></make-offer>
-                <offer-cancel></offer-cancel>
+                <!-- <offer-info></offer-info> -->
                 <take-it-now></take-it-now>
             </div>
 
             <div v-if="ownsTender">
-                <offer-view></offer-view>
+                <accept-offer></accept-offer>
             </div>
         </div>
    
@@ -223,8 +223,8 @@
     import LocationInfo from '../tenders/LocationInfo'
     import MakeOffer from '../../modals/MakeOffer'
     import OfferCard from '../offers/OfferCard'
-    import OfferCancel from '../../modals/OfferCancel' 
-    import OfferView from '../../modals/OfferView' 
+    // import OfferInfo from '../../modals/OfferInfo' 
+    import AcceptOffer from '../../modals/AcceptOffer' 
     import TakeItNow from '../../modals/TakeItNow' 
     import TenderForm from '../tenders/TenderForm'
     import TenderInfo from '../tenders/TenderInfo'
@@ -239,8 +239,8 @@
            LocationInfo,
            MakeOffer,
            OfferCard,
-           OfferCancel,
-           OfferView,
+        //    OfferInfo,
+           AcceptOffer,
            TakeItNow,
            TenderForm,
            TenderInfo

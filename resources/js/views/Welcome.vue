@@ -7,9 +7,7 @@
                      
                         <p class="text-3xl sm:text-4xl font-light leading-none ">{{ $t('home.header_title_1')}}</p>
                         <p class="text-4xl sm:text-5xl font-light leading-none text-teal-500 ">{{ $t('home.header_title_2')}}</p>
-                                                               
-                        
-
+                          
                         <p class="text-lg text-gray-600 mt-10 leading-relaxed">
                            {{ $t('home.header_text')}}
                         </p>
@@ -42,27 +40,45 @@
             
         </section>
         
-        <section class=" w-full flex flex-col items-center px-5 md:px-10 lg:mt-20">
-            <div>
-                <p class="text-4xl sm:text-5xl font-light leading-none mb-12">Fair für beide Seiten</p>
+        <section class=" px-5 mx-auto md:w-7/12 md:px-10 lg:mt-20">
+            <div class="text-center mb-12">
+                <p class="text-4xl font-light leading-none mb-2 md:text-5xl" >{{ $t('home.fair_title') }}</p>
+                <p class="text-lg text-gray-600 md:text-xl">
+                    <span>{{ $t('home.fair_description_1') }}</span>
+                    &middot;  
+                    <span>{{ $t('home.fair_description_2') }}</span>
+                    &middot; 
+                    <span>{{ $t('home.fair_description_3') }}</span>
+                </p>
             </div>            
-            <div class="flex flex-col md:flex-row">
-                <div class="bg-gray-200 rounded-lg shadow-lg p-8 md:mr-5">  
+            <div class=" flex flex-col md:flex-row">
+                <div class="flex flex-col items-center w-full bg-gray-200 rounded-lg shadow-lg p-8 md:w-1/2 md:mr-5">  
                     <p class="uppercase text-gray-600 mb-5">{{ $t('content.consignor') }}</p>
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
-                        <span class="text-xl text-gray-700">Fairer Preis</span>
-                    </div>                  
-                    
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
-                        <span class="text-xl text-gray-700">Einfache Abwicklung</span>
-                    </div>  
 
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
-                        <span class="text-xl text-gray-700">Unabhängige Vermittlung</span>
-                    </div>                     
+                    <p class="text-gray-700 leading-tight font-light mb-5">{{ $t('home.shiper_info') }}</p>  
+
+                    <div>
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.shiper_advantage_1') }}</span>
+                        </div>  
+
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.shiper_advantage_2') }}</span>
+                        </div>                  
+                        
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.shiper_advantage_3') }}</span>
+                        </div>  
+
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.shiper_advantage_4') }}</span>
+                        </div>       
+
+                    </div>                                 
 
                     <div class="text-center mt-10">                        
                         <button class="btn btn-teal"  @click="$modal.show('login')">
@@ -70,22 +86,32 @@
                         </button>
                     </div>                    
                 </div>
-                <div class="bg-gray-300 rounded-lg shadow-lg p-8 mt-5 md:mt-0">  
-                    <p class="uppercase text-gray-600 mb-5">{{ $t('content.carrier') }}</p>
+                <div class="flex flex-col items-center w-full bg-gray-300 rounded-lg shadow-lg p-8 mt-5 md:w-1/2 md:mt-0">  
+                    <p class="uppercase text-gray-600 mb-5">{{ $t('content.carrier') }}</p>  
 
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
-                        <span class="text-xl text-gray-700">Bessere Fahrtauslastung</span>
-                    </div>                  
-                    
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
-                        <span class="text-xl text-gray-700">Schnelle Vergabe</span>
-                    </div>  
+                    <p class="text-gray-700 leading-tight font-light mb-5">{{ $t('home.carrier_info') }}</p>                    
 
-                    <div class="flex items-center mb-2">
-                        <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
-                        <span class="text-xl text-gray-700">Fracht in deiner Nähe</span>
+                    <div>
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.carrier_advantage_1') }}</span>
+                        </div>                  
+                        
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.carrier_advantage_2') }}</span>
+                        </div>  
+
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.carrier_advantage_3') }}</span>
+                        </div>  
+
+                        <div class="flex items-center mb-2">
+                            <i class="icon ion-md-checkmark-circle-outline text-2xl text-teal-400 mr-3"></i>
+                            <span class="text-xl text-gray-700">{{ $t('home.carrier_advantage_4') }}</span>
+                        </div>     
+
                     </div>                     
 
                     <div class="text-center mt-10">
@@ -108,7 +134,7 @@
         <section class="li-welcome-footer pb-24 xl:pb-32"> 
             
             <div class="mx-auto px-5 md:px-10 xl:w-1/2 xl:px-0" style="max-width: 1280px!important;">
-                <p class="text-center text-3xl sm:text-4xl font-light leading-none">{{$t('home.footer_text_head_1')}}</p>
+                <p class="text-center text-3xl sm:text-4xl font-light leading-tight">{{$t('home.footer_text_head_1')}}</p>
                 <p class="text-center text-2xl sm:text-3xl text-teal-500 font-light leading-none">{{$t('home.footer_text_head_2')}}</p>
             
                 <p class="text-lg text-gray-600 mt-8 leading-relaxed">

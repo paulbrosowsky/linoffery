@@ -11,17 +11,17 @@
             <company-info :company="company"></company-info> 
         </router-link>
 
-        <div class="flex flex-col items-center py-8" v-if="offer">
+        <div class="flex flex-col items-center pt-8" v-if="offer">
             <div class="mb-3">
                 <p class="text-5xl text-teal-500 " v-text="'€ '+ offer.price"></p>  
             </div>
             <div>
                 <p class="text-xs text-gray-500 leading-none tracking-tight uppercase">{{$t('tender.offered_at')}}</p>
                 <p class="text-lg -my-1">{{ offer.created_at | moment("DD.MM.YYYY") }}</p>  
-            </div>                     
+            </div>                              
         </div>
 
-        <div v-show="!confirmation">   
+        <!-- <div v-show="!confirmation">   
             <button class="btn  btn-red w-full" @click="confirmation=true">
                 <i class=" icon ion-md-close mr-2"></i>  
                 {{$t('tender.withdraw_offer')}}
@@ -33,7 +33,7 @@
             v-show="confirmation"
             @canceled="confirmation = false"
             @confirmed="cancelOffer"
-        ></confirmation-buttons>  
+        ></confirmation-buttons>   -->
 
     </default-modal>    
 </template>
@@ -58,19 +58,19 @@
                 this.offer = data
             },
 
-            cancelOffer(){               
-                axios
-                    .delete(`/api/offers/${this.offer.id}/destroy`)
-                    .then(response =>{
-                        flash(this.$i18n.t('tender.withdraw_offer_message'))
+            // cancelOffer(){               
+            //     axios
+            //         .delete(`/api/offers/${this.offer.id}/destroy`)
+            //         .then(response =>{
+            //             flash(this.$i18n.t('tender.withdraw_offer_message'))
 
-                        // Fetch Tender data from API. 
-                        // Linstener in /views/tenders/Tender.vue
-                        Event.$emit('retrieveTender');                        
-                        this.close()
-                    })
-                    .catch(errors => console.log(errors.response.data.errors));
-            },
+            //             // Fetch Tender data from API. 
+            //             // Linstener in /views/tenders/Tender.vue
+            //             Event.$emit('retrieveTender');                        
+            //             this.close()
+            //         })
+            //         .catch(errors => console.log(errors.response.data.errors));
+            // },
 
             close(){
                 this.confirmation= false

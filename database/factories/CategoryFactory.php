@@ -9,6 +9,6 @@ $factory->define(App\Category::class, function ($faker) {
     return [
         'name'=> $name,
         'slug'=>$name,        
-        'color'=> $faker->hexcolor, 
+        'color'=> $faker->word, 
     ];
 });

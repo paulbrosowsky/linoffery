@@ -9,9 +9,11 @@
                 <div class=" flex-1 pl-3 overflow-hidden md:pl-8">
                     <p class="truncate font-bold md:text-lg" v-text="tender.title"></p>
 
-                    <category-tag :category="tender.category" ></category-tag>  
+                    <category-tag :category="tender.category" ></category-tag> 
+                     <span class="text-sm text-gray-500 leading-none mr-1">{{$t('tender.offered_at')}}</span>
+                    <span class="text-sm font-bold leading-none"> {{ offer.created_at  | moment("DD.MM.YYYY") }}</span> 
                     <span class="text-sm text-gray-500 leading-none mr-1">{{$t('tender.valid_until')}}</span>
-                    <span class="text-teal-500 font-bold leading-none"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
+                    <span class="text-sm text-teal-500 font-bold leading-none"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
 
                 </div>
             </div>
