@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p class="text-center mb-4" v-text="text"></p>
+        <p class="mb-4" v-text="text"></p>
         <div class="flex">
             <button class="btn btn-outlined btn-red-outlined w-full mr-1" @click="$emit('canceled')">
                 <i class="icon ion-md-close mr-2"></i>  
@@ -15,7 +15,6 @@
 </template>
 <script>
     export default {
-        props:['text']
-        
+        props:['text']        
     }
 </script>

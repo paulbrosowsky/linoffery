@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- <p class="text-sm text-red-500 mb-2" v-if="errors" v-text="errors.earliest_date[0]"></p> -->
+        <p class="text-sm text-red-500 mb-2" v-if="errors.length != 0" v-text="errors.earliest_date[0]"></p>
         <date-picker  
             class="mb-2"    
             :value="range.from"       
@@ -12,7 +12,7 @@
             @changed="updateFrom"
             
         ></date-picker>
-        <!-- <p class="text-sm text-red-500 mb-2" v-if="errors" v-text="errors.latest_date[0]"></p> -->
+        <p class="text-sm text-red-500 mb-2" v-if="errors.length != 0" v-text="errors.latest_date[0]"></p>
         <date-picker     
             :value="range.to"        
             :placeholder="$t('tender.latest_date')"             
@@ -29,7 +29,23 @@
     export default {
        
 
-        props:['errors', 'from', 'to', 'left', 'reset'],
+        props:{
+            errors: {
+                default:()=>[]
+            }, 
+            from:{
+                default: '',
+            },
+            to:{
+                default: '',
+            },
+            left:{
+                default: false,
+            },
+            reset:{
+                default: false,
+            }            
+        },
 
         data(){
             return{

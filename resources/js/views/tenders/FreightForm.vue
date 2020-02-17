@@ -2,10 +2,10 @@
     <div>  
         <div class="flex justify-end pb-2">
             <button 
-                class="text-sm uppercase tracking-tight text-gray-500 pr-2 hover:text-teal-500 focus:outline-none"
+                class="flex items-center text-sm uppercase tracking-tight text-gray-500 pr-2 hover:text-teal-500 focus:outline-none"
                 @click="$emit('remove')"
             >
-                <i class="icon ion-md-trash pr-2"></i>  
+                <svg class="h-4 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M128 405.429C128 428.846 147.198 448 170.667 448h170.667C364.802 448 384 428.846 384 405.429V160H128v245.429zM416 96h-80l-26.785-32H202.786L176 96H96v32h320V96z"/></svg>                
                 <span>{{$t('utilities.delete')}}</span> 
             </button>  
         </div>
@@ -44,6 +44,7 @@
             <div class="w-full">
                 <select-input 
                     class="mb-2" 
+                    :value="freight.transport_type"
                     :options="transport"                     
                     :placeholder="$t('tender.transport_type')"
                     :searchable="true"
@@ -85,14 +86,14 @@
                 </div>
                 
                 <div class="relative flex items-center mb-1">                        
-                        <input
-                            class="input" 
-                            type="number"
-                            :placeholder="$t('tender.weight_kg')"  
-                            @blur="setFreightData"
-                            v-model="form.weight"
-                        >
-                    </div>                 
+                    <input
+                        class="input" 
+                        type="number"
+                        :placeholder="$t('tender.weight_kg')"  
+                        @blur="setFreightData"
+                        v-model="form.weight"
+                    >
+                </div>                 
 
             </div>
 
@@ -110,10 +111,10 @@
             return{
                 form:{
                     tender_id: this.freight.tender_id,
+                    transport_type_id: this.freight.transport_type_id,
                     index: this.freight.index,
                     title: this.freight.title,
-                    description: this.freight.description,
-                    pallet: this.freight.pallet,
+                    description: this.freight.description,                    
                     width: this.freight.width,
                     height: this.freight.height,
                     depth: this.freight.depth,
@@ -146,7 +147,8 @@
             },
                         
             updatePallet(value){
-                this.form.pallet = value.name
+                console.log(value);
+                this.form.transport_type_id = value.id
                 this.form.width = value.width
                 this.form.depth = value.depth
                 this.form.height = value.height

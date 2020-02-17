@@ -42,5 +42,7 @@
     "filter": "Filtern",
     "next": "weiter",
     "back": "zurück",
-    "accept": "Akzeptieren"
+    "accept": "Akzeptieren",
+    "from": "von",
+    "to": "bis"
 }

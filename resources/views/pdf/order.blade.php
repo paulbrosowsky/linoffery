@@ -176,7 +176,7 @@
 
         <p style="margin-bottom:1rem;">{{$tender->description}}</p>
 
-        <div>
+        <div style="margin-bottom:1rem;">
             <strong>{{__('Pickup details')}}</strong>
             <table style="margin-bottom: 1rem;">
                 <tr>
@@ -192,12 +192,18 @@
                     <td>{{$pickup->latest_date->format('d.m.Y')}}</td>
                 </tr>
                 <tr>
+                    <td>{{__('Loading time')}}:</td>
+                    <td>{{__('from')}} {{$pickup->loading_start}} {{__('to')}} {{$pickup->loading_end}}</td>
+                </tr>
+
+                <tr>
                     <td>{{__('Loading by driver')}}:</td>
                     <td>{{$pickup->loading}}</td>
                 </tr>
+
                 <tr>
-                    <td>{{__('Latency')}}:</td>
-                    <td>{{$pickup->latency}} {{__('Hours')}}</td>
+                    <td>{{__('Exchange loading equipment')}}:</td>
+                    <td>{{$pickup->exchange_pallet}}</td>
                 </tr>
             </table>
 
@@ -205,7 +211,7 @@
        
 
         
-        <div>
+        <div style="margin-bottom:1rem;">
             <strong>{{__('Delivery details')}}</strong>
 
             <table>            
@@ -220,14 +226,20 @@
                     <tr>
                         <td>{{__('Latest delivery')}}:</td>
                         <td>{{$delivery->latest_date->format('d.m.Y')}}</td>
+                    </tr>                    
+                    <tr>
+                        <td>{{__('Loading time')}}:</td>
+                        <td>{{__('from')}} {{$delivery->loading_start}} {{__('to')}} {{$delivery->loading_end}}</td>
                     </tr>
+
                     <tr>
                         <td>{{__('Loading by driver')}}:</td>
                         <td>{{$delivery->loading}}</td>
                     </tr>
+
                     <tr>
-                        <td>{{__('Latency')}}:</td>
-                        <td>{{$delivery->latency}} {{__('Hours')}}</td>
+                        <td>{{__('Exchange loading equipment')}}:</td>
+                        <td>{{$delivery->exchange_pallet}}</td>
                     </tr>
                 </table> 
 

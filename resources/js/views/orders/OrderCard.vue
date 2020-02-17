@@ -2,9 +2,11 @@
     <div class="border-b py-3 px-5 hover:bg-gray-100 md:py-5">
         <router-link :to="{ name: 'order', params: { order: order.id }}">
 
-            <div class="mb-6">
+            <div class="mb-6" v-show="isCarrier">
                 <div class="w-full flex items-center">
-                    <span><i class="icon ion-md-flame text-red-400 pr-3" v-show="isCarrier"></i></span>
+                    <span v-show="isCarrier">
+                        <svg class="h-6 fill-current text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M403.208 117.333c-4.271-12.802-16-21.333-29.875-21.333H138.667c-13.875 0-25.604 8.531-29.875 21.333L64 234.667v160C64 406.396 73.604 416 85.333 416h21.334c11.729 0 21.333-9.604 21.333-21.333V384h256v10.667c0 11.729 9.604 21.333 21.333 21.333h21.334c11.729 0 21.333-9.604 21.333-21.333v-160l-44.792-117.334zM138.667 320c-18.125 0-32-13.865-32-32s13.875-32 32-32 32 13.866 32 32-13.875 32-32 32zm234.666 0c-18.125 0-32-13.865-32-32s13.875-32 32-32 32 13.866 32 32-13.875 32-32 32zM106.667 213.333l32-85.333h234.666l32 85.333H106.667z"/></svg>                       
+                    </span>
                     <span class="truncate leading-tight text-lg font-bold md:text-xl" v-text="tender.title"></span>
                 </div> 
                                 

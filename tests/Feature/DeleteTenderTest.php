@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Tender;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -61,5 +62,18 @@ class DeleteTenderTest extends PassportTestCase
         $this->assertDatabaseMissing('tenders', ['id' => $this->tender->id]);
         $this->assertDatabaseMissing('locations', ['id' => $location->id]);
         $this->assertDatabaseMissing('freights', ['id' => $freight->id]);
+    }
+
+    /** @test */
+    function owners_may_clone_tenders()
+    {       
+        create('App\Location', ['tender_id' => $this->tender->id ], 2);
+        create('App\Freight', ['tender_id' => $this->tender->id ], 2);
+        $this->deleteJson('api/tenders/'.$this->tender->id.'/destroy', [ 'withClone' => true ]);
+        $tenders = Tender::all();          
+        
+        $this->assertCount(1, $tenders);
+        $this->assertNotEquals($this->tender->id, $tenders[0]->id);
+        $this->assertEquals($this->tender->title, $tenders[0]->title);
     }
 }

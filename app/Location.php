@@ -42,8 +42,23 @@ class Location extends Model
         return new Carbon($date);
     }
 
+    /**
+     *  Get Loading by driver as string Yes, No
+     * 
+     * @return strung
+     */
     public function getLoadingAttribute($loading)
     {
         return $loading ? __('Yes') : __('No');
+    }
+
+     /**
+     *  Get Exchange Pallet as string Yes, No
+     * 
+     * @return strung
+     */
+    public function getExchangePalletAttribute($exchange_pallet)
+    {
+        return $exchange_pallet ? __('Yes') : __('No');
     }
 }

@@ -23,7 +23,7 @@ class FreightsController extends Controller
         $request->validate([
             'freights.*.tender_id' => 'required|exists:tenders,id',
             'freights.*.title' => 'required',
-            'freights.*.pallet' => 'required',
+            'freights.*.transport_type_id' => 'required',
             'freights.*.weight' => 'required|numeric|max:100000',
             'freights.*.width' => 'max:10000',
             'freights.*.height' => 'max:10000',
@@ -39,9 +39,9 @@ class FreightsController extends Controller
         foreach ($request->freights as $freight) {            
             Freight::create([ 
                 'tender_id' => $freight['tender_id'],
+                'transport_type_id' => $freight['transport_type_id'],
                 'title' => $freight['title'],
-                'description'=> $freight['description'],
-                'pallet' => $freight['pallet'],
+                'description'=> $freight['description'],                
                 'weight' => $freight['weight'],
                 'width' => $freight['width'],
                 'height' => $freight['height'],

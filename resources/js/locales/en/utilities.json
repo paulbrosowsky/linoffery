@@ -42,5 +42,7 @@
     "filter": "Filter",
     "next": "next",
     "back": "back",
-    "accept": "Accept"
+    "accept": "Accept",
+    "from": "from",
+    "to": "to"
 }

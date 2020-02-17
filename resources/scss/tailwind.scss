@@ -9,7 +9,7 @@ body{
 
 
 .btn{
-    @apply .bg-gray-500 .rounded-full .px-5 .py-2 .text-white .text-sm .uppercase .font-semibold .tracking-tight shadow-md;
+    @apply .bg-gray-500 .rounded-full .px-5 .py-2 .text-white .text-sm .uppercase .font-semibold .tracking-tight .shadow-md .flex .items-center .justify-center;
 }
 .btn:hover{
     @apply .bg-gray-700;
@@ -19,7 +19,7 @@ body{
 }
 
 .btn-outlined{
-    @apply .bg-white .border .text-gray-700 shadow-none
+    @apply .bg-transparent .border .text-gray-700 shadow-none
 }
 .btn-outlined:hover{
     @apply .text-white .border-white .bg-gray-500
@@ -80,7 +80,7 @@ body{
 }
 
 .input{
-    @apply .bg-gray-300 .appearance-none .border-2 .border-gray-300 .rounded-lg .w-full .py-3 .px-4 .text-gray-700 .leading-tight;      
+    @apply .bg-gray-300 .appearance-none .border-2 .border-gray-300 .rounded-lg .w-full .py-3 .px-4 .leading-tight;      
 }
 .input:focus{
     @apply .outline-none .bg-white .border-teal-500;

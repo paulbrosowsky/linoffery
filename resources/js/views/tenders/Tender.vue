@@ -1,158 +1,98 @@
 <template>
-        <div v-if="tender">
-            <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !completed">            
-                <div class="pl-5 pb-3 border-b">                 
-                    <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
-                </div>
-                
-                <offer-card                 
-                    :offer="offer"                 
-                    v-for="(offer, index) in tender.offers" 
-                    :key="index"
-                ></offer-card>
-            </div>
+        <div v-if="tender">              
 
-            <div class="py-5">  
+            <div v-if="!draft">
                 
-                <div class="flex justify-between px-5 pb-5" v-if="completed">
-                    <p class="uppercase text-red-500 font-bold tracking-tighter" >
-                        <i class="icon ion-md-checkmark mr-2"></i>  
+                <div class="bg-gray-200 py-3 px-5" v-if="completed">
+                    <p class="uppercase text-red-500 font-bold tracking-tighter" >                        
                         <span>{{$t('utilities.completed')}}</span> 
                     </p>
+                    
+                    <delete-tender v-if="!tender.order"></delete-tender>
 
-                    <router-link class="text-sm text-gray-500 hover:text-teal-500" :to="{name: 'order', params:{ order: tender.order.id }}" v-if="tender.order">
-                        <i class="icon ion-md-list-box mr-1"></i>  
-                        <span>{{$t('tender.open_order')}}</span> 
+                    <router-link 
+                        class="hover:text-teal-500" 
+                        :to="{name: 'order', params:{ order: tender.order.id }}" 
+                        v-if="tender.order"
+                    >                        
+                        <span class="text-gray-500" >{{$t('tender.order')}}</span> 
+                        <span class="text-2xl font-light" v-text="tender.order.custom_id"></span>
                     </router-link>
-                </div>
+                </div>                
 
-                <p 
-                    class="uppercase text-gray-400 font-bold tracking-tighter px-5 pb-5 " 
-                    v-if="draft"
-                >
-                    <i class="icon ion-md-create mr-2"></i>  
-                    <span>{{$t('utilities.draft')}}</span> 
-                </p>
+                <!-- Offers START -->
+                <div class="bg-gray-100 mb-5 pt-3" v-if="hasOffers && !completed">            
+                    <div class="pl-5 pb-3 border-b">                 
+                        <span class="font-bold mb-3">{{$t('tender.offers')}}</span>               
+                    </div>
+                    
+                    <offer-card                 
+                        :offer="offer"                 
+                        v-for="(offer, index) in tender.offers" 
+                        :key="index"
+                    ></offer-card>
+                </div>   
+                 <!-- Offers END -->             
 
-                <tender-info 
+                <tender-info
+                    class="pt-5" 
                     :tender="tender"
                     v-if="!editTender"
                     @edit="editTender = !editTender"
                 ></tender-info> 
                 
-                <div class="px-5 py-5" v-if="editTender && draft">
-                    <tender-form 
-                        :tender="tender" 
-                        :edit="true" 
-                        :left="true"
-                        @cancel="updateTenderData('tender')"
-                    ></tender-form>
-                </div>
-
+                <!-- Locations Info START -->
                 <div class="bg-gray-100 p-5">
                     
                     <div class="w-full pb-5 " >                 
                         <div class="flex items-center mb-2">
                             <i class="icon ion-md-log-in text-gray-500 mr-2"></i>  
-                            <p class="uppercase text-sm text-gray-500">{{$t('tender.pickup_details')}}</p>
-                            <button 
-                                class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                                @click="editPickup = !editPickup"
-                                v-if="draft"
-                            >
-                                <i class="icon ion-md-create"></i>  
-                            </button>
-                        </div>  
+                            <p class="uppercase text-sm text-gray-500">{{$t('tender.pickup_details')}}</p>                            
+                        </div>    
 
-                        <location-form 
-                            :tenderId="tender.id"
-                            :value="pickup" 
-                            :name="'pickup'" 
-                            v-if="!pickup || editPickup && draft "
-                            @close="updateTenderData('pickup')"
-                        ></location-form>              
-
-                        <location-info :location="pickup" v-if="pickup && !editPickup"></location-info> 
+                        <location-info :location="pickup" v-if="pickup"></location-info> 
                     </div>
 
                     <div class="w-full" > 
                         <div class="flex items-center mb-2">
                             <i class="icon ion-md-log-out text-gray-500 mr-3"></i>                           
-                            <p class="uppercase text-sm text-gray-500">{{$t('tender.delivery_details')}}</p>
-                            <button 
-                                class="py-1 px-2 lg:mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                                @click="editDelivery = !editDelivery"
-                                v-if="draft"
-                            >
-                                <i class="icon ion-md-create"></i>  
-                            </button>
-                        </div>   
+                            <p class="uppercase text-sm text-gray-500">{{$t('tender.delivery_details')}}</p>                         
+                        </div> 
 
-                        <location-form 
-                            :tenderId="tender.id"
-                            :value="delivery" 
-                            :name="'delivery'" 
-                            v-if="!delivery || editDelivery && draft"
-                            @close="updateTenderData('delivery')"
-                        ></location-form>   
-
-                        <location-info :location="delivery" v-if="delivery && !editDelivery"></location-info>                                            
+                        <location-info :location="delivery" v-if="delivery"></location-info>                                            
                     </div>
                 </div>
-                
+                <!-- Locations Info END -->
 
+                <!-- Load Info START -->
                 <div class="p-5">
                     <div class="flex items-center mb-2">
-                        <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>
-                        <button 
-                            class="py-1 px-2 mr-3 text-xl text-gray-500 hover:text-teal-500 focus:outline-none"
-                            @click="editFreights = !editFreights"
-                            v-if="draft"
-                        >
-                            <i class="icon ion-md-create"></i>  
-                        </button>
+                        <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>                        
                     </div>  
-                    
-                    <freights-form 
-                        :tenderId="tender.id"
-                        :values="tender.freights" 
-                        v-if="!hasFreights || editFreights && draft"
-                        @close="updateTenderData('freights')"
-                    ></freights-form>
 
                     <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
                 </div>
+                <!-- Load Info START -->
                 
+                <!-- Company Info START -->
                 <div  class="px-5 pb-5">
                     <router-link :to="{name: 'profile', params:{ profile: tender.user.company.id}}">
                         <company-info :company="tender.user.company"></company-info> 
                     </router-link>
                 </div>
-                
+                <!-- Company Info END -->
 
+                <!-- Make Offer Button START -->
                 <div class="py-5 px-5" v-if="!ownsTender && loggedIn && fullyAuthorized" > 
                     <button class="w-full btn btn-teal" @click="$modal.show('make-offer')">
                         {{$t('tender.make_offer')}}
                     </button>                                      
                 </div>  
+                <!-- Make Offer Button END --> 
 
-                <div class="py-3 px-5" v-if="draft && dataComplete && ownsTender">
-                        <div class="flex bg-yellow-200 p-5 rounded-lg mb-3">
-                            <i class="icon ion-md-information-circle-outline text-2xl text-yellow-500 mr-5 mt-1"></i>  
-                            <div class="text-sm">
-                                <span>{{$t('tender.publish_info')}}</span>
-                                <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
-                            </div>                    
-                        </div>
-                    
-                    <button class="btn btn-teal w-full" @click="publishTender">                     
-                        <span>{{$t('utilities.publish')}} </span> 
-                    </button>
-                    
-                </div>   
-
+                <!-- Cancel Tender Button + Confirmation START -->
                 <div class="py-5 px-5" v-if="ownsTender && !draft && !completed" > 
-                <div v-show="!confirmation">   
+                    <div v-show="!confirmation">   
                         <button class="btn  btn-red w-full" @click="confirmation=true">
                             <i class=" icon ion-md-close mr-2"></i>  
                             {{$t('tender.cancel_tender')}}
@@ -181,27 +121,26 @@
                             <span>{{$t('tender.cancel_tender_info')}}</span>
                             <router-link to="/terms" class="text-teal-500 hover:text-teal-700">{{$t('tender.publish_info_terms')}}</router-link>
                         </div>                    
-                    </div>
-                                                    
-                </div>  
+                    </div>                                                    
+                </div>
+                <!-- Cancel Tender Button + Confirmation START -->
 
-                <div class="py-2 px-5" v-if="ownsTender && (completed || draft) && !tender.orderId">
-                    <div v-show="!confirmation">   
-                        <button class="btn  btn-red w-full" @click="confirmation=true">
-                            <i class=" icon ion-md-close mr-2"></i>  
-                            {{$t('tender.delete_tender')}}
-                        </button>            
-                    </div>
+            </div>
 
-                    <confirmation-buttons
-                        :text="$t('tender.delete_tender_question')" 
-                        v-show="confirmation"
-                        @canceled="confirmation = false"
-                        @confirmed="deleteTender"
-                    ></confirmation-buttons> 
+            <div v-if="draft">               
 
-                </div>        
-            
+                <div class="bg-gray-200 py-3">
+                    <div class="px-5">
+                        <p class="uppercase text-teal-500 font-bold tracking-tighter">  
+                            <span>{{$t('utilities.draft')}}</span> 
+                        </p>
+                        <p class="text-xl font-bold leading-tight" v-text="tender.title"></p>
+
+                        <delete-tender></delete-tender>
+                    </div>                    
+                </div>
+
+                <edit-tender :tender="tender" @updated="fetchData"></edit-tender>
             </div>
 
             <div v-if="!ownsTender && loggedIn">
@@ -217,46 +156,38 @@
    
 </template>
 <script>
-    import FreightInfo from '../tenders/FreightInfo'
-    import FreightsForm from '../tenders/FreightsForm'
-    import LocationForm from '../tenders/LocationForm'
-    import LocationInfo from '../tenders/LocationInfo'
+    import FreightInfo from './FreightInfo';   
+    import LocationInfo from './LocationInfo';
     import MakeOffer from '../../modals/MakeOffer'
     import OfferCard from '../offers/OfferCard'
-    // import OfferInfo from '../../modals/OfferInfo' 
     import AcceptOffer from '../../modals/AcceptOffer' 
-    import TakeItNow from '../../modals/TakeItNow' 
-    import TenderForm from '../tenders/TenderForm'
+    import TakeItNow from '../../modals/TakeItNow'     
     import TenderInfo from '../tenders/TenderInfo'
-    
+
+    import EditTender from './EditTender';
+    import DeleteTender from './DeleteTender';   
 
     export default {
 
-       components:{
-           FreightInfo,
-           FreightsForm,
-           LocationForm,
-           LocationInfo,
-           MakeOffer,
-           OfferCard,
-        //    OfferInfo,
-           AcceptOffer,
-           TakeItNow,
-           TenderForm,
-           TenderInfo
-       },   
+        components:{
+            DeleteTender,
+            FreightInfo, 
+            LocationInfo,
+            MakeOffer,
+            OfferCard,      
+            AcceptOffer,
+            TakeItNow,        
+            TenderInfo,
+            EditTender
+        },   
 
        
        data(){
-           return{
-               tender: null,
-               editTender: false,
-               editPickup: false,
-               editDelivery: false,
-               editFreights: false,
+            return{
+                tender: null,               
 
-               confirmation: false, 
-               withClone: false
+                confirmation: false, 
+                withClone: false
            }
        },
 
@@ -357,31 +288,7 @@
                         this.confirmation = false  
                     })
                     .catch(errors => console.log(errors.response.data.errors));             
-            } ,
-
-            deleteTender(){
-                axios
-                    .delete(`/api${this.$route.path}/destroy`)
-                    .then(response =>{
-                        flash(this.$i18n.t('tender.delete_tender_message'))                         
-                        this.$router.push({name: 'dashboard_tenders'}) 
-                        this.confirmation = false                          
-                    })
-                    .catch(errors => reject(errors.response.data.errors))              
-            },
-            
-            updateTenderData(data){                
-                if(data == 'pickup'){
-                    this.editPickup = false;
-                }else if(data == 'delivery'){
-                    this.editDelivery = false;
-                }else if(data == 'freights'){
-                    this.editFreights = false;
-                }else{
-                    this.editTender = false;
-                }
-                this.fetchData();
-            }
+            },  
         },
 
         mounted(){            

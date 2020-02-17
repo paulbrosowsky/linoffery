@@ -26,6 +26,7 @@
     "If you have not sent us anything, just ignore this email.": "Wenn du uns nichts gesendet hast, ignoriere einfach diese E-Mail.", 
    
     "Standard": "Standard",
+    "Others": "Sonstiges",
     "Havy load": "Schwertransport",
     "Foods": "Lebensmittel",
     "Refrigerated": "Kühltransport",
@@ -96,8 +97,12 @@
     "Hours": "Stunden",
     "Freight details": "Frachtdetails",
     "Transport type": "Transportart",
+    "Loading time": "Loading time", 
+    "from": "von",
+    "to": "bis",   
     "Dimentions": "Abname",
-    "Weight": "Gewicht" ,
+    "Weight": "Gewicht",
+    "Exchange loading equipment": "Lademittel tauschen",
     
     "was replaced by a copy": "wurde durch eine Kopie ersetzt",
     

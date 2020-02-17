@@ -6,6 +6,7 @@ Vue.use(VueRouter)
 
 // import Dashboard from './views/Dashboard'
 import About from './views/About'
+import CreateTender from './views/tenders/CreateTender';
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
 import Login from './views/auth/Login'
@@ -160,6 +161,15 @@ let routes = [
         name: 'tenders',
         path:'/tenders',
         component: Tenders,
+        meta:{
+            layout: 'mapped',
+        },  
+    },
+
+    {
+        name: 'create_tender',
+        path:'/tenders/create',
+        component: CreateTender,
         meta:{
             layout: 'mapped',
         },  

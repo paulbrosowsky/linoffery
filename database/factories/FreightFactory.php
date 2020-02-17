@@ -11,6 +11,9 @@ $factory->define(Freight::class, function(Faker $faker){
         'tender_id'=> function(){
             return factory('App\Tender')->create()->id;
         },
+        'transport_type_id'=> function(){
+            return factory('App\TransportType')->create()->id;
+        },
         'title' => $faker->sentence,
         'description' => $faker->paragraph,
         'pallet' => $faker->randomElement(['EPAL', 'Gitterbox', 'Sonder']),

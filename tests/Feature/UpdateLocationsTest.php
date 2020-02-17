@@ -93,6 +93,15 @@ class UpdateLocationsTest extends PassportTestCase
         $this->assertArrayHasKey('latest_date', $errors['errors']);    
         $this->assertArrayHasKey('earliest_date', $errors['errors']);                
     } 
+
+    /** @test */
+    function loading_start_and_loading_end_are_required()
+    {
+        $this->updateLocation([
+            'loading_start' => '',
+            'loading_end' => ''         
+        ])->assertStatus(422); 
+    }
     
     public function updateLocation($overrides = [])
     {       
@@ -104,7 +113,10 @@ class UpdateLocationsTest extends PassportTestCase
             'latest_date' => \Carbon\Carbon::now(),
             'earliest_date' => \Carbon\Carbon::now()->addWeeks(1),
             'latency' => 2,
-            'loading' => true
+            'loading' => true,
+            'exchage_pallet' => true,
+            'loading_start' => '12:00',
+            'loading_end' => '20:30'
 
         ], $overrides ));
         

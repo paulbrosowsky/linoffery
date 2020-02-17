@@ -36,8 +36,9 @@ class CreateFreightTest extends PassportTestCase
     /** @test */
     function authenticated_users_may_create_freights()
     {
+        $this->withoutExceptionHandling();
         $this->createFreight();
-        
+       
         tap(Freight::first(), function($freight){
             $this->assertEquals('New Freight', $freight->title);  
             $this->assertEquals($this->tender->id, $freight->tender_id);          
@@ -85,14 +86,14 @@ class CreateFreightTest extends PassportTestCase
     } 
 
      /** @test */
-    function pallet_is_required()
+    function transport_type_is_required()
     {
         $response = $this->createFreight([
-            'pallet' => '' 
+            'transport_type_id' => '' 
         ])->assertStatus(422); 
         
         $errors = $response->json();
-        $this->assertArrayHasKey('freights.0.pallet', $errors['errors']);         
+        $this->assertArrayHasKey('freights.0.transport_type_id', $errors['errors']);         
     }      
 
       /** @test */
@@ -120,7 +121,7 @@ class CreateFreightTest extends PassportTestCase
         $this->signIn($this->user);
 
         $freights = make('App\Freight', array_merge([
-            'tender_id' => $this->tender->id,
+            'tender_id' => $this->tender->id,            
             'title' => 'New Freight',
             'description' => 'New Freight Description',
             'pallet' => 'EPAL',

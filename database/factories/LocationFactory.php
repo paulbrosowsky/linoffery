@@ -22,6 +22,8 @@ $factory->define(Location::class, function($faker){
         'latency' => $faker->randomDigit,
         'earliest_date' => Carbon::now(),
         'latest_date' => Carbon::now()->addWeeks(1), 
-        'loading' => $faker -> boolean()
+        'loading' => $faker -> boolean(),
+        'loading_start' => '12:00',
+        'loading_end' => '20:30'
     ];
 });

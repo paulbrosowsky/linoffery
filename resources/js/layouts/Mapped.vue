@@ -12,14 +12,13 @@
                 <tender-filters ref="filterNav" @toggled="filterNavResize"></tender-filters>
                 
                  
-                <perfect-scrollbar ref="content" class="h-full rounded-lg pt-5">                                       
+                <perfect-scrollbar ref="content" class="h-full rounded-lg pt-20">                                       
                     <slot></slot>                        
                 </perfect-scrollbar >                     
                     
             </card>        
 
         <app-footer layout="map"></app-footer>
-
     </div>
 </template>
 <script>     
@@ -141,7 +140,9 @@
         },
 
         mounted(){   
-            // Trigger in ./views/tenders/Tenders.vue @fetchTenders
+            // Trigger in 
+            // ./views/tenders/Tenders.vue,  
+            // ./views/tenders/EditTender.vue, 
             Event.$on('scrollTop', () => this.scrollTop())
             
             // Content Drawer handling on Mobile View
@@ -149,7 +150,7 @@
                 // this.setResizeDrawer()
                 // Triggered in TendersFilters
                 Event.$on('drawerDown', () => this.closeDrawer())
-                // Triggered in TendersFilters
+                // Triggered in TendersFilters, CreateTender
                 Event.$on('drawerUp', () => this.openDrawer()) 
                 // Triggered in Tender
                 Event.$on('setDrawerSize', () => this.setDrawerSize())

@@ -36,11 +36,12 @@
                     :rows="4"
                 ></textarea-input>
 
-                <div class="flex py-5">
-                    <div class="w-1/2 mr-1">
+                
+                    <div class="mb-3">
                         <p class="text-sm text-red-500 mb-2" v-if="errors.max_price" v-text="errors.max_price[0]"></p>
                         <div class="relative flex items-center mb-1">
-                            <i class="absolute icon ion-logo-euro text-xl text-gray-500 px-3"></i>
+                            <svg class=" absolute h-5 fill-current text-gray-500 px-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M234 272v-48h131.094l7.149-48H234v-1.83c0-35.92 14.975-58.086 79.25-58.086 26.264 0 55.867 2.498 93.189 8.742L416 59.866C377.988 51.123 345.306 48 310.057 48 195.326 48 146 89.225 146 165.43V176H96v48h50v48H96v48h50v26.57C146 422.774 195.297 464 310.027 464c35.25 0 67.848-3.123 105.859-11.866l-9.619-64.96c-37.322 6.244-66.781 8.742-93.045 8.742-64.276 0-79.223-18.739-79.223-63.086V320h116.795l7.148-48H234z"/></svg>
+                            
                             <input
                                 class="input pl-10" 
                                 :class="errors.max_price ? 'border-red-300' : ''" 
@@ -48,15 +49,17 @@
                                 :placeholder="$t('tender.max_price')" 
                                 v-model="maxPrice" 
                                 @keyup="errors= []"
+                                @blur="comparePrices"
                             >
                         </div>
-                        <p class="text-sm text-gray-500">{{$t('tender.max_price_info')}}</p>
+                        <p class="text-sm text-gray-500 leading-tight">{{$t('tender.max_price_info')}}</p>
                     </div>
 
-                    <div class="w-1/2 ml-1">
+                    <div class="mb-3">
                         <p class="text-sm text-red-500 mb-2" v-if="errors.immediate_price" v-text="errors.immediate_price[0]"></p>
                         <div class="relative flex items-center mb-1">
-                            <i class="absolute icon ion-logo-euro text-xl text-gray-500 px-3"></i>
+                            <svg class="absolute h-5 fill-current text-gray-500 px-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M234 272v-48h131.094l7.149-48H234v-1.83c0-35.92 14.975-58.086 79.25-58.086 26.264 0 55.867 2.498 93.189 8.742L416 59.866C377.988 51.123 345.306 48 310.057 48 195.326 48 146 89.225 146 165.43V176H96v48h50v48H96v48h50v26.57C146 422.774 195.297 464 310.027 464c35.25 0 67.848-3.123 105.859-11.866l-9.619-64.96c-37.322 6.244-66.781 8.742-93.045 8.742-64.276 0-79.223-18.739-79.223-63.086V320h116.795l7.148-48H234z"/></svg>
+                            
                             <input
                                 class="input pl-10" 
                                 :class="errors.immediate_price ? 'border-red-300' : ''" 
@@ -64,11 +67,12 @@
                                 :placeholder="$t('tender.immediate_price')" 
                                 v-model="immediatePrice" 
                                 @keyup="errors= []"
+                                @blur="comparePrices"
                             >
                         </div>
-                        <p class="text-sm text-gray-500">{{$t('tender.immediate_price_info')}}</p>
+                        <p class="text-sm text-gray-500 leading-tight">{{$t('tender.immediate_price_info')}}</p>
                     </div>
-                </div>
+                
 
                 <p class="text-sm text-red-500 mb-2" v-if="errors.valid_date" v-text="errors.valid_date[0]"></p>
                 <date-picker 
@@ -76,23 +80,23 @@
                     class="mb-2"                     
                     :placeholder="$t('tender.valid_date')"
                     @changed="updateDate"
-                    :left="left"
+                    :left="true"
                 ></date-picker>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-gray-500 leading-tight">
                     {{$t('tender.valid_date_info')}}
                 </p>
             </div>             
         </div>
 
-        <div class="flex justify-end mt-5">
-                    
-            <button class="btn btn-outlined is-outlined mr-2" @click.prevent="$emit('cancel')">
-                {{ $t('utilities.cancel')}}
-            </button>
-                    
-            <button class="btn btn-teal" type="submit" @click="submit">
+        <div class="flex justify-end mt-5">                    
+            <button class="btn btn-teal" @click="submit" v-if="!edit">
                 <span>{{ $t('utilities.save_draft')}}</span>                  
-            </button>            
+            </button>  
+
+            <button class="btn btn-teal" @click="submit" v-if="edit">
+                <span class="mr-1">{{$t('utilities.next')}}</span>
+                <svg class="h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M284.9 412.6l138.1-134c6-5.8 9-13.7 9-22.4v-.4c0-8.7-3-16.6-9-22.4l-138.1-134c-12-12.5-31.3-12.5-43.2 0-11.9 12.5-11.9 32.7 0 45.2l83 79.4h-214c-17 0-30.7 14.3-30.7 32 0 18 13.7 32 30.6 32h214l-83 79.4c-11.9 12.5-11.9 32.7 0 45.2 12 12.5 31.3 12.5 43.3 0z"/></svg>                 
+            </button>          
         </div>
 
         <loading-spinner :loading="loading" :position="'absolute'"></loading-spinner> 
@@ -119,11 +123,20 @@
                 loading: false,
                 category: null
             }
-        },       
+        },   
 
         methods:{
-            submit(){
-                this.edit ? this.updateTender() : this.storeTender();
+            submit(){  
+                this.comparePrices();
+                if(this.errors.length == 0){
+                    this.edit ? this.updateTender() : this.storeTender();
+                }
+            },    
+            
+            comparePrices(){
+                return this.maxPrice < this.immediatePrice 
+                        ? this.errors = { max_price: ['Maximaler Preis darf nicht kleiner sein als sofort Preis.']} 
+                        : '';
             },
 
             storeTender(){                
@@ -163,8 +176,8 @@
                         valid_date: this.valid_date                    
                     })
                     .then(response =>{                       
-                        flash(this.$i18n.t('tender.store_tender_message'))                            
-                        this.$emit('cancel');
+                        flash(this.$i18n.t('tender.update_tender_message'))                            
+                        this.$emit('updated');
                         this.loading = false;
                     })
                     .catch(errors =>{

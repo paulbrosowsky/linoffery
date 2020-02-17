@@ -104,8 +104,7 @@ class Tender extends Model
     public function order()
     {
         return $this->hasOne(Order::class);
-    }
-    
+    }   
 
     /**
     *  Update lowest offer in DB    
@@ -217,7 +216,7 @@ class Tender extends Model
         $offerers = $this->removeUnacceptedOffers();
 
         if($withClone){
-            return $this->cloneTender($offerers);
+            $this->cloneTender($offerers);            
         }
     }
     
@@ -247,11 +246,11 @@ class Tender extends Model
      * @param Collection $offers
      * @return Tender
      */
-    protected function cloneTender($offerers)
-    {    
+    public function cloneTender($offerers = NULL)
+    {   
         $clone = $this->replicate(['published_at', 'completed_at', 'lowest_offer']); 
         $clone->save();
-        
+      
         // Clone all locations from original and attach it to the tender clone
         foreach ($this->locations as $location) {
             $location->update(['tender_id' => $clone->id]);
@@ -259,27 +258,28 @@ class Tender extends Model
         // Clone all freights from original and attach it to the tender clone
         foreach ($this->freights as $freight) {            
             $freight->update(['tender_id' => $clone->id]);
-        }  
+        }     
+        
         //Delete orginal
         $this->delete();
 
-        //Notify all offerers
-        $later = now()->addHours(1);
-        foreach ($offerers as $offerer) {
-            if(env('APP_ENV') === 'testing'){
-                $offerer->notify((new TenderWasCloned($clone)));
-            }else{
-                $offerer->notify((new TenderWasCloned($clone))->delay($later));
-            }
-            
-        }        
+        if($offerers){
+            //Notify all offerers
+            $later = now()->addHours(1);
+            foreach ($offerers as $offerer) {
+                if(env('APP_ENV') === 'testing'){
+                    $offerer->notify((new TenderWasCloned($clone)));
+                }else{
+                    $offerer->notify((new TenderWasCloned($clone))->delay($later));
+                }            
+            }  
+        }             
 
         return $clone;                        
     }
 
     /**
-     *  Destroy existing tender
-     * 
+     *  Destroy existing tender 
      */
     public function destroyTender()
     {

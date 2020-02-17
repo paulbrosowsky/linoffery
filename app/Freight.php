@@ -22,6 +22,8 @@ class Freight extends Model
             }                        
         });  
     }
+
+    protected $with = ['transportType'];
     
     /**
      *  A Freight belongs to a Tender
@@ -31,6 +33,16 @@ class Freight extends Model
     public function tender()
     {
         return $this->belongsTo(Tender::class);
+    }
+
+    /**
+     *  A Freight belongs to a Transport Type
+     * 
+     * @return belongsTo
+     */
+    public function transportType()
+    {
+        return $this->belongsTo(TransportType::class);
     }
 
 }

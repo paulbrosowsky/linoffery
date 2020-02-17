@@ -187,12 +187,14 @@ return [
         'latest_date'           => 'Spätestes Termin', 
         'pallet'                => 'Transporttyp',
         'weight'                => 'Gewicht',
-        'freights.*.weight'     => 'Gewicht',
-        'freights.*.pallet'     => 'Transportart',
+        'freights.*.weight'     => 'Gewicht',        
         'freights.*.title'      => 'Bezeichnung',
+        'freights.*.transport_type_id' => 'Transportart',
         'price'                 => 'Preis',
         'rating'                => 'Bewertung',
         'terms_accepted'        => 'AGB-Zustimmung',
-        'payment_terms_accepted'=> 'Zustimmung mit Zahlungbedingungen'
+        'payment_terms_accepted'=> 'Zustimmung mit Zahlungbedingungen',
+        'loading_start'         => 'Verlagezeit',
+        'loading_end'           => 'Verladezeit'
     ],
 ];

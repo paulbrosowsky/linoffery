@@ -26,6 +26,8 @@ class LocationsController extends Controller
             'lng' => 'required|numeric',
             'latest_date' => 'required|date',
             'earliest_date' => 'required|date',
+            'loading_start' => ['required'],
+            'loading_end' => ['required'],
         ]);
 
         $location = Location::create([ 
@@ -40,6 +42,9 @@ class LocationsController extends Controller
             'earliest_date' => $request->earliest_date,
             'latency' => $request->latency,
             'loading' => $request->loading,
+            'exchange_pallet' => $request->exchange_pallet,
+            'loading_start' => $request->loading_start,
+            'loading_end' => $request->loading_end
         ]);
 
         return $location;
@@ -61,7 +66,9 @@ class LocationsController extends Controller
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'latest_date' => 'required|date',
-            'earliest_date' => 'required|date',            
+            'earliest_date' => 'required|date', 
+            'loading_start' => ['required'],
+            'loading_end' => ['required'],           
         ]);       
         
         $location->update([          
@@ -74,6 +81,9 @@ class LocationsController extends Controller
             'earliest_date' => $request->earliest_date,
             'latency' => $request->latency,
             'loading' => $request->loading,
+            'exchange_pallet' => $request->exchange_pallet,
+            'loading_start' => $request->loading_start,
+            'loading_end' => $request->loading_end
         ]); 
         
         return $location;

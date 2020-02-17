@@ -160,12 +160,14 @@ return [
         'latest_date'           => 'latest date',  
         'pallet'                => 'transport type',
         'weight'                => 'weight',
-        'freights.*.weight'     => 'weight',
-        'freights.*.pallet'     => 'transport type',
+        'freights.*.weight'     => 'weight',      
+        'freights.*.transport_type_id' => 'Transport type',
         'freights.*.title'      => 'title', 
         'rating'                => 'rating',
         'terms_accepted'        => 'Terms of use',
-        'payment_terms_accepted'=> 'Terms of payment'              
+        'payment_terms_accepted'=> 'Terms of payment',
+        'loading_start'         => 'Loading time',
+        'loading_end'           => 'Loading time'              
     ],
 
 ];

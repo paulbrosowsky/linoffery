@@ -23,5 +23,11 @@ class FreightTest extends PassportTestCase
     {
         $this->assertInstanceOf('App\Tender', $this->freight->tender);
     }
+
+    /** @test */
+    function is_belongs_to_a_transport_type()
+    {
+        $this->assertInstanceOf('App\TransportType', $this->freight->transportType);
+    }
     
 }

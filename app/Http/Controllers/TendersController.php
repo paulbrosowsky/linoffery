@@ -56,8 +56,8 @@ class TendersController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required',            
-            'max_price' => 'required|numeric|min:0',
-            'immadiate_price' => 'min:0',
+            'max_price' => 'required|numeric|min:1',
+            'immadiate_price' => 'numeric|min:1',
             'valid_date' => 'required|date'
         ]);
             
@@ -91,7 +91,8 @@ class TendersController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required',            
-            'max_price' => 'required|numeric',
+            'max_price' => 'required|numeric|min:1',
+            'immadiate_price' => 'numeric|min:1',
             'valid_date' => 'required|date'
         ]);
 
@@ -145,10 +146,17 @@ class TendersController extends Controller
         return $tender;
     }    
 
-    public function destroy(Tender $tender)
-    {
-        $this->authorize('destroy', $tender);      
+    /** 
+     *  Delete a given Tender From DB
+     */
+    public function destroy(Tender $tender, Request $request)
+    {        
+        $this->authorize('destroy', $tender);    
+       
+        if($request->withClone == 'true'){           
+            return $tender->cloneTender();            
+        }
 
-        $tender->forceDelete();  
+        $tender->delete();  
     }
 }

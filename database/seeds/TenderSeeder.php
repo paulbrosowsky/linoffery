@@ -28,8 +28,8 @@ class TenderSeeder extends Seeder
 
         collect([
             [
-                'name' => 'Standard',
-                'slug' => 'standard',              
+                'name' => 'Others',
+                'slug' => 'others',              
                 'color' => '#4FD1C5',
             ],
             [

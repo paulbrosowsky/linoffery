@@ -1,9 +1,6 @@
 <template>
     
-        <div 
-            class="px-5 pb-5"  
-        > 
-           
+        <div class="px-5 pb-5" >                   
             <div>              
                 <div class="flex items-center mb-1">
                     <category-tag :category="tender.category" ></category-tag>
@@ -23,34 +20,42 @@
                 
                 <span class="text-2xl font-bold leading-none" v-text="tender.title"></span>
             </div>
-                <div class="pt-8 pb-3 px-3">
-                    <div class="flex mb-3">               
-                        <div class="flex flex-col items-center mr-5 ">
-                            <!-- <p class="text-xs text-gray-500 uppercase ">{{$t('tender.curr_offer')}}</p> -->
-                            <p class="text-3xl text-teal-500 tracking-tight leading-none" v-text="'€ '+ price"></p> 
-                            <p class="text-xs text-gray-500 leading-none" v-show="tender.offersCount">
-                                <span class="font-semibold ">{{tender.offersCount}}</span> 
-                                <span class="">{{$t('tender.offers')}}</span>  
-                            </p>                                  
+                <div class="py-5 px-3">
+                    <div class="flex items-end justify-center">
+                        <div>
+                            <div class="w-20 h-20 flex flex-col justify-center items-center rounded-lg text-gray-500 border-2 p-2">                                    
+                                <p class="text-xl tracking-tight leading-none" v-text="'€ '+ tender.max_price"></p>                             
+                                <p class="text-xs leading-none uppercase font-bold text-center mt-2"> {{$t('tender.start_price')}}</p>
+                            </div>
                         </div>
 
-                        <div class="flex-1">
-                            <button class="btn btn-teal w-full mb-2"
-                                @click="$modal.show('make-offer')" 
-                                v-if="!ownsTender && loggedIn && fullyAuthorized">
-                                {{$t('tender.make_offer')}}
-                            </button> 
+                        <button 
+                            class="rounded-lg bg-teal-500 text-white p-2 mx-3 hover:bg-teal-700 focus:outline-none"
+                            style="width: 6.5rem; height: 6.5rem;"
+                            @click="makeOffer"       
+                        >
+                            <div>
+                                <p class="text-xs leading-none" v-show="tender.offersCount">
+                                    <span class="font-semibold ">{{tender.offersCount}}</span> 
+                                    <span class="">{{$t('tender.offers')}}</span>  
+                                </p>
+                                <p class="text-3xl tracking-tight leading-none" v-text="'€ '+ price"></p> 
+                            </div>
+                           
+                            <p class="text-xs leading-none uppercase font-bold mt-2"> {{$t('tender.make_offer')}}</p>
+                        </button>
+
+                        <div>
                             <button 
-                                class=" w-full text-red-500 font-bold  hover:text-red-700 focus:outline-none"
-                                @click="takeItNow"                                    
-                                v-if="tender.immediate_price"
-                            >                               
-                                <span class="text-lg mr-2 " v-text="'€ '+ tender.immediate_price"></span>
-                                <i class="icon ion-md-flash"></i>
-                                <span class="uppercase tracking-tight text-sm">{{$t('tender.take_it')}}</span>    
-                            </button>                             
-                        </div>                                   
-                    </div>          
+                                class="w-20 h-20 rounded-lg border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white focus:outline-none"
+                                @click="takeItNow" 
+                            >
+                                <p class="text-xl tracking-tight leading-none font-bold" v-text="'€ '+ tender.immediate_price"></p>
+                                <p class="text-xs leading-none uppercase font-bold mt-2"> {{$t('tender.take_it')}}</p>
+                            </button>
+                        </div>
+                      
+                    </div>                             
                 </div>               
 
                <p class="text-sm" v-text="tender.description"> </p>                    
@@ -94,7 +99,15 @@
         
         methods:{
             takeItNow(){
-                this.ownsTender ? '' :  this.$modal.show('take-it-now', this.tender);                
+                if(!this.ownsTender && this.loggedIn && this.fullyAuthorized){
+                    this.$modal.show('take-it-now', this.tender)
+                }             
+            },
+
+            makeOffer(){
+                if(!this.ownsTender && this.loggedIn && this.fullyAuthorized){
+                    this.$modal.show('make-offer');
+                }            
             }
         }
         
