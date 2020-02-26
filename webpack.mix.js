@@ -26,3 +26,7 @@ mix
     .tailwind('tailwind.config.js')
     .purgeCss()   
     .browserSync('http://linoffery.test/');
+
+if (mix.inProduction()) {
+    mix.version();
+}
