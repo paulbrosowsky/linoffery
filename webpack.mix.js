@@ -8,7 +8,6 @@ if (mix.isWatching()) {
     mix.bundleAnalyzer();
 }
 
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

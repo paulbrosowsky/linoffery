@@ -11,7 +11,7 @@
         <!-- Fonts -->     
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
         <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
-        <link href="/css/app.css" rel="stylesheet">
+        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
         <style>
             [v-cloak] {
@@ -33,6 +33,6 @@
             <app><app>
         </div>
         
-        <script src="/js/app.js"></script>      
+        <script src="{{ mix('js/app.js') }}"></script>      
     </body>
 </html>
