@@ -16,7 +16,7 @@
                         </div>
                         
                         <div class="p-2">
-                            <button class="w-full btn btn-outlined btn-teal-outlined" @click="agree">
+                            <button class="w-full btn btn-outlined btn-teal-outlined bg-white" @click="agree">
                                 {{ $t('utilities.agree')}}
                             </button>
                         </div>

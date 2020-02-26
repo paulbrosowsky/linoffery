@@ -69,12 +69,7 @@ class AuthController extends Controller
                 if($value == false){
                     $fail(__('Please confirm our terms of use.'));
                 };                
-            }],
-            'payment_terms_accepted' => ['required', 'boolean', function($attribute, $value, $fail){ 
-                if($value == false){
-                    $fail(__('Please confirm our payment terms.'));
-                };                
-            }]            
+            }],                        
         ]);        
 
         $company = Company::create([

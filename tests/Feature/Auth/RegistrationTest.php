@@ -141,7 +141,7 @@ class RegistrationTest extends TestCase
     function terms_must_be_confirmed()
     {  
         $this->registerAccount( ['terms_accepted' => ''])->assertStatus(422);
-        $this->registerAccount( ['payment_terms_accepted' => ''])->assertStatus(422);
+        // $this->registerAccount( ['payment_terms_accepted' => ''])->assertStatus(422);
     }
 
    /** @test */

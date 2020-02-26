@@ -1,21 +1,26 @@
 <template>
     <section>
         <div class="mb-5">
-            <p class="text-xl text-teal-500">
-                {{ $t('content.terms_long')}}
-            </p>
-            <p class="text-gray-700">
-                {{ $t('auth.terms_info')}}
-            </p>
+            <p class="text-xl text-teal-500 leading-tight">
+                {{ $t('conditions.conclusion_of_contract')}}
+            </p>         
         </div>
 
-        <p class="text-xl text-gray-500 text-center h-screen">Hier kommt ein langer AGB Text ... </p>
+        <div>
+            <ol class="list-decimal" >
+                <li><p>{{ $t('conditions.contract_text_1')}}</p> </li>
+                <li><p>{{ $t('conditions.contract_text_2')}}</p> </li>
+                <li><p>{{ $t('conditions.contract_text_3')}}</p> </li>
+            </ol>
+
+           <conditions></conditions>
+        </div>        
 
         <div>
-            <p class="text-sm text-gray-700 mb-1">{{$t('auth.accept_terms')}}</p>
+            <p class="text-sm text-gray-700 mb-1">{{$t('conditions.accept_contitions_info')}}</p>
             <button class="btn flex btn-teal" @click="termsAccepted = true">
                 <svg class="h-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z"/></svg>
-                {{$t('utilities.accept')}}
+                {{$t('conditions.accept_conditions')}}
             </button>
         </div>
 
@@ -38,7 +43,10 @@
     </section> 
 </template>
 <script>
+    import Conditions from '../../legals/Conditions';
+
     export default {
+        components:{Conditions},
 
         data(){
             return{

@@ -96,5 +96,13 @@ body{
     @apply .text-teal-700;
 }
 
+.list-decimal li{
+    @apply .my-5 .ml-3;
+}
+
+h1{
+    @apply .text-3xl .text-teal-500 .leading-tight;
+}
+
 @tailwind utilities;
 

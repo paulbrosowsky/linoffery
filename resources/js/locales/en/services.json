@@ -1,0 +1,31 @@
+{
+    "header_text": "Linoffery ist eine innovative, transparente Logistikplattform für die digitale Fracht-Vermittlung in Echtzeit. Wir bitten einfache und smarte Lösungen für Verlader, Zulieferer, Handelsunternehmer und Speditionen, um Zeit zu sparen und Umsatz zu steigern.",
+    "services_title": "Wir verzichten absichtlich auf die umfangreiche Funktionen, und konzentrieren uns nur auf die wesentliche Vorteile.",
+    
+    "services_shipper": "Spare dir die zeitraubende Recherchen und Angebotsvergleiche auf der Suche nach der richtigen Spedition.",
+    "services_carrier": "Fülle deinen Laderaum egal ob auf dem Rückfahrt, bei Zwischentoren oder einfach unterwegs auf deiner Strecke.", 
+    
+    "create_tender_title": "Veröffentliche Ausschreibungen",
+    "create_tender_text": "Beschreibe deine Fracht, wähle den Wunschpreis, Abhol- und Lieferdatum und voilà. Durch ein paar Mausklicks ist deine Ausschreibung für jeden sichtbar.",
+
+    "choose_offer_title": "Wähle passende Angebote",
+    "choose_offer_text": "Erhalte Angebote von Speditionsfirmen in Echtzeit, und wähle den besten. Alle Angebote gelten solange deine Ausschreibung aktiv ist.",
+
+    "best_offer_title": "Vergebe sofort zum besten Preis",
+    "best_offer_text": "Wähle die Sofort-Preis-Option (der nindrigste Wunschpreis) in deiner Ausschreibung. Damit kannst du den Auftrag sofort vergeben, ohne Angebote zu vergleichen.",
+
+    "manange_tenders_title": "Verwalte deine Ausschreibungen",
+    "manange_tenders_text": "Was ist noch aktiv und wann endet es? Was ist der beste Angebot? Behalte alles im Auge, verwalte deine Ausschreibungen und Aufträge. ",
+
+    "find_tenders_title": "Finde passede Ausschreibungen",
+    "find_tenders_text": "Finde die passende Fracht auf deiner geplanten Strecke oder in nähere Umgebung. Nütze die Filter und suche nur die Aufträge, die auf dich zugeschnitten sind.",
+
+    "make_offers_title": "Gib dein Angebot ab",
+    "make_offers_text": "Sobald du die richtige Ausschreibung im Visier hast, gib dein Angebot ab. Nütze den passenden Zeitpunkt, um den besten Preis zu erzielen. ",
+
+    "take_now_title": "Sofort Zugreifen",
+    "take_now_text": "Kriege deine Ladefläche möglichst schnell voll, indem du die Sofort-Zugreifen-Option nützt. Das passt optimal für den Rückweg oder eine Zwischentour.",
+
+    "manange_orders_title": "Verwalte deine Angebote und Aufträge",
+    "manange_orders_text": "Behalte deine Angebote im Auge, bevor die Ausschreibung endet. Verwalte Aufträge, plane deine nächste Tour."    
+}

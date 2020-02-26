@@ -172,6 +172,7 @@ let routes = [
         component: CreateTender,
         meta:{
             layout: 'mapped',
+            requiresAuth: true,
         },  
     },
 

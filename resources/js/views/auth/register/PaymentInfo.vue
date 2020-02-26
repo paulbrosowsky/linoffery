@@ -3,21 +3,18 @@
         <div class="mb-5">
             <p class="text-xl text-teal-500">
                 {{ $t('auth.payment_terms')}}
-            </p>
-            <p class="text-gray-700">
-                {{ $t('auth.payment_info')}}
-            </p>
+            </p>           
         </div>
 
         <p class="text-xl text-gray-500 text-center h-screen">Hier kommen Zahlungshinweise ... </p>
 
-        <div>
+        <!-- <div>
             <p class="text-sm text-gray-700 mb-1">{{$t('auth.accept_payment_terms')}}</p>
             <button class="btn flex btn-teal" @click="paymentTermsAccepted = true">
                 <svg class="h-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z"/></svg>
                 {{$t('utilities.accept')}}
             </button>
-        </div>
+        </div> -->
 
         <div class="flex justify-between my-5">
             <button class="btn flex" @click.prevent="$emit('back')">                
@@ -40,7 +37,7 @@
     export default {
         data(){
             return{
-                paymentTermsAccepted: false,                
+                paymentTermsAccepted: true,                
             }
         },
 
