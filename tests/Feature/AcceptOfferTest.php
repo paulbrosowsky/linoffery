@@ -20,7 +20,7 @@ class AcceptOfferTest extends PassportTestCase
     {
         parent::setup();
         
-        // Storage::fake(); 
+        Storage::fake(); 
 
         $this->withExceptionHandling();
 
@@ -89,7 +89,7 @@ class AcceptOfferTest extends PassportTestCase
         $this->signIn($this->user);
         $order = $this->offer->accept();
 
-        Storage::disk()->assertExists('/public/pdf/orders/'.$order->custom_id.'.pdf');        
+        Storage::disk('public')->assertExists('pdf/orders/'.$order->custom_id.'.pdf');        
     }
 
     public function acceptOffer()

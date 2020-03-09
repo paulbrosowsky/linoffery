@@ -16,7 +16,7 @@ class MakeOfferTest extends PassportTestCase
     
     public function setUp():void
     {
-        parent::setup();
+        parent::setUp();
 
         $this->withExceptionHandling();
 

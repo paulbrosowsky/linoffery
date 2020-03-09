@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
+    use HasCustomId, HasPdf;
+
     protected $guarded = [];
 
-    // /**
-    //  *  Add PDF to the invoice
-    //  * 
-    //  * @param array $payload
-    //  */
-    // public function addPdf($payload)
-    // {
-    //     $this->update([
-    //         'pdf_url' => $payload['invoice_pdf'],
-    //         'hosted_url' => $payload['hosted_invoice_url']
-    //     ]);
-    // }
+    /**
+     *  Invoice Belongs To an Order
+     * 
+     * @return belongsTo
+     */
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }   
 }

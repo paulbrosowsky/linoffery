@@ -52,13 +52,16 @@ class OrderTest extends PassportTestCase
 
     /** @test */
     function it_knows_its_cost()
-    {        
-        $offer = create('App\Offer', ['price' => 100]);
+    {      
+        $price = 100;  
+        $offer = create('App\Offer', ['price' => $price]);
         $this->order->update([
             'offer_id' => $offer->id
-        ]);     
+        ]);    
+
+        $cost = $price*config('linoffery.payment.standard')/100;
        
-        $this->assertEquals(10, $this->order->cost);
+        $this->assertEquals($cost, $this->order->cost);
     }   
 
     

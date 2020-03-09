@@ -27,7 +27,7 @@ class AddTransportTypeIdToFreightsTable extends Migration
     public function down()
     {
         Schema::table('freights', function (Blueprint $table) {
-            $table->unsignedInteger('transport_type_id')->nullable();
+            $table->dropColumn('transport_type_id');
         });
     }
 }

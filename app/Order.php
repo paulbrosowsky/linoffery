@@ -2,13 +2,12 @@
 
 namespace App;
 
-use PDF;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
-    use HasCustomId;
+    use HasCustomId, Invoiceable, HasPdf;
     
     protected $guarded = [];
 
@@ -62,7 +61,7 @@ class Order extends Model
      * @return float
      */
     public function getCostAttribute()
-    {   
+    {           
         // price in euro * (sevice fee in % * / 100%)  
         $cost = $this->offer->price * (config('linoffery.payment.standard')/100);  
 
@@ -75,31 +74,29 @@ class Order extends Model
     public function makePdf()
     {       
         $pickup = $this->tender->locations->where('type', 'pickup')->first();
-        $delivery = $this->tender->locations->where('type', 'delivery')->first();        
-
-        $pdf = PDF::loadView('pdf.order', [
-            'order' => $this,
-            'tender' => $this->tender,
-            'shipper' => $this->tenderer,
-            'carrier' => $this->carrier,
+        $delivery = $this->tender->locations->where('type', 'delivery')->first();  
+        
+        // Make PDF For Shipper
+        $this->createPdf('pdf.order', [
+            'order' => $this,            
             'pickup' => $pickup,
-            'delivery' => $delivery,
-            'loads' =>  $this->tender->freights,            
-        ]); 
-    
-        $dom_pdf = $pdf->getDomPDF();        
-
-        $canvas = $dom_pdf ->get_canvas(); 
-        $canvas->page_text(500, 780, __("Page {PAGE_NUM} of {PAGE_COUNT}"), null, 10, array(0, 0, 0));
-
-        Storage::disk('public')->put('pdf/orders/'.$this->custom_id.'.pdf', $pdf->output());        
+            'delivery' => $delivery,            
+            'receiver' => $this->tenderer->company
+        ], 'shipper'); 
+        // Make PDF For Carrier
+        $this->createPdf('pdf.order', [
+            'order' => $this,            
+            'pickup' => $pickup,
+            'delivery' => $delivery,            
+            'receiver' => $this->carrier->company
+        ], 'carrier'); 
     }
 
-    /**
-     *  Mark Order as billable when invoice was created    
-     */
-    public function markAsBilled()
-    {
-        $this->update(['billed_at' => now()]);
-    }
+    // /**
+    //  *  Mark Order as billable when invoice was created    
+    //  */
+    // public function markAsBilled()
+    // {
+    //     $this->update(['billed_at' => now()]);
+    // }
 }

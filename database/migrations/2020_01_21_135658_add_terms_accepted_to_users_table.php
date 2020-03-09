@@ -27,8 +27,7 @@ class AddTermsAcceptedToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('terms_accepted_at');
-            $table->timestamp('payment_terms_accepted_at');
+            $table->dropColumn(['terms_accepted_at', 'payment_terms_accepted_at']);
         });
     }
 }

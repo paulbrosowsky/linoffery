@@ -18,6 +18,6 @@ $factory->define(Order::class, function (Faker $faker) {
         },
         'carrier_id'=> function(){
             return factory('App\User')->create()->id;
-        },
+        },        
     ];
 });

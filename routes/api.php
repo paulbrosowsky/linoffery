@@ -45,7 +45,7 @@ Route::group([
     Route::get('/dashboard/tenders', 'TendersDashboardController@index');
 
     Route::get('/orders', 'OrdersController@index');
-    Route::get('/orders/{order}', 'OrdersController@show');
+    Route::get('/orders/{order}', 'OrdersController@show')->name('order.show');
     Route::get('/orders/{order}/pdf', 'OrdersController@pdf');
     Route::patch('/orders/{order}/update', 'OrdersController@update');
 
@@ -100,3 +100,5 @@ Route::get('/categories', 'CategoriesController@index');
 Route::get('/transport-types', 'TransportTypesController@index');
 
 Route::post('/stripe/webhook', 'StripeWebhooksController@handle');
+
+Route::get('/mollie/webhook', 'MollieWebhooksController@index')->name('mollie.webhook');

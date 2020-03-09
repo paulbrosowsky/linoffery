@@ -8,8 +8,14 @@ return [
     ],
 
     'payment' => [
-        // payment percentage
-        'standard' => 10
+        // Linoffery Service Fee in Percent %
+        'standard' => 17
+    ],
+
+    'admin' => [
+        'max.lindemann@linoffery.com',
+        'paul.brosowsky@gmail.com',
+        'john@example.com'
     ]
 
 ];

@@ -12,7 +12,7 @@ class DownloadOrderPdfTest extends PassportTestCase
     
     /** @test */
     function unautorized_users_may_not_download_pdf()
-    {        
+    {         
         $order = create('App\Order');
 
         $this->signIn()->withExceptionHandling();
@@ -23,9 +23,7 @@ class DownloadOrderPdfTest extends PassportTestCase
 
     /** @test */
     function participans_may_download_orders_pdf()
-    {
-        // Storage::fake(); 
-
+    {           
         $order = create('App\Order');
         create('App\Location', [
             'type' => 'pickup',
@@ -40,8 +38,8 @@ class DownloadOrderPdfTest extends PassportTestCase
         ]);
 
         $this->signIn($order->tenderer);
-        
-        $this->getJson('/api/orders/'.$order->id.'/pdf')->assertStatus(200);            
+                
+        $this->getJson('/api/orders/'.$order->id.'/pdf')->assertStatus(200);
     }
     
 }

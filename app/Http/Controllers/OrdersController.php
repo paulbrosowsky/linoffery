@@ -16,7 +16,7 @@ class OrdersController extends Controller
      * @return Order
      */
     public function index()
-    {
+    {        
         return Order::where('tenderer_id', auth()->id())
                     ->orWhere('carrier_id', auth()->id())
                     ->with('tender')
@@ -60,17 +60,15 @@ class OrdersController extends Controller
      * @return Response $file
      */
     public function pdf(Order $order)
-    {        
-        $this->authorize('view', $order); 
+    {           
+        $this->authorize('view', $order);  
 
-        // $file = Storage::disk('public')->url('/pdf/orders/'.$order->custom_id.'.pdf');
-        
-        $file= storage_path('app/public/pdf/orders/'.$order->custom_id.'.pdf');
-        
-        if(!Storage::disk('public')->exists('pdf/orders/'.$order->custom_id.'.pdf')){
+        $path = 'pdf/orders/'.$order->custom_id.'.pdf';
+
+        if(!Storage::disk('public')->exists($path)){                                  
             $order->makePdf();
-        }  
-
-        return response()->download($file);
+        }     
+        
+        return Storage::disk('public')->download($path);        
     }
 }

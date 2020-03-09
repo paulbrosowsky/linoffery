@@ -28,9 +28,7 @@ class AddLoadingTimeAndExchangePalletToLocationsTable extends Migration
     public function down()
     {
         Schema::table('locations', function (Blueprint $table) {
-            $table->boolean('exchange_pallet')->default(false)->nullable();
-            $table->string('loading_start')->nullable();
-            $table->string('loading_end')->nullable();
+            $table->dropColumn(['exchange_pallet', 'loading_start', 'loading_end']);            
         });
     }
 }

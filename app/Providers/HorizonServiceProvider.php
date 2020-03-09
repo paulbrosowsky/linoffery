@@ -5,6 +5,7 @@ namespace App\Providers;
 use Laravel\Horizon\Horizon;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class HorizonServiceProvider extends HorizonApplicationServiceProvider
 {
@@ -18,11 +19,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         parent::boot();
 
         Horizon::auth(function ($request) { 
-            $authorized = in_array($request->user()->email, [
-                'max.lindemann@linoffery.com',
-                'paul.brosowsky@gmail.com',
-                'john@example.com'
-            ]);
+            $authorized = in_array($request->user()->email, config('linoffery.admin'));
 
             if ( !$authorized ) {
                 throw new UnauthorizedHttpException('Unauthorized');

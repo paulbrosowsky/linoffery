@@ -8,6 +8,7 @@ use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class NotificationTest extends PassportTestCase
 {
@@ -17,6 +18,7 @@ class NotificationTest extends PassportTestCase
     {
         parent::setUp();
 
+        Storage::fake('public');
         $this->signIn();
     }
     
@@ -178,8 +180,5 @@ class NotificationTest extends PassportTestCase
         $response = $this->getJson('api/notifications')->json();    
            
         $this->assertCount(1, $response);
-    }
-
-
-    
+    }    
 }

@@ -11,6 +11,17 @@
 |
 */
 
-Route::get('/{any}', function () {
+Route::get('/{any}', function () {    
     return view('app');
 })->where('any', '.*');
+
+// use App\Mail\PayInvoiceEmail;
+
+// Route::get('/pdf', function(){
+
+//     $invoice = App\Invoice::first();
+
+//     return (new PayInvoiceEmail($invoice))->render();
+    
+   
+// });

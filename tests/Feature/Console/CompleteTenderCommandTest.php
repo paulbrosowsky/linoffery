@@ -7,7 +7,7 @@ use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 
-class CompleteUserCommandTest extends PassportTestCase
+class CompleteTenderCommandTest extends PassportTestCase
 {
     use RefreshDatabase;
     

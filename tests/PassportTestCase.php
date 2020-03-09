@@ -31,7 +31,7 @@ class PassportTestCase extends TestCase
             'client_id' => $client->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-        ]); 
+        ]);         
     }
 
     public function signIn($user = null)
