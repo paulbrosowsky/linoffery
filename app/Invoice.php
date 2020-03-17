@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\InvoiceCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
@@ -9,6 +10,14 @@ class Invoice extends Model
     use HasCustomId, HasPdf;
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function($invoice){
+            InvoiceCreated::dispatch($invoice);
+        });        
+    }
 
     /**
      *  Invoice Belongs To an Order

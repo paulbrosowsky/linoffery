@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Http\UploadedFile;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,18 +16,23 @@ trait HasPdf
      * @return  
      */
     public function createPdf($layout, $content, $attributes = NULL)
-    {       
-        $pdf = PDF::loadView($layout, $content); 
+    {            
+        if(env('APP_ENV') != 'testing'){
+            $pdf = PDF::loadView($layout, $content); 
+            
+            $dom_pdf = $pdf->getDomPDF();        
     
-        $dom_pdf = $pdf->getDomPDF();        
-
-        $canvas = $dom_pdf ->get_canvas(); 
-        // Create Page Number in PDF Footer
-        $canvas->page_text(500, 805, __("{PAGE_NUM} of {PAGE_COUNT}"), null, 10, array(0, 0, 0));
+            $canvas = $dom_pdf ->get_canvas(); 
+            // Create Page Number in PDF Footer
+            $canvas->page_text(500, 805, __("{PAGE_NUM} of {PAGE_COUNT}"), null, 10, array(0, 0, 0));
+        }else{
+            $pdf = UploadedFile::fake()->create('test.pdf'); 
+        }     
         
-        $path = $this->makePath($attributes); 
+        $path = $this->makePath($attributes);         
+        
         $this->storePdf($path, $pdf);
-
+        
         return $path;
     }
 
@@ -50,10 +56,13 @@ trait HasPdf
      * @param File $pdf   
      */
     protected function storePdf($path, $pdf)
-    {
-        // If Testing Mode use Fake Storage
-        env('APP_ENV') === 'testing' ? Storage::fake('public') : '';
-        
-        Storage::disk('public')->put($path, $pdf->output()); 
+    {        
+        if(env('APP_ENV') != 'testing'){
+             Storage::disk('public')->put($path, $pdf->output()); 
+        }else{
+            // If Testing Mode use Fake Storage
+            Storage::fake('public');
+            Storage::disk('public')->put($path, $pdf); 
+        }        
     }
 }

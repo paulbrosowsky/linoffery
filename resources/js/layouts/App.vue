@@ -94,7 +94,14 @@
 
         created() {            
             this.retriveLocale();            
-            this.fetchCategories();
+            this.fetchCategories();     
+            
+
+            if(this.$store.getters.loggedIn){
+                setTimeout(() => {
+                    this.$store.dispatch('loginToNotificationBroadcast');
+                }, 2000);                  
+            }   
 
             // Load Tawk.to when cookies are agreed
             if (this.agreeCookies) {

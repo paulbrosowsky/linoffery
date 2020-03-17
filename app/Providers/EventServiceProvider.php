@@ -2,6 +2,18 @@
 
 namespace App\Providers;
 
+use App\Events\InvoiceCreated;
+use App\Events\OfferCreated;
+use App\Events\OrderCreated;
+use App\Events\TenderCompleted;
+use App\Listeners\CompleteTender;
+use App\Listeners\CreateInvoice;
+use App\Listeners\CreatePayment;
+use App\Listeners\CreatePdf;
+use App\Listeners\NotifyOutbiddedUsers;
+use App\Listeners\NotifyTenderOfferer;
+use App\Listeners\NotifyTenderOwner;
+use App\Listeners\RemoveUnusedOffers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -18,6 +30,34 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        OfferCreated::class => [            
+            NotifyOutbiddedUsers::class
+        ],
+
+        OrderCreated::class => [
+            CompleteTender::class,               
+            CreateInvoice::class                 
+        ],
+
+        TenderCompleted::class => [
+            RemoveUnusedOffers::class,
+        ],   
+        
+        InvoiceCreated::class => [
+            CreatePayment::class
+        ]
+    ];
+
+     /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        NotifyTenderOfferer::class,
+        NotifyTenderOwner::class,
+        CreatePdf::class
     ];
 
     /**

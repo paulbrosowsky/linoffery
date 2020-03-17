@@ -7,7 +7,7 @@ trait HasCustomId{
     protected static function bootHasCustomId()
     {  
         static::created(function($model){            
-            $model->generateTenderId($model);
+            $model->generateCustomId($model);
         });           
     }
 
@@ -16,7 +16,7 @@ trait HasCustomId{
      * 
      * @param Model 
      */
-    protected function generateTenderId($model)
+    protected function generateCustomId($model)
     {
         preg_match('/^.{0,2}/', class_basename($model), $short);
 
@@ -27,7 +27,7 @@ trait HasCustomId{
         $numberExists = $model->whereCustomId($number)->exists();  
         
         if($numberExists){                      
-            return $model->generateTenderId($model);
+            return $model->generateCustomId($model);
         }  
 
         $model->update(['custom_id' => $number]);        

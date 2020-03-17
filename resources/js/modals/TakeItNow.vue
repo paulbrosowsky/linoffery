@@ -75,11 +75,13 @@
                     .then(response =>{
                         flash(this.$i18n.t('tender.make_offer_message')); 
                         setTimeout(() => {
-                            flash(this.$i18n.t('tender.take_now_message'))
+                            flash(this.$i18n.t('tender.take_now_message')) 
+                            console.log(response);
+                                                       
                             this.$router.push({name:'order', params:{ order: response.data.id }})                        
                             this.close()
                             this.loading = false 
-                        }, 1000);                         
+                        }, 2000);                         
                     })
                     .catch(errors =>{                        
                         if(errors.response.status == 403){                            

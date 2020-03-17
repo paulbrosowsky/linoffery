@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Unit ;
 
 use App\Notifications\OfferWasAccepted;
@@ -18,8 +17,8 @@ class NotificationTest extends PassportTestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
-        $this->signIn();
+        Storage::fake();
+        $this->signIn();        
     }
     
     /** @test */
@@ -48,7 +47,7 @@ class NotificationTest extends PassportTestCase
         ]);       
 
         $this->assertEquals($tender->fresh()->lowest_offer, $offer->price);
-
+       
         $tender->addOffer([
             'user_id' => create('App\User')->id,
             'tender_id' => $tender->id,
@@ -60,20 +59,21 @@ class NotificationTest extends PassportTestCase
 
     /** @test */
     function offerers_recieve_notifications_if_tender_is_compeded()
-    {
+    {        
         $tender = create('App\Tender');
         create('App\Offer', [
             'user_id' => auth()->id(),
             'tender_id' => $tender->id,
         ], 3);
 
-        $tender -> complete();
+        $tender->complete();
         $this->assertCount(1, auth()->user()->unreadNotifications);
     }
 
     /** @test */
     function order_participants_recieve_notifications_if_offer_have_been_accepted()
-    {   
+    {           
+        
         $offer = create('App\Offer', [
             'user_id' => auth()->id(),          
         ]);
@@ -105,7 +105,7 @@ class NotificationTest extends PassportTestCase
     function order_participants_recieve_emails_if_offer_have_been_accepted()
     {
         Notification::fake();
-
+        $this->withoutExceptionHandling();
         $offer = create('App\Offer', [
             'user_id' => auth()->id(),          
         ]);
@@ -130,7 +130,13 @@ class NotificationTest extends PassportTestCase
         $offer->accept($order);  
 
         Notification::assertSentTo($order->tenderer, OfferWasAccepted::class);
-        Notification::assertSentTo($order->carrier, OfferWasAccepted::class);
+        Notification::assertSentTo(
+            $order->carrier, 
+            OfferWasAccepted::class, 
+            function($notifiaction){                
+                return $notifiaction->toMail(auth()->user())->attachments > 0;
+        });
+        
     }
 
     /** @test */

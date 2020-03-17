@@ -36,9 +36,7 @@
 
                 <tender-info
                     class="pt-5" 
-                    :tender="tender"
-                    v-if="!editTender"
-                    @edit="editTender = !editTender"
+                    :tender="tender"                    
                 ></tender-info> 
                 
                 <!-- Locations Info START -->
@@ -70,7 +68,7 @@
                         <p class="uppercase text-sm text-gray-500">{{$t('tender.freight_details')}}</p>                        
                     </div>  
 
-                    <freight-info :freights="tender.freights" v-if="hasFreights && !editFreights"></freight-info>            
+                    <freight-info :freights="tender.freights" v-if="hasFreights"></freight-info>            
                 </div>
                 <!-- Load Info START -->
                 

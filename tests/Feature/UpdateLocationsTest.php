@@ -108,6 +108,8 @@ class UpdateLocationsTest extends PassportTestCase
 
         return $this->patchJson('api/locations/'.$this->location->id.'/update', array_merge([                     
             'address' => 'Hauptstr.2, 12345 Musterstadt, Deutschland',
+            'city' => 'Musterstadt',
+            'country' => 'Deutschland',
             'lat' => 15,
             'lng' => 50,
             'latest_date' => \Carbon\Carbon::now(),

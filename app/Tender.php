@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Events\OfferCreated;
+use App\Events\TenderCompleted;
 use Carbon\Carbon;
 use App\Filters\TenderFilters;
 use App\Notifications\OfferWasCreated;
@@ -154,7 +156,6 @@ class Tender extends Model
         return $this->order ? $this->order->id : NULL;
     }
 
-
     /**
      * Apply all relevant Tender filters.
      *
@@ -175,70 +176,29 @@ class Tender extends Model
      */
     public function addOffer($offer)
     {   
-        $this->notifyOutbiddedUsers($offer);        
-        
         $offer = $this->offers()->create($offer); 
 
-        $this->notifyTendersOwner($offer);
+        OfferCreated::dispatch($this, $offer);  
 
         return $offer;
-    }
-
-    /**
-     *  Notify Tender owner about new offer
-     * @param Offer
-     */
-    protected function notifyTendersOwner($offer)
-    {
-        $this->user->notify(new OfferWasCreated($this, $offer));                  
-    }
-
-    /**
-     *  Notify outbidded offer owners
-     * @param array
-     */
-    protected function notifyOutbiddedUsers($offer)
-    {        
-        $lowestOffer = $this->offers()->where('price', $this->offers()->min('price'))->first();
-      
-        if($lowestOffer && $lowestOffer->price > $offer['price']){
-            $lowestOffer->user->notify(new OfferWasOutbidded($this, $offer));
-        }
-    }
+    }   
+    
 
     /**
      * Set Tender as completed
      */
     public function complete($withClone = null)
     {      
-        $this->update(['completed_at' => Carbon::now()]);
+        $this->update(['completed_at' => now()]);
 
-        $offerers = $this->removeUnacceptedOffers();
+        TenderCompleted::dispatch($this);
 
-        if($withClone){
-            $this->cloneTender($offerers);            
-        }
-    }
-    
-    /**
-     * Delete all unaccepted offers
-     */
-    protected function removeUnacceptedOffers()
-    {   
-        $offers = $this->offers->where('accepted_at', NULL);
-        $users = collect(); 
-
-        $offers->each(function($offer) use ($users) {
-            $users = $users->push($offer->user);            
-            $offer->delete();
-        });
         
-        $users->unique()->each(function($user){
-            $user->notify(new TenderIsCompleted($this));
-        }); 
-        
-        return $users;
-    }
+
+        // if($withClone){
+        //     $this->cloneTender($offerers);            
+        // }
+    }   
 
     /**
      * Clone Tender and Delete Original

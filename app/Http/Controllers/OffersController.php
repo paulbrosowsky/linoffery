@@ -33,16 +33,14 @@ class OffersController extends Controller
      * @return Offer
      */
     public function store(Tender $tender, Request $request)
-    {
-        $maxPrice = $tender->max_price;
-
+    { 
         $request->validate([
             'price' => [
                 'required',
                 'numeric',
                 'gt:1',
-                function ($attribute, $value, $fail) use ($maxPrice){                                      
-                    if ($value > $maxPrice) {
+                function ($attribute, $value, $fail) use ($tender){                                      
+                    if ($value > $tender->max_price) {
                         $fail(__('The value is greater them tenders max. price.'));
                     }
                 },
@@ -56,11 +54,10 @@ class OffersController extends Controller
         if($tender->isActive){
             $offer = $tender->addOffer([
                 'user_id' => auth()->id(),
-                'tender_id' => $tender->id,
                 'price' => $request->price
-            ]);         
+            ]); 
             
-            if($request->takeNow){
+            if($request->takeNow){              
                 return $offer->accept();            
             }
 
@@ -80,9 +77,7 @@ class OffersController extends Controller
     {
         $this->authorize('show', $offer->tender);
 
-        $order = $offer->accept();
-
-        return $order;
+        return $offer->accept();        
     }
 
     /**

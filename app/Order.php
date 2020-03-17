@@ -2,20 +2,30 @@
 
 namespace App;
 
+use App\Events\OrderCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
-    use HasCustomId, Invoiceable, HasPdf;
+    use HasCustomId, HasPdf;
     
     protected $guarded = [];
 
     protected $with = ['tenderer', 'carrier', 'offer'];
 
-    protected $appends = ['cost'];
+    protected $appends = ['cost'];  
+    
+    protected static function boot(){
 
-     /**
+        parent::boot();
+
+        static::created(function($order){
+            OrderCreated::dispatch($order); 
+        });
+    }
+
+    /**
      * A Order belong to a tenderer
      * 
      * @return belondsTo
@@ -72,24 +82,26 @@ class Order extends Model
      *  Make Order as PDF ans save them in the storage     
      */
     public function makePdf()
-    {       
+    {      
         $pickup = $this->tender->locations->where('type', 'pickup')->first();
         $delivery = $this->tender->locations->where('type', 'delivery')->first();  
-        
+       
         // Make PDF For Shipper
-        $this->createPdf('pdf.order', [
+        $shipperPdf =$this->createPdf('pdf.order', [
             'order' => $this,            
             'pickup' => $pickup,
-            'delivery' => $delivery,            
-            'receiver' => $this->tenderer->company
+            'delivery' => $delivery, 
+            'receiver' => $this->tenderer->company         
         ], 'shipper'); 
         // Make PDF For Carrier
-        $this->createPdf('pdf.order', [
+        $carrierPdf = $this->createPdf('pdf.order', [
             'order' => $this,            
             'pickup' => $pickup,
             'delivery' => $delivery,            
             'receiver' => $this->carrier->company
         ], 'carrier'); 
+
+        return isset($shipperPdf) && isset($carrierPdf);
     }
 
     // /**

@@ -15,13 +15,14 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
 
-// use App\Mail\PayInvoiceEmail;
+// use App\Events\InvoiceCreated;
+// use App\Events\PaymentCreated;
+// use App\Notifications\OfferWasAccepted;
 
-// Route::get('/pdf', function(){
+// Route::get('/email', function(){
 
-//     $invoice = App\Invoice::first();
-
-//     return (new PayInvoiceEmail($invoice))->render();
+//     $invoice = App\Invoice::where('custom_id', 'IN68673-68204')->first();
     
-   
+//     PaymentCreated::dispatch($invoice);
+    
 // });

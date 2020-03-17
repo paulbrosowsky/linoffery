@@ -30,7 +30,7 @@ class PayInvoiceEmail extends Mailable implements ShouldQueue
      * @return $this
      */
     public function build()
-    {   
+    {           
         $file = Storage::disk('public')->url($this->invoice->pdf_url);        
         
         return $this->markdown('emails.pay-invoice')

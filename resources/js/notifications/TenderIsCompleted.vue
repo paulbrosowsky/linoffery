@@ -3,31 +3,22 @@
 
         <div class="flex items-center justify-between">
             <p class="test-sm tracking-tight text-gray-500" v-text="message"></p>
-            <p class="text-xs tracking-tight text-gray-500" v-if="created_at" v-text="created_at"></p>
+            <p class="text-xs tracking-tight text-gray-500" v-text="createdAt"></p>
         </div>
         <p class="truncate font-bold leading-tight" v-text="tender"></p>
     </div>
 </template>
 <script>
     export default {
-        props:['notification'],
+        props:['notification', 'createdAt'],
 
         data(){
             return{ 
-                tender: this.notification.data.tender_title,
-                message: this.notification.data.message,
+                tender: this.notification.tender_title,
+                message: this.notification.message,
                 
             }
-        },
-
-        computed:{
-            created_at(){  
-                if (this.notification.created_at) {
-                    let locale = navigator.language || navigator.userLanguage
-                    return  this.$moment( ).locale(locale).fromNow()
-                }
-            }
-        },
+        },       
 
         methods:{
             read(){
@@ -37,7 +28,7 @@
                         .then(()=>{                        
                             this.$modal.hide('notification-drawer')
                         })
-                }                
+                }               
                 
             },            
         },

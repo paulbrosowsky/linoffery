@@ -16,14 +16,14 @@
 
         data(){
             return{                
-                tenderId: this.notification.data.tender_id,
-                tender: this.notification.data.tender_title,
-                message: this.notification.data.message,              
+                tenderId: this.notification.tender_id,
+                tender: this.notification.tender_title,
+                message: this.notification.message,              
             }
         },
 
         computed:{
-            created_at(){  
+            created_at(){      
                 if (this.notification.created_at) {
                     let locale = navigator.language || navigator.userLanguage
                     return  this.$moment( ).locale(locale).fromNow()

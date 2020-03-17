@@ -6,6 +6,7 @@ namespace Tests\Feature;
 use App\Order;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 class MakeOfferTest extends PassportTestCase
 {
@@ -22,6 +23,15 @@ class MakeOfferTest extends PassportTestCase
 
         $this->tender = create('App\Tender');
         $this->user = create('App\User');
+
+        create('App\Location', [
+            'type' => 'pickup',
+            'tender_id' => $this->tender->id
+        ]);
+        create('App\Location', [
+            'type' => 'delivery',
+            'tender_id' => $this->tender->id
+        ]);  
     }
 
      /** @test */
@@ -35,6 +45,7 @@ class MakeOfferTest extends PassportTestCase
     /** @test */
     function authorized_users_may_make_offers()
     {
+        $this->withoutExceptionHandling();
         $this->makeOffer();      
         
         $this->assertCount(1, $this->tender->offers);  
@@ -55,15 +66,7 @@ class MakeOfferTest extends PassportTestCase
         $this->user->company->update(['address' => null]);  
              
         $this->makeOffer()->assertStatus(401);        
-    }
-
-    // /** @test */
-    // function a_users_maus_have_payment_informations_to_make_offer()
-    // { 
-    //     $this->user->company->update(['stripe_id' => null]);  
-             
-    //     $this->makeOffer()->assertStatus(401);        
-    // }
+    }   
 
     /** @test */
     function tender_owners_may_not_make_offers()
@@ -132,8 +135,8 @@ class MakeOfferTest extends PassportTestCase
     }    
 
     /** @test */
-    function users_may_place_order_immediatly()
-    {
+    function users_may_place_order_immediatly()    
+    {    
         $this->makeOffer(['takeNow' => true]);
 
         $this->assertCount(1, $this->tender->offers);
@@ -142,7 +145,7 @@ class MakeOfferTest extends PassportTestCase
         
         $this->assertEquals($this->tender->id, $order->tender_id);        
         $this->assertEquals($this->tender->user_id, $order->tenderer_id);
-        $this->assertCount(1, $this->tender->user->unreadNotifications);
+        $this->assertCount(2, $this->tender->user->unreadNotifications);
     }
 
     /** @test */

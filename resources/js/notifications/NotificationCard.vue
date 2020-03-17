@@ -1,8 +1,6 @@
 <template>
-    <div class="py-3 border-b cursor-pointer hover:bg-gray-100">
-
-        <component :is="component" :notification="notification"></component>
-
+    <div class="py-3 cursor-pointer w-full hover:bg-gray-100">        
+        <component :is="component" :notification="notificationData" :createdAt="createdAt"></component> 
     </div>
 </template>
 <script>
@@ -23,15 +21,24 @@
             tenderwascloned: TenderWasCloned
         },
 
-        props:['notification'],  
+        props:['notification'],          
 
         computed:{
-            component(){               
+            component(){                  
                 let type =  this.notification.type.match(/([a-z_A-Z]*)$/g)             
                 return type[0].toLowerCase()
-            }
-        },
+            },
 
-        
+            notificationData(){
+                return this.notification.hasOwnProperty('data') ? this.notification.data : this.notification;
+            },
+
+            createdAt(){
+                if( this.notification.hasOwnProperty('created_at')){
+                    let locale = navigator.language || navigator.userLanguage
+                    return  this.$moment(this.notification.created_at).locale(locale).fromNow()
+                }               
+            },            
+        },              
     }
 </script>

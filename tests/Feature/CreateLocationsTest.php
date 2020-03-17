@@ -135,6 +135,8 @@ class CreateLocationsTest extends PassportTestCase
             'tender_id' => $this->tender->id,
             'type' => 'pickup',
             'address' => 'Hauptstr.2, 12345 Musterstadt, Deutschland',
+            'city' => 'Musterstadt',
+            'country' => 'Deutschland',
             'lat' => 15,
             'lng' => 50,
             'latest_date' => \Carbon\Carbon::now(),

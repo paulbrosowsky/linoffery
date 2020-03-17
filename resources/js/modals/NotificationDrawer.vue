@@ -55,19 +55,13 @@
             readAll(){
                 this.$store
                     .dispatch('readAllNotifications')
-                    .then(()=>this.$modal.hide('notification-drawer'))
-                
+                    .then(()=>this.$modal.hide('notification-drawer'));
             }
-        }, 
+        },  
         
         created(){
-            setTimeout(() => {
-                window.Echo.private('App.User.' + this.$store.state.user.id)
-                    .notification((notification) => {
-                        flash(notification, 'info');
-                        this.$store.dispatch('fetchNotifications');
-                    });
-            }, 1000);
+            this.$store.dispatch('fetchNotifications');
         }
+        
     }
 </script>

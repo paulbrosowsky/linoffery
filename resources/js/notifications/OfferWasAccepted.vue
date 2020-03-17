@@ -1,14 +1,13 @@
 <template>
     <div class="flex items-center w-full px-5 cursor-pointer" @click="read">
-
-        <!-- <img class="w-10 h-10 rounded-full shadow-md" :src="user" alt=""> -->
-        <div class="w-1/5">
+        
+        <div class="mr-3 whitespace-no-wrap">
             <span class="text-xl font-light leading-none " v-text="'€ '+price"></span>
         </div>
-        <div class="w-4/5 ">
+        <div class="overflow-hidden">
              <div class="flex items-center justify-between">
                 <p class="tracking-tight text-sm text-gray-500" v-text="message"></p>
-                <p class="text-xs tracking-tight text-gray-500" v-if="created_at" v-text="created_at"></p>
+                <p class="text-xs tracking-tight text-gray-500" v-text="createdAt"></p>
             </div>
             <p class="truncate font-bold leading-tight" v-text="tender"></p>           
         </div>
@@ -17,25 +16,16 @@
 </template>
 <script>
     export default {
-        props:['notification'],
+        props:['notification', 'createdAt'],
 
         data(){
             return{                
-                orderId: this.notification.data.order_id,
-                tender: this.notification.data.tender_title,
-                message: this.notification.data.message,
-                price: this.notification.data.price,
+                orderId: this.notification.order_id,
+                tender: this.notification.tender_title,
+                message: this.notification.message,
+                price: this.notification.price,
             }
-        },
-
-        computed:{
-            created_at(){  
-                if (this.notification.created_at) {
-                    let locale = navigator.language || navigator.userLanguage
-                    return  this.$moment( ).locale(locale).fromNow()
-                }
-            }
-        },
+        },      
 
         methods:{
             read(){

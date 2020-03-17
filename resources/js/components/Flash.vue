@@ -6,58 +6,45 @@
                 style="max-width: 420px"
                 v-if="notification"
             > 
-                <component :is="component" :notification="{data: notification}"></component>
+                <component 
+                    :is="notification.type" 
+                    :notification="notification.message"
+                    :type="notification.type"
+                ></component>
             </div>
         </div>       
 
     </transition>
     
 </template>
-<script>
-    import OfferWasCreated from '../notifications/OfferWasCreated'
-    import OfferWasOutbidded from '../notifications/OfferWasOutbidded'
-    import TenderIsCompleted from '../notifications/TenderIsCompleted'
-    import TenderWasCloned from '../notifications/TenderWasCloned'
-    import OfferWasAccepted from '../notifications/OfferWasAccepted' 
-    import Flash from '../notifications/Flash';   
+<script>  
+    import FlashNotification from '../notifications/FlashNotification';
+    import NotificationCard from '../notifications/NotificationCard';  
 
     export default { 
-        components:{
-            offerwascreated: OfferWasCreated,
-            offerwasoutbidded: OfferWasOutbidded, 
-            tenderiscompleted: TenderIsCompleted,           
-            offerwasaccepted: OfferWasAccepted, 
-            tenderrunout: TenderIsCompleted,
-            tenderwascloned: TenderWasCloned,
-            success: Flash,
-            danger: Flash,
+        components:{  
+            info: NotificationCard,        
+            success: FlashNotification,
+            danger: FlashNotification,
         },
 
         data(){
             return{
-                notification:null,                
+                notification:null,                             
                 show: false
             }
-        },
-
-        computed:{
-            component(){               
-                let type =  this.notification.type.match(/([a-z_A-Z]*)$/g)             
-                return type[0].toLowerCase()
-            }
-        },
+        },        
 
         methods:{
-            flash(data){                
-                this.notification = data ;
+            flash(data){                 
+                this.notification = data;          
                 this.show = true;
                 this.hide();
             },
 
             hide(){
                 setTimeout(()=>{
-                    this.show = false
-                    this.message = null
+                    this.show = false               
                     this.notification = null 
                 }, 5000)
             }

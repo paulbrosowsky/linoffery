@@ -21,7 +21,9 @@ class LocationsController extends Controller
         $request->validate([
             'tender_id' => 'required|exists:tenders,id',
             'type' => ['required', Rule::in(['pickup', 'delivery'])],
-            'address' => 'required|string',            
+            'address' => 'required|string', 
+            'city' => 'required',
+            'country' => 'required',          
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'latest_date' => 'required|date',
@@ -63,6 +65,8 @@ class LocationsController extends Controller
 
         $request->validate([  
             'address' => 'required|string',
+            'city' => 'required',
+            'country' => 'required',  
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'latest_date' => 'required|date',

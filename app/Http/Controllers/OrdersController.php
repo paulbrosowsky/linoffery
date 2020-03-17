@@ -63,7 +63,9 @@ class OrdersController extends Controller
     {           
         $this->authorize('view', $order);  
 
-        $path = 'pdf/orders/'.$order->custom_id.'.pdf';
+        $attribute = auth()->id() === $order->carrier->id ? 'carrier' : 'shipper';
+
+        $path = 'pdf/orders/'.$order->custom_id.'_'.$attribute.'.pdf';
 
         if(!Storage::disk('public')->exists($path)){                                  
             $order->makePdf();

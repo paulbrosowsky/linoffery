@@ -9,16 +9,19 @@ use Mollie\Laravel\Facades\Mollie;
 
 trait Invoiceable
 {
-    /**
-     *  Boot the Model
-     */
-    protected static function bootInvoiceable()
-    {  
-        static::created(function($model){            
-            $invoice = $model->createInvoice();            
-            $model->sendInvoiceEmail($invoice);
-        });           
-    } 
+    // /**
+    //  *  Boot the Model
+    //  */
+    // protected static function bootInvoiceable()
+    // {  
+    //     static::created(function($model){            
+    //         $invoice = $model->createInvoice();
+            
+    //         if(env('APP_ENV') != 'testing'){
+    //             $model->sendInvoiceEmail($invoice);
+    //         }            
+    //     });           
+    // } 
 
     /**
      *  Create Invoice and Store as PDF
@@ -65,7 +68,7 @@ trait Invoiceable
             $webhookUrl = env('MOLLIE_WEBHOOK');            
         }else{
             $webhookUrl = route('mollie.webhook');          
-        }
+        }       
 
         $payment = Mollie::api()->payments()->create([
             'amount' => [
@@ -91,7 +94,7 @@ trait Invoiceable
      * 
      * @param Invoice $invoice    
      */
-    protected function sendInvoiceEmail($invoice)
+    public function sendInvoiceEmail($invoice)
     {        
         Mail::to($this->tenderer)->send(new PayInvoiceEmail($invoice));
     }

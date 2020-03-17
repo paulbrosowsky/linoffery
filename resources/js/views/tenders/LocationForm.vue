@@ -3,7 +3,7 @@
         <form @submit.prevent="submit"> 
             <div class="w-full mb-5 ">                
 
-                <p class="text-sm text-red-500 mb-2" v-if="errors.length != 0" v-text="errors.location"></p>
+                <p class="text-sm text-red-500 mb-2" v-if="errors.length != 0" v-text="errors.location"></p>               
                 <div class="relative flex items-center mb-2">                                        
                     <i class="absolute icon ion-md-pin text-xl text-gray-500 px-3"></i>   
                     <input 
@@ -127,7 +127,12 @@
 
         watch:{
             errors(){                
-                if(this.errors.hasOwnProperty('address') || this.errors.hasOwnProperty('lat')){
+                if(
+                    this.errors.hasOwnProperty('address') || 
+                    this.errors.hasOwnProperty('lat') ||
+                    this.errors.hasOwnProperty('city') ||
+                    this.errors.hasOwnProperty('country')
+                ){
                     this.errors.location = 'Standort ist ungültig';
                 } 
             }

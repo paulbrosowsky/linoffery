@@ -5,7 +5,7 @@ window._isEmpty= require('lodash/isEmpty');
 import {router} from './routes'
 import {store} from './store'
 import App from './layouts/App'
-import i18n from './utilities/i18n'
+import i18n from './locales/i18n'
 
 import Echo from "laravel-echo"
 window.io = require('socket.io-client');
@@ -18,7 +18,7 @@ window.Echo = new Echo({
     auth: {
         headers: {
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + store.state.token
+            // 'Authorization': 'Bearer ' + store.state.token
         }
     },
 });
@@ -38,12 +38,11 @@ Vue.directive('resize', VueResize );
 
 window.Event = new Vue()
 
-window.flash = function(message, type = 'success'){  
-    let data = {
+window.flash = function(message, type = 'success'){ 
+    window.Event.$emit('flash', {
         message: message,
         type: type
-    }  
-    window.Event.$emit('flash', data)
+    });
 }
 
 window.axios = require('axios');
