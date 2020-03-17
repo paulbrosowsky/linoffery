@@ -41,7 +41,7 @@ class TenderWasCloned extends Notification implements ShouldQueue
      * @return array
      */
     public function toArray($notifiable)
-    {
+    {    
         return [
             'message' => __('was replaced by a copy'),            
             'tender_title' => $this->tender->title,

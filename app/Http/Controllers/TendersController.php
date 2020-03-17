@@ -138,7 +138,7 @@ class TendersController extends Controller
         $this->authorize('show', $tender);
 
         if($request->withClone){
-            return $tender->complete($request->withClone);
+            return $tender->clone();
         }
     
         $tender->complete();
@@ -154,7 +154,7 @@ class TendersController extends Controller
         $this->authorize('destroy', $tender);    
        
         if($request->withClone == 'true'){           
-            return $tender->cloneTender();            
+            return $tender->clone();            
         }
 
         $tender->delete();  

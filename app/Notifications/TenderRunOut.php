@@ -49,7 +49,8 @@ class TenderRunOut extends Notification implements ShouldQueue
                     ->greeting(__('Hello ').$notifiable->name. ',')
                     ->line(__('Your tender "'). $this->tender->title .__('" has run out.'))
                     ->action(__('Open tender'), $url)
-                    ->line(__('If you want to publish this tender again, please use a copy function right on your teders view.'));
+                    ->line(__('If you want to publish this tender again, please use a copy function right on your teders view.'))
+                    ->salutation(__('Regards, Linoffery Team'));
     }
 
     /**

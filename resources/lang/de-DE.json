@@ -54,7 +54,7 @@
     "Tender is completed": "Ausschreibung abgeschlossen",
     "You have a new order": "Du hast neuen Auftrag",
 
-    "Your Tender \"": "Deine Ausschreibung \"",
+    "Your tender \"": "Deine Ausschreibung \"",
     "\" has run out." : "\" ist abgelaufen.",
     "Open tender": "Zur Ausschreibung",
 
@@ -130,5 +130,6 @@
     "Please use our payment options at this link:": "Bitte nutze dafür unsere Zahlungsmöglichkeiten unter diesem Link:" ,
     "Enclosed you will receive the information about your new mediation order.": "Anbei erhältst Du die Informationen zu Deinem neuen Vermittlungsauftrag.",
     "Pay now": "Jetzt bezahlen",
-    "If you cannot use the button, try this link.": "Falls Du den Button nicht nutzen kannst, versuche diesen Link."   
+    "If you cannot use the button, try this link.": "Falls Du den Button nicht nutzen kannst, versuche diesen Link.",
+    "Regards, Linoffery Team": "Viele Grüße, Linoffery Team"
 }

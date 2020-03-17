@@ -15,14 +15,10 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
 
-// use App\Events\InvoiceCreated;
-// use App\Events\PaymentCreated;
-// use App\Notifications\OfferWasAccepted;
-
 // Route::get('/email', function(){
 
-//     $invoice = App\Invoice::where('custom_id', 'IN68673-68204')->first();
+//     $tender = Tender::first();
     
-//     PaymentCreated::dispatch($invoice);
+//     $tender->user->notify(new TenderRunOut($tender));
     
 // });

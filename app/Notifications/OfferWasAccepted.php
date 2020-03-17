@@ -65,6 +65,7 @@ class OfferWasAccepted extends Notification implements ShouldQueue
                     ->action(__('Open order'), $url)
                     ->line(__('Attached you will find the overview and the contact details as PDF.'))
                     ->line( $message )
+                    ->salutation(__('Regards, Linoffery Team'))
                     ->attach($path);
     }
 
@@ -75,7 +76,7 @@ class OfferWasAccepted extends Notification implements ShouldQueue
      * @return array
      */
     public function toArray($notifiable)
-    {  
+    {          
         return [            
             'message' => __('You have a new order'),
             'price' => $this->order->offer->price,

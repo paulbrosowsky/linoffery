@@ -3,13 +3,10 @@
 namespace App;
 
 use App\Events\OfferCreated;
-use App\Events\TenderCompleted;
-use Carbon\Carbon;
+use App\Events\TenderCloned;
 use App\Filters\TenderFilters;
-use App\Notifications\OfferWasCreated;
+use App\Events\TenderCompleted;
 use Illuminate\Database\Eloquent\Model;
-use App\Notifications\OfferWasOutbidded;
-use App\Notifications\TenderIsCompleted;
 use App\Notifications\TenderWasCloned;
 
 class Tender extends Model
@@ -191,13 +188,7 @@ class Tender extends Model
     {      
         $this->update(['completed_at' => now()]);
 
-        TenderCompleted::dispatch($this);
-
-        
-
-        // if($withClone){
-        //     $this->cloneTender($offerers);            
-        // }
+        TenderCompleted::dispatch($this); 
     }   
 
     /**
@@ -206,10 +197,12 @@ class Tender extends Model
      * @param Collection $offers
      * @return Tender
      */
-    public function cloneTender($offerers = NULL)
-    {   
+    public function clone()
+    {           
         $clone = $this->replicate(['published_at', 'completed_at', 'lowest_offer']); 
         $clone->save();
+
+        TenderCloned::dispatch($this, $clone);
       
         // Clone all locations from original and attach it to the tender clone
         foreach ($this->locations as $location) {
@@ -218,22 +211,10 @@ class Tender extends Model
         // Clone all freights from original and attach it to the tender clone
         foreach ($this->freights as $freight) {            
             $freight->update(['tender_id' => $clone->id]);
-        }     
-        
-        //Delete orginal
-        $this->delete();
+        }   
 
-        if($offerers){
-            //Notify all offerers
-            $later = now()->addHours(1);
-            foreach ($offerers as $offerer) {
-                if(env('APP_ENV') === 'testing'){
-                    $offerer->notify((new TenderWasCloned($clone)));
-                }else{
-                    $offerer->notify((new TenderWasCloned($clone))->delay($later));
-                }            
-            }  
-        }             
+        //Delete orginal
+        $this->delete();                  
 
         return $clone;                        
     }
