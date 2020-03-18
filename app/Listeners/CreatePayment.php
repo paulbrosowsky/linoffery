@@ -48,7 +48,8 @@ class CreatePayment implements ShouldQueue
 
         $event->invoice->update([
             'payment_id' => $payment->id,
-            'payment_link' => $payment->getCheckoutUrl()
+            'payment_link' => $payment->getCheckoutUrl(),
+            'status' => 'open'
         ]);  
         
         PaymentCreated::dispatch($event->invoice);

@@ -82,18 +82,6 @@ class DeleteAccountTest extends PassportTestCase
 
         $this->assertNotEmpty($order->carrier);    
         $this->assertNotEmpty($order->carrier->company); 
-    }
-
-    /** @test */
-    function payment_subcription_will_be_deleted_upon_deleting_account()
-    {  
-        $this->createStripeCustomer($this->company);
-
-        $this->user->delete();
-
-        $response = \Stripe\Customer::retrieve($this->company->fresh()->stripe_id);
-        $this->assertTrue($response['deleted']);        
-    }
-    
+    }    
 
 }

@@ -6,7 +6,7 @@
         <tabs>
             <tab :name="$t('settings.account')" hash="#account"> </tab>
             <tab :name="$t('settings.company')" hash="#company"> </tab>           
-            <tab :name="$t('settings.payment')" hash="#payment"> </tab>
+            <tab :name="$t('settings.invoices')" hash="#invoices"> </tab>
             <tab :name="$t('settings.notifications')" hash="#notification"> </tab>            
         </tabs>
     </div>

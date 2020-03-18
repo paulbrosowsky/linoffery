@@ -30,7 +30,7 @@ class CreateInvoice implements ShouldQueue
         Invoice::create([
             'company_id' => $event->order->tenderer->company->id,
             'order_id' => $event->order->id, 
-            'custom_id' => ''           
+            'custom_id' => '',                     
         ]);        
     }
 }

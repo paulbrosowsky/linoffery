@@ -61,8 +61,9 @@ trait HasPdf
              Storage::disk('public')->put($path, $pdf->output()); 
         }else{
             // If Testing Mode use Fake Storage
+            
             Storage::fake('public');
-            Storage::disk('public')->put($path, $pdf); 
+            Storage::disk('public')->put($path, $pdf->get()); 
         }        
     }
 }

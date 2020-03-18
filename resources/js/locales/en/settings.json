@@ -47,6 +47,7 @@
     "subtotal": "Subtotal",
     "accounting_info": "This table is only an overview of the expected payments. The final amounts to be paid can be found in the invoice at the end of the month.",
     "invoices": "Invoices",
+    "invoice": "Invoice",
     "invoice_id": "Invoice ID",
     "customer_id": "Customer ID",
     "agree_with_newsletters": "I would like to receive newsletters by email.",
@@ -55,5 +56,6 @@
     "delete_account_question": "Do you really want to delete your account?",
     "delete_account_info": "After deleting, you will lose access to your account. Your data will not be completely deleted.", 
     "delete_account_message": "Your user account has been deleted.",
-    "info_privacy": "More information can be found in our privacy policy."
+    "info_privacy": "More information can be found in our privacy policy.",
+    "state": "State" 
 }

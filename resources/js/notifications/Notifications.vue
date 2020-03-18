@@ -1,20 +1,17 @@
 <template>
     <div v-if="loggedIn"> 
         <confirm-email v-if="!emailConfirmed"></confirm-email>
-        <complete-company-address v-if="!companyAddressComplete"></complete-company-address>
-        <update-payment-info v-if="!hasPaymentSubscription"></update-payment-info>
+        <complete-company-address v-if="!companyAddressComplete"></complete-company-address>      
     </div>
 </template>
 <script>
-    import ConfirmEmail from './ConfirmEmail'
-    import CompleteCompanyAddress from './CompleteCompanyAddress'
-    import UpdatePaymentInfo from './UpdatePaymentInfo'
+    import ConfirmEmail from './ConfirmEmail';
+    import CompleteCompanyAddress from './CompleteCompanyAddress';   
 
     export default {
         components:{
             ConfirmEmail,
             CompleteCompanyAddress,
-            UpdatePaymentInfo
         },
 
         computed:{
@@ -28,11 +25,7 @@
             
             loggedIn(){
                 return this.$store.getters.loggedIn
-            },
-
-            hasPaymentSubscription(){
-                return this.$store.getters.usersCompany.hasPaymentSubscription
-            }
+            },           
         },
     }
 </script>

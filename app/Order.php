@@ -66,6 +66,16 @@ class Order extends Model
     }
 
     /**
+     *  An order has one Invoice
+     * 
+     * @return hasOne
+     */
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
+    /**
      *  Get calculated service cost of an order
      * 
      * @return float

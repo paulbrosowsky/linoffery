@@ -34,7 +34,7 @@ class OrdersController extends Controller
     {
         $this->authorize('view', $order);
 
-        return $order->load('tender');
+        return $order->load(['tender', 'invoice']);
     }
 
 

@@ -67,8 +67,8 @@ Route::group([
 
     Route::delete('/comments/{comment}/destroy', 'CommentsController@destroy');
 
-    Route::get('/payments/invoices', 'PaymentsController@index'); 
-    Route::patch('/payments/update', 'PaymentsController@update');
+    Route::get('/invoices', 'InvoicesController@index'); 
+    Route::get('/invoices/{invoice}/download', 'InvoicesController@download');
     
     Route::group([
         'middleware' => 'is-confirmed-completed'
@@ -98,7 +98,5 @@ Route::get('/tenders/{tender}', 'TendersController@show');
 
 Route::get('/categories', 'CategoriesController@index');
 Route::get('/transport-types', 'TransportTypesController@index');
-
-Route::post('/stripe/webhook', 'StripeWebhooksController@handle');
 
 Route::get('/mollie/webhook', 'MollieWebhooksController@index')->name('mollie.webhook');

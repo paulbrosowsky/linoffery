@@ -2,18 +2,17 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
-    use HasAvatar, HasCustomId, Billable, SoftDeletes;
+    use HasAvatar, HasCustomId, SoftDeletes;
 
     protected $guarded = [];
 
-    protected $appends = ['completed', 'rating', 'hasPaymentSubscription'];    
+    protected $appends = ['completed', 'rating'];    
 
      /**
      * The attributes that should be hidden for arrays.
@@ -30,11 +29,7 @@ class Company extends Model
     ];
 
     protected static function boot(){
-        parent::boot();
-
-        static::deleting(function($company){
-            $company->deleteStipeCustomer();
-        });
+        parent::boot();        
     }
 
     /**
@@ -120,16 +115,6 @@ class Company extends Model
 
             return  $commentsCount > 0 ? $ratingSum / $commentsCount : null;
         }         
-    } 
-
-    /**
-     * Get Payment Customer Attribute
-     * 
-     * @return boolean
-     */
-    public function getHasPaymentSubscriptionAttribute()
-    {   
-        return !empty($this->paymentSubscription);
-    }
+    }    
     
 }

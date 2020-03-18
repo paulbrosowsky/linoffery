@@ -22,8 +22,7 @@
         <script>            
             var Linoffery = {  
                 url: "{{ config('app.url') }}", 
-                csrfToken: "{{ csrf_token() }}",           
-                stripeKey: "{{ config('services.stripe.key') }}",
+                csrfToken: "{{ csrf_token() }}",  
                 mapsKey: "{{ config('services.maps.key') }}"                 
             }                    
         </script>       

@@ -16,13 +16,8 @@ class RejectIfNotConfirmedAndCompleted
     public function handle($request, Closure $next)
     {
         $user = $request->user(); 
-        $hasPaymentSubscription = $user->company->hasPaymentSubscription;
         
-        if (env('APP_ENV') === 'testing') {
-            $hasPaymentSubscription = true;
-        }        
-
-        if (!$user->confirmed || !$user->company->completed || !$hasPaymentSubscription) {
+        if (!$user->confirmed || !$user->company->completed) {
             return  response()->json([
                 'message' => 'Bitte bestätige deine Email-Adresse, oder vervollständige die Firmenadresse'
             ], 401);           

@@ -9,14 +9,14 @@
     import AccountSettings from '../settings/AccountSettings'
     import CompanySettings from '../settings/CompanySettings'
     import NotificationSettings from '../settings/NotificationSettings'
-    import PaymentSettings from '../settings/PaymentSettings'
+    import InvoicesSettings from '../settings/InvoicesSettings';
 
     export default {
         components: {         
             AccountSettings,
             CompanySettings,
             NotificationSettings,
-            PaymentSettings
+            InvoicesSettings
         },
 
         computed:{

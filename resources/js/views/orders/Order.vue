@@ -95,17 +95,30 @@
             </div>
             <!-- Freights Info END -->
            
-           <div class="flex justify-end px-3 pb-10 md:px-10">
-               <button class="btn btn-outlined mr-2" @click="downloadPdf">
+           <div class="flex justify-end px-3 md:pb-10 md:px-10">
+               <button class="btn btn-outlined mr-2" @click="downloadInvoicePdf">
+                   <i class="icon ion-md-download mr-1"></i>
+                   <span>{{$t('settings.invoice')}}</span>
+               </button>
+
+               <button class="btn btn-outlined" @click="downloadOrderPdf">
                    <i class="icon ion-md-download mr-1"></i>
                    <span>PDF</span>
                </button>
 
-                <button class="btn btn-teal" v-if="isTenderer && !completed" @click="completeOrder">
+                <button class="btn btn-teal hidden ml-2 md:block" v-if="isTenderer && !completed" @click="completeOrder">
                    <i class="icon ion-md-checkmark mr-1"></i>
                    <span>{{$t('utilities.completed')}}</span>
                </button>
            </div>
+
+            <div class="flex justify-end px-3 mt-2 pb-10 md:hidden md:px-10">
+                <button class="btn btn-teal" v-if="isTenderer && !completed" @click="completeOrder">
+                    <i class="icon ion-md-checkmark mr-1"></i>
+                    <span>{{$t('utilities.completed')}}</span>
+                </button>
+            </div>
+           
             
         </card>
     </div>    
@@ -161,7 +174,7 @@
                     .catch(errors => reject(errors.response));             
             }, 
             
-            downloadPdf(){                
+            downloadOrderPdf(){                
                 axios({
                     url: `/api${this.$route.path}/pdf`,
                     method: 'GET',
@@ -176,6 +189,23 @@
                     link.click();
                 })
                 .catch(errors => console.log(errors.response))
+            },
+
+            downloadInvoicePdf(){                               
+                axios({
+                    url: `api/invoices/${this.order.invoice.id}/download`,
+                    method: 'GET',
+                    responseType: 'blob'
+                })                    
+                .then(response =>{ 
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', this.order.invoice.custom_id+'.pdf'); 
+                    document.body.appendChild(link);
+                    link.click();
+                })
+                .catch(errors => console.log(errors.response))        
             },
 
             completeOrder(){                

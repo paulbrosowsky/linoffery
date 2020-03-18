@@ -48,7 +48,7 @@ export let store = new Vuex.Store({
                 let company = state.user.company;
                 let confirmed =  state.user.confirmed;
 
-                return  company.completed && company.hasPaymentSubscription && confirmed;
+                return  company.completed && confirmed;
             }
         },
 

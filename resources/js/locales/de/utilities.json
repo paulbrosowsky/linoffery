@@ -44,5 +44,9 @@
     "back": "zurück",
     "accept": "Akzeptieren",
     "from": "von",
-    "to": "bis"
+    "to": "bis",
+
+    "open": "offen",
+    "paid": "bezahlt",
+    "failed": "fehlgeschlagen"
 }

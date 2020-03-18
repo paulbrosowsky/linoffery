@@ -14,7 +14,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\CompleteTender',
-        // 'App\Console\Commands\CreateInvoices'
     ];
 
     /**
@@ -26,10 +25,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('linoffery:complete-tender')->daily(); 
-         
-        // $schedule->command('linoffery:create-invoices')
-        //     ->monthly()
-        //     ->emailOutputOnFailure(config('linoffrey.email.techology'));       
     }
 
     /**
