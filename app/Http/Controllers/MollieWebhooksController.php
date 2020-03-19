@@ -2,26 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Invoice;
 use Illuminate\Http\Request;
 use Mollie\Laravel\Facades\Mollie;
 
 class MollieWebhooksController extends Controller
 {
-    public function index()
-    {
-        dd('webhook');
-        // $payment = Mollie::api()->payments()->create([
-        //     'amount' => [
-        //         'currency' => 'EUR',
-        //         'value' => '10.00'
-        //     ],
-        //     'description' => 'My first API payment',
-        //     'redirectUrl' => 'https://linoffery.com/',
-        // ]);  
+    /**
+     *  Handle Mollie Webhooks
+     * 
+     * @param Request $request
+     */
+    public function handle(Request $request)
+    {   
+        if(! $request->has('id')){
+            return;
+        }
         
-        // $payment = Mollie::api()->payments()->get($payment->id);
-
-        // dd($payment);
+        if(env('APP_ENV') != 'testing'){
+            $payment = Mollie::api()->payments()->get($request->id);
+        }else{
+            $payment= json_decode(json_encode($request->all()), FALSE);
+        }        
+       
+        Invoice::where('payment_id', $payment->id)->update([
+            'status' => $payment->status
+        ]);
         
     }
 }

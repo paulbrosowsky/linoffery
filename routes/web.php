@@ -15,10 +15,8 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
 
-// Route::get('/email', function(){
+// Route::get('/mollie/webhook', function(){
 
-//     $tender = Tender::first();
-    
-//     $tender->user->notify(new TenderRunOut($tender));
+//     dd(request()->all());
     
 // });

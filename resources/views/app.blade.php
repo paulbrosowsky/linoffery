@@ -18,7 +18,7 @@
                 display: none;
             }
         </style>
-        <script src="https://js.stripe.com/v3/"></script>
+                
         <script>            
             var Linoffery = {  
                 url: "{{ config('app.url') }}", 
