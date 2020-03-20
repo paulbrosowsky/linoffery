@@ -17,7 +17,9 @@
 
                 <li>
                     <p class="font-bold text-lg leading-tight">{{ $t('conditions.conditions_header_3')}}</p>
-                    <p>{{ $t('conditions.conditions_text_3')}}</p>                     
+                    <span>{{ $t('conditions.conditions_text_3')}}</span>   
+                    <a href="/pricing" class="link">https://linoffery.com/pricing</a>
+                    <span>{{ $t('conditions.conditions_text_3_1')}}</span>                   
                 </li>
 
                 <li>
@@ -47,12 +49,14 @@
 
                 <li>
                     <p class="font-bold text-lg leading-tight">{{ $t('conditions.conditions_header_6')}}</p>
-                    <p>{{ $t('conditions.conditions_text_6')}}</p>                     
+                    <p>{{ $t('conditions.conditions_text_6')}}</p>  
                 </li>
 
                 <li>
                     <p class="font-bold text-lg leading-tight">{{ $t('conditions.conditions_header_7')}}</p>
-                    <p>{{ $t('conditions.conditions_text_7')}}</p>                     
+                    <span>{{ $t('conditions.conditions_text_7')}}</span>  
+                    <a href="/privacy" class="link">https://linoffery.com/privacy</a> 
+                    <span>{{ $t('conditions.conditions_text_7_1')}}</span>                     
                 </li>
                
             </ol>

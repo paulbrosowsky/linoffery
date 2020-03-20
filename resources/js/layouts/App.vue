@@ -114,11 +114,15 @@
                         let scrollPosition = document.documentElement.scrollTop
                         let scrollable = document.documentElement.scrollHeight
 
-                        if (scrollable - (window.innerHeight + 100) < scrollPosition) {
+                        if(screen < 640 && scrollPosition > 0){                    
                             Tawk_API.hideWidget();
-                        } else {
-                            Tawk_API.showWidget();
-                        }
+                        }else{
+                            if (scrollable - (window.innerHeight + 100) < scrollPosition) {
+                                Tawk_API.hideWidget();
+                            } else {
+                                Tawk_API.showWidget();
+                            }
+                        }  
                     }
                 });
             }                     
