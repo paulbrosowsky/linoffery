@@ -28,9 +28,7 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {    
-        Stripe::setApiKey(config('services.stripe.secret'));
-        
+    {     
         // Enabled Pagination on Collection
         if (!Collection::hasMacro('paginate')) {
             Collection::macro('paginate', 
