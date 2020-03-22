@@ -12,7 +12,7 @@
 
         <div class="w-full mt-3 md:mt-0 md:w-auto">
             <button 
-                class="w-full btn btn-outlined btn-blue-outlined"
+                class="w-full btn btn-outlined btn-blue-outlined bg-white"
                 @click="sendConfirmationEmail"
             >
                  {{$t('auth.send_again')}}

@@ -123,7 +123,7 @@
                 loading: false,
                 category: null
             }
-        },   
+        }, 
 
         methods:{
             submit(){  
@@ -133,10 +133,10 @@
                 }
             },    
             
-            comparePrices(){
-                return this.maxPrice < this.immediatePrice 
+            comparePrices(){                
+                Number(this.maxPrice) < Number(this.immediatePrice)
                         ? this.errors = { max_price: ['Maximaler Preis darf nicht kleiner sein als sofort Preis.']} 
-                        : '';
+                        : this.errors = [];
             },
 
             storeTender(){                

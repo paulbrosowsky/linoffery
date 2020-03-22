@@ -7,19 +7,14 @@
         <div v-if="loggedIn">
             <notification-drawer></notification-drawer>
             <create-comment></create-comment>
-        </div>
-
-        <div v-if="fullyAuthorized">
-            <create-tender></create-tender>          
-        </div>
+        </div>      
         
         <nav-drawer></nav-drawer>
         <flash></flash>
     </div>
 </template>
 <script>
-    import CreateComment from './CreateComment'
-    import CreateTender from './CreateTender'
+    import CreateComment from './CreateComment'    
     import Flash from '../components/Flash'
     import LoginModal from './LoginModal'   
     import NavDrawer from './NavDrawer'
@@ -27,8 +22,7 @@
 
     export default {
         components:{
-            CreateComment,
-            CreateTender,
+            CreateComment,            
             Flash,
             LoginModal,           
             NavDrawer,
