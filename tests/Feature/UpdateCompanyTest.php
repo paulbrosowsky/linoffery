@@ -66,16 +66,16 @@ class UpdateCompanyTest extends PassportTestCase
         $this->assertArrayHasKey('vat', $errors['errors']);         
     }  
 
-    /** @test */
-    function vat_must_be_valide()
-    { 
-        $this->withExceptionHandling();        
+    // /** @test */
+    // function vat_must_be_valide()
+    // { 
+    //     $this->withExceptionHandling();        
 
-        $response = $this->updateCompany( ['vat' => 'DE12345678']);
+    //     $response = $this->updateCompany( ['vat' => 'DE12345678']);
 
-        $errors = $response->json();   
-        $this->assertArrayHasKey('vat', $errors['errors']);            
-    }
+    //     $errors = $response->json();   
+    //     $this->assertArrayHasKey('vat', $errors['errors']);            
+    // }
 
      /** @test */
     function address_is_required()

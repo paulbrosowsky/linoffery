@@ -1,3 +1,7 @@
+@php
+    $deCustomer = preg_match('/^(DE|de)/', $invoice->company->vat);
+@endphp
+
 @component('mail::message')
 # @lang('Thank you for using our platform.')
 
@@ -23,10 +27,25 @@
             <td colspan="2">{{__('Amount of the agency fee incurred')}}</td>
             <td>{{config('linoffery.payment.standard')}} %</td>
         </tr>
-        <tr style="font-weight:bold; text-align: right">
+        <tr style="text-align: right">
             <td colspan="2">{{__('Net amount')}}</td>
-        <td>{{$invoice->order->cost}} EUR</td>
-        
+            <td>{{ number_format($invoice->order->cost , 2, ',', ' ') }} EUR</td>        
+        </tr>
+        <tr style="text-align: right">
+            <td colspan="2">{{__('VAT')}}</td>
+            @if($deCustomer)
+                <td>19 %</td>
+            @else
+                <td>{{__('Reverse charge procedure')}}</td>
+            @endif      
+        </tr>
+        <tr style="font-weight:bold; text-align: right">
+            <td colspan="2">{{__('Invoice amount')}}</td>
+            @if ($deCustomer)
+                <td>{{ number_format($invoice->order->cost*1.19 , 2, ',', ' ')}} EUR</td>
+            @else
+                <td>{{ number_format($invoice->order->cost , 2, ',', ' ') }} EUR</td>
+            @endif        
         </tr>
     </tbody>  
 </table>    

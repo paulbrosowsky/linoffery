@@ -10,7 +10,7 @@ use Mollie\Laravel\Facades\Mollie;
 
 class CreatePayment implements ShouldQueue
 {
-    /**
+    /**de
      * Create the event listener.
      *
      * @return void
@@ -32,12 +32,14 @@ class CreatePayment implements ShouldQueue
             $webhookUrl = env('MOLLIE_WEBHOOK');            
         }else{
             $webhookUrl = route('mollie.webhook');          
-        }       
+        }  
+        
+        $value = $this->getValue($event->invoice); 
 
         $payment = Mollie::api()->payments()->create([
             'amount' => [
                 'currency' => 'EUR',
-                'value' => $event->invoice->order->cost
+                'value' => $value
             ],                                    
             'description' => __('Order') .': '. $event->invoice->order->custom_id.' / '.__('Invoice') .': '. $event->invoice->custom_id,
             'webhookUrl' => $webhookUrl,
@@ -64,6 +66,17 @@ class CreatePayment implements ShouldQueue
     public function shouldQueue(InvoiceCreated $event)
     {        
         return env('APP_ENV') != 'testing' || $event->testable;
+    }
+
+    protected function getValue($invoice)
+    {
+        $deCustomer = preg_match('/^(DE|de)/', $invoice->company->vat);              
+        
+        if($deCustomer){
+            return number_format($invoice->order->cost * 1.19, 2);
+        }
+
+        return $invoice->order->cost;
     }
 
 }

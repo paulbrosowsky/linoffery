@@ -74,7 +74,8 @@
 
 
     "{PAGE_NUM} of {PAGE_COUNT}": "{PAGE_NUM} von {PAGE_COUNT}",
-    "VAT Number": "Umsatzsteuer ID",
+    "VAT ID": "Ust. Nr",
+    "VAT": "Umsatzsteuer",
     "Shipper": "Absender",
     "Carrier": "Spediteur",
     "Contact": "Ansprechpartner",
@@ -124,6 +125,8 @@
     "Price in EUR": "Preis in EUR",
     "Amount of the agency fee incurred": "Höhe der anfallender Vermittlungsgebühr",
     "Net amount": "Betrag Netto",
+    "Invoice amount": "Rechnungsbetrag",
+    "Reverse charge procedure": "Reverse-Charge-Verfahren",
     "The invoice has to be paid immediately.": "Die Rechnung ist sofort fällig.",
     "For further inquiries, we are happy to help you.": "Bei Rückfragen stehen wir Dir gerne zur Verfügung." ,
     "Your linoffery Team": "Dein linoffery Team",
@@ -131,5 +134,6 @@
     "Enclosed you will receive the information about your new mediation order.": "Anbei erhältst Du die Informationen zu Deinem neuen Vermittlungsauftrag.",
     "Pay now": "Jetzt bezahlen",
     "If you cannot use the button, try this link.": "Falls Du den Button nicht nutzen kannst, versuche diesen Link.",
-    "Regards, Linoffery Team": "Viele Grüße, Linoffery Team"
+    "Regards, Linoffery Team": "Viele Grüße, Linoffery Team",
+    "The invoice is shown without sales tax, since in this case the change of Tax liability (reverse charge procedure) applies. The service recipient must declare and pay the tax amount.": "Der Rechnungsausweis erfolgt ohne Umsatzsteuer, da vorliegend der Wechsel der Steuerschuldnerschaft (Reverse-Charge-Verfahren) greift. Die Umsatzsteuer ist vom Leistungsempfänger anzumelden und abzuführen."
 }

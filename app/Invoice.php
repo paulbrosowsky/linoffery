@@ -27,5 +27,15 @@ class Invoice extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
-    }   
+    }  
+    
+     /**
+     *  Invoice Belongs To an Company
+     * 
+     * @return belongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    } 
 }

@@ -1,5 +1,10 @@
 @extends('pdf._layout')
 
+@php
+    $deCustomer = preg_match('/^(DE|de)/', $receiver->vat) 
+@endphp
+
+
 @section('header')
     <p>{{__('Invoice').': '.$invoice->custom_id}}</p>
 @endsection
@@ -8,7 +13,10 @@
     <p>{{$receiver->name}}</p>   
     <p>{{$receiver->address}}</p> 
     <p>{{$receiver->postcode .' '. $receiver->city}}</p> 
-    <p>{{$receiver->country}}</p> 
+    <p>{{$receiver->country}}</p>      
+    @if (! $deCustomer)
+        <p>{{__('VAT ID')}}: {{$receiver->vat}}</p>  
+    @endif
 @endsection
 
 @section('content')
@@ -52,10 +60,25 @@
                 <td colspan="4">{{__('Amount of the agency fee incurred')}}</td>
                 <td>{{config('linoffery.payment.standard')}} %</td>
             </tr>
-            <tr style="font-weight:bold">
+            <tr>
                 <td colspan="4">{{__('Net amount')}}</td>
-            <td>{{$invoice->order->cost}} EUR</td>
-            
+                <td>{{ number_format($invoice->order->cost , 2, ',', ' ') }} EUR</td>
+            </tr>
+            <tr>
+                <td colspan="4">{{__('VAT')}}</td>
+                @if($deCustomer)
+                    <td>19 %</td>
+                @else
+                    <td>{{__('Reverse charge procedure')}}</td>
+                @endif
+            </tr>
+            <tr style="font: bold">
+                <td colspan="4">{{__('Invoice amount')}}</td>
+                @if ($deCustomer)
+                    <td>{{ number_format($invoice->order->cost*1.19 , 2, ',', ' ')}} EUR</td>
+                @else
+                    <td>{{ number_format($invoice->order->cost , 2, ',', ' ') }} EUR</td>
+                @endif
             </tr>
         </tbody>  
     </table>    
@@ -66,6 +89,11 @@
         <span>{{__('Please use our payment options at this link:')}}</span>
     </p>
     <p style="margin-top: 1rem; margin-bottom: 1rem;">{{$invoice->payment_link}}</p>
+
+    @if(!$deCustomer)
+        <p>{{__('The invoice is shown without sales tax, since in this case the change of Tax liability (reverse charge procedure) applies. The service recipient must declare and pay the tax amount.')}}</p>
+    @endif
+    
     <p>{{__('For further inquiries, we are happy to help you.')}}</p> 
     <p style="margin-top: 2rem;">{{__('Your linoffery Team')}}</p>
 

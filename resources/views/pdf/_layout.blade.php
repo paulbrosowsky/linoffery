@@ -90,6 +90,7 @@
                     <p>Mob: +49(0)176 64787862</p>
                     <p>Tel: +49(0)7161 9661846</p>
                     <p>Email: info@linoffery.com</p>
+                    <p>{{__('VAT ID')}}: DE316201575</p>  
                 </td>
             </tr>           
         </table>      
@@ -110,7 +111,7 @@
                         <p>BIC: GOPSDE6GXXX</p>
                     </td>
                     <td style="vertical-align:top">
-                        <p>Steuer-Nr.: 64339/11447</p>  
+                        <p>{{__('VAT ID')}}: DE316201575</p>  
                         <p>Finanzamt Heidenheim</p>  
                     </td>
                     

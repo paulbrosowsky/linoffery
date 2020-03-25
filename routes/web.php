@@ -15,8 +15,19 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
 
-// Route::get('/mollie/webhook', function(){
+// use App\Invoice;
+// use App\Mail\PayInvoiceEmail;
 
-//     dd(request()->all());
+// Route::get('/email', function(){
+
+//     $invoice = Invoice::first();
+//     $invoice->company->update(['vat' => 'DE12345']);
+
+//     $invoice->createPdf('pdf.invoice', [
+//         'receiver' => $invoice->order->tenderer->company,
+//         'invoice' => $invoice 
+//     ]);   
+    
+//     return new PayInvoiceEmail($invoice);
     
 // });
