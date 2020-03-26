@@ -21,7 +21,7 @@ Route::get('/{any}', function () {
 // Route::get('/email', function(){
 
 //     $invoice = Invoice::first();
-//     $invoice->company->update(['vat' => 'DE12345']);
+//     $invoice->company->update(['vat' => 'AU12345']);
 
 //     $invoice->createPdf('pdf.invoice', [
 //         'receiver' => $invoice->order->tenderer->company,

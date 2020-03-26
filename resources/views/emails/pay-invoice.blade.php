@@ -1,7 +1,3 @@
-@php
-    $deCustomer = preg_match('/^(DE|de)/', $invoice->company->vat);
-@endphp
-
 @component('mail::message')
 # @lang('Thank you for using our platform.')
 
@@ -33,7 +29,7 @@
         </tr>
         <tr style="text-align: right">
             <td colspan="2">{{__('VAT')}}</td>
-            @if($deCustomer)
+            @if($invoice->company->deLocated)
                 <td>19 %</td>
             @else
                 <td>{{__('Reverse charge procedure')}}</td>
@@ -41,7 +37,7 @@
         </tr>
         <tr style="font-weight:bold; text-align: right">
             <td colspan="2">{{__('Invoice amount')}}</td>
-            @if ($deCustomer)
+            @if ($invoice->company->deLocated)
                 <td>{{ number_format($invoice->order->cost*1.19 , 2, ',', ' ')}} EUR</td>
             @else
                 <td>{{ number_format($invoice->order->cost , 2, ',', ' ') }} EUR</td>

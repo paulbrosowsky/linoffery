@@ -14,7 +14,7 @@
     <p>{{$receiver->address}}</p> 
     <p>{{$receiver->postcode .' '. $receiver->city}}</p> 
     <p>{{$receiver->country}}</p>      
-    @if (! $deCustomer)
+    @if (!$receiver->deLocated)
         <p>{{__('VAT ID')}}: {{$receiver->vat}}</p>  
     @endif
 @endsection
@@ -66,7 +66,7 @@
             </tr>
             <tr>
                 <td colspan="4">{{__('VAT')}}</td>
-                @if($deCustomer)
+                @if($receiver->deLocated)
                     <td>19 %</td>
                 @else
                     <td>{{__('Reverse charge procedure')}}</td>
@@ -74,7 +74,7 @@
             </tr>
             <tr style="font: bold">
                 <td colspan="4">{{__('Invoice amount')}}</td>
-                @if ($deCustomer)
+                @if ($receiver->deLocated)
                     <td>{{ number_format($invoice->order->cost*1.19 , 2, ',', ' ')}} EUR</td>
                 @else
                     <td>{{ number_format($invoice->order->cost , 2, ',', ' ') }} EUR</td>
@@ -90,7 +90,7 @@
     </p>
     <p style="margin-top: 1rem; margin-bottom: 1rem;">{{$invoice->payment_link}}</p>
 
-    @if(!$deCustomer)
+    @if(! $receiver->deLocated)
         <p>{{__('The invoice is shown without sales tax, since in this case the change of Tax liability (reverse charge procedure) applies. The service recipient must declare and pay the tax amount.')}}</p>
     @endif
     

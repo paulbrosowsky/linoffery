@@ -12,7 +12,7 @@ class Company extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['completed', 'rating'];    
+    protected $appends = ['completed', 'rating', 'deLocated'];    
 
      /**
      * The attributes that should be hidden for arrays.
@@ -98,7 +98,7 @@ class Company extends Model
         return $this->user->tenders()->where('published_at', '!=', NULL)->count();                   
     }
 
-     /**
+    /**
      *  Get average rating 
      * 
      * @return integer
@@ -116,5 +116,14 @@ class Company extends Model
             return  $commentsCount > 0 ? $ratingSum / $commentsCount : null;
         }         
     }    
-    
+
+    /**
+     *  Determine where company is located in Geramany
+     *  
+     * @return boolean
+     */
+    public function getDeLocatedAttribute()
+    {
+        return preg_match('/^(DE|de|De|dE)/', $this->vat);
+    }    
 }

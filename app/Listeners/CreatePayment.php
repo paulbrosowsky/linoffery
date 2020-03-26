@@ -69,13 +69,10 @@ class CreatePayment implements ShouldQueue
     }
 
     protected function getValue($invoice)
-    {
-        $deCustomer = preg_match('/^(DE|de)/', $invoice->company->vat);              
-        
-        if($deCustomer){
+    {   
+        if($invoice->company->deLocated){
             return number_format($invoice->order->cost * 1.19, 2);
         }
-
         return $invoice->order->cost;
     }
 
