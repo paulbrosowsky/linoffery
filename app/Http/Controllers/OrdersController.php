@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Order;
-use PDF;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class OrdersController extends Controller

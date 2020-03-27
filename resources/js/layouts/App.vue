@@ -70,20 +70,36 @@
                 //     this.$i18n.locale = navigator.language
                 //     this.$cookies.set('locale', navigator.language, 60*60*24*365)   
                 // }                
+            },
+
+            hideTawk() {
+                let screen = window.screen.width;
+                let scrollPosition = document.documentElement.scrollTop
+                let scrollable = document.documentElement.scrollHeight                 
+
+                if(screen < 640 && scrollPosition > 0){                    
+                    Tawk_API.hideWidget();
+                }else{
+                    if (scrollable - (window.innerHeight + 100) < scrollPosition) {
+                        Tawk_API.hideWidget();
+                    } else {
+                        this.layout != 'default-layout' ? Tawk_API.hideWidget() : Tawk_API.showWidget();   
+                    }
+                }           
             }, 
-            
 
             initTawk(){
-               var Tawk_API = Tawk_API || {}, Tawk_LoadStart=new Date();
+                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
 
-                (function(){
-                    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                    s1.async=true;
-                    s1.src='https://embed.tawk.to/5d7fe6d0c22bdd393bb6215b/default';
-                    s1.charset='UTF-8';
-                    s1.setAttribute('crossorigin','*');
-                    s0.parentNode.insertBefore(s1,s0);
-                })();                   
+                (function () {
+                    var s1 = document.createElement("script"),
+                        s0 = document.getElementsByTagName("script")[0];
+                    s1.async = true;
+                    s1.src = 'https://embed.tawk.to/5d7fe6d0c22bdd393bb6215b/default';
+                    s1.charset = 'UTF-8';
+                    s1.setAttribute('crossorigin', '*');
+                    s0.parentNode.insertBefore(s1, s0);
+                })();                 
             },
 
             fetchCategories(){
@@ -94,38 +110,27 @@
 
         created() {            
             this.retriveLocale();            
-            this.fetchCategories();     
-            
+            this.fetchCategories(); 
 
             if(this.$store.getters.loggedIn){
                 setTimeout(() => {
                     this.$store.dispatch('loginToNotificationBroadcast');
+                    this.hideTawk()
                 }, 2000);                  
-            }   
+            } 
+            
+           if (this.agreeCookies) {
+               this.initTawk();
 
-            // Load Tawk.to when cookies are agreed
-            if (this.agreeCookies) {
-                this.initTawk();
+               setTimeout(() => {
+                    window.addEventListener('scroll', this.hideTawk); 
+               }, 2000);
+           }
+            
+        },
 
-                window.addEventListener('scroll', () => {
-                    if (this.layout != 'default-layout') {
-                        Tawk_API.hideWidget();
-                    } else {
-                        let scrollPosition = document.documentElement.scrollTop
-                        let scrollable = document.documentElement.scrollHeight
-
-                        if(screen < 640 && scrollPosition > 0){                    
-                            Tawk_API.hideWidget();
-                        }else{
-                            if (scrollable - (window.innerHeight + 100) < scrollPosition) {
-                                Tawk_API.hideWidget();
-                            } else {
-                                Tawk_API.showWidget();
-                            }
-                        }  
-                    }
-                });
-            }                     
+        beforeDestroy(){
+            window.removeEventListener('scroll', this.hideTawk);
         }
 
     }

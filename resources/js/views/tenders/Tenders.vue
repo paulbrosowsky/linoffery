@@ -93,6 +93,7 @@
             
             // Trigger in TendersFilters @filterTenders
             Event.$on('fetchTenders', ()=> this.fetchTenders(`/api/tenders`))
+            Event.$emit('setDrawerSize');
         },
 
         beforeDestroy(){ 
