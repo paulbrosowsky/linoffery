@@ -42,6 +42,26 @@ class DeleteAccountTest extends PassportTestCase
     }
 
     /** @test */
+    function account_can_not_be_deleted_if_the_user_has_active_tenders()
+    {
+        create('App\Tender', ['user_id' => $this->user->id]);
+
+        $this->signIn($this->user);
+
+        $this->deleteJson('api/auth/destroy')->assertStatus(420);
+    }
+
+    /** @test */
+    function account_can_not_be_deleted_if_the_user_has_active_offers()
+    {
+        create('App\Offer', ['user_id' => $this->user->id]);
+
+        $this->signIn($this->user);
+
+        $this->deleteJson('api/auth/destroy')->assertStatus(420);
+    }
+
+    /** @test */
     function users_tender_offers_and_comments_will_be_deleted_if_account_is_canceled()
     {        
         $tender = create('App\Tender', ['user_id'=> $this->user->id]);
@@ -72,7 +92,7 @@ class DeleteAccountTest extends PassportTestCase
     }
 
     /** @test */
-    function orders_can_view_user_and_company_data_althought_they_are_deleted()
+    function orders_can_view_user_and_company_data_although_they_are_deleted()
     {        
         $order = create('App\Order', [
             'carrier_id' => $this->user->id,

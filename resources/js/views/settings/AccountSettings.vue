@@ -224,9 +224,14 @@
                 axios
                     .delete('/api/auth/destroy')
                     .then(() => { 
-                        this.$router.push('/logout')
                         flash(this.$i18n.t('settings.delete_account_message'))
-                });               
+                        setTimeout(() => {
+                            this.$router.push('/logout')    
+                        }, 3000);                 
+                    })
+                    .catch((errors) => {
+                        flash(errors.response.data.message, 'danger');
+                    });               
             },
 
             // Update Password if password field chanded

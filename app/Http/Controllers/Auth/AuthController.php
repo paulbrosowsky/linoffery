@@ -134,7 +134,14 @@ class AuthController extends Controller
      *  Delete User Account
      */
     public function destroy()
-    {        
+    {     
+        $tenders = auth()->user()->tenders->where('completed_at', NULL);
+        $offers = auth()->user()->offers->where('active', true);
+
+        if(!$tenders->isEmpty() || !$offers->isEmpty()){
+            return response()->json(['message' => __('You still has active tenders or offers. Please complete them first.')], 420);
+        }
+
         auth()->user()->delete();        
     }
 

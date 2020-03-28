@@ -14,6 +14,8 @@ class Offer extends Model
 
     protected $with = ['user'];   
 
+    protected $append = ['active'];
+
     protected static function boot()
     {
         parent::boot();
@@ -75,22 +77,7 @@ class Offer extends Model
         ]); 
         
         return $order;
-    }
-
-    // /**
-    //  *  Make a new Order
-    //  * 
-    //  * @return Order
-    //  */
-    // protected function makeOrder()
-    // {       
-
-    //     if (env('APP_ENV') != 'testing') {
-    //         $this->user->company->createInvoiceItem($order); 
-    //     }
-        
-    //     return $order;
-    // }
+    }   
 
     /**
      *  Destroy existing Offer
@@ -102,5 +89,10 @@ class Offer extends Model
             return 'Delete not alowed.';
         }        
         $this->delete();
+    }
+
+    public function getActiveAttribute()
+    {
+        return $this->tender->isActive;
     }
 }

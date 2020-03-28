@@ -16,7 +16,7 @@ import de_settings from './de/settings.json';
 import de_tender from './de/tender.json';
 import de_utilities from './de/utilities.json';
 
-Vue.use(VueI18n)
+Vue.use(VueI18n);
 
 const messages = {    
     'en-EN': {

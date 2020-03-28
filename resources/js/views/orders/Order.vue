@@ -96,7 +96,7 @@
             <!-- Freights Info END -->
            
            <div class="flex justify-end px-3 md:pb-10 md:px-10">
-               <button class="btn btn-outlined mr-2" @click="downloadInvoicePdf">
+               <button class="btn btn-outlined mr-2" @click="downloadInvoicePdf" v-if="isTenderer">
                    <i class="icon ion-md-download mr-1"></i>
                    <span>{{$t('settings.invoice')}}</span>
                </button>

@@ -45,5 +45,15 @@ class OfferTest extends PassportTestCase
         $this->assertNotEmpty($offer->fresh()->custom_id);        
     }
 
+    /** @test */
+    function it_knows_if_it_is_active()
+    {
+        $this->assertTrue($this->offer->active);
+
+        $this->offer->tender->update(['completed_at' => now()]);
+
+        $this->assertFalse($this->offer->active);
+    }
+
     
 }

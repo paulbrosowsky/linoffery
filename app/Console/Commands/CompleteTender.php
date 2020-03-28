@@ -47,13 +47,7 @@ class CompleteTender extends Command
         $tenders->map(function($tender){            
             $tender->complete();
             
-            if(env('APP_ENV') === 'testing'){
-               return  $tender->user->notify(new TenderRunOut($tender));
-            } 
-                    
-            $later = now()->addHours(8);
-
-            $tender->user->notify((new TenderRunOut($tender))->delay($later));                    
+            return  $tender->user->notify(new TenderRunOut($tender));                              
         });
     }
 }

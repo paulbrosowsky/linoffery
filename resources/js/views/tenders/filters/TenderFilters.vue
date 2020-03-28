@@ -43,21 +43,21 @@
             </div>  
         </nav>
         
-        <div 
-            v-for="(filter, index) in filters" 
-            :key="index"
-            v-show="selected == index" 
-        >
-            <component 
-                :is="filter" 
-                @close="closeFilter"  
-                @filter="filterTenders"                                               
-            >            
-            </component>           
-        </div>       
-       
+        
+            <div                 
+                v-for="(filter, index) in filters" 
+                :key="index"
+                v-show="selected == index" 
+            >
+                <component 
+                    :is="filter" 
+                    @close="closeFilter"  
+                    @filter="filterTenders"                                               
+                >            
+                </component>           
+            </div>       
+        
     </div>
- 
     
 </template>
 <script>

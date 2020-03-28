@@ -135,5 +135,6 @@
     "Pay now": "Jetzt bezahlen",
     "If you cannot use the button, try this link.": "Falls Du den Button nicht nutzen kannst, versuche diesen Link.",
     "Regards, Linoffery Team": "Viele Grüße, Linoffery Team",
-    "The invoice is shown without sales tax, since in this case the change of Tax liability (reverse charge procedure) applies. The service recipient must declare and pay the tax amount.": "Der Rechnungsausweis erfolgt ohne Umsatzsteuer, da vorliegend der Wechsel der Steuerschuldnerschaft (Reverse-Charge-Verfahren) greift. Die Umsatzsteuer ist vom Leistungsempfänger anzumelden und abzuführen."
+    "The invoice is shown without sales tax, since in this case the change of Tax liability (reverse charge procedure) applies. The service recipient must declare and pay the tax amount.": "Der Rechnungsausweis erfolgt ohne Umsatzsteuer, da vorliegend der Wechsel der Steuerschuldnerschaft (Reverse-Charge-Verfahren) greift. Die Umsatzsteuer ist vom Leistungsempfänger anzumelden und abzuführen.",
+    "You still has active tenders or offers. Please complete them first.": "Du hast noch aktive Ausschreibungen oder Angebote. Bitte schließe sie zuerst ab."
 }
