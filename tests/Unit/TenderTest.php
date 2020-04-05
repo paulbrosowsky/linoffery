@@ -90,6 +90,5 @@ class TenderTest extends PassportTestCase
         $tender = create('App\Tender');        
         
         $this->assertNotEmpty($tender->fresh()->custom_id);        
-    }
-    
+    } 
 }

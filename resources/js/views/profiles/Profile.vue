@@ -1,6 +1,10 @@
 <template>
-    <section class="mt-5 lg:mt-0">
-        <card classes="py-2">
+    <section class="mt-5 md:flex lg:mt-0 ">
+        <div class="w-full md:w-1/3 md:mr-5">
+            <profile-overview :company="company"></profile-overview>
+        </div>
+
+        <card class="flex-1 py-5 px-0">
             <div v-if="comments">
                 <comment                
                     v-for="(comment, index) in comments"
@@ -15,18 +19,22 @@
             </div>
                        
         </card>
+
+        <loading-spinner :loading="loading" size="48px"></loading-spinner> 
     </section>    
 </template>
-<script>
-    import Comment from './Comment'
+<script>    
+    import Comment from './Comment';
+    import ProfileOverview from './ProfileOverview';
 
     export default {
 
-        components:{ Comment },
+        components:{ Comment, ProfileOverview },
 
         data(){
             return{
                 company: null,
+                loading: false, 
             }
         },
 
@@ -38,16 +46,14 @@
 
         methods:{
             fetchCompanyProfile(){
+                this.loading = true;
                 axios
                     .get(`/api${this.$route.path}`)
                     .then(response =>{                       
-                        this.company = response.data; 
-
-                        // Set Company Data on the Sidebar
-                        // Listener in /views/profiles/ProfileSidebar.vue
-                        Event.$emit('setCompanyData', this.company);                      
+                        this.company = response.data;
+                        this.loading = false;  
                     })
-                    .catch(errors => console.log(errors.response));
+                    .catch(errors => this.loading = false);
             }
         },
 

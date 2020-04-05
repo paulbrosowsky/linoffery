@@ -145,11 +145,11 @@
         computed:{         
 
             delivery(){                
-                return this.order.tender.locations.find(location => location.type === 'delivery')
+                return this.order.tender.delivery;
             },
 
             pickup(){                
-                return this.order.tender.locations.find(location => location.type === 'pickup')                             
+                return this.order.tender.pickup;                             
             },
 
             isTenderer(){                

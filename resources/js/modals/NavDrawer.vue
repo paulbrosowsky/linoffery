@@ -83,12 +83,12 @@
                {{ $t('content.create_tender') }}
             </p>
 
-            <router-link 
+            <!-- <router-link 
                 class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                 :to="{name: 'support'}"
             >              
                 <p @click="hide">support</p>   
-            </router-link>
+            </router-link> -->
             
             <div v-if="!loggedIn"> 
                 <button class="btn btn-outlined btn-teal-outlined bg-white mt-10" @click="showLogin"> {{ $t('auth.login') }} </button>

@@ -1,6 +1,22 @@
 <template>
     <div>  
-        <component :is="settings" :user="user"></component>
+
+        <p class="text-gray-700 font-light leading-none mb-5 text-2xl ml-2">
+            {{$t('settings.settings')}}
+        </p>
+
+        <tabs>
+            <tab :name="$t('settings.account')"> 
+                <account-settings :user="user"></account-settings>
+            </tab>
+            <tab :name="$t('settings.company')">
+                <company-settings :user="user"></company-settings>
+            </tab>
+            <tab :name="$t('settings.notifications')">
+                <notification-settings :user="user"></notification-settings>
+            </tab>          
+        </tabs>
+       
         <gmap class="hidden"></gmap> 
     </div> 
     
@@ -9,33 +25,19 @@
     import AccountSettings from '../settings/AccountSettings'
     import CompanySettings from '../settings/CompanySettings'
     import NotificationSettings from '../settings/NotificationSettings'
-    import InvoicesSettings from '../settings/InvoicesSettings';
+    
 
     export default {
         components: {         
             AccountSettings,
             CompanySettings,
             NotificationSettings,
-            InvoicesSettings
         },
 
         computed:{
             user(){                
                 return this.$store.state.user
-            },
-
-            settings(){
-                return this.$route.hash.substring(1)+ '-settings' 
-            },
-        },
-        
-        beforeRouteEnter(to, from, next){            
-           if(!to.hash){
-               next({name: 'settings', hash: '#account'})
-           }else{
-               next()
-           }
-        }
-
+            },            
+        }, 
     }
 </script>

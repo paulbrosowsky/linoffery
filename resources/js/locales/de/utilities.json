@@ -23,7 +23,8 @@
     "completed": "Abgeschlossen",
     "contact_person": "Ansprechpartner",
     "more_results": "Weitere Ergebnisse",
-    "no_more_results": "Keine weiteren Ergebnisse.",
+    "results": "Ergebnisse",
+    "no_results": "Keine Ergebnisse",
     "origin": "Startpunkt",
     "destination": "Reiseziel",
     "detour": "Umweg",
@@ -44,9 +45,13 @@
     "back": "zurück",
     "accept": "Akzeptieren",
     "from": "von",
+    "of": "von",
     "to": "bis",
+    "all": "Alle",
 
     "open": "offen",
     "paid": "bezahlt",
-    "failed": "fehlgeschlagen"
+    "failed": "fehlgeschlagen",
+    "created_at": "erstellt am",
+    "amount": "Betrag"
 }

@@ -1,23 +1,14 @@
 <template>
-    <div>
-        <div class="flex">        
-            <dashboard-nav></dashboard-nav>
-            <div class="flex flex-col min-h-screen w-full md:ml-20">
-                <navbar></navbar>                
+    <div class="w-full">
+        <dashboard-nav></dashboard-nav>
+        <div class="flex"> 
+            <div class="flex flex-col min-h-screen w-full md:ml-80">
+                <navbar layout="dashboard"></navbar>                
                     <div class="flex-1 bg-gray-300">
-                        <div class="w-full mx-auto px-3 py-5 md:px-20" :style="maxWidth"> 
-                            <div class="lg:flex">
-                                <div class="lg:w-1/4" v-if="this.$slots.sidebar"> 
-                                    <sidebar-nav>   
-                                        <slot name="sidebar"></slot>
-                                    </sidebar-nav>
-                                </div>
-                                <div class="flex-1 lg:ml-10">
-                                    <notifications></notifications>
-                                    <slot></slot>  
-                                </div>
-                            </div>
+                        <div class="w-full mx-auto px-3 py-5 md:px-10" :style="maxWidth">
                             
+                            <notifications></notifications>
+                            <slot></slot>  
                                 
                         </div>
                     </div>                 

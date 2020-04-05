@@ -1,30 +1,32 @@
 <template>
-
-    <section class="py-3 px-3 border-b hover:bg-gray-100 md:px-8 ">
-        <router-link class="w-full" :to="{ name: 'tender', params: { tender: tender.id }}">
-            <div class="flex items-center">
-
-                <p class="text-2xl font-light leading-none" v-text="'€ '+offer.price"></p>
-                
-                <div class=" flex-1 pl-3 overflow-hidden md:pl-8">
-                    <p class="truncate font-bold md:text-lg" v-text="tender.title"></p>
-
-                    <category-tag :category="tender.category" ></category-tag> 
-                     <span class="text-sm text-gray-500 leading-none mr-1">{{$t('tender.offered_at')}}</span>
-                    <span class="text-sm font-bold leading-none"> {{ offer.created_at  | moment("DD.MM.YYYY") }}</span> 
-                    <span class="text-sm text-gray-500 leading-none mr-1">{{$t('tender.valid_until')}}</span>
-                    <span class="text-sm text-teal-500 font-bold leading-none"> {{ tender.valid_date | moment("DD.MM.YYYY") }}</span>
-
-                </div>
+    <router-link 
+        class="w-full border-b py-3 px-5 rounded-t-mg overflow-hidden hover:bg-gray-100 md:py-5" 
+        :to="{ name: 'tender', params: { tender: tender.id }}"
+    >
+        <section class="flex items-center mb-5">
+            <div class="pr-5">
+                <p class="text-2xl font-light leading-none " v-text="'€ '+ offer.price"></p>
             </div>
-        </router-link>
+            <div class="flex-1 overflow-hidden">
+                <div class="flex items-center">
+                    <category-tag :category="tender.category" ></category-tag> 
+                    <p class="text-sm text-gray-500 leading-none pl-2" v-text="offer.custom_id"></p>
+                </div>
+                <p class="text-lg truncate" v-text="tender.title"></p>
+            </div>
+        </section>
 
-    </section>
+        <tender-overview :tender="tender"></tender-overview>
+
+    </router-link>
 
 </template>
 <script>
+    import TenderOverview from '../tenders/TenderOverview';
     
-    export default {        
+    export default { 
+        components:{TenderOverview},
+
         props:['offer'],
         
         data(){

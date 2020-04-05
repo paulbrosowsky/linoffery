@@ -1,116 +1,96 @@
 <template>
-    <section>
-        <div class="w-full" >                      
-            <div class="flex items-center mb-2 md:justify-start md:-ml-3 lg:flex-col lg:items-start"> 
-                <div                     
-                    class="lg:w-full"
-                    v-for="(tab, index) in tabsList" 
-                    :key="index"
-                > 
+    <section >
+        <div class="li-tabs flex mb-3 overflow-x-scroll" v-dragscroll>
+            <div                          
+                v-for="(tab, index) in tabs" 
+                :key="index"                
+            >   
+                <button 
+                    class="flex items-center rounded-lg cursor-pointer mr-1 py-2 hover:bg-gray-100 focus:outline-none"
+                    :class="{ 'bg-gray-100' : tab == activeTab }"
+                    @click="setActiveTab(tab)"
+                    role-tab
+                    :aria-selected="tab == activeTab"
+                >
+                            
+                    <p
+                        class="text-gray-600 text-sm uppercase tracking-tight cursor-pointer px-2" 
+                        :class="{ 'text-teal-500 font-bold' : tab == activeTab }"
+                        v-text="tab.name" 
+                    ></p>
 
-                    <div 
-                        class="lg:flex  lg:justify-between lg:items-center mb-1 lg:p-2 lg:hover:bg-gray-100 rounded-lg cursor-pointer"
-                        :class="{ 'lg:bg-gray-100 lg:rounded-lg' : tab.isActive }"
-                         @click="setActiveTab(tab)"
-                    >
-                        
-                        <button
-                            class="text-gray-500 text-sm tracking-tight cursor-pointer px-2 md:text-base focus:outline-none" 
-                            :class="{ 'text-teal-500 font-bold' : tab.isActive }"
-                            role-tab
-                            :aria-selected="tab.isActive"
-                            v-text="tab.name" 
-                           
-                        ></button>
+                    <p 
+                        class="text-xs text-white px-2 mr-2 rounded-full bg-gray-500 font-bold"
+                        :class="{ 'bg-teal-500' : tab == activeTab }"                            
+                        v-text="tab.count"
+                        v-if="tab.count"
+                    ></p>
 
-                        <p 
-                            class="hidden text-sm text-white px-2 rounded-full bg-gray-500 font-bold lg:block"
-                            :class="{ 'bg-teal-500' : tab.isActive }"                            
-                            v-text="tab.count"
-                        ></p>
-
-                    </div>
-                    
-                </div>                  
-
-                <div v-if="dropdownTabs"> 
-                    <dropdown>
-                        <template v-slot:trigger>
-                            <button class="px-2 md:hidden focus:outline-none ">
-                                <i class="icon ion-md-more  text-2xl text-gray-600 hover:text-teal-500 "></i>
-                            </button>
-                        </template>
-                        
-                        <div 
-                            v-for="(tab, index) in dropdownTabs" 
-                            :key="index" 
-                        >                         
-                            <button
-                                class="text-gray-500 text-sm cursor-pointer px-2 pb-2 md:text-base md:px-5 focus:outline-none" 
-                                :class="{ 'text-teal-500 font-bold' : tab.isActive }"
-                                role-tab
-                                :aria-selected="tab.isActive"
-                                v-text="tab.name" 
-                                @click="setActiveTab(tab)"
-                            ></button>
-
-                        </div> 
-
-                    </dropdown>
-                </div>                
-            </div>                  
-            
+                </button> 
+            </div>  
         </div>
-
-        <div class="flex-1">
-            <slot></slot>
-        </div>
+       
+        
+        <slot></slot>
+    
 
     </section>
 
 </template>
 <script>
-    export default {   
+    import { dragscroll } from 'vue-dragscroll';
+
+    export default {
         
-        props:['route'],
+        directives: {
+            'dragscroll': dragscroll
+        },  
 
         data(){
            return{
                tabs:[],
+               activeTab: null
            }
+        },    
+        
+        watch:{
+            activeTab(activeTab){
+                this.tabs.map(tab => (tab.show = tab == activeTab ))
+            }
         },
-
-        computed:{
-            tabsList(){  
-                // reduce tabs lenght on mobile view   
-                if (screen.width<=640 && this.tabs.length > 4) {
-                   return this.tabs.slice(0,4)
-                }                       
-                return  this.tabs              
-            },
-
-            dropdownTabs(){
-                // make tabs array for dropdown on mobile view   
-                if (screen.width<=640 && this.tabs.length > 4) {
-                    return this.tabs.slice(4, this.tabs.length-1) 
-                }                
-                return null
-            },            
-        },        
 
         methods:{
             setActiveTab(tab){
-                this.$router.push({
-                        name: this.route ? this.route : this.$route.name, 
-                        hash: tab.hash
-                }) 
+                this.activeTab = tab;
+
+                if(tab.hash){
+                    history.pushState({}, null, '#'+ tab.hash) 
+                }else{
+                    var noHashURL = window.location.href.replace(/#.*$/, '');
+                    window.history.replaceState({}, null, noHashURL) 
+                }   
+                
+                this.$emit('update', this.activeTab.hash);
+              
             },
         },       
 
         mounted(){            
-            this.tabs = this.$children            
+            this.tabs = this.$children;
+
+            window.location.hash 
+                ? this.tabs.map(tab => (tab.isActive ? this.activeTab = tab : ''))
+                : this.activeTab = this.tabs[0]; 
         },
        
     }
 </script>
 
+<style >
+    .li-tabs{
+        -ms-overflow-style: none;
+    }
+    .li-tabs::-webkit-scrollbar{
+        display: none;
+    }
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="border-b py-5 px-5 md:px-12">
+    <div class="border-b py-5 px-5">
         <div class="flex">
             <div class="w-10 h-10 cursor-pointer shadow-lg rounded-full overflow-hidden mr-5"> 
                 <router-link :to="{name: 'profile', params:{ profile: comment.user.company.id}}">

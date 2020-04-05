@@ -9,25 +9,23 @@ import About from './views/About'
 import CreateTender from './views/tenders/CreateTender';
 import ForgotPassword from './views/auth/ForgotPassword'
 import Impressum from './views/Impressum'
+import Invoices from './views/invoices/Invoices';
 import Login from './views/auth/Login'
 import Logout from './views/auth/Logout'
 import NotFound from './views/NotFound'
+import Offers from './views/offers/Offers';
 import Order from './views/orders/Order'
 import Orders from './views/orders/Orders'
-import OrdersSidebar from './views/orders/OrdersSidebar'
 import Privacy from "./views/Privacy"
 import Profile from "./views/profiles/Profile"
-import ProfileSidebar from "./views/profiles/ProfileSidebar"
 import Register from './views/auth/register/Register'
 import ResetPassword from './views/auth/ResetPassword'
 import Services from './views/Services'
 import Settings from './views/settings/Settings'
-import SettingsSidebar from './views/settings/SettingsSidebar'
-import Support from './views/Support'
+// import Support from './views/Support'
 import Tender from './views/tenders/Tender'
 import TendersDashboard from './views/tenders/TendersDashboard'
 import Tenders from './views/tenders/Tenders'
-import TendersSidebar from './views/tenders/TendersSidebar'
 import Terms from './views/Terms'
 import Welcome from './views/Welcome'
 
@@ -64,11 +62,11 @@ let routes = [
         component: Privacy
     },
 
-    {
-        name:'support',
-        path:'/support',
-        component: Support
-    },
+    // {
+    //     name:'support',
+    //     path:'/support',
+    //     component: Support
+    // },
 
     {
         name:'about',
@@ -80,28 +78,12 @@ let routes = [
         name:'services',
         path:'/services',
         component: Services
-    },
-
-    {
-        name:'dashboard_tenders',
-        path:'/dashboard/tenders',        
-        components:{
-            default:TendersDashboard, 
-            sidebar: TendersSidebar         
-        },
-        meta:{
-            layout: 'dashboard',          
-            requiresAuth: true
-        },       
-    },
+    },    
 
     {
         name:'settings',
         path:'/settings',
-        components:{
-            default: Settings, 
-            sidebar: SettingsSidebar         
-        },        
+        component: Settings,
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
@@ -183,15 +165,22 @@ let routes = [
         meta:{
             layout: 'mapped',
         }
-    },    
+    },  
+
+    {
+        name:'dashboard_tenders',
+        path:'/dashboard/tenders',        
+        component: TendersDashboard,      
+        meta:{
+            layout: 'dashboard',          
+            requiresAuth: true
+        },       
+    },
 
     {
         name:'orders',
         path:'/orders',
-        components:{
-            default: Orders, 
-            sidebar: OrdersSidebar         
-        },
+        component: Orders, 
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
@@ -201,10 +190,7 @@ let routes = [
     {
         name:'order',
         path:'/orders/:order',
-        components:{
-            default:Order,
-            sidebar: OrdersSidebar   
-        },
+        component: Order,         
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
@@ -214,16 +200,32 @@ let routes = [
     {
         name:'profile',
         path:'/profiles/:profile',
-        components:{
-            default:Profile,
-            sidebar: ProfileSidebar   
-        },
+        component: Profile,        
         meta:{            
             layout: 'dashboard',          
             requiresAuth: true,
         },                 
     },
-   
+
+    {
+        name:'offers',
+        path:'/offers',
+        component: Offers, 
+        meta:{            
+            layout: 'dashboard',          
+            requiresAuth: true,
+        },          
+    },   
+
+    {
+        name:'invoices',
+        path:'/invoices',
+        component: Invoices, 
+        meta:{            
+            layout: 'dashboard',          
+            requiresAuth: true,
+        },          
+    }, 
 ]
 
 export const router = new VueRouter({

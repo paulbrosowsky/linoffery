@@ -2,7 +2,7 @@
     <div>
         <router-link :to="{name: 'profile', params:{ profile: user.company.id}}">
             <div class="w-full flex py-5">            
-                <img class="w-16 h-16 rounded-full shadow-md" :src="user.company.avatar" alt="">
+                <img class="w-16 h-16 rounded-full shadow-md" :src="user.company.avatar" alt="" v-if="avatar">
 
                 <div class="ml-3 md:ml-5">
                     <p class="text-lg font-bold mb-1" v-text="user.company.name"></p>
@@ -17,8 +17,7 @@
         <div class="w-full flex ml-5">
            <div class="h-10 w-10 rounded-full overflow-hidden shadow-md">
                <avatar :user="user"></avatar>
-           </div>
-            
+           </div>            
 
             <div class="ml-3 md:ml-5">
                 <p class="uppercase text-xs text-gray-500 ">{{$t('utilities.contact_person')}}</p>  
@@ -39,9 +38,10 @@
 </template>
 <script>
     export default {
-        props:['user'],
-
-        
+        props:{
+            user: {type:Object},
+            avatar: { default: true}
+        },
         
     }
 </script>

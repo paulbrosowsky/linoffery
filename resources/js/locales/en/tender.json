@@ -7,9 +7,11 @@
     "offer_id": "Offer ID",
 
     "order": "Order", 
+    "orders": "Orders", 
     "order_id": "Order ID",   
     "my_orders": "My Orders", 
-    "open_order": "open order",  
+    "open_order": "open order", 
+    "my_offers": "My Offers", 
 
     "my_tenders": "My Tenders",  
     "tender_id": "Tender ID", 
@@ -41,6 +43,7 @@
     "transport_type":"Transport type",
     "dimentions": "Dimentions",
     "weight": "Weight",
+    "total_weight": "Total weight",
     "max_weight": "max. Weight",
     "min_weight": "min. Weight",
     "weight_kg": "Weight kg",
@@ -103,5 +106,7 @@
     "filter_message_number": "The values ​​must be numeric.",
     "filter_message_min_max": "Max. Value must be greater than min.",
     "loading_equipment_exchange": "Exchange loading equipment",
-    "loading_equipment_exchange_info": "Optional: If nothing is heard, the loading device (e.g. replacement pallet) does not have to be replaced."
+    "loading_equipment_exchange_info": "Optional: If nothing is heard, the loading device (e.g. replacement pallet) does not have to be replaced.",
+    "load": "Load",
+    "single_loads": "Single loads"
 }

@@ -1,19 +1,23 @@
 <template>
     <nav class="w-full px-5 py-2 z-10 md:px-10" :class="classes"> 
         <div class="flex items-center justify-between">
-            <div class="flex"> 
-                <div>
-                    <router-link to="/">                
-                        <div class="flex items-center flex-1 text-gray-700 text-2xl mr-6 md:text-3xl"> 
-                            <span class="font-light">lin</span>
-                            <span class="text-teal-500">o</span>
-                            <span class="font-light">ffery</span>
-                        </div>
-                    </router-link>
-                </div>                
-                
+            <div>
+                <router-link to="/" v-show="layout != 'dashboard'">
+                    <div class="flex items-center flex-1 text-gray-700 text-2xl mr-6 md:text-3xl">
+                        <span class="font-light">lin</span>
+                        <span class="text-teal-500">o</span>
+                        <span class="font-light">ffery</span>
+                    </div>
+                </router-link>
+                <button 
+                    class="icon-btn text-gray-700 -ml-2 md:hidden" 
+                    @click="toggleSidebar"
+                    v-show="layout === 'dashboard'"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M80 280h256v48H80zM80 184h320v48H80zM80 88h352v48H80z"/><g><path d="M80 376h288v48H80z"/></g></svg>
+                </button>
             </div>
-            
+
             <div class="flex items-center">
                 <div class="lg:flex-grow"></div>
                 <div v-show="!loggedIn"> 
@@ -81,7 +85,14 @@
                 return this.$store.getters.hasNotifications
             },           
           
-        },       
+        },   
+        
+        methods:{
+            toggleSidebar(){
+                // Listener in DashboardNav
+                Event.$emit('toggle-dashboard-sidebar');
+            }
+        }
         
     }
 </script>

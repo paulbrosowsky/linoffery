@@ -1,5 +1,5 @@
 <template>
-    <div role="tab-panel" v-if="isActive">
+    <div role="tabpanel" v-if="show">
         <slot></slot>
     </div>
 </template>
@@ -7,22 +7,20 @@
     export default {
         props:{
             name:'',
-            hash:'',
-            count:{default:null}        
+            hash:{default:null} ,
+            count:{default:null}                    
         },  
         
         data(){
             return{
-                
+                show: false
             }
         },
 
         computed:{
             isActive(){               
-                return this.hash == this.$route.hash
+                return this.hash == window.location.hash.substring(1)
             }            
-        },
-       
-        
+        },        
     }
 </script>

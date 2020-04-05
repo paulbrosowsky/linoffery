@@ -106,12 +106,14 @@ Vue.component('image-upload', require('./components/ImageUpload.vue').default);
 Vue.component('loading-spinner', require('./components/Spinner.vue').default);
 Vue.component('gmap', require('./views/Map.vue').default);
 Vue.component('navbar', require('./components/Navbar.vue').default);
+Vue.component('paginator', require('./components/Paginator.vue').default);
 Vue.component('password-input', require('./components/PasswordInput.vue').default);
 Vue.component('select-input', require('./components/SelectInput.vue').default);
 Vue.component('sidebar-nav', require('./components/SidebarNav.vue').default);
 Vue.component('star-rating', require('vue-star-rating').default);
 Vue.component('tab', require('./components/Tab.vue').default);
 Vue.component('tabs', require('./components/Tabs.vue').default);
+Vue.component('tender-card', require('./views/tenders/TenderCard.vue').default);
 Vue.component('textarea-input', require('./components/TextareaInput.vue').default);
 
 

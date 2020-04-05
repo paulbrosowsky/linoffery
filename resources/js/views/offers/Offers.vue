@@ -1,100 +1,58 @@
 <template>
     <section>
         <p class="text-gray-700 font-light leading-none mb-5 text-2xl ml-2">
-            {{$t('tender.my_orders')}}
+            {{$t('tender.my_offers')}}
         </p>
 
-        <tabs @update="updateHash" v-if="orders">
-            <tab :name="$t('utilities.all')" hash="" :count="all.length"></tab>
-            <tab :name="$t('utilities.active')" hash="active" :count="active.length"></tab>
-            <tab :name="$t('utilities.completed')" hash="completed" :count="completed.length"></tab>
-        </tabs>
-
-        <card class="flex flex-col overflow-hidden px-0">
-            <order-card 
-                v-for="(order, index) in filtered" 
+        <card class="flex flex-col overflow-hidden px-0">            
+            <offer-dashboard-card 
+                v-for="(offer, index) in offers" 
                 :key="index" 
-                :order="order" 
-                v-show="filtered"
-            ></order-card>        
+                :offer="offer" 
+            ></offer-dashboard-card>
 
-            <p class="flex px-5 py-5 md:px-10 text-gray-500" v-show="!orders">
+            <p class="flex px-5 py-5 md:px-10 text-gray-500" v-show="!offers">
                 <svg class="h-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 140h-16v-6c8.9-9 16-22.9 16-38 0-35.3-28.7-64-64-64-16.3 0-31.1 6.1-42.4 16.1C297.2 38 281.4 32 264.2 32c-15.8 0-30.4 5.1-42.3 13.7C212 37.2 199 32 184.9 32c-17.1 0-32.4 7.6-42.8 19.5-11.7-12-28-19.5-46.1-19.5-35.3 0-64 28.7-64 64 0 16.2 6.1 31 16 42.3V193c0 26.5 21.5 48 48 48v174.5c0 35.3 28.8 64.5 64.2 64.5H336c35.3 0 64.1-29.2 64.1-64.5V372h16c50 0 64-32.7 64-68v-96c-.1-35.3-17.1-68-64.1-68zm-64 52H144v-53.7c.3-.4.7-.8 1-1.2 1.2-1.5 2.4-3 3.5-4.6 1.5 1.2 3 2.4 4.6 3.4 9.1 6.1 20 9.7 31.7 9.7 6.4 0 12.6-1.1 18.3-3 12.8 20.2 35.3 33.7 61 33.7 22 0 41.7-9.9 54.9-25.4 5.7-6.7 10.2-14.4 13.1-22.9H352v64zM96 128.1v75c-9 0-16-7.2-16-16v-63.3c-8-4.5-13.4-12.1-15.3-21-.5-2.1-.7-4.4-.7-6.7 0-17.6 14.4-32 32-32 11.8 0 23.3 7.7 30.1 15.4s26.7 7.7 33.9 0c6.8-7.3 14.3-15.4 24.8-15.4 6 0 11.6 2.2 15.9 5.8 1.9 1.6 3.6 3.5 4.9 5.6 1.1 1.8 2 4.2 3.1 5.8 2.7 3.4 6.5 5.5 11.2 5.5 4.4 0 8.3-1.9 11-5 .6-.7 1.2-1.5 1.7-2.3 2-2.5 4.2-4.8 6.7-6.8 6.8-5.4 15.5-8.6 24.8-8.6 10.6 0 20.2 4.1 27.4 10.9 1.7 1.6 6.7 4.5 13.2 5.1 4.5.4 6.1.3 8.2 0 10.3-1.3 14.4-4.7 16.4-6.6 5.8-5.8 13.8-9.4 22.6-9.4 17.6 0 32 14.4 32 32 .2 3.1-.3 6.2-1.2 9.1-2.5-5.5-8.1-9.2-14.6-9.2h-55s-8.7-.7-8.7 8.2c0 8.9-2.9 17.1-7.8 23.7-7.3 9.9-19.1 16.4-32.4 16.4-14.9 0-27.9-8.1-34.8-20.2-1.6-2.7-2.8-5.6-3.7-8.6-.1-.6-.3-1.1-.4-1.6-2-5.9-7.5-10.2-14.1-10.2-3.9 0-7.5 1.5-10.2 4l-.1.1c-2.4 2.1-5.3 3.7-8.4 4.7-2.4.8-5 1.2-7.7 1.2-7.5 0-14.7-4-18.8-8.6-10-11.4-23.7-6.8-29.7-5.5-6 1.3-12.2 11.7-12.2 11.7-1.1 2.1-2.4 4-3.9 5.8-6 6.7-15.2 11-24.2 11zM432 304c0 17.7-6.3 24-24 24h-8V184h8c17.7 0 24 6.3 24 24v96z"/></svg>
-                <span>{{$t('tender.no_orders_info')}}</span>
+                <span>{{$t('tender.no_offers_info')}}</span>
             </p>
 
             <loading-spinner :loading="loading" size="48px"></loading-spinner> 
-        </card>        
+
+        </card>
     </section>
 </template>
-<script>    
-    import OrderCard from '../orders/OrderCard'
+<script>
+    import OfferDashboardCard from './OfferDashboardCard';
 
     export default {
 
-        components:{            
-            OrderCard
+        components:{
+            OfferDashboardCard,
         },
 
         data(){
-            return{                
-                orders: null,
-                hash: null,
+            return{
+                offers: null,
                 loading: false, 
             }
         },
 
-        computed:{ 
-            all(){
-                return this.orders;
-            },
-
-            active(){
-                if(this.orders){
-                    return this.orders.filter((order)=>{
-                        return order.completed_at === null
-                    })
-                }else{
-                    return []
-                }               
-            },
-
-            completed(){
-                if(this.orders){
-                    return this.orders.filter((order)=>{
-                        return order.completed_at != null
-                    })             
-                }else{
-                    return []
-                }             
-            },
-
-           filtered(){                
-                return this[this.hash];
-            }           
-        },
-
         methods:{
-
-            fetchOrders(){
+            fetchOffers(){
                 this.loading = true;
                 axios
-                    .get('/api/orders')
-                    .then(response =>{                       
-                        this.orders = response.data;
+                    .get('/api/offers')
+                    .then(response =>{                                               
+                        this.offers = response.data;
                         this.loading = false;
                     })
-                    .catch(errors => this.loading = false );
-            },  
-            
-            updateHash(value){
-                value ? this.hash = value : this.hash = 'all';
+                    .catch(errors => this.loading = false);
             },
         },
 
         created(){
-            this.fetchOrders();
-            this.updateHash(window.location.hash.substring(1));
-        },
+            this.fetchOffers();
+        }
+        
     }
 </script>

@@ -6,10 +6,12 @@
     "active_offers": "Aktive Angebote",
     "offer_id": "Angebot ID",
 
-    "order": "Auftrag", 
+    "order": "Auftrag",
+    "orders": "Aufträge", 
     "order_id": "Auftrag ID",
     "my_orders": "Meine Aufträge", 
     "open_order": "zum Auftrag",  
+    "my_offers": "Meine Angebote",
     
     "my_tenders": "Meine Ausschreibungen",     
     "tender_id": "Ausschreibung ID", 
@@ -41,10 +43,11 @@
     "transport_type":"Transportart",
     "dimentions": "Abmaße",
     "weight": "Gewicht",
+    "total_weight": "Gesamtgewicht",
     "max_weight": "max. Gewicht",
     "min_weight": "min. Gewicht",
     "weight_kg": "Gewicht kg",
-    "width_cm": "Breite cm",
+    "width_cm": "Breite cm",    
     "height_cm": "Höhe cm",
     "length_cm": "Länge cm",
 
@@ -103,5 +106,7 @@
     "filter_message_number": "Die Werte müssen numerisch sein.",
     "filter_message_min_max": "Max. Wert muss größer als min. sein.",
     "loading_equipment_exchange": "Lademittel tauschen",
-    "loading_equipment_exchange_info": "Optional: Wenn nichts angegeben ist, muss das Lademittel (z.B. Ersatzpalette) nicht getauscht werden."
+    "loading_equipment_exchange_info": "Optional: Wenn nichts angegeben ist, muss das Lademittel (z.B. Ersatzpalette) nicht getauscht werden.",
+    "load": "Ladung",
+    "single_loads": "Einzelladungen"
 }

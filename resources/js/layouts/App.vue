@@ -1,10 +1,6 @@
 <template>
-    <div>
-        <component :is="layout">  
-
-            <template v-slot:sidebar>
-                <router-view name="sidebar"></router-view>
-            </template> 
+    <div class="antialiased">
+        <component :is="layout"> 
 
             <template v-slot:map>
                 <router-view name="map"></router-view>
@@ -83,7 +79,7 @@
                     if (scrollable - (window.innerHeight + 100) < scrollPosition) {
                         Tawk_API.hideWidget();
                     } else {
-                        this.layout != 'default-layout' ? Tawk_API.hideWidget() : Tawk_API.showWidget();   
+                        this.layout == 'mapped-layout' ? Tawk_API.hideWidget() : Tawk_API.showWidget();   
                     }
                 }           
             }, 

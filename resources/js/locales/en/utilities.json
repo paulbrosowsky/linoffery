@@ -23,6 +23,7 @@
     "completed": "Completed",
     "contact_person": "Contact",
     "more_results": "More Results",
+    "results": "Results",
     "no_more_results": "No more results.",
     "origin": "Origin",
     "destination": "Destination",
@@ -40,13 +41,17 @@
     "cookies_info": "In order to optimize our website and improve it continuously, we use cookies. For more information about cookies, please visit our",
     "agree": "I agree",
     "filter": "Filter",
-    "next": "next",
+    "next": "next", 
     "back": "back",
     "accept": "Accept",
     "from": "from",
+    "of": "of",
     "to": "to",
+    "all": "All",
 
     "open": "open",
     "paid": "paid",
-    "failed": "failed"
+    "failed": "failed",
+    "created_at": "created at",
+    "amount": "Amount"
 }

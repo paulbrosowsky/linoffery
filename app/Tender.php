@@ -7,7 +7,6 @@ use App\Events\TenderCloned;
 use App\Filters\TenderFilters;
 use App\Events\TenderCompleted;
 use Illuminate\Database\Eloquent\Model;
-use App\Notifications\TenderWasCloned;
 
 class Tender extends Model
 {
@@ -15,11 +14,9 @@ class Tender extends Model
 
     protected $guarded = [];
 
-    protected $with = [ 'user', 'locations', 'freights', 'category'];
+    protected $with = [ 'user', 'freights', 'category'];
 
-    protected $appends = ['offersCount', 'isActive', 'orderId']; 
-
-
+    protected $appends = ['offersCount', 'isActive', 'orderId', 'delivery', 'pickup']; 
 
     protected static function boot()
     {
@@ -33,8 +30,7 @@ class Tender extends Model
             $tender->freights()->each(function($freight){
                 $freight->delete();
             }); 
-        });  
-       
+        }); 
     }
 
     /**
@@ -178,8 +174,7 @@ class Tender extends Model
         OfferCreated::dispatch($this, $offer);  
 
         return $offer;
-    }   
-    
+    }      
 
     /**
      * Set Tender as completed
@@ -229,5 +224,25 @@ class Tender extends Model
         }
         $this->complete();
         $this->delete();
+    }
+
+    /**
+     *  Get Delivery Location 
+     * 
+     * @return Collection
+     */
+    public function getDeliveryAttribute()
+    {
+        return $this->locations()->where('type', 'delivery')->first();
+    }
+    
+    /**
+     *  Get Pickup Location 
+     * 
+     * @return Collection
+     */
+    public function getPickupAttribute()
+    {
+        return $this->locations()->where('type', 'pickup')->first();
     }
 }

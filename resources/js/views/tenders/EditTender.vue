@@ -128,23 +128,26 @@
                 ],
 
                 currentStep: 0,
+
+                delivery: this.tender.delivery,
+                pickup: this.tender.pickup
             }
         },
 
         computed:{
-            delivery(){
-                let delivery = this.tender.locations.find(location => location.type === 'delivery'); 
-                typeof delivery !== 'undefined' ? this.steps[2].completed = true : '';
+            // delivery(){
+            //     let delivery = this.tender.locations.find(location => location.type === 'delivery'); 
+            //     typeof delivery !== 'undefined' ? this.steps[2].completed = true : '';
 
-                return delivery;               
-            },
+            //     return delivery;               
+            // },
 
-            pickup(){
-                let pickup = this.tender.locations.find(location => location.type === 'pickup'); 
-                typeof pickup !== 'undefined' ? this.steps[1].completed = true : '';
+            // pickup(){
+            //     let pickup = this.tender.locations.find(location => location.type === 'pickup'); 
+            //     typeof pickup !== 'undefined' ? this.steps[1].completed = true : '';
 
-                return pickup;             
-            },   
+            //     return pickup;             
+            // },   
             
             draft(){
                 return !this.tender.published_at;

@@ -113,12 +113,4 @@ class Order extends Model
 
         return isset($shipperPdf) && isset($carrierPdf);
     }
-
-    // /**
-    //  *  Mark Order as billable when invoice was created    
-    //  */
-    // public function markAsBilled()
-    // {
-    //     $this->update(['billed_at' => now()]);
-    // }
 }

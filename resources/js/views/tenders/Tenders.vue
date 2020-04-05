@@ -2,14 +2,14 @@
     <div ref="tendersList">     
         <div v-if="tenders">
             <tender-card 
-                v-for="(tender, index) in tenders" 
-                :key="index" 
+                v-for="tender in tenders" 
+                :key="tender.id" 
                 :tender="tender"                                  
             ></tender-card>
         </div> 
 
         <paginator 
-            class="px-3 py-8" 
+            class="px-5 py-8" 
             :data-set="dataSet" 
             v-if="dataSet" 
             @change="fetchTenders"
@@ -20,11 +20,7 @@
     </div>
 </template>
 <script>
-    import TenderCard from '../tenders/TenderCard';
-    import Paginator from '../../components/Paginator';    
-
     export default {
-        components:{TenderCard, Paginator},
         
         data(){
             return{                 
@@ -39,12 +35,9 @@
                 let locations = [];
 
                 if(this.tenders){
-                    this.tenders.map(tender => {  
-                        if(tender.locations.length > 0){
-                            tender.locations.forEach( location => {
-                                locations.push(location);
-                            }); 
-                        }              
+                    this.tenders.map(tender => {                         
+                        tender.delivery ? locations.push(tender.delivery) : '';
+                        tender.pickup ? locations.push(tender.pickup) : '';                                    
                     });
                 }
 
