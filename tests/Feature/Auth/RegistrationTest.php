@@ -137,12 +137,12 @@ class RegistrationTest extends TestCase
     //    $this->registerAccount( ['vat' => 'DE12345678'])->assertStatus(422);
     // }
 
-    /** @test */
-    function terms_must_be_confirmed()
-    {  
-        $this->registerAccount( ['terms_accepted' => ''])->assertStatus(422);
-        // $this->registerAccount( ['payment_terms_accepted' => ''])->assertStatus(422);
-    }
+    // /** @test */
+    // function terms_must_be_confirmed()
+    // {  
+    //     $this->registerAccount( ['terms_accepted' => ''])->assertStatus(422);
+    //     // $this->registerAccount( ['payment_terms_accepted' => ''])->assertStatus(422);
+    // }
 
    /** @test */
    function a_confirmation_email_is_sent_upon_registration()

@@ -18,7 +18,8 @@ import Order from './views/orders/Order'
 import Orders from './views/orders/Orders'
 import Privacy from "./views/Privacy"
 import Profile from "./views/profiles/Profile"
-import Register from './views/auth/register/Register'
+// import Register from './views/auth/register/Register'
+import Registration from './views/auth/register/Registration';
 import ResetPassword from './views/auth/ResetPassword'
 import Services from './views/Services'
 import Settings from './views/settings/Settings'
@@ -93,7 +94,7 @@ let routes = [
     {
         name:'register',
         path:'/register',
-        component: Register,
+        component: Registration,
         meta:{
             layout: 'fullscreen',
             requiresVisitor: true

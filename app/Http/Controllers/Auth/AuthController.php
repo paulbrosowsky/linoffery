@@ -60,16 +60,16 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
             'company_name' => ['required', 'string'],
-            'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies'],
+            'vat' => ['required', 'string', 'max:15', 'alpha_num', 'unique:companies'],
             'address' => ['required'],
             'postcode' => ['required'],
             'city' => ['required'],
             'country' => ['required'],
-            'terms_accepted' => ['required', 'boolean', function($attribute, $value, $fail){ 
-                if($value == false){
-                    $fail(__('Please confirm our terms of use.'));
-                };                
-            }],                        
+            // 'terms_accepted' => ['required', 'boolean', function($attribute, $value, $fail){ 
+            //     if($value == false){
+            //         $fail(__('Please confirm our terms of use.'));
+            //     };                
+            // }],                        
         ]);        
 
         $company = Company::create([
@@ -79,8 +79,8 @@ class AuthController extends Controller
             'city' => $request->city,
             'postcode' => $request->postcode,
             'address' => $request->address,
-            'lat' => $request->lat,
-            'lng' => $request->lng,
+            // 'lat' => $request->lat,
+            // 'lng' => $request->lng,
         ]);       
        
         $user =  User::create([

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
 import en_auth from './en/auth.json';
+import en_conditions from './en/conditions.json';
 import en_content from './en/content.json';
 import en_settings from './en/settings.json';
 import en_tender from './en/tender.json';
@@ -21,6 +22,7 @@ Vue.use(VueI18n);
 const messages = {    
     'en-EN': {
         auth: en_auth,
+        conditions: en_conditions, 
         content: en_content,
         settings: en_settings, 
         tender: en_tender, 
