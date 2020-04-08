@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Exception\BadResponseException;
 use App\Company;
+use App\Jobs\ValidateVat;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmYourEmail;
@@ -95,6 +96,8 @@ class AuthController extends Controller
 
         Mail::to($user)->send(new ConfirmYourEmail($user));
 
+        ValidateVat::dispatch($company);
+        
         return $user;
     }
 

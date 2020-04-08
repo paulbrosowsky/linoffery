@@ -14,20 +14,3 @@
 Route::get('/{any}', function () {    
     return view('app');
 })->where('any', '.*');
-
-// use App\Invoice;
-// use App\Mail\PayInvoiceEmail;
-
-// Route::get('/email', function(){
-
-//     $invoice = Invoice::first();
-//     $invoice->company->update(['vat' => 'dE12345']);
-
-//     $invoice->createPdf('pdf.invoice', [
-//         'receiver' => $invoice->order->tenderer->company,
-//         'invoice' => $invoice 
-//     ]);   
-    
-//     return new PayInvoiceEmail($invoice);
-    
-// });

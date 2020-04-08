@@ -75,7 +75,13 @@ class Company extends Model
      */
     public function getCompletedAttribute()
     {        
-        return !empty($this->address && $this->postcode && $this->city && $this->country);
+        return !empty(
+                    $this->address 
+                    && $this->postcode 
+                    && $this->city 
+                    && $this->country
+                    && $this->vat_validated_at
+                );
     }
 
     /**

@@ -6,10 +6,11 @@ use App\User;
 use App\Company;
 use Tests\TestCase;
 use App\Mail\ConfirmYourEmail;
-use Carbon\Carbon;
+use App\Notifications\InvalidVatNumber;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 
 // use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
@@ -131,11 +132,25 @@ class RegistrationTest extends TestCase
         $this->registerAccount()->assertStatus(422);
     }
 
-    // /** @test */
-    // function vat_must_be_valide()
-    // { 
-    //    $this->registerAccount( ['vat' => 'DE12345678'])->assertStatus(422);
-    // }
+    /** @test */
+    function it_starts_vat_validation_upon_registartion()
+    {   
+        $this->registerAccount();  
+
+        $this->assertNotNull(Company::first()->vat_validated_at);            
+    }
+
+    /** @test */
+    function vat_number_must_be_valide()
+    {
+        Notification::fake();
+
+        $this->registerAccount(['vat' => 'DE123456']);
+        $company = Company::first();
+
+        $this->assertNull($company->vat_validated_at); 
+        Notification::assertSentTo($company->user, InvalidVatNumber::class);
+    }
 
     // /** @test */
     // function terms_must_be_confirmed()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ValidateVat;
 use Illuminate\Http\Request;
 
 class CompaniesController extends Controller
@@ -22,26 +23,33 @@ class CompaniesController extends Controller
             'postcode' => ['required'],
             'city' => ['required'],
             'country' => ['required'],
-        ]);
-
-        if($request->vat != $company->vat){
-            $request->validate([               
-                'vat' => ['required', 'string', 'max:20', 'alpha_num', 'unique:companies'],                
-            ]);
-        }
+        ]);        
 
         $company->update([
             'name' => $request->name,
-            'vat' => $request->vat,
             'country' => $request->country,
             'city' => $request->city,
             'postcode' => $request->postcode,
             'address' => $request->address,
             'lat' => $request->lat,
             'lng' => $request->lng,
-            'website' => $request->website
+            'website' => $request->website,
         ]);
+        
+        // Trigger Validation If VAT Changed
+        if($request->vat != $company->vat){
+            $request->validate([
+                'vat' => ['required', 'string', 'max:15', 'alpha_num', 'unique:companies']
+            ]);
+            
+            $company->update([
+                'vat' => $request->vat,
+                'vat_validated_at' => NULL
+            ]);
 
-        return response()->json(['message' => 'Your companys data were successfully updated.' ], 200);
+            ValidateVat::dispatch($company);
+        }        
+
+        return response()->json(['message' => 'Your companies data were successfully updated.' ], 200);
     }
 }

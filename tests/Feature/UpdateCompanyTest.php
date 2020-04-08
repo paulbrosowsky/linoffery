@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Company;
+use App\Notifications\InvalidVatNumber;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 
 class UpdateCompanyTest extends PassportTestCase
 {
@@ -66,16 +69,16 @@ class UpdateCompanyTest extends PassportTestCase
         $this->assertArrayHasKey('vat', $errors['errors']);         
     }  
 
-    // /** @test */
-    // function vat_must_be_valide()
-    // { 
-    //     $this->withExceptionHandling();        
+    /** @test */
+    function vat_number_must_be_valide()
+    {
+        Notification::fake();
 
-    //     $response = $this->updateCompany( ['vat' => 'DE12345678']);
+        $this->updateCompany(['vat' => 'DE123456']);
 
-    //     $errors = $response->json();   
-    //     $this->assertArrayHasKey('vat', $errors['errors']);            
-    // }
+        $this->assertNull(auth()->user()->company->vat_validated_at); 
+        Notification::assertSentTo(auth()->user(), InvalidVatNumber::class);
+    }
 
      /** @test */
     function address_is_required()

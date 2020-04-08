@@ -32,8 +32,8 @@
     "upload_image_error": "The file has an invalid format. Please use jpg, png or gif.",
     "image_uploaded_message": "Your uploded your image successfully.",
 
-    "please_complete_company_address": "Please complete the companys address.",
-    "complete_company_address_info": "You can only use our service as a business customer. That's why we need complete information about your company.",
+    "please_complete_company_address": "Please complete the companys data.",
+    "complete_company_address_info": "You can only use our service as a business customer. That's why we need complete company address an valid VAT-Number.",
     
     "credit_card": "Credit Card",
     "use_your_credit_card": "Use your credit card for convenient payment.",

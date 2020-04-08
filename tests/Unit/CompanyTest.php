@@ -64,5 +64,27 @@ class CompanyTest extends PassportTestCase
 
         $this->assertEquals(3, $this->company->rating);
     }  
+
+    /** @test */
+    function it_knows_if_all_required_fields_are_completed()
+    {
+        $company = create('App\Company',[
+            'address' => NULL,
+            'postcode' => NULL,
+            'city' => NULL,
+            'country' => NULL,
+            'vat_validated_at' => NULL
+        ]);
+        $this->assertFalse($company->completed);
+
+        $company->update([
+            'address' => 'Poststr.6',
+            'postcode' => '12345',
+            'city' => 'Berlin',
+            'country' => 'Germany',
+            'vat_validated_at' => now()
+        ]);
+        $this->assertTrue($company->completed);
+    }
    
 }

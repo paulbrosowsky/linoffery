@@ -11,10 +11,10 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'address' => $faker->streetAddress,
         'country' =>  $faker->country,
         'city' =>  $faker->city,
-        'postcode' =>  $faker->postcode,
-        'stripe_id' => $faker->md5,
+        'postcode' =>  $faker->postcode,        
         'lat' => $faker->latitude($min = 47, $max = 54),
-        'lng' => $faker->longitude($min = 6, $max = 15),  
+        'lng' => $faker->longitude($min = 6, $max = 15), 
+        'vat_validated_at' => now() 
     ];
 });
 
