@@ -198,10 +198,12 @@
                         lat: this.lat,
                         lng: this.lng   
                     })
-                    .then(()=>{  
-                        this.$store.dispatch('fetchLoggedInUser');                                               
-                        this.loading = false;
-                        flash(this.$i18n.t('settings.changed_company_message'));
+                    .then(()=>{ 
+                        setTimeout(() => {
+                            this.loading = false;
+                            flash(this.$i18n.t('settings.changed_company_message'));
+                            this.$store.dispatch('fetchLoggedInUser'); 
+                        }, 3000);
                     })
                     .catch(errors =>{ 
                         this.loading = false;

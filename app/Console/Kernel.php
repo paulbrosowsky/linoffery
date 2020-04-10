@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('linoffery:complete-tender')->daily(); 
-        $schedule->command('linoffery:retry-vat-validation')->daily(); 
+        $schedule->command('linoffery:retry-vat-validation')->hourly();
     }
 
     /**

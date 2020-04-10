@@ -37,15 +37,15 @@ class ValidateVat implements ShouldQueue
     {    
         try {
             $valid =  Validator::validate($this->company->vat);
-
-            if(!$valid){
-                return $this->company->user->notify(new InvalidVatNumber());
-            }
-
-            return $this->company->update(['vat_validated_at' => now()]);
-
+            
         } catch (ViesException $e) {
             throw $e;
         }
+
+        if(!$valid){
+            return $this->company->user->notify(new InvalidVatNumber());
+        }
+
+        return $this->company->update(['vat_validated_at' => now()]);
     }
 }
