@@ -32,13 +32,20 @@
                 >
                     <p @click="hide">{{ $t('content.about') }}</p>
                     
-                </router-link>
+                </router-link>                
 
                 <router-link 
                     class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
                     to="/services"
                 >
                     <p @click="hide">{{ $t('content.services') }}</p>
+                </router-link>
+
+                <router-link 
+                    class="uppercase text-white font-bold text-lg mb-2 hover:text-teal-300" 
+                    to="/pricing"
+                >
+                    <p @click="hide">{{ $t('content.pricing') }}</p>                    
                 </router-link>
 
             </div>
@@ -78,7 +85,8 @@
 
             <p
                 class="uppercase text-white font-bold text-lg mb-2 cursor-pointer hover:text-teal-300" 
-                @click="createNewTender"
+                v-if="loggedIn"
+                @click="createNewTender"                
             >
                {{ $t('content.create_tender') }}
             </p>

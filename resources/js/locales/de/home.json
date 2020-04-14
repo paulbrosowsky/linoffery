@@ -2,12 +2,12 @@
     "header_title_1" : "Die smarte",
     "header_title_2" : "Logistikplattform",
 
-    "header_text": "Linoffery ist eine innovative transparente Logistikplattform für die digitale Vermittlung von Frachten und Speditionsfirmen in Echtzeit. Finde bei uns ganz einfach und mit wenig Aufwand passende Fracht oder Spedition mit attraktiven und transparenten Preisen.",
+    "header_text": "Linoffery ist eine innovative und transparente Logistikplattform für die digitale Vermittlung von Frachten und Speditionsfirmen in Echtzeit. Finde bei uns ganz einfach und mit wenig Aufwand passende Fracht oder Spedition mit attraktiven und transparenten Preisen.",
 
     "fair_title": "Fair für beide Seiten",      
     "fair_description_1": "Keine Mindestlaufzeit", 
-    "fair_description_2": "Kein Grundgebühr", 
-    "fair_description_3": "Keine verstekte Kosten ", 
+    "fair_description_2": "Keine Grundgebühr", 
+    "fair_description_3": "Keine verstekten Kosten", 
 
     "shiper_info":"Mache deine Fracht für alle sichtbar, erhalte passende Angebote und buche einfach ohne zu verhandeln.",
     "shiper_advantage_1":"Fairer Preis",
@@ -24,8 +24,8 @@
     "responsive_text": "Profitiere mit linoffery ob im Büro oder unterwegs.",
 
     "footer_text_head_1": "Wir erleichtern dein tägliches Geschäft,",
-    "footer_text_head_2": "nützen deine Zeit effektiv.",
+    "footer_text_head_2": "nutze deine Zeit effektiv.",
     "footer_text_1": "Linoffery verzichtet gezielt auf überflüssige Funktionen und konzertiert sich auf zwei wesentliche Vorteile.",
     "footer_text_2": "Als Versender ersparst du dir die endlosen Recherchen und Angebotsvergleiche bei der Suche nach der richtigen Spedition.",
-    "footer_text_3": "Als Transportunternehmen bekommst du deinen Laderaum voll egal ob auf dem Rückfahrt, bei Zwischentoren oder einfach unterwegs auf deiner Strecke.  "
+    "footer_text_3": "Als Transportunternehmen bekommst du deinem Laderaum immer voll, unabhändig davon ob auf der Rückfahrt, bei Zwischentoren oder einfach unterwegs auf der Strecke."
 }

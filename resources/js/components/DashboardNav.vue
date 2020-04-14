@@ -19,6 +19,10 @@
 
             <div class="h-full flex flex-col justify-center -mt-10">  
 
+                <router-link class="btn btn-outlined bg-white mx-5 mb-10" :to="{name: 'create_tender'}" >
+                    {{$t('tender.new_tender')}}
+                </router-link>
+
                 <router-link 
                     class="flex uppercase font-bold text-gray-600 py-3 px-5 hover:text-white" 
                     active-class="text-teal-100" 

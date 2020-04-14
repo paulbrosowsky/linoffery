@@ -16,6 +16,7 @@ import NotFound from './views/NotFound'
 import Offers from './views/offers/Offers';
 import Order from './views/orders/Order'
 import Orders from './views/orders/Orders'
+import Pricing from "./views/Pricing"
 import Privacy from "./views/Privacy"
 import Profile from "./views/profiles/Profile"
 // import Register from './views/auth/register/Register'
@@ -79,7 +80,13 @@ let routes = [
         name:'services',
         path:'/services',
         component: Services
-    },    
+    },  
+    
+    {
+        name:'pricing',
+        path:'/pricing',
+        component: Pricing
+    }, 
 
     {
         name:'settings',

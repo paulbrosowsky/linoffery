@@ -1,6 +1,6 @@
 {
     "terms": "AGB",    
-    "privacy": "Datenschutzerklärung",
+    "privacy": "Datenschutz",
     "legals": "Impressum",
 
     "about": "Über uns",
@@ -15,5 +15,6 @@
     "settings": "Einstellungen",
 
     "profile": "Profil",
-    "career": "Karriere"  
+    "career": "Karriere" ,
+    "pricing": "Preise" 
 }
