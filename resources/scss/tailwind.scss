@@ -104,5 +104,9 @@ h1{
     @apply .text-3xl .text-teal-500 .leading-tight;
 }
 
+h3{
+   @apply .font-bold .text-lg .leading-tight;
+}
+
 @tailwind utilities;
 
