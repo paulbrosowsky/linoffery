@@ -8,6 +8,7 @@ import en_settings from './en/settings.json';
 import en_tender from './en/tender.json';
 import en_utilities from './en/utilities.json';
 
+import de_about from './de/about.json';
 import de_auth from  './de/auth.json';
 import de_conditions from './de/conditions.json';
 import de_content from './de/content.json';
@@ -29,6 +30,7 @@ const messages = {
         utilities: en_utilities,        
     },    
     'de-DE': {
+        about: de_about,
         auth: de_auth,
         conditions: de_conditions, 
         content: de_content,
