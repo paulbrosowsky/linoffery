@@ -13,6 +13,7 @@ import de_auth from  './de/auth.json';
 import de_conditions from './de/conditions.json';
 import de_content from './de/content.json';
 import de_home from './de/home.json';
+import de_pricing from './de/pricing.json';
 import de_services from './de/services.json';
 import de_settings from './de/settings.json';
 import de_tender from './de/tender.json';
@@ -35,6 +36,7 @@ const messages = {
         conditions: de_conditions, 
         content: de_content,
         home: de_home,
+        pricing: de_pricing,
         services: de_services, 
         settings: de_settings, 
         tender: de_tender, 

@@ -189,13 +189,9 @@
                     <p><router-link class="link text-sm" to="/terms">
                         {{ $t('content.terms') }}
                     </router-link></p>  
-                </div>
-                        
+                </div>                        
             </div>
-
         </div>
-
-
 
         <loading-spinner :loading="loading" size="48px"></loading-spinner>
     </section>
@@ -233,8 +229,10 @@
 
                 axios
                     .post('/api/auth/register', this.form)
-                    .then((response)=>{                        
-                        this.login() ; 
+                    .then((response)=>{ 
+                        setTimeout(() => {
+                            this.login(); 
+                        }, 2000);  
                     })
                     .catch(errors =>{                        
                         this.errors = errors.response.data.errors;                        

@@ -15,7 +15,7 @@ class MollieWebhooksController extends Controller
      */
     public function handle(Request $request)
     {   
-        if(! $request->has('id')){
+        if(!$request->has('id')){
             return;
         }
         
