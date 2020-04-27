@@ -18,10 +18,8 @@
     
     "service_fee_example": "Einfache Preisbildung",
     "service_fee_example_1": "Vereinbarter Transportpreis 100 EUR  an die Spedition (Zahlungsbedingungen mit Transportunternehmen zu vereinbaren).",
-    "service_fee_example_2": "+ 17 EUR als 17% Vermittlungsgebühr (Zahlung direkt an Linoffery) ",
-    "service_fee_example_3": "= 117 EUR Gesamtpreis für die Lieferung 117 EUR",
+    "service_fee_example_2": "+ 5 EUR als 5% Vermittlungsgebühr (Zahlung direkt an Linoffery) ",
+    "service_fee_example_3": "= 105 EUR Gesamtpreis für die Lieferung",
 
     "payment_title": "Bequeme Bezahlung"
-
-
 }

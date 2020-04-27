@@ -9,7 +9,7 @@ return [
 
     'payment' => [
         // Linoffery Service Fee in Percent %
-        'standard' => 17
+        'standard' => 5
     ],
 
     'admin' => [

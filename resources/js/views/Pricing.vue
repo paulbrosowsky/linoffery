@@ -77,7 +77,7 @@
                
                     <p class="text-xl text-gray-500 mb-5 ">
                         <span>{{ $t('pricing.service_fee_subtitle') }}</span>
-                        <span class="text-teal-500 font-semibold">17% zzgl. Ust.</span>
+                        <span class="text-teal-500 font-semibold">5% zzgl. Ust.</span>
                     </p>
                 
                     <p class="text-lg">{{ $t('pricing.service_fee_text') }}</p>
