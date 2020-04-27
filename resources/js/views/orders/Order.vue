@@ -101,10 +101,10 @@
                    <span>{{$t('settings.invoice')}}</span>
                </button>
 
-               <button class="btn btn-outlined" @click="downloadOrderPdf">
+               <a class="btn btn-outlined" @click="downloadOrderPdf">
                    <i class="icon ion-md-download mr-1"></i>
                    <span>PDF</span>
-               </button>
+               </a>
 
                 <button class="btn btn-teal hidden ml-2 md:block" v-if="isTenderer && !completed" @click="completeOrder">
                    <i class="icon ion-md-checkmark mr-1"></i>
