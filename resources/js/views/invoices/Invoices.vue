@@ -40,6 +40,13 @@
                     <td class="pl-2 text-gray-600 hidden md:table-cell">{{ invoice.created_at | moment('DD.MM.YYYY')}}</td>                    
                     <td class="text-right p-2">
                         <a 
+                            class="text-red-500 font-bold mr-2 hover:text-teal-500 hover:text-white focus:text-teal-500" 
+                            v-if="invoice.status === 'open'"
+                            :href="invoice.payment_link"
+                        >
+                            {{$t('utilities.pay')}}
+                        </a>
+                        <a 
                             class="text-teal-500 font-bold cursor-pointer hover:text-teal-700" 
                             @click="downloadPdf(invoice)"
                         >PDF</a>                    
@@ -72,7 +79,7 @@
 
             downloadPdf(invoice){                               
                 axios({
-                    url: `api/invoices/${invoice.id}/download`,
+                    url: `/api/invoices/${invoice.id}/download`,
                     method: 'GET',
                     responseType: 'blob'
                 })                    

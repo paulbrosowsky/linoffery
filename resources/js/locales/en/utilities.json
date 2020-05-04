@@ -53,5 +53,6 @@
     "paid": "paid",
     "failed": "failed",
     "created_at": "created at",
-    "amount": "Amount"
+    "amount": "Amount",
+    "pay": "pay"
 }

@@ -193,7 +193,7 @@
 
             downloadInvoicePdf(){                               
                 axios({
-                    url: `api/invoices/${this.order.invoice.id}/download`,
+                    url: `/api/invoices/${this.order.invoice.id}/download`,
                     method: 'GET',
                     responseType: 'blob'
                 })                    

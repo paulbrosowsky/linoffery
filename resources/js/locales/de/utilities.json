@@ -53,5 +53,6 @@
     "paid": "bezahlt",
     "failed": "fehlgeschlagen",
     "created_at": "erstellt am",
-    "amount": "Betrag"
+    "amount": "Betrag",
+    "pay": "bezahlen"
 }

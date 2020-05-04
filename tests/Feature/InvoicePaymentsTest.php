@@ -38,7 +38,9 @@ class InvoicePaymentsTest extends PassportTestCase
             'tender_id' => $tender->id
         ]); 
 
-        $this->order = create('App\Offer', ['tender_id' => $tender->id])->accept();        
+        $this->order = create('App\Offer', [
+            'tender_id' => $tender->id            
+        ])->accept();        
     }
 
     /** @test */

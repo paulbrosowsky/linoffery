@@ -99,4 +99,4 @@ Route::get('/tenders/{tender}', 'TendersController@show');
 Route::get('/categories', 'CategoriesController@index');
 Route::get('/transport-types', 'TransportTypesController@index');
 
-Route::post('/mollie/webhook', 'MollieWebhooksController@handle')->name('mollie.webhook');
+Route::post('/mollie/webhook', 'MollieWebhooksController@handle');
