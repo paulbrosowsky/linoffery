@@ -28,12 +28,12 @@ class CreatePayment implements ShouldQueue
      */
     public function handle(InvoiceCreated $event)
     {
-        if(env('APP_ENV') != 'production'){
-            $webhookUrl = 'https://54846ec0.ngrok.io/api/mollie/webhook';            
+        if(env('APP_ENV') === 'production'){
+            $webhookUrl = route('payments.webhook');                
         }else{
-            $webhookUrl = route('payments.webhook');          
+            $webhookUrl = 'https://54846ec0.ngrok.io/api/mollie/webhook';
         } 
-        
+       
         $payment = Mollie::api()->payments()->create([
             'amount' => [
                 'currency' => 'EUR',
