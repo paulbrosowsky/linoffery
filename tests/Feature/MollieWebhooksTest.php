@@ -12,7 +12,7 @@ class MollieWebhooksTest extends PassportTestCase
     
     /** @test */
     function invoice_status_updates_regarding_paymemt_webhook_status()
-    {
+    {        
         $payment =[
             'id' => 'tr_mollie_id',
             'status' => 'paid' 
@@ -24,9 +24,8 @@ class MollieWebhooksTest extends PassportTestCase
 
         $this->assertEquals($invoice->status, 'open');    
 
-        $this->postJson('api/mollie/webhook', $payment);
+        $this->postJson('api/payments/webhook', $payment);
 
         $this->assertEquals($invoice->fresh()->status, 'paid');         
-    }
-    
+    }    
 }
