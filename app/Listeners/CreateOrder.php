@@ -3,10 +3,11 @@
 namespace App\Listeners;
 
 use App\Events\OfferAccepted;
+use App\Order;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RemoveUnusedOffers
+class CreateOrder
 {
     /**
      * Create the event listener.
@@ -25,12 +26,12 @@ class RemoveUnusedOffers
      * @return void
      */
     public function handle(OfferAccepted $event)
-    {        
-        $offers = $event->offer->tender->offers->where('accepted_at', NULL);
-
-        $offers->each(function($offer){
-            $offer->delete();
-        });      
-        
+    {
+        return Order::create([
+            'tender_id' => $event->offer->tender->id,
+            'offer_id' => $event->offer->id,
+            'carrier_id' => $event->offer->user_id,
+            'tenderer_id' => $event->offer->tender->user_id
+        ]); 
     }
 }

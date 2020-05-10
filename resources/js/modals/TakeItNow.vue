@@ -75,10 +75,8 @@
                     .then(response =>{
                         flash(this.$i18n.t('tender.make_offer_message')); 
                         setTimeout(() => {
-                            flash(this.$i18n.t('tender.take_now_message')) 
-                            console.log(response);
-                                                       
-                            this.$router.push({name:'order', params:{ order: response.data.id }})                        
+                            flash(this.$i18n.t('tender.take_now_message'))
+                            this.$router.push({name:'orders'});                      
                             this.close()
                             this.loading = false 
                         }, 2000);                         

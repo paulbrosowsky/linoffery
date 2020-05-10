@@ -21,7 +21,7 @@ class AcceptOfferTest extends PassportTestCase
     {
         parent::setup();
         
-        Storage::fake();         
+        Storage::fake();   
 
         $this->user = create('App\User');
         $this->tender = create('App\Tender', ['user_id' => $this->user->id]);   
@@ -41,8 +41,7 @@ class AcceptOfferTest extends PassportTestCase
 
     /** @test */
     function not_tender_owners_can_not_accept_tenders()
-    {
-        Queue::fake();
+    {        
         $this->withExceptionHandling();
         $this->signIn();
         $this->acceptOffer()->assertStatus(403);
@@ -50,8 +49,7 @@ class AcceptOfferTest extends PassportTestCase
 
     /** @test */
     function tender_owners_may_accept_offers()
-    {
-        Queue::fake();
+    {        
         $this->signIn($this->user);
         $this->acceptOffer();
 
@@ -61,9 +59,7 @@ class AcceptOfferTest extends PassportTestCase
 
     /** @test */
     function new_order_will_be_created_upon_accepted_offer()
-    {
-        Queue::fake();
-
+    {  
         $this->signIn($this->user);
         $this->acceptOffer();
         
@@ -76,9 +72,7 @@ class AcceptOfferTest extends PassportTestCase
 
     /** @test */
     function all_offers_exept_accepted_will_be_deleted()
-    {
-        Queue::fake();
-
+    {   
         create('App\Offer', ['tender_id' => $this->tender->id], 3);  
         $this->assertCount(4, Offer::all());
 
@@ -93,7 +87,7 @@ class AcceptOfferTest extends PassportTestCase
     { 
         $this->signIn($this->user);
 
-        $this->offer->accept();
+        $this->acceptOffer();
         $order = $this->offer->order;        
 
         Storage::disk('public')->assertExists('/pdf/orders/'.$order->custom_id.'_carrier.pdf');               

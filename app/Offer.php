@@ -58,27 +58,6 @@ class Offer extends Model
     {
         return $this->hasOne(Order::class);
     }
-
-    /**
-     *  Set an order as accepted 
-     * 
-     * @return Order
-     */
-    public function accept()
-    {  
-        $this->update(['accepted_at' => now()]);
-
-        // Make New Order
-        $order = $this->order()->create([
-            'tender_id' => $this->tender->id,
-            'offer_id' => $this->id,
-            'carrier_id' => $this->user_id,
-            'tenderer_id' => $this->tender->user_id
-        ]); 
-        
-        return $order;
-    }   
-
     /**
      *  Destroy existing Offer
      * 

@@ -77,7 +77,7 @@
                     .then(response =>{
                         flash(this.$i18n.t('tender.place_order_message'));                    
                         this.close();
-                        this.$router.push({name:'order', params:{ order: response.data.id }});                            
+                        this.$router.push({name:'orders'});                            
                     })
                     .catch(errors =>{
                         console.log(errors.response.data.errors);

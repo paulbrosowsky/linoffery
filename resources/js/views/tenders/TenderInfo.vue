@@ -45,7 +45,7 @@
                             <p class="text-xs leading-none uppercase font-bold mt-2"> {{$t('tender.make_offer')}}</p>
                         </button>
 
-                        <div>
+                        <div v-if="tender.immediate_price">
                             <button 
                                 class="w-20 h-20 rounded-lg border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white focus:outline-none"
                                 @click="takeItNow" 

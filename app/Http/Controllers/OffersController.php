@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AcceptOfferJob;
 use App\Offer;
 use App\Order;
 use App\Tender;
@@ -55,10 +56,10 @@ class OffersController extends Controller
             $offer = $tender->addOffer([
                 'user_id' => auth()->id(),
                 'price' => $request->price
-            ]); 
+            ]);             
             
-            if($request->takeNow){              
-                return $offer->accept();            
+            if($request->takeNow){ 
+                return AcceptOfferJob::dispatch($offer); 
             }
 
             return $offer;
@@ -74,10 +75,10 @@ class OffersController extends Controller
      * @return Order
     */
     public function update(Offer $offer)
-    {
+    {        
         $this->authorize('show', $offer->tender);
 
-        return $offer->accept();        
+        AcceptOfferJob::dispatch($offer);
     }
 
     /**

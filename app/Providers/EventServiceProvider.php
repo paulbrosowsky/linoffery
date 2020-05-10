@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Events\InvoiceCreated;
+use App\Events\OfferAccepted;
 use App\Events\OfferCreated;
 use App\Events\OrderCreated;
 use App\Events\TenderCompleted;
 use App\Listeners\CompleteTender;
 use App\Listeners\CreateInvoice;
+use App\Listeners\CreateOrder;
 use App\Listeners\CreatePayment;
 use App\Listeners\CreatePdf;
 use App\Listeners\NotifyOutbiddedUsers;
@@ -35,18 +37,19 @@ class EventServiceProvider extends ServiceProvider
             NotifyOutbiddedUsers::class
         ],
 
-        OrderCreated::class => [
-            CompleteTender::class,               
+        OrderCreated::class => [                       
             CreateInvoice::class                 
-        ],
-
-        TenderCompleted::class => [
-            RemoveUnusedOffers::class,
-        ],   
+        ],         
         
         InvoiceCreated::class => [
             CreatePayment::class
-        ]
+        ],
+        
+        OfferAccepted::class => [
+            CompleteTender::class,
+            RemoveUnusedOffers::class,
+            CreateOrder::class
+        ]        
     ];
 
      /**

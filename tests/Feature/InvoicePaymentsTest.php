@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Events\InvoiceCreated;
 use App\Events\PaymentCreated;
 use App\Invoice;
+use App\Jobs\AcceptOfferJob;
 use App\Mail\PayInvoiceEmail;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,9 +39,14 @@ class InvoicePaymentsTest extends PassportTestCase
             'tender_id' => $tender->id
         ]); 
 
-        $this->order = create('App\Offer', [
+        $offer = create('App\Offer', [
             'tender_id' => $tender->id            
-        ])->accept();        
+        ]);
+        
+        AcceptOfferJob::dispatch($offer);
+
+        $this->order = $offer->order;
+
     }
 
     /** @test */

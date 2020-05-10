@@ -2,26 +2,27 @@
 
 namespace App\Jobs;
 
-use App\Order;
+use App\Events\OfferAccepted;
+use App\Offer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class CreateInvoicesJob implements ShouldQueue
+class AcceptOfferJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $company;
+    protected $offer;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($company)
+    public function __construct(Offer $offer)
     {
-        $this->company = $company;
+        $this->offer = $offer;
     }
 
     /**
@@ -31,13 +32,10 @@ class CreateInvoicesJob implements ShouldQueue
      */
     public function handle()
     {
-        $orders = Order::where('carrier_id', $this->company->user->id)            
-                        ->where('carrier_id', $this->company->user->id)
-                        ->where('billed_at', NULL)
-                        ->get();
+        if($this->offer->tender->isActive){
+            $this->offer->update(['accepted_at' => now()]);
             
-        if (!$orders->isEmpty()) {
-            $this->company->createInvoice($orders);
-        }    
+            OfferAccepted::dispatch($this->offer);           
+        }
     }
 }

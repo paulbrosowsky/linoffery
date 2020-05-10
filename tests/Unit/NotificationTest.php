@@ -2,6 +2,7 @@
 
 namespace Tests\Unit ;
 
+use App\Jobs\AcceptOfferJob;
 use App\Notifications\OfferWasAccepted;
 use Tests\PassportTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,26 +62,29 @@ class NotificationTest extends PassportTestCase
     function offerers_recieve_notifications_if_tender_is_compeded()
     {        
         $tender = create('App\Tender');
+        $offer = create('App\Offer', ['tender_id' => $tender->id]);
+
         create('App\Offer', [
             'user_id' => auth()->id(),
             'tender_id' => $tender->id,
         ], 3);
 
-        $tender->complete();
+        AcceptOfferJob::dispatch($offer);
+        
         $this->assertCount(1, auth()->user()->unreadNotifications);
     }
 
     /** @test */
     function order_participants_recieve_notifications_if_offer_have_been_accepted()
-    {  
+    {      
         $offer = create('App\Offer', [
             'user_id' => auth()->id(),          
         ]);        
 
-        $order = $offer->accept();       
+        AcceptOfferJob::dispatch($offer);    
         
-        $this->assertCount(1, $order->tenderer->unreadNotifications);
-        $this->assertCount(1, $order->carrier->unreadNotifications);       
+        $this->assertCount(1, $offer->order->tenderer->unreadNotifications);
+        $this->assertCount(1, $offer->order->carrier->unreadNotifications);       
     }
 
     /** @test */
@@ -92,11 +96,11 @@ class NotificationTest extends PassportTestCase
             'user_id' => auth()->id(),          
         ]);      
 
-        $order = $offer->accept();  
+        AcceptOfferJob::dispatch($offer);
 
-        Notification::assertSentTo($order->tenderer, OfferWasAccepted::class);
+        Notification::assertSentTo($offer->order->tenderer, OfferWasAccepted::class);
         Notification::assertSentTo(
-            $order->carrier, 
+            $offer->order->carrier, 
             OfferWasAccepted::class, 
             function($notifiaction){                
                 return $notifiaction->toMail(auth()->user())->attachments > 0;

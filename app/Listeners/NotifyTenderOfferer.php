@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Events\OrderCreated;
 use App\Events\TenderCloned;
-use App\Events\TenderCompleted;
+use App\Events\OfferAccepted;
 use App\Notifications\OfferWasAccepted;
 use App\Notifications\TenderIsCompleted;
 use App\Notifications\TenderWasCloned;
@@ -27,18 +27,18 @@ class NotifyTenderOfferer
     /**
      * Handle the OrderCreated event.
      *
-     * @param  TenderCompleted $event
+     * @param  OfferAccepted $event
      * @return void
      */
-    public function handleTenderCompleted(TenderCompleted $event)
+    public function handleOfferAccepted(OfferAccepted $event)
     {        
-        $users = $event->tender->offers
+        $users = $event->offer->tender->offers
                     ->where('accepted_at', NULL)                    
                     ->pluck('user');
         
         if(isset($users)){
             $users->unique()->each(function($user) use ($event){
-                $user->notify(new TenderIsCompleted($event->tender));
+                $user->notify(new TenderIsCompleted($event->offer->tender));
             });  
         }
     }
@@ -88,8 +88,8 @@ class NotifyTenderOfferer
     public function subscribe($events)
     {        
         $events->listen(
-            TenderCompleted::class,            
-            'App\Listeners\NotifyTenderOfferer@handleTenderCompleted'
+            OfferAccepted::class,            
+            'App\Listeners\NotifyTenderOfferer@handleOfferAccepted'
         );
 
         $events->listen(
